@@ -92,6 +92,8 @@ export function PlanWalk() {
       if (want !== open) {
         open = want;
         panel.toggleAttribute("data-open", open);
+        // the bar's links over the panel turn ink while it is open
+        document.documentElement.toggleAttribute("data-walk-panel", open);
       }
       const y = Math.min(Math.max(0, -r.top - from), Math.max(0, content.scrollHeight - panel.clientHeight));
       content.style.transform = `translateY(${-y}px)`;
@@ -180,6 +182,7 @@ export function PlanWalk() {
 
     return () => {
       alive = false;
+      document.documentElement.removeAttribute("data-walk-panel");
       cancelAnimationFrame(raf);
       sized.disconnect();
       window.removeEventListener("scroll", onScroll);

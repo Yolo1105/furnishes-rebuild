@@ -1,6 +1,7 @@
 /* The panel beside the walk, over whatever is behind it. On a wide screen
-   it wipes in from the right under the bar; on a tall one, up from the
-   foot. Its leading edge comes in on a slope: the top end leads and the
+   it wipes in from the right, the full height of the screen with the bar
+   over its top (whose links turn ink while it is open: SiteHeader); on a
+   tall one, up from the foot. Its leading edge comes in on a slope: the top end leads and the
    bottom follows a beat behind, then they meet square; going out, the
    same in reverse. Its steps scroll inside it one for one with the page
    (PlanWalk moves .content), and each step's parts come in one after
@@ -23,7 +24,7 @@
   --trail: 100%;
   position: absolute;
   z-index: var(--z-content);
-  top: var(--nav-h);
+  top: 0;
   right: 0;
   bottom: 0;
   width: var(--walk-panel);
@@ -46,8 +47,19 @@
 }
 
 .content {
-  padding: 0 calc(var(--panel-pad) + var(--space-6)) 0 var(--panel-pad);
+  padding: var(--nav-h) calc(var(--panel-pad) + var(--space-6)) 0 var(--panel-pad);
   will-change: transform;
+}
+
+/* Under the bar, the steps fade into the paper as they scroll up past it. */
+.panel::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 auto;
+  height: calc(var(--nav-h) * 1.6);
+  background: linear-gradient(var(--color-paper) 60%, transparent);
+  content: "";
+  pointer-events: none;
 }
 
 .step {

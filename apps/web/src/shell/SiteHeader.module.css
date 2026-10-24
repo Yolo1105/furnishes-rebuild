@@ -33,6 +33,17 @@
 
 .end {
   justify-self: end;
+  color: var(--bar-fg);
+  transition: color var(--dur-panel) var(--ease-panel);
+}
+
+/* While the landing walk's side panel is open on the right, the links over
+   it are ink on its paper (PlanWalk marks the page). */
+@media (min-aspect-ratio: 1/1) {
+  :global(html[data-walk-panel]) .end {
+    --bar-fg: var(--color-ink);
+    --bar-on-fg: var(--color-cream);
+  }
 }
 
 .link {
