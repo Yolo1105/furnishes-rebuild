@@ -275,7 +275,7 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 
 /**
  * What an architect adds to a plan that is not the building: room names,
- * tile joints, dimension strings round the outside, door swings,
+ * tile joints, door swings,
  * window glass, wardrobe crosses and the north point, and the metre grid on
  * the ground. All of it lies on the floor or the
  * ground. The notes that only make sense on a flat drawing fade as the walls
@@ -402,45 +402,8 @@ export function addSheet(
     text([{ text: r.name.toUpperCase(), size: small ? 0.15 : 0.2, track: 0.08 }], x, z, { y: LABEL_Y });
   }
 
-  // ---- dimension strings ----------------------------------------------------
-  const TICK = 0.08; // half a tick's reach, m
-  const OVER = 0.15; // how far an extension line runs past its dimension line, m
-  const DIM_TEXT = 0.19;
-  /**
-   * A chain of dimensions along one side. `along` are the points measured,
-   * `line` where the dimension line runs across them, `from` where each
-   * extension line starts (by the building), `labels` one a gap, mm.
-   */
-  const chain = (run: "ew" | "ns", along: number[], line: number, from: number | number[], labels: string[]) => {
-    const pts: number[] = [];
-    const P = (a: number, b: number) => (run === "ew" ? [a, FLOOR, b] : [b, FLOOR, a]);
-    const out = Math.sign(line - (Array.isArray(from) ? from[0]! : from));
-    pts.push(...P(along[0]!, line), ...P(along[along.length - 1]!, line));
-    along.forEach((a, i) => {
-      const f = Array.isArray(from) ? from[i]! : from;
-      pts.push(...P(a, f), ...P(a, line + out * OVER)); // extension line
-      pts.push(...P(a - TICK, line + TICK), ...P(a + TICK, line - TICK)); // the architect's slash
-    });
-    segments(pts, 0.6, true);
-    labels.forEach((t, i) => {
-      const mid = (along[i]! + along[i + 1]!) / 2;
-      const off = line + out * 0.19;
-      if (run === "ew") text([{ text: t, size: DIM_TEXT }], mid, off, { fade: true });
-      else text([{ text: t, size: DIM_TEXT }], off, mid, { rot: Math.PI / 2, fade: true });
-    });
-  };
+  // the flat's outer bounds, m
   const b = { x0: BOUNDS.x0 / 1000, x1: BOUNDS.x1 / 1000, y0: BOUNDS.y0 / 1000, y1: BOUNDS.y1 / 1000 };
-  const gap = 0.15; // extension lines stop this short of the building
-  // north: each room along the top, then the whole flat
-  chain("ew", [b.x0, 3.15, 6.45, 9.45, b.x1], b.y0 - 0.8, b.y0 - gap, ["3000", "3000", "2700", "5700"]);
-  chain("ew", [b.x0, b.x1], b.y0 - 1.5, b.y0 - gap, [`${Math.round((b.x1 - b.x0) * 1000)}`]);
-  // west: the master suite, then the whole flat's depth (its foot is the kitchen wing)
-  chain("ns", [b.y0, 1.85, 6.0], b.x0 - 0.8, b.x0 - gap, ["1700", "3800"]);
-  chain("ns", [b.y0, b.y1], b.x0 - 1.5, [b.x0 - gap, 5.7 - gap], [`${Math.round((b.y1 - b.y0) * 1000)}`]);
-  // east: the living room's depth
-  chain("ns", [b.y0, 6.5], b.x1 + 0.8, b.x1 + gap, ["6300"]);
-  // south: the yard and the kitchen
-  chain("ew", [5.7, 7.55, 12.9], b.y1 + 0.8, b.y1 + gap, ["1500", "5000"]);
 
   // ---- door swings: the arc each leaf sweeps (the leaves themselves stand open in the model)
   const swings: number[] = [];
@@ -507,7 +470,7 @@ export function addSheet(
   rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
 
   // ---- north point, by the north-east corner --------------------------------
-  const [nx, nz, nr] = [b.x1 + 1.75, b.y0 + 0.9, 0.34];
+  const [nx, nz, nr] = [b.x1 + 0.9, b.y0 + 0.9, 0.34];
   const ring: number[] = [];
   for (let k = 0; k < 48; k++) {
     const [a0, a1] = [(k / 48) * Math.PI * 2, ((k + 1) / 48) * Math.PI * 2];
