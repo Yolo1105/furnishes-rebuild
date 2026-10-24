@@ -129,6 +129,8 @@ export function PlanWalk() {
       const t = stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE);
       const notes = 1 - t * t * (3 - 2 * t);
       sheet?.fade(notes);
+      // the plan opens empty; the furniture is drawn in with the first scroll
+      sheet?.furnish(smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)));
       // as the plan's symbols fade, the pieces they stand for rise out of the floor
       rise(1 - notes);
       // the page's own words beside the plan go with the plan's notes

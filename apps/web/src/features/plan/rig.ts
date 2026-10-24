@@ -16,11 +16,11 @@ import { BOUNDS, CEILING, FRONT_DOOR } from "./flat";
 /** How much of the scroll the walk in takes; the room comes to life in the rest. */
 const WALK = 0.5;
 /** The walk's own stops, as shares of the walk. */
-const W = { sheet: 0.08, lifted: 0.42, landed: 0.66 };
+const W = { sheet: 0.16, lifted: 0.46, landed: 0.68 };
 
 /** Where each stage ends, as shares of the whole scroll. */
 export const STOPS = {
-  sheet: W.sheet * WALK, // the plan, as drawn
+  sheet: W.sheet * WALK, // the plan: empty, then furnished as it is drawn in
   lifted: W.lifted * WALK, // the walls up, seen from above
   landed: W.landed * WALK, // at the front door
   walked: WALK, // inside, turned to the living room

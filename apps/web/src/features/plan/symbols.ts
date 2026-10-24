@@ -6,8 +6,10 @@ import { DOORS, FRONT_DOOR } from "./flat";
  * flat is a drawing (scene.ts grows those up out of the floor as the walls
  * rise), so every place and size here mirrors a piece in scene.ts.
  *
- * Lines come in tiers, heaviest first: fittings built into the flat (the
- * kitchen, bathrooms, wardrobes, door leaves), then furniture, then the
+ * The door leaves are the building's, drawn from the start; the rest is
+ * drawn in once the flat is shown empty. Lines come in tiers, heaviest
+ * first: fittings built into the flat (the kitchen, bathrooms, wardrobes),
+ * then furniture, then the
  * lightest marks (rugs, shower falls, door swings live in addSheet). Each
  * tier is flat pairs of [x, z] points, metres; `tags` are the small
  * labels a plan puts on appliances.
@@ -53,6 +55,7 @@ function ellipse(out: Pts, x: number, z: number, rx: number, rz: number, steps =
 const line = (out: Pts, x0: number, z0: number, x1: number, z1: number) => out.push(x0, z0, x1, z1);
 
 export function planSymbols(wardrobes: readonly (readonly [number, number, number, number])[]) {
+  const doors: Pts = [];
   const fittings: Pts = [];
   const furniture: Pts = [];
   const light: Pts = [];
@@ -194,9 +197,9 @@ export function planSymbols(wardrobes: readonly (readonly [number, number, numbe
     const face = d.across / 1000 + (d.swing.side * d.swing.wall) / 2000;
     const along = [hinge, hinge + toward * 0.04].sort((p, q) => p - q) as [number, number];
     const perp = [face, face + d.swing.side * w].sort((p, q) => p - q) as [number, number];
-    if (d.run === "ew") rect(fittings, along[0], perp[0], along[1], perp[1]);
-    else rect(fittings, perp[0], along[0], perp[1], along[1]);
+    if (d.run === "ew") rect(doors, along[0], perp[0], along[1], perp[1]);
+    else rect(doors, perp[0], along[0], perp[1], along[1]);
   }
 
-  return { fittings, furniture, light, tags };
+  return { doors, fittings, furniture, light, tags };
 }

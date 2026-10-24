@@ -461,7 +461,8 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 /**
  * What an architect adds to a plan that is not the building: room names,
  * tile joints, door swings, window glass, the furniture and fittings drawn
- * as symbols (symbols.ts), and the metre grid on the ground. All of it lies on the floor or the ground. The
+ * as symbols (symbols.ts, drawn in across the plan by `furnish`), and the
+ * metre grid on the ground. All of it lies on the floor or the ground. The
  * notes that only make sense on a flat drawing fade as the walls rise; room
  * names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them.
@@ -496,6 +497,12 @@ export function addSheet(
    * Text drawn into a canvas and laid flat at height `y`, turned `rot`
    * radians; `track` spaces its letters, in ems.
    */
+  // The furniture and fittings are drawn in across the plan, west to east,
+  // with the first scroll: they are cut away east of this plane.
+  const drawnTo = new THREE.Plane(new THREE.Vector3(-1, 0, 0), BOUNDS.x0 / 1000 - 1);
+  /** The planes what is drawn next is clipped by: set while the furniture is drawn. */
+  let clip: THREE.Plane[] | undefined;
+
   const text = (
     rows: { text: string; size: number; weight?: number; track?: number }[],
     x: number,
@@ -529,7 +536,7 @@ export function addSheet(
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8;
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, clippingPlanes: clip });
     const geo = new THREE.PlaneGeometry(c.width / PX, c.height / PX);
     disposables.push(tex, mat, geo);
     const m = new THREE.Mesh(geo, mat);
@@ -542,7 +549,14 @@ export function addSheet(
   /** Line segments, as flat pairs of [x, y, z] points. */
   const segments = (points: number[], width: number, fade: boolean, color: THREE.Color = ink, opacity = 1) => {
     const geo = new LineSegmentsGeometry().setPositions(points);
-    const mat = new LineMaterial({ color, linewidth: width, worldUnits: false, transparent: fade || opacity < 1, opacity });
+    const mat = new LineMaterial({
+      color,
+      linewidth: width,
+      worldUnits: false,
+      transparent: fade || opacity < 1,
+      opacity,
+      clippingPlanes: clip,
+    });
     lineMats.push(mat);
     disposables.push(geo, mat);
     keep(new LineSegments2(geo, mat), mat, fade);
@@ -631,10 +645,13 @@ export function addSheet(
   // (the 3D pieces stay down until the walls start to rise: see `rise`)
   const symbols = planSymbols(WARDROBES);
   const onFloor = (pts: number[]) => pts.flatMap((v, i) => (i % 2 ? [] : [v, FLOOR * 2, pts[i + 1]!]));
+  segments(onFloor(symbols.doors), 0.9, true);
+  clip = [drawnTo];
   segments(onFloor(symbols.fittings), 0.9, true);
   segments(onFloor(symbols.furniture), 0.7, true, furnitureInk);
   segments(onFloor(symbols.light), 0.5, true, lightInk);
   for (const t of symbols.tags) text([{ text: t.text, size: 0.11, track: 0.08 }], t.x, t.z, { fade: true });
+  clip = undefined;
 
   // ---- the drafting grid: a metre grid on the ground the flat stands on ----
   // It thins out away from the flat, in rings, and stays once the walls rise.
@@ -663,6 +680,11 @@ export function addSheet(
     fade(t: number) {
       for (const m of fader.mats) m.opacity = t;
       for (const o of fader.objects) o.visible = t > 0.001;
+    },
+    /** How far across the plan the furniture and fittings are drawn, 0 (none: an empty flat) to 1 (all). */
+    furnish(t: number) {
+      const [x0, x1] = [BOUNDS.x0 / 1000 - 0.5, BOUNDS.x1 / 1000 + 1.5];
+      drawnTo.constant = x0 + (x1 - x0) * t;
     },
   };
 }
