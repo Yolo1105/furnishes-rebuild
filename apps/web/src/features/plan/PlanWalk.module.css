@@ -56,8 +56,8 @@
 }
 
 /* At the top, a little left of centre, behind the plan: the live site's
-   title, the second word echoed fainter and fainter, each line rising in
-   after the one above. On a phone it keeps to the left margin. */
+   title, its second word a shade fainter, each line rising in after the
+   one above. On a phone it keeps to the left margin. */
 .title {
   z-index: 0;
   top: calc(var(--nav-h) + var(--space-4));
@@ -75,7 +75,7 @@
 .titleEcho {
   display: block;
   font-variation-settings:
-    "wght" 200,
+    "wght" 100,
     "wdth" 118;
   animation: rise var(--dur-title) var(--ease-title) both;
   animation-delay: calc(var(--i, 0) * var(--stagger) * 1.5);

@@ -49,8 +49,8 @@ export function makeRig(aspect: number) {
   const cx = (BOUNDS.x0 + BOUNDS.x1) / 2000;
   const cz = (BOUNDS.y0 + BOUNDS.y1) / 2000;
   // the sheet frames the whole flat, with a margin
-  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 7;
-  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 6;
+  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 9.5;
+  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 8;
   const frame0 = Math.max(flatD, flatW / aspect);
 
   const door = { x: FRONT_DOOR.at / 1000, z: FRONT_DOOR.across / 1000 };
@@ -67,9 +67,9 @@ export function makeRig(aspect: number) {
   const SHEET_LENS = 0.5; // degrees
   const lens = track([[0, L(T(SHEET_LENS))], [s1, L(T(SHEET_LENS))], [s2, L(T(9)), smooth], [s3, L(T(fovWalk)), smoother]]);
   const frame = track([[0, L(frame0)], [s1, L(frame0)], [s2, L(portrait ? 18 : 14), smooth], [s3, L(landFrame), smoother]]);
-  // the sheet sits a little below centre, clear of the bar
+  // the sheet sits a little high, so the flat overlaps the title behind it
   const sheetX = cx;
-  const sheetZ = cz - 0.4;
+  const sheetZ = cz + 0.5;
   const tx = track([[0, sheetX], [s1, sheetX], [s2, 12.6, smooth], [s3, door.x, smooth]]);
   const ty = track([[0, 0], [s1, 0], [s2, 0.8, smooth], [s3, EYE, smooth]]);
   const tz = track([[0, sheetZ], [s1, sheetZ], [s2, 4.2, smooth], [s3, door.z, smooth]]);

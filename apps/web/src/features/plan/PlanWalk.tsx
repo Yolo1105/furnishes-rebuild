@@ -29,8 +29,8 @@ const PANEL_OPEN = STOPS.sheet + 0.02;
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
 
-/** The title's echoes of its second word, each fainter than the last (as on the live site). */
-const ECHOES = [0.9, 0.55, 0.2];
+/** The title's second word, a shade fainter than its first. */
+const ECHOES = [0.9];
 
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
