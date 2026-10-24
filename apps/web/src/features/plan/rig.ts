@@ -6,10 +6,28 @@ import { BOUNDS, CEILING, FRONT_DOOR } from "./flat";
  * which flattens perspective until the model is a true plan; then the cut
  * rises (the walls grow), the camera tips and comes down, the lens opens and
  * the distance shrinks together so there is never a cut, and it walks in
- * through the front door at eye height and turns to the living room.
+ * through the front door at eye height and turns to the living room. That
+ * is the first half of the scroll. In the second it watches the room come
+ * to life: close on the bookcase while it is built, back in the corner while
+ * the materials sweep in, then up over the walls while the furniture moves
+ * to its second layout, and up and away at the end.
  */
 
-export const STOPS = { sheet: 0.08, lifted: 0.42, landed: 0.66 };
+/** How much of the scroll the walk in takes; the room comes to life in the rest. */
+const WALK = 0.5;
+/** The walk's own stops, as shares of the walk. */
+const W = { sheet: 0.08, lifted: 0.42, landed: 0.66 };
+
+/** Where each stage ends, as shares of the whole scroll. */
+export const STOPS = {
+  sheet: W.sheet * WALK, // the plan, as drawn
+  lifted: W.lifted * WALK, // the walls up, seen from above
+  landed: W.landed * WALK, // at the front door
+  walked: WALK, // inside, turned to the living room
+  built: 0.66, // the bookcase built again
+  finished: 0.8, // the materials swept in
+  laid: 0.92, // the furniture in its second layout
+};
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
 const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
@@ -57,7 +75,7 @@ export function makeRig(aspect: number) {
   const EYE = 1.55;
   const OUTSIDE = 3.0; // where the camera lands: this far outside the door, m
   const landFrame = 2 * OUTSIDE * Math.tan((fovWalk * rad) / 2);
-  const { sheet: s1, lifted: s2, landed: s3 } = STOPS;
+  const { sheet: s1, lifted: s2, landed: s3 } = W;
   const L = Math.log;
   const T = (deg: number) => Math.tan((deg * rad) / 2);
 
@@ -82,8 +100,45 @@ export function makeRig(aspect: number) {
   const turn = track([[0.8, 0], [1, 40, smooth]]);
   const lookDown = track([[s3, 0], [1, -7, smooth]]);
 
+  // ---- the room come to life: hold each view while its stage plays out
+  type View = { x: number; y: number; z: number; yaw: number; pitch: number };
+  const walkedIn: View = { x: door.x - 0.15, y: EYE, z: door.z - 1.5, yaw: 40, pitch: -7 };
+  // each view looks a little right of what it shows, so it sits in the open
+  // part of the screen left of the side panel
+  const atBookcase: View = { x: 13.2, y: 1.5, z: 4.4, yaw: 43, pitch: -8 };
+  const inCorner: View = { x: 14.9, y: 2.2, z: 5.0, yaw: 42, pitch: -22 };
+  const overWalls: View = { x: 14.4, y: 4.6, z: 7.4, yaw: 30, pitch: -45 };
+  const away: View = { x: 13.8, y: 8.0, z: 10.5, yaw: 24, pitch: -52 };
+  const { walked, built, finished, laid } = STOPS;
+  const views: [number, View][] = [
+    [walked, walkedIn],
+    [walked + 0.06, atBookcase],
+    [built, atBookcase],
+    [built + 0.04, inCorner],
+    [finished, inCorner],
+    [finished + 0.04, overWalls],
+    [laid, overWalls],
+    [1, away],
+  ];
+  const viewTrack = (key: keyof View) => track(views.map(([s, v], i) => [s, v[key], i ? smoother : undefined]));
+  const later = { x: viewTrack("x"), y: viewTrack("y"), z: viewTrack("z"), yaw: viewTrack("yaw"), pitch: viewTrack("pitch") };
+
   return (sIn: number): Shot => {
-    const s = clamp01(sIn);
+    const sAll = clamp01(sIn);
+    if (sAll > WALK) {
+      return {
+        x: later.x(sAll),
+        y: later.y(sAll),
+        z: later.z(sAll),
+        pitch: later.pitch(sAll) * rad,
+        yaw: later.yaw(sAll) * rad,
+        fov: fovWalk,
+        near: 0.05,
+        far: 200,
+        cut: 6,
+      };
+    }
+    const s = sAll / WALK; // through the walk itself
     const c = cut(s);
     if (s <= s3) {
       const e = elev(s) * rad;

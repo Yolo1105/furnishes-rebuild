@@ -3,8 +3,8 @@
    over its top; on a tall one, up from the foot. Its leading edge comes in on a slope: the top end leads and the
    bottom follows a beat behind, then they meet square; going out, the
    same in reverse. Its steps scroll inside it one for one with the page
-   (PlanWalk moves .content), and each step's parts come in one after
-   another once the step is shown: the outline number, the headline line
+   (PlanWalk sets .scroller's scrollTop), and each step's parts come in one
+   after another once the step is shown: the outline number, the headline line
    by line, the card, then the words. */
 @property --lead {
   syntax: "<percentage>";
@@ -45,15 +45,21 @@
     --trail var(--dur-panel) var(--ease-panel) calc(var(--stagger) * 2);
 }
 
+/* Scrolled by PlanWalk, never by hand: the page's scroll drives it. */
+.scroller {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
 .content {
   padding: var(--nav-h) calc(var(--panel-pad) + var(--space-6)) 0 var(--panel-pad);
-  will-change: transform;
 }
 
 /* Under the bar, the steps fade into the paper as they scroll up past it. */
 .panel::before {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   inset: 0 0 auto;
   height: calc(var(--nav-h) * 1.6);
   background: linear-gradient(var(--color-paper) 60%, transparent);
@@ -61,13 +67,19 @@
   pointer-events: none;
 }
 
+/* A step is as long as its stage (PlanWalk sets each); its words stay
+   pinned near the top while the stage plays out, until the next step's
+   push them on up. */
 .step {
-  position: relative;
+  min-height: var(--step-h, calc(100dvh - var(--nav-h)));
+}
+
+.stepBody {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--space-7));
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: var(--step-h, calc(100dvh - var(--nav-h))); /* PlanWalk sets it to share out the walk */
-  padding: var(--space-7) 0;
+  padding-bottom: var(--space-7);
 }
 
 /* The step's number, huge and in outline only; the words below ride up
@@ -163,6 +175,37 @@
   text-anchor: middle;
 }
 
+/* The finishes, as samples in a row across the card. */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: var(--space-4) var(--space-5);
+  height: 100%;
+  margin: 0;
+  padding: var(--space-5);
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-narrow);
+  text-transform: uppercase;
+}
+
+.swatches li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  border: 1px solid var(--color-line-strong);
+  border-radius: 50%;
+}
+
 .name,
 .body,
 .cta {
@@ -217,7 +260,20 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  translate: var(--space-6) -50%;
+  opacity: 0;
+  transition:
+    translate var(--dur-panel) var(--ease-panel),
+    opacity var(--dur) ease;
+}
+
+/* They slide in once the panel itself is in, not with it. */
+.panel[data-open] .dots {
   translate: 0 -50%;
+  opacity: 1;
+  transition:
+    translate var(--dur-panel) var(--ease-panel) var(--dur-panel),
+    opacity var(--dur-panel) ease var(--dur-panel);
 }
 
 .dots li {

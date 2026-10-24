@@ -23,9 +23,15 @@ import { WalkPanel } from "./WalkPanel";
 /** How far the eased progress closes on the scroll each frame. */
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
-const NOTES_FADE = 0.12;
+const NOTES_FADE = 0.06;
 /** Where in the walk the side panel opens: once the walls are well on their way up. It stays open to the end. */
-const PANEL_OPEN = STOPS.sheet + 0.12;
+const PANEL_OPEN = STOPS.sheet + 0.06;
+/** Where in the walk each of the panel's steps ends: one step to a stage. */
+const STEP_ENDS = [STOPS.lifted, STOPS.landed, STOPS.walked, STOPS.built, STOPS.finished, 1];
+
+/** How far through the stretch from a to b the walk is, 0 to 1. */
+const stage = (s: number, a: number, b: number) => Math.min(1, Math.max(0, (s - a) / (b - a)));
+const smooth = (t: number) => t * t * (3 - 2 * t);
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
 
@@ -48,9 +54,9 @@ export function PlanWalk() {
     const canvas = canvasRef.current;
     const panel = panelRef.current;
     if (!track || !sticky || !canvas || !panel) return;
-    const content = panel.firstElementChild as HTMLElement;
-    const steps = [...content.children] as HTMLElement[];
-    const dots = [...panel.querySelectorAll("li")];
+    const scroller = panel.firstElementChild as HTMLElement;
+    const steps = [...scroller.firstElementChild!.children] as HTMLElement[];
+    const dots = [...panel.lastElementChild!.children];
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -64,7 +70,7 @@ export function PlanWalk() {
     renderer.setClearColor(0x000000, 0);
 
     const palette = { paper: css("--color-paper"), ink: css("--color-ink") };
-    const { scene, cut, lineMats, disposables } = buildFlatScene(palette);
+    const { scene, cut, lineMats, disposables, later } = buildFlatScene(palette);
     const camera = new THREE.PerspectiveCamera(2, 1, 1, 500);
     camera.rotation.order = "YXZ";
     let rig = makeRig(1);
@@ -92,9 +98,11 @@ export function PlanWalk() {
       if (want !== open) {
         open = want;
         panel.toggleAttribute("data-open", open);
+        // the bar turns brown while the panel is in
+        document.documentElement.toggleAttribute("data-walk-panel", open);
       }
-      const y = Math.min(Math.max(0, -r.top - from), Math.max(0, content.scrollHeight - panel.clientHeight));
-      content.style.transform = `translateY(${-y}px)`;
+      const y = Math.min(Math.max(0, -r.top - from), Math.max(0, scroller.scrollHeight - scroller.clientHeight));
+      scroller.scrollTop = y;
       let up = 0;
       steps.forEach((step, i) => {
         const shown = open && step.offsetTop - y < panel.clientHeight * SHOW_AT;
@@ -113,7 +121,12 @@ export function PlanWalk() {
       camera.far = o.far;
       camera.updateProjectionMatrix();
       cut.constant = o.cut;
-      const t = Math.min(1, Math.max(0, (s - STOPS.sheet) / NOTES_FADE));
+      // the room come to life: the bookcase built once the camera is at it,
+      // then the materials, then the second layout
+      later.build(stage(s, STOPS.walked + 0.05, STOPS.built));
+      later.sweep(stage(s, STOPS.built + 0.02, STOPS.finished));
+      later.layout(smooth(stage(s, STOPS.finished + 0.04, STOPS.laid)));
+      const t = stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE);
       const notes = 1 - t * t * (3 - 2 * t);
       sheet?.fade(notes);
       // the page's own words beside the plan go with the plan's notes
@@ -132,9 +145,14 @@ export function PlanWalk() {
       camera.aspect = w / h;
       rig = makeRig(w / h);
       for (const m of lineMats) m.resolution.set(w, h);
-      // the steps share the scroll left once the panel opens, so the last ends with the walk
+      // each step is as long as its stage, so it is up while the stage plays
+      // out; the last runs on a screen further, so it ends with the walk
       const run = track.offsetHeight - window.innerHeight;
-      panel.style.setProperty("--step-h", `${(run * (1 - PANEL_OPEN) + panel.clientHeight) / steps.length}px`);
+      steps.forEach((step, i) => {
+        const from = i ? STEP_ENDS[i - 1]! : PANEL_OPEN;
+        const extra = i === steps.length - 1 ? panel.clientHeight : 0;
+        step.style.setProperty("--step-h", `${(STEP_ENDS[i]! - from) * run + extra}px`);
+      });
       steer();
       draw(eased);
     };
@@ -180,6 +198,7 @@ export function PlanWalk() {
 
     return () => {
       alive = false;
+      document.documentElement.removeAttribute("data-walk-panel");
       cancelAnimationFrame(raf);
       sized.disconnect();
       window.removeEventListener("scroll", onScroll);

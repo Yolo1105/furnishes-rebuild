@@ -32,8 +32,8 @@
   --text-md: 13px;
   --text-input: 16px; /* 16px or more: phones don't zoom into fields */
   --text-title: 28px;
-  --text-display: clamp(28px, 2.6vw, 40px); /* the walk panel's headlines */
-  --text-numeral: clamp(96px, 12vw, 200px); /* the walk panel's outline step numbers */
+  --text-display: clamp(22px, 1.9vw, 30px); /* the walk panel's headlines */
+  --text-numeral: clamp(80px, 9vw, 150px); /* the walk panel's outline step numbers */
   --text-hero: clamp(38px, 5.4vw, 96px); /* the landing title */
   --text-lede: clamp(15px, 1.1vw, 17px);
   --text-caption: clamp(17px, 1.5vw, 21px);
@@ -63,7 +63,7 @@
   --icon: 16px;
   --icon-lg: 32px;
   --card-w: 400px;
-  --walk-length: 600vh; /* scrolling the plan walk takes */
+  --walk-length: 1200vh; /* scrolling the plan walk takes: half to walk in, half for the room */
   --walk-panel: 28vw; /* the walk's side panel, on a wide screen */
   --walk-panel-h: 54dvh; /* the same panel, rising from the foot on a tall one */
   --panel-pad: clamp(24px, 5vw, 80px);

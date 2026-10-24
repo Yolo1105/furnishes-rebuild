@@ -3,6 +3,7 @@ import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
 import { BOUNDS, CEILING, DOOR_HEAD, DOORS, floorOf, FRONT_DOOR, ROOMS, wallBoxes, WINDOWS, type Opening } from "./flat";
+import { FINISH } from "./finishes";
 import { BoxSolid } from "./solid";
 
 /**
@@ -12,6 +13,11 @@ import { BoxSolid } from "./solid";
  * seen only where the cut plane slices it, is ink; edges are ink lines.
  * Nothing is lit, so straight down it is exactly a plan. The scene has no
  * background or ground of its own: it is drawn over the page's moving wash.
+ *
+ * Later in the walk the drawing comes to life, and `later` drives it: the
+ * bookcase is taken apart and built again board by board, real materials
+ * sweep out across the flat from the bookcase, and the living room's
+ * furniture moves to a second layout.
  *
  * World units are metres: x east, y up, z south (sheet y), so the camera's
  * default -z view looks north, the way the plan is drawn.
@@ -33,6 +39,9 @@ export const WARDROBES: readonly [number, number, number, number][] = [
 /** One shade a face, from which way it faces: up is the paper itself. */
 const SHADE = { up: 1, x: 0.93, z: 0.87, down: 0.8 };
 
+/** Where the materials sweep out from: the bookcase, m on the floor (x, z). */
+const SWEEP_FROM = new THREE.Vector2(9.72, 2.0);
+
 export function buildFlatScene(palette: Palette) {
   const scene = new THREE.Scene();
   const paper = new THREE.Color(palette.paper);
@@ -50,6 +59,28 @@ export function buildFlatScene(palette: Palette) {
     polygonOffsetFactor: 1,
     polygonOffsetUnits: 1,
   });
+  // Each vertex also carries its finished colour; a face shows it where the
+  // sweep, a circle growing out across the floor from the bookcase, has reached.
+  const sweep = { value: -1 };
+  faceMat.onBeforeCompile = (shader) => {
+    shader.uniforms.uSweep = sweep;
+    shader.uniforms.uFrom = { value: SWEEP_FROM };
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nattribute vec3 finish;\nvarying vec3 vFinish;\nvarying vec2 vFloor;")
+      .replace(
+        "#include <project_vertex>",
+        "#include <project_vertex>\nvFinish = finish;\nvFloor = (modelMatrix * vec4(transformed, 1.0)).xz;",
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nuniform float uSweep;\nuniform vec2 uFrom;\nvarying vec3 vFinish;\nvarying vec2 vFloor;",
+      )
+      .replace(
+        "#include <color_fragment>",
+        "#include <color_fragment>\ndiffuseColor.rgb = mix(vFinish, diffuseColor.rgb, smoothstep(uSweep - 0.35, uSweep, distance(vFloor, uFrom)));",
+      );
+  };
   // Pushed back as far as the faces, so a thin piece's paper top always wins
   // over its own inside; only the lines sit in front.
   const insideMat = new THREE.MeshBasicMaterial({
@@ -65,24 +96,34 @@ export function buildFlatScene(palette: Palette) {
   pieceInsideMat.color.copy(paper);
   disposables.push(faceMat, insideMat, pieceInsideMat);
 
+  /** What a face is made of: a colour, or one picked by which way the face looks and how high it is. */
+  type Finish = string | ((ny: number, y: number) => string | null) | null;
+
   /**
-   * Paper colours on a geometry's vertices, by the way each face faces; up
-   * faces at or over `inkFrom` m are ink, as the cut shows them.
+   * Paper colours on a geometry's vertices, by the way each face faces (up
+   * faces at or over `inkFrom` m are ink, as the cut shows them), and the
+   * finished colours the sweep turns them to, shaded the same way.
    */
-  const shade = (g: THREE.BufferGeometry, inkFrom = Infinity) => {
+  const shade = (g: THREE.BufferGeometry, inkFrom = Infinity, finish: Finish = null) => {
     const n = g.getAttribute("normal");
     const p = g.getAttribute("position");
     const colors = new Float32Array(n.count * 3);
+    const finished = new Float32Array(n.count * 3);
     const c = new THREE.Color();
     for (let i = 0; i < n.count; i++) {
       const ny = n.getY(i);
       const k =
         ny > 0.5 ? SHADE.up : ny < -0.5 ? SHADE.down : Math.abs(n.getX(i)) > 0.5 ? SHADE.x : SHADE.z;
-      if (ny > 0.5 && p.getY(i) >= inkFrom) c.copy(ink);
+      const inked = ny > 0.5 && p.getY(i) >= inkFrom;
+      if (inked) c.copy(ink);
       else c.copy(paper).multiplyScalar(k);
       colors.set([c.r, c.g, c.b], i * 3);
+      const f = typeof finish === "function" ? finish(ny, p.getY(i)) : finish;
+      if (f && !inked) c.set(f).multiplyScalar(k);
+      finished.set([c.r, c.g, c.b], i * 3);
     }
     g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    g.setAttribute("finish", new THREE.BufferAttribute(finished, 3));
     return g;
   };
 
@@ -97,12 +138,17 @@ export function buildFlatScene(palette: Palette) {
   };
 
   /** A solid object: shaded paper faces, its inside, ink edges. */
-  const solid = (g: THREE.BufferGeometry, width: number, inside: THREE.Material, inkFrom?: number) => {
-    shade(g, inkFrom);
+  const solid = (
+    g: THREE.BufferGeometry,
+    width: number,
+    inside: THREE.Material,
+    { inkFrom, finish = null, into = scene }: { inkFrom?: number; finish?: Finish; into?: THREE.Object3D } = {},
+  ) => {
+    shade(g, inkFrom, finish);
     disposables.push(g);
     const group = new THREE.Group();
     group.add(new THREE.Mesh(g, faceMat), new THREE.Mesh(g, inside), lines(g, width));
-    scene.add(group);
+    into.add(group);
     return group;
   };
 
@@ -124,7 +170,11 @@ export function buildFlatScene(palette: Palette) {
   };
   [...DOORS, FRONT_DOOR, ...WINDOWS].forEach(hole);
   // the walls' tops are ink, so once the cut clears them they read as it did
-  solid(shell.build(), 1.2, insideMat, H - 0.001);
+  solid(shell.build(), 1.2, insideMat, {
+    inkFrom: H - 0.001,
+    // the floor is oak and the walls plaster; the slab's edges stay paper
+    finish: (ny, y) => (ny > 0.5 && Math.abs(y) < 0.01 ? FINISH.floor : Math.abs(ny) < 0.5 && y > -0.01 ? FINISH.wall : null),
+  });
 
   // ---- furniture and fittings ---------------------------------------------
   /** A box from (x0, y0, z0) to (x1, y1, z1), metres. */
@@ -140,30 +190,67 @@ export function buildFlatScene(palette: Palette) {
     g.translate(x, (y0 + y1) / 2, z);
     return g;
   };
-  const piece = (...parts: THREE.BufferGeometry[]) => parts.forEach((g) => solid(g, 0.6, pieceInsideMat));
+  /** Pieces made of `finish`, put `into` a group (the scene by default). */
+  const made = (finish: Finish, into: THREE.Object3D, ...parts: THREE.BufferGeometry[]) =>
+    parts.map((g) => solid(g, 0.6, pieceInsideMat, { finish, into }));
+  const piece = (...parts: THREE.BufferGeometry[]) => made(null, scene, ...parts);
 
-  // living room: the sofa faces the television on the north wall
-  piece(
+  /**
+   * A set of furniture that can move to a second layout: its pieces turn
+   * `turn` radians about `pivot` (x, z) and shift by `shift` (x, z).
+   */
+  const set = (pivot: [number, number], turn: number, shift: [number, number]) => {
+    const outer = new THREE.Group();
+    const inner = new THREE.Group();
+    outer.position.set(pivot[0], 0, pivot[1]);
+    inner.position.set(-pivot[0], 0, -pivot[1]);
+    outer.add(inner);
+    scene.add(outer);
+    return {
+      into: inner,
+      /** 0 for the first layout, 1 for the second. */
+      at(t: number) {
+        outer.rotation.y = turn * t;
+        outer.position.set(pivot[0] + shift[0] * t, 0, pivot[1] + shift[1] * t);
+      },
+    };
+  };
+
+  // living room: the sofa faces the television on the north wall; in the
+  // second layout it turns to face the bookcase, and the dining table turns
+  // lengthways by the west wall
+  const lounge = set([12.45, 3.05], Math.PI / 2, [0, 0]);
+  made(
+    FINISH.moss,
+    lounge.into,
     box(11.25, 0, 3.1, 13.65, 0.4, 4.0), // base
-    ...[0, 1, 2].map((i) => box(11.43 + i * 0.68, 0.4, 3.12, 11.43 + (i + 1) * 0.68 - 0.02, 0.46, 3.8)), // seat cushions
     box(11.25, 0.4, 3.8, 13.65, 0.82, 4.0), // back
     box(11.25, 0.4, 3.1, 11.42, 0.62, 3.8), // arms
     box(13.48, 0.4, 3.1, 13.65, 0.62, 3.8),
-    box(11.9, 0, 2.1, 13.0, 0.4, 2.7), // coffee table
-    box(11.0, 0.002, 1.8, 13.9, 0.012, 4.3), // rug
-    box(11.65, 0, 0.01, 13.25, 0.5, 0.43), // television console
-    box(11.9, 0.62, 0.15, 13.0, 1.25, 0.2), // television
-    // an armchair by the east window, turned to the room
+  );
+  made(FINISH.mossLight, lounge.into, ...[0, 1, 2].map((i) => box(11.43 + i * 0.68, 0.4, 3.12, 11.43 + (i + 1) * 0.68 - 0.02, 0.46, 3.8))); // seat cushions
+  made(FINISH.walnut, lounge.into, box(11.9, 0, 2.1, 13.0, 0.4, 2.7)); // coffee table
+  made(FINISH.wool, lounge.into, box(11.0, 0.002, 1.8, 13.9, 0.012, 4.3)); // rug
+  made(FINISH.oak, scene, box(11.65, 0, 0.01, 13.25, 0.5, 0.43)); // television console
+  made(FINISH.screen, scene, box(11.9, 0.62, 0.15, 13.0, 1.25, 0.2)); // television
+  // an armchair by the east window, turned to the room, and its side table
+  made(
+    FINISH.rust,
+    scene,
     box(14.25, 0, 1.9, 15.05, 0.4, 2.7),
     box(14.88, 0.4, 1.9, 15.05, 0.8, 2.7),
     box(14.25, 0.4, 1.9, 14.88, 0.6, 2.05),
     box(14.25, 0.4, 2.55, 14.88, 0.6, 2.7),
-    disc(14.75, 3.25, 0.22, 0.22, 0, 0.55), // side table
   );
+  made(FINISH.walnut, scene, disc(14.75, 3.25, 0.22, 0.22, 0, 0.55));
+
   // dining: a table and four chairs by the kitchen
+  const dining = set([11.0, 5.15], Math.PI / 2, [-0.2, 0]);
   const table = (x0: number, z0: number, x1: number, z1: number) => {
     const l = 0.05;
-    piece(
+    made(
+      FINISH.oak,
+      dining.into,
       box(x0, 0.71, z0, x1, 0.75, z1),
       box(x0, 0, z0, x0 + l, 0.71, z0 + l),
       box(x1 - l, 0, z0, x1, 0.71, z0 + l),
@@ -172,23 +259,26 @@ export function buildFlatScene(palette: Palette) {
     );
   };
   table(10.2, 4.7, 11.8, 5.6);
-  const chair = (x: number, z: number, backZ: number) =>
-    piece(box(x - 0.22, 0, z - 0.22, x + 0.22, 0.45, z + 0.22), box(x - 0.22, 0.45, backZ - 0.02, x + 0.22, 0.9, backZ + 0.02));
-  chair(10.6, 4.45, 4.25);
-  chair(11.4, 4.45, 4.25);
-  chair(10.6, 5.85, 6.05);
-  chair(11.4, 5.85, 6.05);
+  const chair = (x: number, z: number, backZ: number, finish: Finish = null, into: THREE.Object3D = scene) =>
+    made(finish, into, box(x - 0.22, 0, z - 0.22, x + 0.22, 0.45, z + 0.22), box(x - 0.22, 0.45, backZ - 0.02, x + 0.22, 0.9, backZ + 0.02));
+  chair(10.6, 4.45, 4.25, FINISH.walnut, dining.into);
+  chair(11.4, 4.45, 4.25, FINISH.walnut, dining.into);
+  chair(10.6, 5.85, 6.05, FINISH.walnut, dining.into);
+  chair(11.4, 5.85, 6.05, FINISH.walnut, dining.into);
 
-  // the Furnishes bookcase on the living room's west wall: real 18 mm boards
+  // the Furnishes bookcase on the living room's west wall: real 18 mm boards,
+  // each its own piece so it can be built board by board
   const bx0 = 9.52;
   const bx1 = bx0 + 0.4;
   const [bz0, bz1, bh] = [1.2, 2.8, 1.8];
-  piece(
+  const boards = made(
+    FINISH.furnishes,
+    scene,
+    box(bx0, 0.06, bz0, bx1, 0.06 + PANEL, bz1), // bottom
     box(bx0, 0, bz0, bx1, bh, bz0 + PANEL), // side
     box(bx0, 0, bz1 - PANEL, bx1, bh, bz1), // side
-    box(bx0, bh - PANEL, bz0, bx1, bh, bz1), // top
-    box(bx0, 0.06, bz0, bx1, 0.06 + PANEL, bz1), // bottom
     ...[0.48, 0.9, 1.32].map((y) => box(bx0, y, bz0 + PANEL, bx1, y + PANEL, bz1 - PANEL)), // shelves
+    box(bx0, bh - PANEL, bz0, bx1, bh, bz1), // top
   );
 
   // bedrooms: each bed's head against the north, a duvet turned down, pillows
@@ -263,7 +353,37 @@ export function buildFlatScene(palette: Palette) {
   // the yard: a washing machine in its corner
   piece(box(5.92, 0, 8.36, 6.52, 0.85, 8.98), disc(6.22, 8.67, 0.2, 0.2, 0.85, 0.856));
 
-  return { scene, cut, lineMats, disposables };
+  const smooth = (a: number, b: number, t: number) => {
+    const x = Math.min(1, Math.max(0, (t - a) / (b - a)));
+    return x * x * (3 - 2 * x);
+  };
+
+  const later = {
+    /**
+     * The bookcase taken apart and built again, 0 to 1: its boards all lift
+     * out into the room together, then go back one at a time, bottom first,
+     * each on a little arc.
+     */
+    build(t: number) {
+      const out = smooth(0, 0.22, t);
+      boards.forEach((board, i) => {
+        const back = smooth(0.3 + i * 0.085, 0.42 + i * 0.085, t);
+        const away = out * (1 - back);
+        board.position.set(away * (0.9 + i * 0.16), away * 0.12 + Math.sin(Math.PI * back) * 0.18 * out, 0);
+      });
+    },
+    /** How far the materials have swept out from the bookcase, 0 (none) to 1 (the whole flat). */
+    sweep(t: number) {
+      sweep.value = t <= 0 ? -1 : t * 20;
+    },
+    /** The living room's furniture, 0 in its first layout, 1 in its second. */
+    layout(t: number) {
+      lounge.at(t);
+      dining.at(t);
+    },
+  };
+
+  return { scene, cut, lineMats, disposables, later };
 }
 
 /** A line material and the objects that use it, so the plan's notes can fade. */
@@ -271,10 +391,10 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 
 /**
  * What an architect adds to a plan that is not the building: room names,
- * tile joints, door swings,
- * window glass and wardrobe crosses, and the metre grid on the ground. All of it lies on the floor or the
- * ground. The notes that only make sense on a flat drawing fade as the walls
- * rise; room names, tiles, window glass and the ground grid stay.
+ * tile joints, door swings, window glass and wardrobe crosses, and the
+ * metre grid on the ground. All of it lies on the floor or the ground. The
+ * notes that only make sense on a flat drawing fade as the walls rise; room
+ * names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them.
  */
 export function addSheet(

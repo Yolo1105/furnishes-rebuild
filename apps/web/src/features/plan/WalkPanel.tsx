@@ -1,14 +1,16 @@
 import Link from "next/link";
 import type { CSSProperties, Ref } from "react";
 import { routes } from "@/lib/routes";
+import { SWATCHES } from "./finishes";
 import button from "./InkButton.module.css";
 import styles from "./WalkPanel.module.css";
 
 /**
  * The panel that slides in beside the walk and says what is going on, one
- * step at a time. PlanWalk opens it, scrolls its steps and marks each one
- * shown as it comes up (data-open, data-shown, data-active); everything
- * else here is markup and CSS.
+ * step at a time. PlanWalk opens it, scrolls its steps (the scroller's
+ * scrollTop, one for one with the page) and marks each one shown as it
+ * comes up (data-open, data-shown, data-active); everything else here is
+ * markup and CSS.
  */
 
 type Step = {
@@ -16,7 +18,8 @@ type Step = {
   label: string;
   lines: string[];
   body: string;
-  card?: boolean;
+  /** a card above the words: the bookcase drawn, or the finishes */
+  card?: "bookcase" | "swatches";
   name?: string;
   cta?: boolean;
 };
@@ -32,20 +35,37 @@ const STEPS: Step[] = [
     no: "02",
     label: "The walls",
     lines: ["Then the walls", "go up."],
-    card: true,
-    name: "The Furnishes bookcase",
-    body: "Built for that wall, from 18 mm boards, to the millimetre. Every piece we make starts from your plan.",
+    body: "The drawing becomes rooms you can stand in, at their real height, with light through their windows.",
   },
   {
     no: "03",
     label: "Inside",
-    lines: ["Step inside.", "Make it yours."],
-    body: "Move a piece, change a finish, try another layout. What you see here is what we make.",
+    lines: ["Step inside."],
+    body: "Through the front door at eye level, the way you will walk in on the first day.",
+  },
+  {
+    no: "04",
+    label: "Board by board",
+    lines: ["Made for that wall,", "board by board."],
+    card: "bookcase",
+    name: "The Furnishes bookcase",
+    body: "Cut to the millimetre from 18 mm boards, and put together in your home. Every piece we make starts from your plan.",
+  },
+  {
+    no: "05",
+    label: "Materials",
+    lines: ["Then choose what", "it is made of."],
+    card: "swatches",
+    body: "Oak or walnut, wool or linen, any colour: try a finish across the whole room before you decide.",
+  },
+  {
+    no: "06",
+    label: "Your turn",
+    lines: ["Try another layout.", "Make it yours."],
+    body: "Turn the sofa, move the table, see what fits. Then start on your own room.",
     cta: true,
   },
 ];
-
-export const STEP_COUNT = STEPS.length;
 
 /** The bookcase from the plan, drawn in elevation with its two main sizes. */
 function BookcaseDrawing() {
@@ -70,41 +90,57 @@ function BookcaseDrawing() {
   );
 }
 
+/** The finishes the room sweeps into, as round samples with their names. */
+function Swatches() {
+  return (
+    <ul className={styles.swatches}>
+      {SWATCHES.map((s) => (
+        <li key={s.name}>
+          <span className={styles.swatch} style={{ background: s.color }} />
+          {s.name}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
   return (
     <aside ref={ref} className={styles.panel} aria-label="What you are looking at">
-      <div className={styles.content}>
-        {STEPS.map((step) => (
-          <section key={step.no} className={styles.step}>
-            <p className={styles.numeral} aria-hidden="true">
-              {step.no}
-            </p>
-            <p className={styles.label}>
-              {step.no} · {step.label}
-            </p>
-            <h2 className={styles.headline}>
-              {step.lines.map((line, i) => (
-                <span key={line} className={styles.line} style={{ "--i": i } as CSSProperties}>
-                  <span>{line}</span>
-                </span>
-              ))}
-            </h2>
-            {step.card && (
-              <figure className={styles.card}>
-                <div className={styles.cardArt}>
-                  <BookcaseDrawing />
-                </div>
-              </figure>
-            )}
-            {step.name && <p className={styles.name}>{step.name}</p>}
-            <p className={styles.body}>{step.body}</p>
-            {step.cta && (
-              <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
-                Design your room
-              </Link>
-            )}
-          </section>
-        ))}
+      <div className={styles.scroller}>
+        <div className={styles.content}>
+          {STEPS.map((step) => (
+            <section key={step.no} className={styles.step}>
+              <div className={styles.stepBody}>
+                <p className={styles.numeral} aria-hidden="true">
+                  {step.no}
+                </p>
+                <p className={styles.label}>
+                  {step.no} · {step.label}
+                </p>
+                <h2 className={styles.headline}>
+                  {step.lines.map((line, i) => (
+                    <span key={line} className={styles.line} style={{ "--i": i } as CSSProperties}>
+                      <span>{line}</span>
+                    </span>
+                  ))}
+                </h2>
+                {step.card && (
+                  <figure className={styles.card}>
+                    <div className={styles.cardArt}>{step.card === "bookcase" ? <BookcaseDrawing /> : <Swatches />}</div>
+                  </figure>
+                )}
+                {step.name && <p className={styles.name}>{step.name}</p>}
+                <p className={styles.body}>{step.body}</p>
+                {step.cta && (
+                  <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
+                    Design your room
+                  </Link>
+                )}
+              </div>
+            </section>
+          ))}
+        </div>
       </div>
       <ol className={styles.dots} aria-hidden="true">
         {STEPS.map((step) => (
