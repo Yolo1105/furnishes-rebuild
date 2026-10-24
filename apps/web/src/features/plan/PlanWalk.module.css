@@ -74,7 +74,7 @@
 .titleEcho {
   display: block;
   font-variation-settings:
-    "wght" 500,
+    "wght" 200,
     "wdth" 118;
   animation: rise var(--dur-title) var(--ease-title) both;
   animation-delay: calc(var(--i, 0) * var(--stagger) * 1.5);
