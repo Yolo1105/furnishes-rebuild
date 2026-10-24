@@ -1,7 +1,6 @@
 /* The panel beside the walk, over whatever is behind it. On a wide screen
    it wipes in from the right, the full height of the screen with the bar
-   over its top (whose links turn ink while it is open: SiteHeader); on a
-   tall one, up from the foot. Its leading edge comes in on a slope: the top end leads and the
+   over its top; on a tall one, up from the foot. Its leading edge comes in on a slope: the top end leads and the
    bottom follows a beat behind, then they meet square; going out, the
    same in reverse. Its steps scroll inside it one for one with the page
    (PlanWalk moves .content), and each step's parts come in one after

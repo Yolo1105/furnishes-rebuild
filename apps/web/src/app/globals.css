@@ -64,7 +64,7 @@
   --icon-lg: 32px;
   --card-w: 400px;
   --walk-length: 600vh; /* scrolling the plan walk takes */
-  --walk-panel: 34vw; /* the walk's side panel, on a wide screen */
+  --walk-panel: 28vw; /* the walk's side panel, on a wide screen */
   --walk-panel-h: 54dvh; /* the same panel, rising from the foot on a tall one */
   --panel-pad: clamp(24px, 5vw, 80px);
 

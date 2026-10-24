@@ -1,6 +1,7 @@
-/* Type and colour follow the live header (furnishes_prod public-shell): cream
-   on the orange that always sits at the top of the page. The bar has no
-   background of its own: the page shows through it. */
+/* Type follows the live header (furnishes_prod public-shell); its colour is
+   the site's ink, over the orange at the top of the page and the paper of
+   the walk's panel alike. The bar has no background of its own: the page
+   shows through it. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -12,8 +13,8 @@
   min-height: var(--nav-h);
   padding: var(--nav-pad-y) var(--gutter);
   /* The bar's ink, and the colour drawn on a filled ink shape. */
-  --bar-fg: var(--color-on-orange);
-  --bar-on-fg: var(--color-orange-top);
+  --bar-fg: var(--color-ink);
+  --bar-on-fg: var(--color-cream);
   color: var(--bar-fg);
   font-family: var(--font-mono);
   font-size: var(--text-nav);
@@ -33,17 +34,6 @@
 
 .end {
   justify-self: end;
-  color: var(--bar-fg);
-  transition: color var(--dur-panel) var(--ease-panel);
-}
-
-/* While the landing walk's side panel is open on the right, the links over
-   it are ink on its paper (PlanWalk marks the page). */
-@media (min-aspect-ratio: 1/1) {
-  :global(html[data-walk-panel]) .end {
-    --bar-fg: var(--color-ink);
-    --bar-on-fg: var(--color-cream);
-  }
 }
 
 .link {
