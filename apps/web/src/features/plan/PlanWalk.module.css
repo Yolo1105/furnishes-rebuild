@@ -60,7 +60,7 @@
    rising in after the one above. */
 .title {
   z-index: 0;
-  top: calc(var(--nav-h) + var(--space-4));
+  top: calc(var(--nav-h) + var(--space-7) * 2.5); /* low enough that the plan's corner crosses its second line */
   left: var(--gutter);
   margin: 0 0 0 -0.09em; /* the wide caps sit inside their box: line the ink up with the bar */
   color: var(--color-rust);
