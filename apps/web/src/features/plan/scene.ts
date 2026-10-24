@@ -26,8 +26,8 @@ const PANEL = 0.018; // Furnishes board thickness, m
 /** Built-in wardrobes, [x0, z0, x1, z1] in metres: the plan marks each with a cross. */
 export const WARDROBES: readonly [number, number, number, number][] = [
   [0.05, 5.2, 2.0, 5.79], // master
-  [8.78, 0.05, 9.37, 2.2], // bedroom 2
-  [3.35, 2.9, 4.95, 3.47], // bedroom 3
+  [8.805, 0.05, 9.395, 2.2], // bedroom 2
+  [3.35, 2.925, 4.95, 3.495], // bedroom 3
 ];
 
 /** One shade a face, from which way it faces: up is the paper itself. */
@@ -184,7 +184,7 @@ export function buildFlatScene(palette: Palette) {
   chair(11.4, 5.85, 6.05);
 
   // the Furnishes bookcase on the living room's west wall: real 18 mm boards
-  const bx0 = 9.545;
+  const bx0 = 9.52;
   const bx1 = bx0 + 0.4;
   const [bz0, bz1, bh] = [1.2, 2.8, 1.8];
   piece(
@@ -209,9 +209,9 @@ export function buildFlatScene(palette: Palette) {
     );
   };
   const bedside = (x0: number, z0: number) => piece(box(x0, 0, z0, x0 + 0.42, 0.5, z0 + 0.4));
-  bed(0.55, 1.935, 2.15, 4.035); // master
-  bedside(0.08, 1.955);
-  bedside(2.2, 1.955);
+  bed(0.55, 1.91, 2.15, 4.01); // master
+  bedside(0.08, 1.93);
+  bedside(2.2, 1.93);
   bed(6.85, 0.05, 7.85, 2.15); // bedroom 2
   bedside(7.9, 0.05);
   bed(3.5, 0.05, 4.5, 2.15); // bedroom 3
@@ -236,8 +236,8 @@ export function buildFlatScene(palette: Palette) {
   basin(1.75, 0.01, 2.85, 0.5);
   shower(0.01, 0.01, 0.9, 1.69);
   wc(4.2, 6.79, -1); // bathroom
-  basin(3.235, 6.0, 3.73, 6.79);
-  shower(4.75, 5.035, 5.665, 6.79);
+  basin(3.21, 6.0, 3.7, 6.79);
+  shower(4.75, 5.01, 5.69, 6.79);
 
   // kitchen: counters on the south and east walls, a sink under the window,
   // the hob, the fridge by the yard door
@@ -249,7 +249,7 @@ export function buildFlatScene(palette: Palette) {
     plate(12.02, 8.5, 12.38, 8.9, 0.9),
     plate(9.25, 8.48, 9.95, 8.92, 0.9), // hob
     ...[9.43, 9.77].flatMap((x) => [8.6, 8.8].map((z) => disc(x, z, 0.08, 0.08, 0.906, 0.91))),
-    box(7.645, 0, 6.545, 8.345, 1.8, 7.245), // fridge
+    box(7.62, 0, 6.52, 8.32, 1.8, 7.22), // fridge
   );
   // each hinged door's leaf, standing open square to its wall
   for (const d of [...DOORS, FRONT_DOOR]) {
@@ -265,7 +265,7 @@ export function buildFlatScene(palette: Palette) {
   }
 
   // the yard: a washing machine in its corner
-  piece(box(5.845, 0, 8.36, 6.445, 0.85, 8.98), disc(6.145, 8.67, 0.2, 0.2, 0.85, 0.856));
+  piece(box(5.82, 0, 8.36, 6.42, 0.85, 8.98), disc(6.12, 8.67, 0.2, 0.2, 0.85, 0.856));
 
   return { scene, cut, lineMats, disposables };
 }
@@ -276,10 +276,9 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 /**
  * What an architect adds to a plan that is not the building: room names and
  * areas, tile joints, dimension strings round the outside, door swings,
- * window glass, wardrobe crosses, the north point, the title block and scale
- * bar. All of it lies on the floor or the ground. The notes that only make
- * sense on a flat drawing fade as the walls rise; room names, tiles and
- * window glass stay.
+ * window glass, wardrobe crosses and the north point. All of it lies on
+ * the floor or the ground. The notes that only make sense on a flat drawing
+ * fade as the walls rise; room names, tiles and window glass stay.
  * `lineMats` collects the line materials so the caller can size them.
  */
 export function addSheet(
@@ -503,24 +502,6 @@ export function addSheet(
   fill([[nx, nz - nr * 0.92], [nx + nr * 0.38, nz + nr * 0.62], [nx, nz + nr * 0.3]], true);
   segments([nx, FLOOR, nz - nr * 0.92, nx - nr * 0.38, FLOOR, nz + nr * 0.62, nx - nr * 0.38, FLOOR, nz + nr * 0.62, nx, FLOOR, nz + nr * 0.3], 0.6, true);
   text([{ text: "N", size: 0.22 }], nx, nz - nr - 0.26, { fade: true });
-
-  // ---- the title block and a scale bar, below the flat's south-east corner --
-  const tx = b.x1 - 2.6;
-  text(
-    [
-      { text: "furnishes.", size: 0.32, weight: 700 },
-      { text: "5-ROOM HDB  ·  FLOOR PLAN  ·  1:100", size: 0.16, track: 0.06 },
-    ],
-    tx,
-    b.y1 + 1.7,
-    { fade: true },
-  );
-  const [s0, sz, sh] = [tx - 2.5, b.y1 + 2.5, 0.08];
-  for (let m = 0; m < 5; m++) {
-    if (m % 2 === 0) fill([[s0 + m, sz], [s0 + m + 1, sz], [s0 + m + 1, sz + sh], [s0 + m, sz + sh]], true);
-  }
-  segments([s0, FLOOR, sz, s0 + 5, FLOOR, sz, s0, FLOOR, sz + sh, s0 + 5, FLOOR, sz + sh, s0 + 5, FLOOR, sz, s0 + 5, FLOOR, sz + sh], 0.6, true);
-  for (const m of [0, 1, 2, 5]) text([{ text: m === 5 ? "5 m" : `${m}`, size: 0.15 }], s0 + m + (m === 5 ? 0.17 : 0), sz + sh + 0.2, { fade: true });
 
   return {
     /** How much of the flat-drawing notes shows, 0 to 1. */

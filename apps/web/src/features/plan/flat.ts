@@ -26,8 +26,8 @@ export const ROOMS: readonly Room[] = [
 
 /** Wall height, and thickness round the outside and between rooms, mm. */
 export const CEILING = 2600;
-export const OUTER_WALL = 200;
-export const PARTITION = 150;
+export const OUTER_WALL = 150;
+export const PARTITION = 100;
 const GAP = 300; // between neighbouring rooms in ROOMS
 
 /**
@@ -88,7 +88,7 @@ export const DOORS: readonly Opening[] = [
 export const FRONT_DOOR: Opening = {
   run: "ew",
   at: 14050,
-  across: 6400,
+  across: 6375,
   width: 850,
   bottom: 0,
   top: DOOR_HEAD,
@@ -106,15 +106,15 @@ const win = (run: Opening["run"], at: number, across: number, width: number, sil
 
 /** Windows in the outside walls. */
 export const WINDOWS: readonly Opening[] = [
-  win("ew", 12450, -100, 3000), // living, north
-  win("ns", 2200, 15400, 1500), // living, east
-  win("ew", 12000, 9100, 1000), // kitchen, south
-  win("ns", 3900, -100, 1500), // master, west
-  win("ew", 7950, -100, 1200), // bedroom 2, north
-  win("ew", 4800, -100, 1500), // bedroom 3, north
+  win("ew", 12450, -75, 3000), // living, north
+  win("ns", 2200, 15375, 1500), // living, east
+  win("ew", 12000, 9075, 1000), // kitchen, south
+  win("ns", 3900, -75, 1500), // master, west
+  win("ew", 7950, -75, 1200), // bedroom 2, north
+  win("ew", 4800, -75, 1500), // bedroom 3, north
   win("ew", 5150, 6900, 600, 1500, 2100), // bathroom, south
-  win("ns", 450, -100, 600, 1500, 2100), // master bath, west
-  win("ew", 6650, 9100, 1200), // yard, south
+  win("ns", 450, -75, 600, 1500, 2100), // master bath, west
+  win("ew", 6650, 9075, 1200), // yard, south
 ];
 
 /** The flat's bounds on the sheet, outer walls included, mm. */

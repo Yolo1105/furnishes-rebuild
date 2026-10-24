@@ -48,9 +48,9 @@ export function makeRig(aspect: number) {
   const fovWalk = portrait ? 70 : aspect < 1.5 ? 58 : 52;
   const cx = (BOUNDS.x0 + BOUNDS.x1) / 2000;
   const cz = (BOUNDS.y0 + BOUNDS.y1) / 2000;
-  // the sheet frames the whole flat, its dimensions and title block, with a margin
+  // the sheet frames the whole flat and its dimensions, with a margin
   const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 5.5;
-  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 6.5;
+  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 5.5;
   const frame0 = Math.max(flatD, flatW / aspect);
 
   const door = { x: FRONT_DOOR.at / 1000, z: FRONT_DOOR.across / 1000 };
@@ -69,7 +69,8 @@ export function makeRig(aspect: number) {
   const frame = track([[0, L(frame0)], [s1, L(frame0)], [s2, L(portrait ? 18 : 14), smooth], [s3, L(landFrame), smoother]]);
   const tx = track([[0, cx], [s1, cx], [s2, 12.6, smooth], [s3, door.x, smooth]]);
   const ty = track([[0, 0], [s1, 0], [s2, 0.8, smooth], [s3, EYE, smooth]]);
-  const tz = track([[0, cz], [s1, cz], [s2, 4.2, smooth], [s3, door.z, smooth]]);
+  const sheetZ = cz - 0.4; // a little north of centre, so the top dimensions clear the bar
+  const tz = track([[0, sheetZ], [s1, sheetZ], [s2, 4.2, smooth], [s3, door.z, smooth]]);
   // walls first: the cut climbs to just over them, then clears everything
   const cut = track([[0, 1.2], [s1 + 0.01, 1.2], [s2, CEILING / 1000 + 0.05, smooth], [s3, 6, smooth]]);
 

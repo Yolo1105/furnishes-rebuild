@@ -21,19 +21,11 @@ const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
 const NOTES_FADE = 0.12;
 
-/** The captions, each shown over a stretch of the walk [from, to]. */
-const CAPTIONS = [
-  { from: 0, to: 0.1, no: "01", text: "Every home starts as a plan." },
-  { from: 0.16, to: 0.4, no: "02", text: "Here it is drawn to scale: a 5-room HDB flat." },
-  { from: 0.7, to: 1.01, no: "03", text: "Step inside. Everything in it you can change." },
-];
-
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 export function PlanWalk() {
   const trackRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [caption, setCaption] = useState<number>(0);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -105,7 +97,6 @@ export function PlanWalk() {
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
       if (eased !== shown) draw(eased);
-      setCaption(CAPTIONS.findIndex((c) => eased >= c.from && eased < c.to));
       if (eased !== target) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
@@ -151,12 +142,6 @@ export function PlanWalk() {
         ) : (
           <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         )}
-        {CAPTIONS.map((c, i) => (
-          <p key={c.no} className={styles.caption} data-on={i === caption ? "true" : undefined}>
-            <span className={styles.no}>{c.no}</span>
-            {c.text}
-          </p>
-        ))}
       </div>
     </section>
   );
