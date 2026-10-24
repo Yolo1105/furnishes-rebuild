@@ -24,8 +24,8 @@ import { WalkPanel } from "./WalkPanel";
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
 const NOTES_FADE = 0.12;
-/** Where in the walk the side panel opens: as the walls start to rise. It stays open to the end. */
-const PANEL_OPEN = STOPS.sheet + 0.02;
+/** Where in the walk the side panel opens: once the walls are well on their way up. It stays open to the end. */
+const PANEL_OPEN = STOPS.sheet + 0.12;
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
 
@@ -193,7 +193,12 @@ export function PlanWalk() {
       {/* The wash in CSS until its canvas draws, as on every stage. */}
       <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
         <LivingGradient />
-        {/* behind the plan, which is drawn over it */}
+        {failed ? (
+          <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
+        ) : (
+          <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
+        )}
+
         <h1 className={styles.title} aria-label="Interior Revolution">
           <span className={styles.titleMain}>Interior</span>
           {ECHOES.map((o, i) => (
@@ -202,11 +207,6 @@ export function PlanWalk() {
             </span>
           ))}
         </h1>
-        {failed ? (
-          <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
-        ) : (
-          <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
-        )}
 
         <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
           Design your room

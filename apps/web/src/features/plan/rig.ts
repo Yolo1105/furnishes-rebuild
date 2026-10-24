@@ -67,9 +67,9 @@ export function makeRig(aspect: number) {
   const SHEET_LENS = 0.5; // degrees
   const lens = track([[0, L(T(SHEET_LENS))], [s1, L(T(SHEET_LENS))], [s2, L(T(9)), smooth], [s3, L(T(fovWalk)), smoother]]);
   const frame = track([[0, L(frame0)], [s1, L(frame0)], [s2, L(portrait ? 18 : 14), smooth], [s3, L(landFrame), smoother]]);
-  // the sheet sits a little high, so the flat overlaps the title behind it
+  // the sheet is centred on the screen
   const sheetX = cx;
-  const sheetZ = cz + 0.3;
+  const sheetZ = cz;
   const tx = track([[0, sheetX], [s1, sheetX], [s2, 12.6, smooth], [s3, door.x, smooth]]);
   const ty = track([[0, 0], [s1, 0], [s2, 0.8, smooth], [s3, EYE, smooth]]);
   const tz = track([[0, sheetZ], [s1, sheetZ], [s2, 4.2, smooth], [s3, door.z, smooth]]);
