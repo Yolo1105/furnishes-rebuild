@@ -177,15 +177,36 @@ export function buildFlatScene(palette: Palette) {
   return { scene, cut, lineMats, disposables };
 }
 
-/** Text drawn into a canvas and laid flat on the floor, for room names and the title block. */
-export function addLabels(
+/** A line material and the objects that use it, so the plan's notes can fade. */
+type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
+
+/**
+ * What an architect adds to a plan that is not the building: room names and
+ * sizes, dimension strings round the outside, door swings, window lines and
+ * the title block. All of it lies on the floor or the ground. The notes that
+ * only make sense on a flat drawing (dimensions, door swings, the title
+ * block) fade as the walls rise; room names and window lines stay.
+ * `lineMats` collects the line materials so the caller can size them.
+ */
+export function addSheet(
   scene: THREE.Scene,
   palette: Palette,
   font: string,
   disposables: { dispose(): void }[],
+  lineMats: LineMaterial[],
 ) {
   const PX = 220; // canvas pixels a metre
-  const label = (rows: { text: string; size: number; weight?: number }[], x: number, z: number) => {
+  const FLOOR = 0.003; // notes lie this far over the floor, m
+  const fader: Fader = { mats: [], objects: [] };
+  const ink = new THREE.Color(palette.ink);
+
+  /** Text drawn into a canvas and laid flat, turned `rot` radians on the floor. */
+  const text = (
+    rows: { text: string; size: number; weight?: number }[],
+    x: number,
+    z: number,
+    { rot = 0, fade = false }: { rot?: number; fade?: boolean } = {},
+  ) => {
     const c = document.createElement("canvas");
     const g = c.getContext("2d")!;
     const fonts = rows.map((r) => `${r.weight ?? 400} ${r.size * PX}px ${font}`);
@@ -199,10 +220,11 @@ export function addLabels(
     c.height = Math.ceil(lead.reduce((a, b) => a + b, 0)) + 8;
     g.fillStyle = palette.ink;
     g.textBaseline = "middle";
+    g.textAlign = "center";
     let y = 4;
     rows.forEach((r, i) => {
       g.font = fonts[i]!;
-      g.fillText(r.text, 4, y + lead[i]! / 2);
+      g.fillText(r.text, c.width / 2, y + lead[i]! / 2);
       y += lead[i]!;
     });
     const tex = new THREE.CanvasTexture(c);
@@ -212,24 +234,44 @@ export function addLabels(
     const geo = new THREE.PlaneGeometry(c.width / PX, c.height / PX);
     disposables.push(tex, mat, geo);
     const m = new THREE.Mesh(geo, mat);
-    m.rotation.x = -Math.PI / 2;
-    m.position.set(x, 0.004, z);
+    m.rotation.set(-Math.PI / 2, 0, rot);
+    m.position.set(x, FLOOR + 0.001, z);
     m.renderOrder = 2;
     scene.add(m);
+    if (fade) {
+      fader.mats.push(mat);
+      fader.objects.push(m);
+    }
   };
 
+  /** Line segments, as flat pairs of [x, y, z] points. */
+  const segments = (points: number[], width: number, fade: boolean) => {
+    const geo = new LineSegmentsGeometry().setPositions(points);
+    const mat = new LineMaterial({ color: ink, linewidth: width, worldUnits: false, transparent: fade });
+    const l = new LineSegments2(geo, mat);
+    lineMats.push(mat);
+    disposables.push(geo, mat);
+    scene.add(l);
+    if (fade) {
+      fader.mats.push(mat);
+      fader.objects.push(l);
+    }
+  };
+
+  // ---- room names and sizes -------------------------------------------------
   // where a room's own furniture leaves its floor free for its name
   const at: Record<string, [number, number]> = {
     living: [14.3, 1.2],
     kitchen: [9.0, 7.4],
     master: [1.5, 5.0],
     bedroom2: [7.95, 2.85],
-    bedroom3: [5.4, 2.6],
+    bedroom3: [5.6, 1.6],
+    shelter: [8.1, 6.05],
   };
   for (const r of ROOMS) {
     const [x, z] = at[r.key] ?? [(r.x + r.w / 2) / 1000, (r.y + r.d / 2) / 1000];
     const small = r.w < 2000 || r.d < 1500;
-    label(
+    text(
       [
         { text: r.name.toUpperCase(), size: small ? 0.09 : 0.13, weight: 700 },
         { text: `${(r.w / 1000).toFixed(1)} × ${(r.d / 1000).toFixed(1)} m`, size: small ? 0.07 : 0.1 },
@@ -239,13 +281,98 @@ export function addLabels(
     );
   }
 
-  // the title block, on the paper below the flat's south-east corner
-  label(
+  // ---- dimension strings ----------------------------------------------------
+  const TICK = 0.09; // half a tick's reach, m
+  const OVER = 0.15; // how far an extension line runs past its dimension line, m
+  const DIM_TEXT = 0.12;
+  /**
+   * A chain of dimensions along one side. `along` are the points measured,
+   * `line` where the dimension line runs across them, `from` where each
+   * extension line starts (by the building), `labels` one a gap, mm.
+   */
+  const chain = (run: "ew" | "ns", along: number[], line: number, from: number | number[], labels: string[]) => {
+    const pts: number[] = [];
+    const P = (a: number, b: number) => (run === "ew" ? [a, FLOOR, b] : [b, FLOOR, a]);
+    const out = Math.sign(line - (Array.isArray(from) ? from[0]! : from));
+    pts.push(...P(along[0]!, line), ...P(along[along.length - 1]!, line));
+    along.forEach((a, i) => {
+      const f = Array.isArray(from) ? from[i]! : from;
+      pts.push(...P(a, f), ...P(a, line + out * OVER)); // extension line
+      pts.push(...P(a - TICK, line + TICK), ...P(a + TICK, line - TICK)); // the architect's slash
+    });
+    segments(pts, 0.8, true);
+    labels.forEach((t, i) => {
+      const mid = (along[i]! + along[i + 1]!) / 2;
+      const off = line + out * 0.14;
+      if (run === "ew") text([{ text: t, size: DIM_TEXT }], mid, off, { fade: true });
+      else text([{ text: t, size: DIM_TEXT }], off, mid, { rot: Math.PI / 2, fade: true });
+    });
+  };
+  const b = { x0: BOUNDS.x0 / 1000, x1: BOUNDS.x1 / 1000, y0: BOUNDS.y0 / 1000, y1: BOUNDS.y1 / 1000 };
+  const gap = 0.15; // extension lines stop this short of the building
+  // north: each room along the top, then the whole flat
+  chain("ew", [b.x0, 3.15, 6.45, 9.45, b.x1], b.y0 - 0.8, b.y0 - gap, ["3000", "3000", "2700", "5700"]);
+  chain("ew", [b.x0, b.x1], b.y0 - 1.5, b.y0 - gap, [`${Math.round((b.x1 - b.x0) * 1000)}`]);
+  // west: the master suite, then the whole flat's depth (its foot is the kitchen wing)
+  chain("ns", [b.y0, 1.85, 6.0], b.x0 - 0.8, b.x0 - gap, ["1700", "3800"]);
+  chain("ns", [b.y0, b.y1], b.x0 - 1.5, [b.x0 - gap, 5.7 - gap], [`${Math.round((b.y1 - b.y0) * 1000)}`]);
+  // east: the living room's depth
+  chain("ns", [b.y0, 6.5], b.x1 + 0.8, b.x1 + gap, ["6300"]);
+  // south: the yard and the kitchen
+  chain("ew", [5.7, 7.55, 12.9], b.y1 + 0.8, b.y1 + gap, ["1500", "5000"]);
+
+  // ---- door swings: each leaf standing open, and the arc it sweeps ---------
+  const swings: number[] = [];
+  for (const d of [...DOORS, FRONT_DOOR]) {
+    if (!d.swing) continue;
+    const w = d.width / 1000;
+    const mid = d.at / 1000;
+    const face = d.across / 1000 + d.swing.side * (d.swing.wall / 2000);
+    const hinge = d.swing.hinge === "low" ? mid - w / 2 : mid + w / 2;
+    const toward = d.swing.hinge === "low" ? 1 : -1; // from the hinge to the other jamb
+    const P = (along: number, perp: number) => (d.run === "ew" ? [along, FLOOR, perp] : [perp, FLOOR, along]);
+    swings.push(...P(hinge, face), ...P(hinge, face + d.swing.side * w)); // the leaf
+    const STEPS = 16;
+    for (let k = 0; k < STEPS; k++) {
+      const a0 = (k / STEPS) * (Math.PI / 2);
+      const a1 = ((k + 1) / STEPS) * (Math.PI / 2);
+      swings.push(
+        ...P(hinge + toward * w * Math.sin(a0), face + d.swing.side * w * Math.cos(a0)),
+        ...P(hinge + toward * w * Math.sin(a1), face + d.swing.side * w * Math.cos(a1)),
+      );
+    }
+  }
+  segments(swings, 0.8, true);
+
+  // ---- window lines: three across each opening, at its sill ---------------
+  const glass: number[] = [];
+  for (const wdw of WINDOWS) {
+    const half = wdw.width / 2000;
+    const y = wdw.bottom / 1000 + 0.002;
+    for (const k of [-0.06, 0, 0.06]) {
+      const c = wdw.across / 1000 + k;
+      const [a0, a1] = [wdw.at / 1000 - half, wdw.at / 1000 + half];
+      glass.push(...(wdw.run === "ew" ? [a0, y, c, a1, y, c] : [c, y, a0, c, y, a1]));
+    }
+  }
+  segments(glass, 0.8, false);
+
+  // ---- the title block, below the flat's south-east corner -----------------
+  text(
     [
       { text: "furnishes.", size: 0.32, weight: 700 },
       { text: "5-ROOM HDB  ·  GROUND PLAN  ·  1:100", size: 0.13 },
     ],
-    (BOUNDS.x1 / 1000) - 4.6,
-    (BOUNDS.y1 / 1000) + 1.2,
+    b.x1 - 2.6,
+    b.y1 + 2.0,
+    { fade: true },
   );
+
+  return {
+    /** How much of the flat-drawing notes shows, 0 to 1. */
+    fade(t: number) {
+      for (const m of fader.mats) m.opacity = t;
+      for (const o of fader.objects) o.visible = t > 0.001;
+    },
+  };
 }

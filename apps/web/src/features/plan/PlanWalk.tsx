@@ -5,8 +5,8 @@ import * as THREE from "three";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
 import styles from "./PlanWalk.module.css";
-import { makeRig } from "./rig";
-import { addLabels, buildFlatScene } from "./scene";
+import { makeRig, STOPS } from "./rig";
+import { addSheet, buildFlatScene } from "./scene";
 
 /**
  * The landing's first screen: the flat drawn as a plan over the moving
@@ -18,6 +18,8 @@ import { addLabels, buildFlatScene } from "./scene";
 
 /** How far the eased progress closes on the scroll each frame. */
 const EASE = 0.12;
+/** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
+const NOTES_FADE = 0.12;
 
 /** The captions, each shown over a stretch of the walk [from, to]. */
 const CAPTIONS = [
@@ -61,6 +63,7 @@ export function PlanWalk() {
     let shown = -1;
     let eased = 0;
     let raf = 0;
+    let sheet: ReturnType<typeof addSheet> | null = null;
 
     const draw = (s: number) => {
       const o = rig(s);
@@ -71,6 +74,8 @@ export function PlanWalk() {
       camera.far = o.far;
       camera.updateProjectionMatrix();
       cut.constant = o.cut;
+      const t = Math.min(1, Math.max(0, (s - STOPS.sheet) / NOTES_FADE));
+      sheet?.fade(1 - t * t * (3 - 2 * t));
       renderer.render(scene, camera);
       shown = s;
       canvas.dataset.progress = s.toFixed(3);
@@ -112,13 +117,14 @@ export function PlanWalk() {
     sized.observe(canvas);
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    // Room names are drawn in the site's mono face, once it has loaded.
+    // The plan's notes are drawn in the site's mono face, once it has loaded;
+    // sizing again gives their lines the canvas's resolution.
     let alive = true;
     const font = css("--font-space-mono") || "monospace";
     document.fonts.load(`700 40px ${font}`).finally(() => {
       if (!alive) return;
-      addLabels(scene, palette, font, disposables);
-      draw(eased);
+      sheet = addSheet(scene, palette, font, disposables, lineMats);
+      resize();
     });
 
     target = read();

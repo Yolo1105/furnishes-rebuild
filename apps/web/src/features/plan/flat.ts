@@ -41,19 +41,26 @@ export type Opening = {
   width: number;
   bottom: number;
   top: number;
+  /**
+   * A hinged door's swing, for the plan's arc: which jamb it hangs on (the
+   * one at the lower or higher end along the wall), which side of the wall
+   * it opens into (-1 north or west, 1 south or east), and the wall's
+   * thickness, mm.
+   */
+  swing?: { hinge: "low" | "high"; side: -1 | 1; wall: number };
 };
 
 /** The doorways between rooms (as the playground places them) and the front door. */
 export const DOORS: readonly Opening[] = [
   { run: "ns", at: 4250, across: 9450, width: 1000, bottom: 0, top: DOOR_HEAD }, // living to hall
   { run: "ew", at: 10900, across: 6450, width: 1800, bottom: 0, top: DOOR_HEAD }, // living to kitchen
-  { run: "ns", at: 4200, across: 3150, width: 800, bottom: 0, top: DOOR_HEAD }, // master
-  { run: "ew", at: 8700, across: 3550, width: 800, bottom: 0, top: DOOR_HEAD }, // bedroom 2
-  { run: "ew", at: 5500, across: 3550, width: 800, bottom: 0, top: DOOR_HEAD }, // bedroom 3
-  { run: "ew", at: 4000, across: 4950, width: 750, bottom: 0, top: DOOR_HEAD }, // bathroom
-  { run: "ew", at: 2550, across: 1850, width: 700, bottom: 0, top: DOOR_HEAD }, // master bath
-  { run: "ew", at: 8500, across: 4950, width: 800, bottom: 0, top: DOOR_HEAD }, // shelter
-  { run: "ns", at: 8000, across: 7550, width: 800, bottom: 0, top: DOOR_HEAD }, // yard
+  { run: "ns", at: 4200, across: 3150, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // master
+  { run: "ew", at: 8700, across: 3550, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // bedroom 2
+  { run: "ew", at: 5500, across: 3550, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: -1, wall: 300 } }, // bedroom 3
+  { run: "ew", at: 4000, across: 4950, width: 750, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: 1, wall: 300 } }, // bathroom
+  { run: "ew", at: 2550, across: 1850, width: 700, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // master bath
+  { run: "ew", at: 8500, across: 4950, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: 1, wall: 300 } }, // shelter
+  { run: "ns", at: 8000, across: 7550, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // yard
 ];
 
 /** The front door: the living room's south wall, near its east end. */
@@ -64,6 +71,7 @@ export const FRONT_DOOR: Opening = {
   width: 900,
   bottom: 0,
   top: DOOR_HEAD,
+  swing: { hinge: "high", side: -1, wall: OUTER_WALL },
 };
 
 const win = (run: Opening["run"], at: number, across: number, width: number, sill: number = WINDOW.sill, head: number = WINDOW.head): Opening => ({

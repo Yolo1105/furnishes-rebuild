@@ -48,9 +48,9 @@ export function makeRig(aspect: number) {
   const fovWalk = portrait ? 70 : aspect < 1.5 ? 58 : 52;
   const cx = (BOUNDS.x0 + BOUNDS.x1) / 2000;
   const cz = (BOUNDS.y0 + BOUNDS.y1) / 2000;
-  // the sheet frames the whole flat and its title block, with a margin
-  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 4;
-  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 5;
+  // the sheet frames the whole flat, its dimensions and title block, with a margin
+  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 5.5;
+  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 6.5;
   const frame0 = Math.max(flatD, flatW / aspect);
 
   const door = { x: FRONT_DOOR.at / 1000, z: FRONT_DOOR.across / 1000 };
