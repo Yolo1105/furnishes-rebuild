@@ -55,7 +55,7 @@
   visibility: hidden;
 }
 
-/* At the top, a little left of centre, behind the plan: the live site's
+/* At the top, in from the left, behind the plan: the live site's
    title, its second word a shade fainter, each line rising in after the
    one above. On a phone it keeps to the left margin. */
 .title {
@@ -74,6 +74,7 @@
 .titleMain,
 .titleEcho {
   display: block;
+  font-size: 0.7em;
   font-variation-settings:
     "wght" 100,
     "wdth" 118;
@@ -83,7 +84,6 @@
 
 .titleMain {
   color: var(--color-rust-deep);
-  font-size: 0.7em;
 }
 
 @keyframes rise {
