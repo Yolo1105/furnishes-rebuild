@@ -28,8 +28,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Read here so the page is sent already showing the demo state, if any.
   const demo = (await cookies()).get(DEMO_COOKIE)?.value === "1";
+  // The loader's inline script marks <html> before React hydrates (so a
+  // returning visitor never sees it flash); that one attribute is expected.
   return (
-    <html lang="en" className={`${archivo.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${spaceMono.variable}`} suppressHydrationWarning>
       <body>
         <DemoSessionProvider initial={demo}>{children}</DemoSessionProvider>
       </body>
