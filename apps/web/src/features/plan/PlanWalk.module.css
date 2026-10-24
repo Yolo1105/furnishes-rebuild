@@ -1,0 +1,67 @@
+/* The walk's length on the page: how much scrolling the whole move takes. */
+.track {
+  position: relative;
+  height: var(--walk-length);
+  background: var(--color-paper);
+}
+
+/* The view stays on screen while the track scrolls past it. */
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fallback {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin: 0;
+  padding: var(--space-6);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+/* A caption: a tag stuck on the drawing, bottom left. */
+.caption {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--space-7);
+  max-width: min(var(--card-w), calc(100% - 2 * var(--gutter)));
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-caption);
+  line-height: var(--leading);
+  opacity: 0;
+  transform: translateY(var(--space-3));
+  transition:
+    opacity var(--dur) ease,
+    transform var(--dur) ease;
+  pointer-events: none;
+}
+
+.caption[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.no {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track);
+  opacity: 0.7;
+}

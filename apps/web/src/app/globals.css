@@ -11,6 +11,7 @@
   --color-cream: #fff6e9; /* text on orange buttons, cards */
   --color-on-orange: #fbf0dc; /* text on the orange background */
   --color-white: #fff;
+  --color-paper: #ffeddf; /* the wash's cream foot; the plan is drawn on it */
 
   /* Colours made from the brand ones */
   --color-line: color-mix(in srgb, var(--color-ink) 20%, transparent);
@@ -30,6 +31,7 @@
   --text-md: 13px;
   --text-input: 16px; /* 16px or more: phones don't zoom into fields */
   --text-title: 28px;
+  --text-caption: clamp(17px, 1.5vw, 21px);
   --text-nav: clamp(12px, 1.05vw, 14px);
   --text-wordmark: clamp(15px, 1.2vw, 17px);
   --text-wordmark-sm: 15px;
@@ -56,6 +58,7 @@
   --icon: 16px;
   --icon-lg: 32px;
   --card-w: 400px;
+  --walk-length: 600vh; /* scrolling the plan walk takes */
 
   /* Shape and depth */
   --radius-sm: 2px;

@@ -113,6 +113,9 @@ void main() {
   // The very top eases into the wash's own first colour (#e83200), exactly
   // the colour the header fills with on scroll, so the two never differ.
   heat = mix(heat, 1.0, smoothstep(0.88, 1.0, uv.y));
+  // And the very foot into its last colour, the paper the plan below is
+  // drawn on, so the two sections meet without a seam.
+  heat = mix(heat, 0.0, smoothstep(0.12, 0.0, uv.y));
   vec3 col = wash((1.0 - heat) * WASH_END);
 
   // A trace of grain so the soft ramps never band.
