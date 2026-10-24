@@ -2,7 +2,6 @@ import Link from "next/link";
 import { routes } from "@/lib/routes";
 import { AccountLink } from "./AccountLink";
 import { CartLink } from "./CartLink";
-import { HeaderShell } from "./HeaderShell";
 import styles from "./SiteHeader.module.css";
 
 /**
@@ -12,7 +11,7 @@ import styles from "./SiteHeader.module.css";
  */
 export function SiteHeader() {
   return (
-    <HeaderShell className={styles.header}>
+    <header className={styles.header}>
       <nav className={styles.start} aria-label="Browse">
         <Link href={routes.collection} className={styles.link}>
           Collection
@@ -34,6 +33,6 @@ export function SiteHeader() {
         <CartLink />
         <AccountLink />
       </nav>
-    </HeaderShell>
+    </header>
   );
 }

@@ -20,10 +20,11 @@ app/
   layout.tsx            fonts, metadata, the demo sign-in read from its cookie
   globals.css           design tokens: every colour, size, space and timing
   (site)/layout.tsx     every public page: the bar, then the page
-  (site)/page.tsx       landing
+  (site)/page.tsx       landing: the plan walk over the moving wash
   (site)/sign-in/       sign-in (UI only, plus a demo account)
-shell/                  the bar: SiteHeader, HeaderShell, CartLink, AccountLink
+shell/                  the bar: SiteHeader, CartLink, AccountLink
 features/stage/         the moving orange-to-cream background (Stage, LivingGradient, wash)
+features/plan/          the plan walk: the HDB flat as a 3D drawing, and the scroll camera
 features/auth/          sign-in panel and the demo session
 lib/routes.ts           every address the site links to
 ```

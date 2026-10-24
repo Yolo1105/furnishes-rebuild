@@ -20,7 +20,6 @@
   --color-card: color-mix(in srgb, var(--color-cream) 86%, transparent);
   --color-card-edge: color-mix(in srgb, var(--color-white) 50%, transparent);
   --color-shadow: color-mix(in srgb, var(--color-ink) 35%, transparent);
-  --color-orange-top-clear: color-mix(in srgb, var(--color-orange-top) 0%, transparent);
 
   /* Type */
   --font-sans: var(--font-archivo), "Archivo", sans-serif;
