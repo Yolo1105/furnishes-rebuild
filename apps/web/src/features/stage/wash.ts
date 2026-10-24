@@ -27,9 +27,15 @@ const STOPS: readonly (readonly [number, readonly [number, number, number]])[] =
 /** Where the wash stops changing: beyond it, flat cream. */
 export const WASH_END = 0.84;
 
+/**
+ * The share of the screen's foot given to flat cream: the ramp is squeezed
+ * into the rest, so the page opens on a real band of cream, not a sliver.
+ */
+export const CREAM_SHARE = 0.2;
+
 /** The wash as a CSS gradient, top to bottom. */
 export const WASH_CSS = `linear-gradient(to bottom, ${STOPS.map(
-  ([at, [r, g, b]]) => `rgb(${r} ${g} ${b}) ${at * 100}%`,
+  ([at, [r, g, b]]) => `rgb(${r} ${g} ${b}) ${(at * (1 - CREAM_SHARE) * 100).toFixed(1)}%`,
 ).join(", ")}, rgb(255 237 223) 100%)`;
 
 const f = (n: number) => n.toFixed(4);

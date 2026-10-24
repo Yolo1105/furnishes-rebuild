@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./Stage.module.css";
-import { WASH_END, WASH_GLSL } from "./wash";
+import { CREAM_SHARE, WASH_END, WASH_GLSL } from "./wash";
 
 /**
  * The landing background, alive: one soft, slightly curved sweep through the
@@ -76,6 +76,7 @@ const float WAVE = 0.12;
 // lookup stops here, so cream never forms a flat block whose edge reads as a
 // shape (the white humps).
 const float WASH_END = ${WASH_END.toFixed(2)};
+const float CREAM_SHARE = ${CREAM_SHARE.toFixed(2)};
 // How far the sweep may lean from straight up, in radians (0.3 is about 17°).
 const float TILT = 0.3;
 
@@ -116,7 +117,8 @@ void main() {
   // And the very foot into its last colour, the paper the plan below is
   // drawn on, so the two sections meet without a seam.
   heat = mix(heat, 0.0, smoothstep(0.12, 0.0, uv.y));
-  vec3 col = wash((1.0 - heat) * WASH_END);
+  // The coolest CREAM_SHARE of the sweep is all cream.
+  vec3 col = wash(min(1.0, (1.0 - heat) / (1.0 - CREAM_SHARE)) * WASH_END);
 
   // A trace of grain so the soft ramps never band.
   float g = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
@@ -127,7 +129,7 @@ void main() {
 `;
 
 /** Seconds of drift per real second: slow enough to feel, never to watch. */
-const SPEED = 0.04;
+const SPEED = 0.07;
 /** Share of device pixels the shader draws; the browser scales it up. */
 const RESOLUTION = 0.5;
 /** How long the drift takes to come up to speed after the page opens. */
