@@ -11,14 +11,6 @@ import { BOUNDS, CEILING, FRONT_DOOR } from "./flat";
 
 export const STOPS = { sheet: 0.08, lifted: 0.42, landed: 0.66 };
 
-/**
- * On a wide screen the sheet leaves this share of the width free at each
- * side for the page's own words; PlanWalk.module.css sets its side columns
- * to match, at the same aspect ratio.
- */
-export const SIDE = 0.2;
-export const WIDE_ASPECT = 1.25;
-
 const smooth = (t: number) => t * t * (3 - 2 * t);
 const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
@@ -56,12 +48,10 @@ export function makeRig(aspect: number) {
   const fovWalk = portrait ? 70 : aspect < 1.5 ? 58 : 52;
   const cx = (BOUNDS.x0 + BOUNDS.x1) / 2000;
   const cz = (BOUNDS.y0 + BOUNDS.y1) / 2000;
-  // the sheet frames the whole flat and its north point, with a margin
-  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 3.2;
+  // the sheet frames the whole flat, with a margin
+  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 2;
   const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 2.8;
-  // on a wide screen, the drawing (less its margin) fits between the side columns
-  const sides = aspect >= WIDE_ASPECT ? (flatW - 0.6) / (aspect * (1 - 2 * SIDE)) : 0;
-  const frame0 = Math.max(flatD, flatW / aspect, sides);
+  const frame0 = Math.max(flatD, flatW / aspect);
 
   const door = { x: FRONT_DOOR.at / 1000, z: FRONT_DOOR.across / 1000 };
   const EYE = 1.55;

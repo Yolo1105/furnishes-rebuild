@@ -35,13 +35,11 @@
   text-align: center;
 }
 
-/* Beside the plan: the pitch on the left, the flat's spec sheet on the
-   right. Both are the drawing's colour, and go as its notes go, once the
-   walls start to rise. On a wide screen each sits in the side share of the
-   width the sheet leaves free (rig.ts SIDE, WIDE_ASPECT); otherwise the
-   pitch sits under the plan and the spec sheet is left out. */
-.pitch,
-.spec,
+/* Over the plan's foot: the way into the studio at the bottom right, and a
+   cue in the middle that the page scrolls. Both are the drawing's colour,
+   and go as its notes go, once the walls start to rise. On a narrow screen
+   the button sits above the cue. */
+.cta,
 .cue {
   position: absolute;
   z-index: var(--z-content);
@@ -50,53 +48,17 @@
   transform: translateY(calc((1 - var(--notes, 1)) * var(--space-4)));
 }
 
-.sticky[data-walking] .pitch,
-.sticky[data-walking] .spec,
+.sticky[data-walking] .cta,
 .sticky[data-walking] .cue {
   visibility: hidden;
 }
 
-.pitch {
-  left: var(--gutter);
-  right: var(--gutter);
-  bottom: calc(var(--space-7) * 3); /* clear of the scroll cue below */
-}
-
-.kicker,
-.cue,
-.keyTitle {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--track);
-  text-transform: uppercase;
-}
-
-.headline {
-  margin: var(--space-3) 0 0;
-  font-family: var(--font-sans);
-  font-size: var(--text-display);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.lede {
-  max-width: 34ch;
-  margin: var(--space-4) 0 0;
-  font-family: var(--font-sans);
-  font-size: var(--text-md);
-  line-height: var(--leading);
-}
-
 .cta {
-  display: inline-block;
-  margin-top: var(--space-6);
+  right: var(--gutter);
+  bottom: var(--space-6);
   padding: 0.75em 1.1em;
   border: 1px solid var(--color-ink);
   border-radius: var(--radius-sm);
-  color: inherit;
   font-family: var(--font-mono);
   font-size: var(--text-nav);
   letter-spacing: var(--track);
@@ -112,37 +74,12 @@
   color: var(--color-cream);
 }
 
-.spec {
-  display: none;
-}
-
-@media (min-aspect-ratio: 5/4) {
-  .pitch,
-  .spec {
-    top: 50%;
-    bottom: auto;
-    width: calc(var(--walk-side) - 1.5 * var(--gutter));
-    translate: 0 -50%;
-  }
-
-  .pitch {
-    right: auto;
-  }
-
-  .spec {
-    right: var(--gutter);
-    display: block;
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-  }
-
-  .lede {
-    font-size: var(--text-caption);
+@media (max-width: 760px) {
+  .cta {
+    bottom: calc(var(--space-7) * 3);
   }
 }
 
-/* Bottom centre: the word and an arrow nudging down, so it is plain the
-   page goes on. */
 .cue {
   left: 50%;
   bottom: var(--space-4);
@@ -150,6 +87,11 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
   translate: -50% 0;
 }
 
@@ -172,55 +114,4 @@
   .cue svg {
     animation: none;
   }
-}
-
-.rows {
-  margin: 0;
-  border-top: 1px solid var(--color-line-strong);
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-line-strong);
-}
-
-.row dt {
-  letter-spacing: var(--track-narrow);
-  text-transform: uppercase;
-  opacity: 0.75;
-}
-
-.row dd {
-  margin: 0;
-  text-align: right;
-}
-
-.keyTitle {
-  margin-top: var(--space-6);
-  opacity: 0.75;
-}
-
-.key {
-  margin: var(--space-2) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.key li {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-1) 0;
-}
-
-.key svg {
-  flex: none;
-  width: var(--icon);
-  height: var(--icon);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1;
 }

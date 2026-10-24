@@ -272,8 +272,7 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 /**
  * What an architect adds to a plan that is not the building: room names,
  * tile joints, door swings,
- * window glass, wardrobe crosses and the north point, and the metre grid on
- * the ground. All of it lies on the floor or the
+ * window glass and wardrobe crosses, and the metre grid on the ground. All of it lies on the floor or the
  * ground. The notes that only make sense on a flat drawing fade as the walls
  * rise; room names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them.
@@ -354,18 +353,6 @@ export function addSheet(
     lineMats.push(mat);
     disposables.push(geo, mat);
     keep(new LineSegments2(geo, mat), mat, fade);
-  };
-
-  /** A filled ink shape on the floor, through [x, z] points. */
-  const fill = (points: [number, number][], fade: boolean) => {
-    const geo = new THREE.ShapeGeometry(new THREE.Shape(points.map(([x, z]) => new THREE.Vector2(x, -z))));
-    geo.rotateX(-Math.PI / 2);
-    const mat = new THREE.MeshBasicMaterial({ color: ink, transparent: fade, depthWrite: false });
-    disposables.push(geo, mat);
-    const m = new THREE.Mesh(geo, mat);
-    m.position.y = FLOOR;
-    m.renderOrder = 2;
-    keep(m, mat, fade);
   };
 
   // ---- floor finishes: 300 mm tiles in the wet rooms ------------------------
@@ -464,18 +451,6 @@ export function addSheet(
   for (let x = gx0; x <= gx1; x++) for (let z = gz0; z < gz1; z++) put(x, z, x, z + 1);
   for (let z = gz0; z <= gz1; z++) for (let x = gx0; x < gx1; x++) put(x, z, x + 1, z);
   rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
-
-  // ---- north point, by the north-east corner --------------------------------
-  const [nx, nz, nr] = [b.x1 + 0.9, b.y0 + 0.9, 0.34];
-  const ring: number[] = [];
-  for (let k = 0; k < 48; k++) {
-    const [a0, a1] = [(k / 48) * Math.PI * 2, ((k + 1) / 48) * Math.PI * 2];
-    ring.push(nx + nr * Math.cos(a0), FLOOR, nz + nr * Math.sin(a0), nx + nr * Math.cos(a1), FLOOR, nz + nr * Math.sin(a1));
-  }
-  segments(ring, 0.6, true);
-  fill([[nx, nz - nr * 0.92], [nx + nr * 0.38, nz + nr * 0.62], [nx, nz + nr * 0.3]], true);
-  segments([nx, FLOOR, nz - nr * 0.92, nx - nr * 0.38, FLOOR, nz + nr * 0.62, nx - nr * 0.38, FLOOR, nz + nr * 0.62, nx, FLOOR, nz + nr * 0.3], 0.6, true);
-  text([{ text: "N", size: 0.22 }], nx, nz - nr - 0.26, { fade: true });
 
   return {
     /** How much of the flat-drawing notes shows, 0 to 1. */

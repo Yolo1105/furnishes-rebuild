@@ -6,7 +6,6 @@ import * as THREE from "three";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
 import { routes } from "@/lib/routes";
-import { CEILING, floorOf, ROOMS } from "./flat";
 import styles from "./PlanWalk.module.css";
 import { makeRig, STOPS } from "./rig";
 import { addSheet, buildFlatScene } from "./scene";
@@ -18,21 +17,6 @@ import { addSheet, buildFlatScene } from "./scene";
  * the front door, and walks it into the living room. The 3D canvas is clear,
  * so the wash shows round the flat and above its walls.
  */
-
-/** The flat's floor area, every room's clear floor added up, m². */
-const AREA = ROOMS.reduce((sum, r) => {
-  const f = floorOf(r);
-  return sum + ((f.x1 - f.x0) * (f.y1 - f.y0)) / 1e6;
-}, 0);
-
-/** The spec sheet beside the plan, as a drawing's side panel has it. */
-const SPEC = [
-  ["Flat", "5-room HDB"],
-  ["Floor area", `≈ ${Math.round(AREA)} m²`],
-  ["Bedrooms", "3"],
-  ["Bathrooms", "2"],
-  ["Ceiling", `${(CEILING / 1000).toFixed(1)} m`],
-] as const;
 
 /** How far the eased progress closes on the scroll each frame. */
 const EASE = 0.12;
@@ -167,16 +151,9 @@ export function PlanWalk() {
           <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         )}
 
-        <div className={styles.pitch}>
-          <p className={styles.kicker}>Furnishes · 5-room HDB</p>
-          <h1 className={styles.headline}>Every home starts as a plan.</h1>
-          <p className={styles.lede}>
-            Scroll to walk into this one. Every piece in it is made to measure, and yours to change.
-          </p>
-          <Link href={routes.studio} className={styles.cta}>
-            Design your room
-          </Link>
-        </div>
+        <Link href={routes.studio} className={styles.cta}>
+          Design your room
+        </Link>
 
         <p className={styles.cue} aria-hidden="true">
           Scroll
@@ -184,38 +161,6 @@ export function PlanWalk() {
             <path d="M8 2v19M2 15l6 6 6-6" />
           </svg>
         </p>
-
-        <aside className={styles.spec} aria-label="About this flat">
-          <dl className={styles.rows}>
-            {SPEC.map(([term, value]) => (
-              <div key={term} className={styles.row}>
-                <dt>{term}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className={styles.keyTitle}>Key</p>
-          <ul className={styles.key}>
-            <li>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M3 14V2M3 2a12 12 0 0 1 12 12" />
-              </svg>
-              Door, and its swing
-            </li>
-            <li>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M1.5 4.5h13v7h-13zM1.5 4.5l13 7M1.5 11.5l13-7" />
-              </svg>
-              Built-in wardrobe
-            </li>
-            <li>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M1 5.5h14M1 10.5h14M5.5 1v14M10.5 1v14" />
-              </svg>
-              Grid, 1 m
-            </li>
-          </ul>
-        </aside>
       </div>
     </section>
   );
