@@ -5,6 +5,7 @@ import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeome
 import { BOUNDS, CEILING, DOOR_HEAD, DOORS, floorOf, FRONT_DOOR, ROOMS, wallBoxes, WINDOWS, type Opening } from "./flat";
 import { FINISH } from "./finishes";
 import { BoxSolid } from "./solid";
+import { planSymbols } from "./symbols";
 
 /**
  * The flat as a drawing you can walk into. One closed solid holds the floor
@@ -190,9 +191,14 @@ export function buildFlatScene(palette: Palette) {
     g.translate(x, (y0 + y1) / 2, z);
     return g;
   };
+  /** Every piece of furniture and fitting, so they can rise out of the floor together. */
+  const pieces: THREE.Group[] = [];
   /** Pieces made of `finish`, put `into` a group (the scene by default). */
-  const made = (finish: Finish, into: THREE.Object3D, ...parts: THREE.BufferGeometry[]) =>
-    parts.map((g) => solid(g, 0.6, pieceInsideMat, { finish, into }));
+  const made = (finish: Finish, into: THREE.Object3D, ...parts: THREE.BufferGeometry[]) => {
+    const groups = parts.map((g) => solid(g, 0.6, pieceInsideMat, { finish, into }));
+    pieces.push(...groups);
+    return groups;
+  };
   const piece = (...parts: THREE.BufferGeometry[]) => made(null, scene, ...parts);
 
   /**
@@ -358,6 +364,17 @@ export function buildFlatScene(palette: Palette) {
     return x * x * (3 - 2 * x);
   };
 
+  /**
+   * The furniture and fittings standing up out of the floor, 0 (flat and
+   * hidden: the plan draws them as symbols) to 1 (full height).
+   */
+  const rise = (t: number) => {
+    for (const p of pieces) {
+      p.visible = t > 0.001;
+      p.scale.y = Math.max(t, 0.001);
+    }
+  };
+
   const later = {
     /**
      * The bookcase taken apart and built again, 0 to 1: its boards all lift
@@ -383,7 +400,7 @@ export function buildFlatScene(palette: Palette) {
     },
   };
 
-  return { scene, cut, lineMats, disposables, later };
+  return { scene, cut, lineMats, disposables, rise, later };
 }
 
 /** A line material and the objects that use it, so the plan's notes can fade. */
@@ -391,8 +408,8 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 
 /**
  * What an architect adds to a plan that is not the building: room names,
- * tile joints, door swings, window glass and wardrobe crosses, and the
- * metre grid on the ground. All of it lies on the floor or the ground. The
+ * tile joints, door swings, window glass, the furniture and fittings drawn
+ * as symbols (symbols.ts), and the metre grid on the ground. All of it lies on the floor or the ground. The
  * notes that only make sense on a flat drawing fade as the walls rise; room
  * names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them.
@@ -408,8 +425,12 @@ export function addSheet(
   const FLOOR = 0.003; // notes lie this far over the floor, m
   const fader: Fader = { mats: [], objects: [] };
   const ink = new THREE.Color(palette.ink);
+  // The drawing's tiers of line, heaviest first: the walls (drawn by the
+  // model), fittings in ink, furniture lighter, and the faintest marks.
+  const furnitureInk = new THREE.Color(palette.paper).lerp(ink, 0.55);
+  const lightInk = new THREE.Color(palette.paper).lerp(ink, 0.32);
   /** The tile joints' colour: ink barely on paper. */
-  const faint = new THREE.Color(palette.paper).lerp(ink, 0.22);
+  const faint = new THREE.Color(palette.paper).lerp(ink, 0.14);
 
   const keep = (o: THREE.Object3D, mat: { opacity: number }, fade: boolean) => {
     scene.add(o);
@@ -528,7 +549,7 @@ export function addSheet(
       );
     }
   }
-  segments(swings, 0.5, true);
+  segments(swings, 0.5, true, lightInk);
 
   // ---- windows: the glass, two lines along the middle of the wall at the sill
   const glass: number[] = [];
@@ -543,12 +564,14 @@ export function addSheet(
   }
   segments(glass, 0.6, false);
 
-  // ---- wardrobes: the plan's cross over each -------------------------------
-  const crosses: number[] = [];
-  for (const [x0, z0, x1, z1] of WARDROBES) {
-    crosses.push(x0, FLOOR, z0, x1, FLOOR, z1, x0, FLOOR, z1, x1, FLOOR, z0);
-  }
-  segments(crosses, 0.5, true);
+  // ---- furniture and fittings, as the plan draws them --------------------------
+  // (the 3D pieces stay down until the walls start to rise: see `rise`)
+  const symbols = planSymbols(WARDROBES);
+  const onFloor = (pts: number[]) => pts.flatMap((v, i) => (i % 2 ? [] : [v, FLOOR * 2, pts[i + 1]!]));
+  segments(onFloor(symbols.fittings), 0.9, true);
+  segments(onFloor(symbols.furniture), 0.7, true, furnitureInk);
+  segments(onFloor(symbols.light), 0.5, true, lightInk);
+  for (const t of symbols.tags) text([{ text: t.text, size: 0.11, track: 0.08 }], t.x, t.z, { fade: true });
 
   // ---- the drafting grid: a metre grid on the ground the flat stands on ----
   // It thins out away from the flat, in rings, and stays once the walls rise.

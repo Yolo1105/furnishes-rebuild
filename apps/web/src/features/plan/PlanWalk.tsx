@@ -70,7 +70,7 @@ export function PlanWalk() {
     renderer.setClearColor(0x000000, 0);
 
     const palette = { paper: css("--color-paper"), ink: css("--color-ink") };
-    const { scene, cut, lineMats, disposables, later } = buildFlatScene(palette);
+    const { scene, cut, lineMats, disposables, rise, later } = buildFlatScene(palette);
     const camera = new THREE.PerspectiveCamera(2, 1, 1, 500);
     camera.rotation.order = "YXZ";
     let rig = makeRig(1);
@@ -129,6 +129,8 @@ export function PlanWalk() {
       const t = stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE);
       const notes = 1 - t * t * (3 - 2 * t);
       sheet?.fade(notes);
+      // as the plan's symbols fade, the pieces they stand for rise out of the floor
+      rise(1 - notes);
       // the page's own words beside the plan go with the plan's notes
       sticky.style.setProperty("--notes", notes.toFixed(3));
       sticky.toggleAttribute("data-walking", notes < 0.02);
