@@ -132,6 +132,8 @@ export function PlanWalk() {
       // the page's own words beside the plan go with the plan's notes
       sticky.style.setProperty("--notes", notes.toFixed(3));
       sticky.toggleAttribute("data-walking", notes < 0.02);
+      // the title goes as the walk reaches the front door (the panel's step 03)
+      sticky.style.setProperty("--title", (1 - smooth(stage(s, STOPS.landed - 0.03, STOPS.landed))).toFixed(3));
       renderer.render(scene, camera);
       shown = s;
       canvas.dataset.progress = s.toFixed(3);

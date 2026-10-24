@@ -55,7 +55,8 @@
 
 /* At the top left, lined up with the bar's first link, over the 3D view:
    the live site's title, its second word a shade fainter, each line rising
-   in after the one above. It stays put for the whole walk. */
+   in after the one above. It stays put until the walk reaches the front
+   door (the panel's step 03), and fades as it does (PlanWalk sets --title). */
 .title {
   position: absolute;
   z-index: var(--z-content);
@@ -67,6 +68,7 @@
   font-size: var(--text-hero);
   line-height: 0.92;
   text-transform: uppercase;
+  opacity: var(--title, 1);
   pointer-events: none;
 }
 
