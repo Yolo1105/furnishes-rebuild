@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
-import { BOUNDS, CEILING, DOOR_HEAD, DOORS, floorOf, FRONT_DOOR, OUTER_WALL, ROOMS, WINDOWS, type Opening } from "./flat";
+import { BOUNDS, CEILING, DOOR_HEAD, DOORS, floorOf, FRONT_DOOR, ROOMS, wallBoxes, WINDOWS, type Opening } from "./flat";
 import { BoxSolid } from "./solid";
 
 /**
@@ -109,14 +109,10 @@ export function buildFlatScene(palette: Palette) {
   // ---- the shell -----------------------------------------------------------
   const shell = new BoxSolid();
   const H = CEILING * M;
-  const o = OUTER_WALL * M;
-  for (const r of ROOMS) {
-    shell.add([r.x * M - o, -SLAB, r.y * M - o], [(r.x + r.w) * M + o, H, (r.y + r.d) * M + o]);
-  }
-  for (const r of ROOMS) {
-    const f = floorOf(r);
-    shell.sub([f.x0 * M, 0, f.y0 * M], [f.x1 * M, H, f.y1 * M]);
-  }
+  const { add, clear, trim } = wallBoxes();
+  for (const [x0, y0, x1, y1] of add) shell.add([x0 * M, -SLAB, y0 * M], [x1 * M, H, y1 * M]);
+  for (const [x0, y0, x1, y1] of clear) shell.sub([x0 * M, 0, y0 * M], [x1 * M, H, y1 * M]);
+  for (const [x0, y0, x1, y1] of trim) shell.sub([x0 * M, -SLAB - 0.01, y0 * M], [x1 * M, H, y1 * M]);
   const hole = (op: Opening) => {
     const half = (op.width / 2) * M;
     const t = 0.25; // past either face of any wall
@@ -128,7 +124,7 @@ export function buildFlatScene(palette: Palette) {
   };
   [...DOORS, FRONT_DOOR, ...WINDOWS].forEach(hole);
   // the walls' tops are ink, so once the cut clears them they read as it did
-  solid(shell.build(), 1.5, insideMat, H - 0.001);
+  solid(shell.build(), 1.2, insideMat, H - 0.001);
 
   // ---- furniture and fittings ---------------------------------------------
   /** A box from (x0, y0, z0) to (x1, y1, z1), metres. */
@@ -236,7 +232,7 @@ export function buildFlatScene(palette: Palette) {
   basin(1.75, 0.01, 2.85, 0.5);
   shower(0.01, 0.01, 0.9, 1.69);
   wc(4.2, 6.79, -1); // bathroom
-  basin(3.21, 6.0, 3.7, 6.79);
+  basin(3.31, 6.0, 3.8, 6.79);
   shower(4.75, 5.01, 5.69, 6.79);
 
   // kitchen: counters on the south and east walls, a sink under the window,
@@ -265,7 +261,7 @@ export function buildFlatScene(palette: Palette) {
   }
 
   // the yard: a washing machine in its corner
-  piece(box(5.82, 0, 8.36, 6.42, 0.85, 8.98), disc(6.12, 8.67, 0.2, 0.2, 0.85, 0.856));
+  piece(box(5.92, 0, 8.36, 6.52, 0.85, 8.98), disc(6.22, 8.67, 0.2, 0.2, 0.85, 0.856));
 
   return { scene, cut, lineMats, disposables };
 }

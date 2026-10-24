@@ -41,7 +41,8 @@
    width the sheet leaves free (rig.ts SIDE, WIDE_ASPECT); otherwise the
    pitch sits under the plan and the spec sheet is left out. */
 .pitch,
-.spec {
+.spec,
+.cue {
   position: absolute;
   z-index: var(--z-content);
   color: var(--color-ink);
@@ -50,18 +51,19 @@
 }
 
 .sticky[data-walking] .pitch,
-.sticky[data-walking] .spec {
+.sticky[data-walking] .spec,
+.sticky[data-walking] .cue {
   visibility: hidden;
 }
 
 .pitch {
   left: var(--gutter);
   right: var(--gutter);
-  bottom: var(--space-7);
+  bottom: calc(var(--space-7) * 3); /* clear of the scroll cue below */
 }
 
 .kicker,
-.scroll,
+.cue,
 .keyTitle {
   margin: 0;
   font-family: var(--font-mono);
@@ -110,10 +112,6 @@
   color: var(--color-cream);
 }
 
-.scroll {
-  display: none;
-}
-
 .spec {
   display: none;
 }
@@ -141,10 +139,38 @@
   .lede {
     font-size: var(--text-caption);
   }
+}
 
-  .scroll {
-    display: block;
-    margin-top: var(--space-7);
+/* Bottom centre: the word and an arrow nudging down, so it is plain the
+   page goes on. */
+.cue {
+  left: 50%;
+  bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  translate: -50% 0;
+}
+
+.cue svg {
+  width: var(--icon);
+  height: calc(var(--icon) * 1.5);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  animation: nudge var(--dur-slow) ease-in-out infinite alternate;
+}
+
+@keyframes nudge {
+  to {
+    translate: 0 var(--space-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue svg {
+    animation: none;
   }
 }
 

@@ -176,10 +176,14 @@ export function PlanWalk() {
           <Link href={routes.studio} className={styles.cta}>
             Design your room
           </Link>
-          <p className={styles.scroll} aria-hidden="true">
-            Scroll ↓
-          </p>
         </div>
+
+        <p className={styles.cue} aria-hidden="true">
+          Scroll
+          <svg viewBox="0 0 16 24">
+            <path d="M8 2v19M2 15l6 6 6-6" />
+          </svg>
+        </p>
 
         <aside className={styles.spec} aria-label="About this flat">
           <dl className={styles.rows}>
