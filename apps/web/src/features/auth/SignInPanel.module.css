@@ -1,0 +1,218 @@
+/* A cream card on the moving wash: ink text, the site's orange for the one
+   main action, the mono face for labels as in the bar. */
+.panel {
+  width: min(var(--card-w), 100%);
+  padding: clamp(var(--space-6), 4vw, 36px);
+  background: var(--color-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--color-card-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-title);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin: var(--space-2) 0 var(--space-6);
+  font-size: var(--text-md);
+  line-height: var(--leading);
+  opacity: 0.75;
+}
+
+/* Every full-width button and button-link on the card shares this. */
+.google,
+.submit,
+.secondary,
+.submitLink {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease;
+}
+
+.google {
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+}
+
+.google:hover {
+  border-color: var(--color-line-strong);
+}
+
+/* The main action. */
+.submit,
+.submitLink {
+  background: var(--color-orange);
+  border: 1px solid var(--color-orange);
+  color: var(--color-cream);
+}
+
+.submit {
+  margin-top: var(--space-2);
+}
+
+.submit:hover,
+.submitLink:hover {
+  background: var(--color-orange-top);
+  border-color: var(--color-orange-top);
+}
+
+/* The demo way in, and leaving it: outlined, quieter than the main action. */
+.secondary {
+  margin-top: var(--space-4);
+  background: transparent;
+  border: 1px dashed var(--color-orange);
+  color: var(--color-orange);
+}
+
+.secondary:hover {
+  background: var(--color-tint);
+}
+
+.mark {
+  width: var(--icon);
+  height: var(--icon);
+}
+
+.or {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  font-size: var(--text-xs);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.or::before,
+.or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+.form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fieldHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.field input {
+  min-height: var(--tap);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-input);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.inline {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-orange);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+.note {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3);
+  border-left: 2px solid var(--color-orange);
+  background: var(--color-tint);
+  font-size: var(--text-sm);
+  line-height: var(--leading);
+}
+
+.switch {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.guest {
+  display: block;
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  text-align: center;
+  opacity: 0.75;
+  text-underline-offset: 0.25em;
+}
+
+.guest:hover {
+  opacity: 1;
+}
+
+.legal {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-2xs);
+  line-height: var(--leading);
+  text-align: center;
+  opacity: 0.6;
+}
+
+.legal a {
+  text-underline-offset: 0.2em;
+}
+
+.google:focus-visible,
+.submit:focus-visible,
+.secondary:focus-visible,
+.submitLink:focus-visible,
+.inline:focus-visible,
+.guest:focus-visible,
+.legal a:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}

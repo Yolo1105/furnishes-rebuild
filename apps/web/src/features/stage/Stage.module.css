@@ -1,0 +1,34 @@
+/* At least a screen; taller if what sits on it needs the room. The CSS wash
+   itself is set inline from wash.ts, the one copy of its colours. */
+.stage {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.living {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Hidden until its first frame, then a short fade over the CSS wash. */
+  opacity: 0;
+  transition: opacity var(--dur-slow) ease;
+}
+
+.living[data-live="true"] {
+  opacity: 1;
+}
+
+/* Anything placed on the stage: centred, clear of the bar. */
+.content {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: calc(var(--nav-h) + var(--space-6)) var(--space-4) var(--space-7);
+}

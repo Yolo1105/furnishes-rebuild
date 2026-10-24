@@ -1,0 +1,19 @@
+{
+  "name": "furnishes-rebuild",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Furnishes: pnpm workspace with apps/web (Next.js).",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @furnishes/web dev",
+    "build": "pnpm --filter @furnishes/web build",
+    "start": "pnpm --filter @furnishes/web start",
+    "typecheck": "pnpm -r --parallel typecheck"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}

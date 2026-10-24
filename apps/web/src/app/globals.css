@@ -1,0 +1,103 @@
+/*
+ * Design tokens. Every colour, size, space, radius and timing the site uses
+ * is named here; component styles use these names only. Brand colours are
+ * the live site's (furnishes_prod, landing.module.css).
+ */
+:root {
+  /* Brand colours */
+  --color-orange-top: #e83200; /* the wash's top; the bar fills with it */
+  --color-orange: #e7551a; /* actions */
+  --color-ink: #6e1810; /* text on light */
+  --color-cream: #fff6e9; /* text on orange buttons, cards */
+  --color-on-orange: #fbf0dc; /* text on the orange background */
+  --color-white: #fff;
+
+  /* Colours made from the brand ones */
+  --color-line: color-mix(in srgb, var(--color-ink) 20%, transparent);
+  --color-line-strong: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  --color-tint: color-mix(in srgb, var(--color-orange) 8%, transparent);
+  --color-card: color-mix(in srgb, var(--color-cream) 86%, transparent);
+  --color-card-edge: color-mix(in srgb, var(--color-white) 50%, transparent);
+  --color-shadow: color-mix(in srgb, var(--color-ink) 35%, transparent);
+  --color-orange-top-clear: color-mix(in srgb, var(--color-orange-top) 0%, transparent);
+
+  /* Type */
+  --font-sans: var(--font-archivo), "Archivo", sans-serif;
+  --font-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
+  --text-2xs: 10.5px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 13px;
+  --text-input: 16px; /* 16px or more: phones don't zoom into fields */
+  --text-title: 28px;
+  --text-nav: clamp(12px, 1.05vw, 14px);
+  --text-wordmark: clamp(15px, 1.2vw, 17px);
+  --text-wordmark-sm: 15px;
+  --track-wide: 0.14em;
+  --track: 0.12em;
+  --track-narrow: 0.06em;
+  --leading: 1.5;
+
+  /* Space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --gutter: clamp(14px, 2vw, 28px); /* page edge to content */
+  --nav-gap: clamp(18px, 2.4vw, 36px);
+
+  /* Sizes */
+  --nav-h: 56px;
+  --nav-pad-y: clamp(10px, 1.2vh, 14px);
+  --tap: 44px; /* smallest comfortable touch target */
+  --icon: 16px;
+  --icon-lg: 32px;
+  --card-w: 400px;
+
+  /* Shape and depth */
+  --radius-sm: 2px;
+  --radius: 4px;
+  --blur: 14px;
+  --shadow-card: 0 24px 60px -24px var(--color-shadow);
+
+  /* Motion */
+  --dur-fast: 0.2s;
+  --dur: 0.3s;
+  --dur-slow: 1.2s;
+
+  /* Layers */
+  --z-content: 1;
+  --z-header: 60;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+/* The page's base is the wash's top colour, so pulling past the top of the
+   page, or anything behind the stage, never shows a different colour. */
+html {
+  background: var(--color-orange-top);
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
