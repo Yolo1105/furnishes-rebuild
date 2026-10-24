@@ -2,16 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { INK_BAR } from "@/shell/HeaderShell";
+import { LivingGradient } from "@/features/stage/LivingGradient";
+import { WASH_CSS } from "@/features/stage/wash";
 import styles from "./PlanWalk.module.css";
 import { makeRig } from "./rig";
 import { addLabels, buildFlatScene } from "./scene";
 
 /**
- * The plan you walk into: a tall stretch of page whose scroll drives one
- * camera. It opens on the flat drawn as a plan on the cream the landing ends
- * in; scrolling raises the walls out of the drawing, brings the camera down
- * to the front door, and walks it into the living room.
+ * The landing's first screen: the flat drawn as a plan over the moving
+ * orange wash, in a tall stretch of page whose scroll drives one camera.
+ * Scrolling raises the walls out of the drawing, brings the camera down to
+ * the front door, and walks it into the living room. The 3D canvas is clear,
+ * so the wash shows round the flat and above its walls.
  */
 
 /** How far the eased progress closes on the scroll each frame. */
@@ -39,13 +41,14 @@ export function PlanWalk() {
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
     } catch {
       setFailed(true);
       return;
     }
     renderer.localClippingEnabled = true;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
 
     const palette = { paper: css("--color-paper"), ink: css("--color-ink") };
     const { scene, cut, lineMats, disposables } = buildFlatScene(palette);
@@ -133,8 +136,10 @@ export function PlanWalk() {
   }, []);
 
   return (
-    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan" {...INK_BAR}>
-      <div className={styles.sticky}>
+    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan">
+      {/* The wash in CSS until its canvas draws, as on every stage. */}
+      <div className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
+        <LivingGradient />
         {failed ? (
           <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
         ) : (

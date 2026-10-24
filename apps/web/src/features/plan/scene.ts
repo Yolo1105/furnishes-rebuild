@@ -10,7 +10,8 @@ import { BoxSolid } from "./solid";
  * slab and every wall, with the rooms, doorways and windows cut out of it.
  * Faces are paper, gently shaded by the way they face; the solid's inside,
  * seen only where the cut plane slices it, is ink; edges are ink lines.
- * Nothing is lit, so straight down it is exactly a plan on paper.
+ * Nothing is lit, so straight down it is exactly a plan. The scene has no
+ * background or ground of its own: it is drawn over the page's moving wash.
  *
  * World units are metres: x east, y up, z south (sheet y), so the camera's
  * default -z view looks north, the way the plan is drawn.
@@ -29,7 +30,6 @@ export function buildFlatScene(palette: Palette) {
   const scene = new THREE.Scene();
   const paper = new THREE.Color(palette.paper);
   const ink = new THREE.Color(palette.ink);
-  scene.background = paper;
 
   /** Everything is cut by this plane: it keeps what lies below its height. */
   const cut = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1.2);
@@ -112,15 +112,6 @@ export function buildFlatScene(palette: Palette) {
   };
   [...DOORS, FRONT_DOOR, ...WINDOWS].forEach(hole);
   solid(shell.build(), 1.4);
-
-  // ---- the paper round the flat ------------------------------------------
-  const groundGeo = new THREE.PlaneGeometry(400, 400);
-  const groundMat = new THREE.MeshBasicMaterial({ color: paper });
-  disposables.push(groundGeo, groundMat);
-  const ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -SLAB - 0.001;
-  scene.add(ground);
 
   // ---- furniture -----------------------------------------------------------
   /** A box from (x0, y0, z0) to (x1, y1, z1), metres. */
