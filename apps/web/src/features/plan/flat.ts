@@ -3,8 +3,10 @@
  * (personal_local/furnishes-playground, room-store.ts `showcaseFlat`).
  *
  * Sheet coordinates in millimetres: x runs east, y runs south from the
- * flat's north edge, so the plan reads with north at the top. Rooms are
- * their clear insides; the 300 mm between neighbours is wall.
+ * flat's north edge, so the plan reads with north at the top. Rooms sit
+ * 300 mm apart, as the playground spaces them; `floorOf` gives a room's
+ * clear floor, which reaches into that gap so the wall left between two
+ * rooms is a partition's thickness.
  */
 
 export type Room = { key: string; name: string; x: number; y: number; w: number; d: number };
@@ -22,9 +24,28 @@ export const ROOMS: readonly Room[] = [
   { key: "yard", name: "Yard", x: 5900, y: 5100, w: 1500, d: 3900 },
 ];
 
-/** Wall height and thickness round the outside, mm. */
+/** Wall height, and thickness round the outside and between rooms, mm. */
 export const CEILING = 2600;
 export const OUTER_WALL = 200;
+export const PARTITION = 150;
+const GAP = 300; // between neighbouring rooms in ROOMS
+
+/**
+ * A room's clear floor, mm: on each side where another room lies across the
+ * gap, it reaches halfway to the partition's face.
+ */
+export function floorOf(r: Room) {
+  const grow = (GAP - PARTITION) / 2;
+  const near = (a: number, b: number) => Math.abs(a - b) < 1;
+  const overlaps = (a0: number, a1: number, b0: number, b1: number) => a0 < b1 && b0 < a1;
+  const across = (test: (o: Room) => boolean) => (ROOMS.some((o) => o !== r && test(o)) ? grow : 0);
+  return {
+    x0: r.x - across((o) => near(o.x + o.w, r.x - GAP) && overlaps(o.y, o.y + o.d, r.y, r.y + r.d)),
+    x1: r.x + r.w + across((o) => near(o.x, r.x + r.w + GAP) && overlaps(o.y, o.y + o.d, r.y, r.y + r.d)),
+    y0: r.y - across((o) => near(o.y + o.d, r.y - GAP) && overlaps(o.x, o.x + o.w, r.x, r.x + r.w)),
+    y1: r.y + r.d + across((o) => near(o.y, r.y + r.d + GAP) && overlaps(o.x, o.x + o.w, r.x, r.x + r.w)),
+  };
+}
 /** A door's head, and a window's sill and head, mm. */
 export const DOOR_HEAD = 2100;
 export const WINDOW = { sill: 900, head: 2400 } as const;
@@ -54,13 +75,13 @@ export type Opening = {
 export const DOORS: readonly Opening[] = [
   { run: "ns", at: 4250, across: 9450, width: 1000, bottom: 0, top: DOOR_HEAD }, // living to hall
   { run: "ew", at: 10900, across: 6450, width: 1800, bottom: 0, top: DOOR_HEAD }, // living to kitchen
-  { run: "ns", at: 4200, across: 3150, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // master
-  { run: "ew", at: 8700, across: 3550, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // bedroom 2
-  { run: "ew", at: 5500, across: 3550, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: -1, wall: 300 } }, // bedroom 3
-  { run: "ew", at: 4000, across: 4950, width: 750, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: 1, wall: 300 } }, // bathroom
-  { run: "ew", at: 2550, across: 1850, width: 700, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // master bath
-  { run: "ew", at: 8500, across: 4950, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: 1, wall: 300 } }, // shelter
-  { run: "ns", at: 8000, across: 7550, width: 800, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: 300 } }, // yard
+  { run: "ns", at: 4200, across: 3150, width: 750, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: PARTITION } }, // master
+  { run: "ew", at: 8700, across: 3550, width: 750, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: PARTITION } }, // bedroom 2
+  { run: "ew", at: 5500, across: 3550, width: 750, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: -1, wall: PARTITION } }, // bedroom 3
+  { run: "ew", at: 4000, across: 4950, width: 650, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: 1, wall: PARTITION } }, // bathroom
+  { run: "ew", at: 2550, across: 1850, width: 650, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: PARTITION } }, // master bath
+  { run: "ew", at: 8500, across: 4950, width: 700, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: 1, wall: PARTITION } }, // shelter
+  { run: "ns", at: 8000, across: 7550, width: 700, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: PARTITION } }, // yard
 ];
 
 /** The front door: the living room's south wall, near its east end. */
@@ -68,7 +89,7 @@ export const FRONT_DOOR: Opening = {
   run: "ew",
   at: 14050,
   across: 6400,
-  width: 900,
+  width: 850,
   bottom: 0,
   top: DOOR_HEAD,
   swing: { hinge: "high", side: -1, wall: OUTER_WALL },

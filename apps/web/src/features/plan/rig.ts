@@ -2,8 +2,8 @@ import { BOUNDS, CEILING, FRONT_DOOR } from "./flat";
 
 /**
  * The camera as a function of scroll progress s, 0 to 1. One camera does it
- * all: on the sheet it hangs far above the flat behind a 2° lens, which
- * flattens perspective until the model reads as a drawing; then the cut
+ * all: on the sheet it hangs far above the flat behind a half-degree lens,
+ * which flattens perspective until the model is a true plan; then the cut
  * rises (the walls grow), the camera tips and comes down, the lens opens and
  * the distance shrinks together so there is never a cut, and it walks in
  * through the front door at eye height and turns to the living room.
@@ -64,7 +64,8 @@ export function makeRig(aspect: number) {
   // ---- from above: tip early, so the walls are seen rising, not just risen
   const early: Ease = (t) => 0.5 * smooth(t) + 0.5 * (1 - (1 - t) * (1 - t));
   const elev = track([[0, 90], [s1, 90], [s2, 36, early], [s3, 0, smooth]]);
-  const lens = track([[0, L(T(2))], [s1, L(T(2))], [s2, L(T(9)), smooth], [s3, L(T(fovWalk)), smoother]]);
+  const SHEET_LENS = 0.5; // degrees
+  const lens = track([[0, L(T(SHEET_LENS))], [s1, L(T(SHEET_LENS))], [s2, L(T(9)), smooth], [s3, L(T(fovWalk)), smoother]]);
   const frame = track([[0, L(frame0)], [s1, L(frame0)], [s2, L(portrait ? 18 : 14), smooth], [s3, L(landFrame), smoother]]);
   const tx = track([[0, cx], [s1, cx], [s2, 12.6, smooth], [s3, door.x, smooth]]);
   const ty = track([[0, 0], [s1, 0], [s2, 0.8, smooth], [s3, EYE, smooth]]);
