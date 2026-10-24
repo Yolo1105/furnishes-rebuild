@@ -35,7 +35,6 @@
   --text-display: clamp(28px, 2.6vw, 40px); /* the walk panel's headlines */
   --text-numeral: clamp(96px, 12vw, 200px); /* the walk panel's outline step numbers */
   --text-hero: clamp(38px, 5.4vw, 96px); /* the landing title */
-  --title-x: 10vw; /* where the landing title starts, in from the left */
   --text-lede: clamp(15px, 1.1vw, 17px);
   --text-caption: clamp(17px, 1.5vw, 21px);
   --text-nav: clamp(12px, 1.05vw, 14px);
