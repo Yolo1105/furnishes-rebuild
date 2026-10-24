@@ -78,7 +78,7 @@ const float WAVE = 0.12;
 const float WASH_END = ${WASH_END.toFixed(2)};
 const float CREAM_SHARE = ${CREAM_SHARE.toFixed(2)};
 // How far the sweep may lean from straight up, in radians (0.3 is about 17°).
-const float TILT = 0.3;
+const float TILT = 0.1;
 
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
@@ -114,9 +114,9 @@ void main() {
   // The very top eases into the wash's own first colour (#e83200), exactly
   // the colour the header fills with on scroll, so the two never differ.
   heat = mix(heat, 1.0, smoothstep(0.88, 1.0, uv.y));
-  // And the very foot into its last colour, the paper the plan below is
-  // drawn on, so the two sections meet without a seam.
-  heat = mix(heat, 0.0, smoothstep(0.12, 0.0, uv.y));
+  // And the bottom quarter into its last colour, the paper the plan below
+  // is drawn on: the foot is always cream, whatever the sweep is doing.
+  heat = mix(heat, 0.0, smoothstep(0.24, 0.0, uv.y));
   // The coolest CREAM_SHARE of the sweep is all cream.
   vec3 col = wash(min(1.0, (1.0 - heat) / (1.0 - CREAM_SHARE)) * WASH_END);
 
@@ -159,7 +159,7 @@ export function LivingGradient() {
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
     // A random lean and a random point on the noise paths, so every visit differs.
-    const angle = (Math.random() - 0.5) * 0.3;
+    const angle = (Math.random() - 0.5) * 0.1;
     const offset = Math.random() * 1000;
     const born = performance.now();
     let raf = 0;

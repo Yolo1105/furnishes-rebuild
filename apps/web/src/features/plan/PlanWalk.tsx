@@ -34,7 +34,7 @@ const PANEL = { open: STOPS.sheet + 0.02, close: STOPS.landed - 0.06 };
 const SHOW_AT = 0.55;
 
 /** The title's echoes of its second word, each fainter than the last (as on the live site). */
-const ECHOES = [0.9, 0.65, 0.4, 0.15];
+const ECHOES = [0.9, 0.55, 0.2];
 
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 

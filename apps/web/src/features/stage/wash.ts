@@ -31,7 +31,7 @@ export const WASH_END = 0.84;
  * The share of the screen's foot given to flat cream: the ramp is squeezed
  * into the rest, so the page opens on a real band of cream, not a sliver.
  */
-export const CREAM_SHARE = 0.12;
+export const CREAM_SHARE = 0.16;
 
 /** The wash as a CSS gradient, top to bottom. */
 export const WASH_CSS = `linear-gradient(to bottom, ${STOPS.map(
