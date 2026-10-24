@@ -30,6 +30,7 @@
   --text-md: 13px;
   --text-input: 16px; /* 16px or more: phones don't zoom into fields */
   --text-title: 28px;
+  --text-display: clamp(30px, 2.9vw, 44px); /* the landing's headline */
   --text-caption: clamp(17px, 1.5vw, 21px);
   --text-nav: clamp(12px, 1.05vw, 14px);
   --text-wordmark: clamp(15px, 1.2vw, 17px);
@@ -58,6 +59,7 @@
   --icon-lg: 32px;
   --card-w: 400px;
   --walk-length: 600vh; /* scrolling the plan walk takes */
+  --walk-side: 20vw; /* each side column beside the plan; rig.ts SIDE matches */
 
   /* Shape and depth */
   --radius-sm: 2px;

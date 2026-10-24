@@ -274,8 +274,8 @@ export function buildFlatScene(palette: Palette) {
 type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 
 /**
- * What an architect adds to a plan that is not the building: room names and
- * areas, tile joints, dimension strings round the outside, door swings,
+ * What an architect adds to a plan that is not the building: room names,
+ * tile joints, dimension strings round the outside, door swings,
  * window glass, wardrobe crosses and the north point, and the metre grid on
  * the ground. All of it lies on the floor or the
  * ground. The notes that only make sense on a flat drawing fade as the walls
@@ -383,7 +383,7 @@ export function addSheet(
   }
   segments(joints, 0.5, false, faint);
 
-  // ---- room names, and each room's area -------------------------------------
+  // ---- room names ----------------------------------------------------------
   const LABEL_Y = 0.04; // just over the shower trays and the rug, so a name may sit on them
   // where a room's own furniture leaves its floor free for its name
   const at: Record<string, [number, number]> = {
@@ -399,15 +399,7 @@ export function addSheet(
   for (const r of ROOMS) {
     const [x, z] = at[r.key] ?? [(r.x + r.w / 2) / 1000, (r.y + r.d / 2) / 1000];
     const small = r.w < 2400 || r.d < 1500;
-    text(
-      [
-        { text: r.name.toUpperCase(), size: small ? 0.15 : 0.2, track: 0.08 },
-        { text: `${((r.w * r.d) / 1e6).toFixed(1)} m²`, size: small ? 0.12 : 0.15 },
-      ],
-      x,
-      z,
-      { y: LABEL_Y },
-    );
+    text([{ text: r.name.toUpperCase(), size: small ? 0.15 : 0.2, track: 0.08 }], x, z, { y: LABEL_Y });
   }
 
   // ---- dimension strings ----------------------------------------------------

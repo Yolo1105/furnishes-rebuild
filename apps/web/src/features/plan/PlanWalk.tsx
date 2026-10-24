@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
+import { routes } from "@/lib/routes";
+import { CEILING, floorOf, ROOMS } from "./flat";
 import styles from "./PlanWalk.module.css";
 import { makeRig, STOPS } from "./rig";
 import { addSheet, buildFlatScene } from "./scene";
@@ -16,6 +19,21 @@ import { addSheet, buildFlatScene } from "./scene";
  * so the wash shows round the flat and above its walls.
  */
 
+/** The flat's floor area, every room's clear floor added up, m². */
+const AREA = ROOMS.reduce((sum, r) => {
+  const f = floorOf(r);
+  return sum + ((f.x1 - f.x0) * (f.y1 - f.y0)) / 1e6;
+}, 0);
+
+/** The spec sheet beside the plan, as a drawing's side panel has it. */
+const SPEC = [
+  ["Flat", "5-room HDB"],
+  ["Floor area", `≈ ${Math.round(AREA)} m²`],
+  ["Bedrooms", "3"],
+  ["Bathrooms", "2"],
+  ["Ceiling", `${(CEILING / 1000).toFixed(1)} m`],
+] as const;
+
 /** How far the eased progress closes on the scroll each frame. */
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
@@ -25,13 +43,15 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
 
 export function PlanWalk() {
   const trackRef = useRef<HTMLElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const track = trackRef.current;
+    const sticky = stickyRef.current;
     const canvas = canvasRef.current;
-    if (!track || !canvas) return;
+    if (!track || !sticky || !canvas) return;
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -67,7 +87,11 @@ export function PlanWalk() {
       camera.updateProjectionMatrix();
       cut.constant = o.cut;
       const t = Math.min(1, Math.max(0, (s - STOPS.sheet) / NOTES_FADE));
-      sheet?.fade(1 - t * t * (3 - 2 * t));
+      const notes = 1 - t * t * (3 - 2 * t);
+      sheet?.fade(notes);
+      // the page's own words beside the plan go with the plan's notes
+      sticky.style.setProperty("--notes", notes.toFixed(3));
+      sticky.toggleAttribute("data-walking", notes < 0.02);
       renderer.render(scene, camera);
       shown = s;
       canvas.dataset.progress = s.toFixed(3);
@@ -135,13 +159,59 @@ export function PlanWalk() {
   return (
     <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan">
       {/* The wash in CSS until its canvas draws, as on every stage. */}
-      <div className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
+      <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
         <LivingGradient />
         {failed ? (
           <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
         ) : (
           <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         )}
+
+        <div className={styles.pitch}>
+          <p className={styles.kicker}>Furnishes · 5-room HDB</p>
+          <h1 className={styles.headline}>Every home starts as a plan.</h1>
+          <p className={styles.lede}>
+            Scroll to walk into this one. Every piece in it is made to measure, and yours to change.
+          </p>
+          <Link href={routes.studio} className={styles.cta}>
+            Design your room
+          </Link>
+          <p className={styles.scroll} aria-hidden="true">
+            Scroll ↓
+          </p>
+        </div>
+
+        <aside className={styles.spec} aria-label="About this flat">
+          <dl className={styles.rows}>
+            {SPEC.map(([term, value]) => (
+              <div key={term} className={styles.row}>
+                <dt>{term}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className={styles.keyTitle}>Key</p>
+          <ul className={styles.key}>
+            <li>
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 14V2M3 2a12 12 0 0 1 12 12" />
+              </svg>
+              Door, and its swing
+            </li>
+            <li>
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M1.5 4.5h13v7h-13zM1.5 4.5l13 7M1.5 11.5l13-7" />
+              </svg>
+              Built-in wardrobe
+            </li>
+            <li>
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M1 5.5h14M1 10.5h14M5.5 1v14M10.5 1v14" />
+              </svg>
+              Grid, 1 m
+            </li>
+          </ul>
+        </aside>
       </div>
     </section>
   );
