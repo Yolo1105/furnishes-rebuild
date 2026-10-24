@@ -24,19 +24,14 @@ import { WalkPanel } from "./WalkPanel";
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
 const NOTES_FADE = 0.12;
-/**
- * The stretch of the walk the side panel is open for: in as the walls start
- * to rise, out just before the camera lands at the front door, so the walk
- * in is the whole screen.
- */
-const PANEL = { open: STOPS.sheet + 0.02, close: STOPS.landed - 0.06 };
+/** Where in the walk the side panel opens: as the walls start to rise. It stays open to the end. */
+const PANEL_OPEN = STOPS.sheet + 0.02;
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
 
 /** The title's echoes of its second word, each fainter than the last (as on the live site). */
 const ECHOES = [0.9, 0.55, 0.2];
 
-const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -83,15 +78,22 @@ export function PlanWalk() {
 
     let open = false;
 
-    /** Open or close the panel, scroll its steps with the walk, and show each as it comes up. */
-    const steer = (s: number) => {
-      const want = s >= PANEL.open && s < PANEL.close;
+    /**
+     * Open or close the panel, scroll its steps, and show each as it comes
+     * up. This follows the page's own scroll, not the eased camera: the
+     * steps move one for one with the scroll, however fast, as if the
+     * panel scrolled natively.
+     */
+    const steer = () => {
+      const r = track.getBoundingClientRect();
+      const run = r.height - window.innerHeight;
+      const from = run * PANEL_OPEN; // px scrolled when the panel opens
+      const want = -r.top >= from;
       if (want !== open) {
         open = want;
         panel.toggleAttribute("data-open", open);
       }
-      const p = clamp01((s - PANEL.open) / (PANEL.close - PANEL.open - NOTES_FADE / 2));
-      const y = p * Math.max(0, content.scrollHeight - panel.clientHeight);
+      const y = Math.min(Math.max(0, -r.top - from), Math.max(0, content.scrollHeight - panel.clientHeight));
       content.style.transform = `translateY(${-y}px)`;
       let up = 0;
       steps.forEach((step, i) => {
@@ -103,7 +105,6 @@ export function PlanWalk() {
     };
 
     const draw = (s: number) => {
-      steer(s);
       const o = rig(s);
       camera.position.set(o.x, o.y, o.z);
       camera.rotation.set(o.pitch, o.yaw, 0);
@@ -131,6 +132,10 @@ export function PlanWalk() {
       camera.aspect = w / h;
       rig = makeRig(w / h);
       for (const m of lineMats) m.resolution.set(w, h);
+      // the steps share the scroll left once the panel opens, so the last ends with the walk
+      const run = track.offsetHeight - window.innerHeight;
+      panel.style.setProperty("--step-h", `${(run * (1 - PANEL_OPEN) + panel.clientHeight) / steps.length}px`);
+      steer();
       draw(eased);
     };
 
@@ -150,6 +155,7 @@ export function PlanWalk() {
       if (eased !== target) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
+      steer();
       target = read();
       if (!raf) raf = requestAnimationFrame(tick);
     };

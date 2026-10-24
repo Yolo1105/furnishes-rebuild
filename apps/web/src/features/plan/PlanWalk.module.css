@@ -55,12 +55,13 @@
   visibility: hidden;
 }
 
-/* Top left, behind the plan: the live site's title, the second word echoed
-   fainter and fainter, each line rising in after the one above. */
+/* At the top, a little left of centre, behind the plan: the live site's
+   title, the second word echoed fainter and fainter, each line rising in
+   after the one above. On a phone it keeps to the left margin. */
 .title {
   z-index: 0;
   top: calc(var(--nav-h) + var(--space-4));
-  left: var(--gutter);
+  left: var(--title-x);
   margin: 0 0 0 -0.09em; /* the wide caps sit inside their box: line the ink up with the bar */
   color: var(--color-rust);
   font-family: var(--font-sans);
@@ -102,6 +103,10 @@
 }
 
 @media (max-width: 760px) {
+  .title {
+    left: var(--gutter);
+  }
+
   .cta {
     bottom: calc(var(--space-7) * 3);
   }
