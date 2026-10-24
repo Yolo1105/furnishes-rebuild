@@ -12,6 +12,8 @@
   --color-on-orange: #fbf0dc; /* text on the orange background */
   --color-white: #fff;
   --color-paper: #ffeddf; /* the wash's cream foot; the plan is drawn on it */
+  --color-rust: #9a4017; /* the landing title (live site's) */
+  --color-rust-deep: #6b2c12; /* its first word */
 
   /* Colours made from the brand ones */
   --color-line: color-mix(in srgb, var(--color-ink) 20%, transparent);
@@ -32,6 +34,7 @@
   --text-title: 28px;
   --text-display: clamp(28px, 2.6vw, 40px); /* the walk panel's headlines */
   --text-numeral: clamp(96px, 12vw, 200px); /* the walk panel's outline step numbers */
+  --text-hero: clamp(44px, 6.4vw, 112px); /* the landing title */
   --text-lede: clamp(15px, 1.1vw, 17px);
   --text-caption: clamp(17px, 1.5vw, 21px);
   --text-nav: clamp(12px, 1.05vw, 14px);
@@ -84,6 +87,8 @@
   --ease-panel: cubic-bezier(0.77, 0, 0.175, 1); /* slow, fast, soft landing */
   --ease-out: cubic-bezier(0.165, 0.84, 0.44, 1);
   --ease-rise: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --dur-title: 1.7s; /* the landing title's lines rising in */
+  --ease-title: cubic-bezier(0.16, 0.84, 0.3, 1);
 
   /* Layers */
   --z-content: 1;

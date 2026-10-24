@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
@@ -32,12 +32,10 @@ const NOTES_FADE = 0.12;
 const PANEL = { open: STOPS.sheet + 0.02, close: STOPS.landed - 0.06 };
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
-/** How long the view takes to move aside for the panel, ms: the panel's own slide. */
-const REFRAME_MS = 650;
-/** How much of the free side the moved-aside view fills: a little under, so the flat stays whole. */
-const REFRAME_FILL = 0.95;
 
-const easeInOutQuart = (t: number) => (t < 0.5 ? 8 * t ** 4 : 1 - (-2 * t + 2) ** 4 / 2);
+/** The title's echoes of its second word, each fainter than the last (as on the live site). */
+const ECHOES = [0.9, 0.65, 0.4, 0.15];
+
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -83,32 +81,14 @@ export function PlanWalk() {
     let raf = 0;
     let sheet: ReturnType<typeof addSheet> | null = null;
 
-    // The view moving aside for the panel, 0 (whole screen) to 1 (the free side).
     let open = false;
-    const aside = { from: 0, to: 0, start: 0 };
-    const asideAt = (now: number) => {
-      const t = still.matches ? 1 : clamp01((now - aside.start) / REFRAME_MS);
-      return aside.from + (aside.to - aside.from) * easeInOutQuart(t);
-    };
-    const moving = (now: number) => !still.matches && now - aside.start < REFRAME_MS;
-
-    /** Shrink and shift the picture so it sits whole in the part of the screen the panel leaves. */
-    const frameAside = (w: number, h: number, a: number) => {
-      if (a <= 0) return camera.clearViewOffset();
-      const wide = w >= h;
-      const free = wide ? w - panel.offsetWidth : h - panel.offsetHeight;
-      const k = 1 - a * (1 - Math.min(1, (free / (wide ? w : h)) * REFRAME_FILL));
-      const [cx, cy] = wide ? [w / 2 - a * (w - free) / 2, h / 2] : [w / 2, h / 2 - a * (h - free) / 2];
-      camera.setViewOffset(w * k, h * k, (w * k) / 2 - cx, (h * k) / 2 - cy, w, h);
-    };
 
     /** Open or close the panel, scroll its steps with the walk, and show each as it comes up. */
-    const steer = (s: number, now: number) => {
+    const steer = (s: number) => {
       const want = s >= PANEL.open && s < PANEL.close;
       if (want !== open) {
         open = want;
         panel.toggleAttribute("data-open", open);
-        Object.assign(aside, { from: asideAt(now), to: open ? 1 : 0, start: now });
       }
       const p = clamp01((s - PANEL.open) / (PANEL.close - PANEL.open - NOTES_FADE / 2));
       const y = p * Math.max(0, content.scrollHeight - panel.clientHeight);
@@ -123,15 +103,13 @@ export function PlanWalk() {
     };
 
     const draw = (s: number) => {
-      const now = performance.now();
-      steer(s, now);
+      steer(s);
       const o = rig(s);
       camera.position.set(o.x, o.y, o.z);
       camera.rotation.set(o.pitch, o.yaw, 0);
       camera.fov = o.fov;
       camera.near = o.near;
       camera.far = o.far;
-      frameAside(canvas.clientWidth, canvas.clientHeight, asideAt(now));
       camera.updateProjectionMatrix();
       cut.constant = o.cut;
       const t = Math.min(1, Math.max(0, (s - STOPS.sheet) / NOTES_FADE));
@@ -163,15 +141,13 @@ export function PlanWalk() {
       return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
     };
 
-    // Ease the camera towards the scroll, then stop drawing until it moves
-    // (or the view is still moving aside for the panel).
+    // Ease the camera towards the scroll, then stop drawing until it moves.
     const tick = () => {
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
-      const now = performance.now();
-      if (eased !== shown || moving(now)) draw(eased);
-      if (eased !== target || moving(performance.now())) raf = requestAnimationFrame(tick);
+      if (eased !== shown) draw(eased);
+      if (eased !== target) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
       target = read();
@@ -211,6 +187,15 @@ export function PlanWalk() {
       {/* The wash in CSS until its canvas draws, as on every stage. */}
       <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
         <LivingGradient />
+        {/* behind the plan, which is drawn over it */}
+        <h1 className={styles.title} aria-label="Interior Revolution">
+          <span className={styles.titleMain}>Interior</span>
+          {ECHOES.map((o, i) => (
+            <span key={i} className={styles.titleEcho} style={{ "--echo": o, "--i": i + 1 } as CSSProperties} aria-hidden="true">
+              Revolution
+            </span>
+          ))}
+        </h1>
         {failed ? (
           <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
         ) : (

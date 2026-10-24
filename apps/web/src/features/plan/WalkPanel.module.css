@@ -1,9 +1,25 @@
-/* The panel beside the walk. On a wide screen it slides in from the right
-   under the bar; on a tall one it rises from the foot. Its steps scroll
-   inside it (PlanWalk moves .content), and each step's parts come in one
-   after another once the step is shown: the outline number, the headline
-   line by line, the card, then the words. */
+/* The panel beside the walk, over whatever is behind it. On a wide screen
+   it wipes in from the right under the bar; on a tall one, up from the
+   foot. Its leading edge comes in on a slope: the top end leads and the
+   bottom follows a beat behind, then they meet square; going out, the
+   same in reverse. Its steps scroll inside it (PlanWalk moves .content),
+   and each step's parts come in one after another once the step is shown:
+   the outline number, the headline line by line, the card, then the words. */
+@property --lead {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --trail {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
 .panel {
+  --lead: 100%;
+  --trail: 100%;
   position: absolute;
   z-index: var(--z-content);
   top: var(--nav-h);
@@ -13,12 +29,19 @@
   overflow: hidden;
   background: var(--color-paper);
   color: var(--color-ink);
-  transform: translateX(100%);
-  transition: transform var(--dur-panel) var(--ease-panel);
+  clip-path: polygon(var(--lead) 0, 100% 0, 100% 100%, var(--trail) 100%);
+  /* going out: the bottom end leaves first, the top a beat later */
+  transition:
+    --trail var(--dur-panel) var(--ease-panel),
+    --lead var(--dur-panel) var(--ease-panel) calc(var(--stagger) * 2);
 }
 
 .panel[data-open] {
-  transform: none;
+  --lead: 0%;
+  --trail: 0%;
+  transition:
+    --lead var(--dur-panel) var(--ease-panel),
+    --trail var(--dur-panel) var(--ease-panel) calc(var(--stagger) * 2);
 }
 
 .content {
@@ -198,13 +221,13 @@
 }
 
 @media (max-aspect-ratio: 1/1) {
+  /* up from the foot: the left end leads, the right follows */
   .panel {
     top: auto;
     left: 0;
     width: auto;
     height: var(--walk-panel-h);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    transform: translateY(100%);
+    clip-path: polygon(0 var(--lead), 100% var(--trail), 100% 100%, 0 100%);
   }
 
   .step {
