@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { INK_BAR } from "@/shell/HeaderShell";
 import styles from "./PlanWalk.module.css";
 import { makeRig } from "./rig";
 import { addLabels, buildFlatScene } from "./scene";
@@ -132,7 +133,7 @@ export function PlanWalk() {
   }, []);
 
   return (
-    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan">
+    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan" {...INK_BAR}>
       <div className={styles.sticky}>
         {failed ? (
           <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>

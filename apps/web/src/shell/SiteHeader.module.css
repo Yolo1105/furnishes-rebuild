@@ -10,10 +10,20 @@
   gap: var(--space-6);
   min-height: var(--nav-h);
   padding: var(--nav-pad-y) var(--gutter);
-  color: var(--color-on-orange);
+  /* The bar's ink, and the colour drawn on a filled ink shape: cream on the
+     orange by default, ink on paper over the plan (data-tone="ink"). */
+  --bar-fg: var(--color-on-orange);
+  --bar-on-fg: var(--color-orange-top);
+  color: var(--bar-fg);
   font-family: var(--font-mono);
   font-size: var(--text-nav);
   line-height: 1;
+  transition: color var(--dur) ease;
+}
+
+.header[data-tone="ink"] {
+  --bar-fg: var(--color-ink);
+  --bar-on-fg: var(--color-paper);
 }
 
 /* Behind the bar: nothing at the top of the page, so the bar is the
@@ -39,6 +49,11 @@
 
 .header[data-scrolled="true"]::before {
   opacity: 1;
+}
+
+/* Over the plan's paper the bar stays clear. */
+.header[data-tone="ink"]::before {
+  opacity: 0;
 }
 
 .start,
@@ -72,17 +87,18 @@
 /* The bar's one button, in the live header's button style. */
 .primary {
   padding: 0.55em 0.85em;
-  border: 1px solid var(--color-on-orange);
+  border: 1px solid var(--bar-fg);
   border-radius: var(--radius-sm);
   transition:
     background-color var(--dur-fast) ease,
-    color var(--dur-fast) ease;
+    color var(--dur-fast) ease,
+    border-color var(--dur) ease;
 }
 
 .primary:hover {
   text-decoration: none;
-  background: var(--color-on-orange);
-  color: var(--color-orange-top);
+  background: var(--bar-fg);
+  color: var(--bar-on-fg);
 }
 
 /* The cart: the word, with its count raised at its top right; on phones a
@@ -118,8 +134,8 @@
   height: var(--icon);
   padding: 0 var(--space-1);
   border-radius: calc(var(--icon) / 2);
-  background: var(--color-on-orange);
-  color: var(--color-orange-top);
+  background: var(--bar-fg);
+  color: var(--bar-on-fg);
   font-size: var(--text-2xs);
   font-weight: 700;
   line-height: var(--icon);
@@ -137,7 +153,7 @@
 
 .link:focus-visible,
 .wordmark:focus-visible {
-  outline: 2px solid var(--color-on-orange);
+  outline: 2px solid var(--bar-fg);
   outline-offset: var(--space-1);
 }
 
