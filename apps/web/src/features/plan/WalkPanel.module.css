@@ -1,0 +1,226 @@
+/* The panel beside the walk. On a wide screen it slides in from the right
+   under the bar; on a tall one it rises from the foot. Its steps scroll
+   inside it (PlanWalk moves .content), and each step's parts come in one
+   after another once the step is shown: the outline number, the headline
+   line by line, the card, then the words. */
+.panel {
+  position: absolute;
+  z-index: var(--z-content);
+  top: var(--nav-h);
+  right: 0;
+  bottom: 0;
+  width: var(--walk-panel);
+  overflow: hidden;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  transform: translateX(100%);
+  transition: transform var(--dur-panel) var(--ease-panel);
+}
+
+.panel[data-open] {
+  transform: none;
+}
+
+.content {
+  padding: 0 calc(var(--panel-pad) + var(--space-6)) 0 var(--panel-pad);
+  will-change: transform;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100dvh - var(--nav-h));
+  padding: var(--space-7) 0;
+}
+
+/* The step's number, huge and in outline only; the words below ride up
+   over its foot. */
+.numeral {
+  margin: 0 0 calc(var(--text-numeral) * -0.42) calc(-1 * var(--space-2));
+  color: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-numeral);
+  font-weight: 200;
+  line-height: 1;
+  -webkit-text-stroke: 1px var(--color-ink);
+  opacity: 0;
+  transition: opacity var(--dur-slow) linear;
+  pointer-events: none;
+}
+
+.label,
+.name {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.label {
+  opacity: 0.7;
+}
+
+.headline {
+  position: relative;
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-display);
+  font-weight: 600;
+  line-height: 1.12;
+}
+
+/* Each line is a mask; the words in it swing up and level out from a tilt. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line > span {
+  display: block;
+  transform: translateY(110%) rotate(15deg);
+  transform-origin: 0 100%;
+  transition: transform var(--dur-reveal) var(--ease-out) calc(var(--dur-fast) + var(--i) * var(--stagger));
+}
+
+/* A card that rises and fades in, the drawing in it easing back to size. */
+.card {
+  margin: var(--space-6) 0 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-cream);
+  opacity: 0;
+  transform: translateY(calc(var(--space-7) * 3));
+  transition:
+    opacity calc(var(--stagger) * 7) linear calc(var(--stagger) * 7),
+    transform var(--dur-rise) var(--ease-rise) calc(var(--stagger) * 6);
+}
+
+.cardArt {
+  height: 100%;
+  transform: scale(1.15);
+  transition: transform var(--dur-settle) var(--ease-rise) calc(var(--stagger) * 6);
+}
+
+.cardArt svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 0.8;
+}
+
+.cardArt .dim {
+  stroke-width: 0.5;
+}
+
+.cardArt text {
+  fill: var(--color-ink);
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  text-anchor: middle;
+}
+
+.name,
+.body,
+.cta {
+  opacity: 0;
+  transform: translateY(var(--space-4));
+  transition:
+    opacity calc(var(--stagger) * 5) linear calc(var(--stagger) * 8),
+    transform var(--dur-rise) var(--ease-rise) calc(var(--stagger) * 8);
+}
+
+.name {
+  margin-top: var(--space-5);
+  font-weight: 700;
+}
+
+.body {
+  max-width: 38ch;
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-lede);
+  line-height: 1.7;
+}
+
+.cta {
+  align-self: flex-start;
+  margin-top: var(--space-6);
+}
+
+/* Shown: everything in the step comes in, each on its own delay above. */
+.step[data-shown] .numeral {
+  opacity: 0.16;
+}
+
+.step[data-shown] .line > span,
+.step[data-shown] .card,
+.step[data-shown] .cardArt,
+.step[data-shown] .name,
+.step[data-shown] .body,
+.step[data-shown] .cta {
+  opacity: 1;
+  transform: none;
+}
+
+/* Which step is up, as dots down the panel's right edge. */
+.dots {
+  position: absolute;
+  top: 50%;
+  right: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  translate: 0 -50%;
+}
+
+.dots li {
+  width: var(--space-2);
+  height: var(--space-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 50%;
+  transition: background-color var(--dur) ease;
+}
+
+.dots li[data-active] {
+  background: var(--color-ink);
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .panel {
+    top: auto;
+    left: 0;
+    width: auto;
+    height: var(--walk-panel-h);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+  }
+
+  .step {
+    min-height: var(--walk-panel-h);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .numeral,
+  .line > span,
+  .card,
+  .cardArt,
+  .name,
+  .body,
+  .cta {
+    transition: none;
+  }
+}
