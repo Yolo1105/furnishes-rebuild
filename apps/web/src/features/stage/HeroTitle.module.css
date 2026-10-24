@@ -1,0 +1,55 @@
+.title {
+  position: absolute;
+  z-index: var(--z-content);
+  top: calc(var(--nav-h) + var(--space-4));
+  left: var(--gutter);
+  margin: 0 0 0 -0.09em; /* the wide caps sit inside their box: line the ink up with the bar */
+  color: var(--color-rust);
+  font-family: var(--font-sans);
+  font-size: var(--text-hero);
+  line-height: 0.92;
+  text-transform: uppercase;
+  opacity: var(--title, 1);
+  pointer-events: none;
+}
+
+.first,
+.second {
+  display: block;
+  font-size: 0.7em;
+  font-variation-settings:
+    "wght" 100,
+    "wdth" 118;
+  animation: rise var(--dur-title) var(--ease-title) both;
+}
+
+.first {
+  color: var(--color-rust-deep);
+}
+
+.second {
+  --shown: 0.9;
+  animation-delay: calc(var(--stagger) * 1.5);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-4));
+  }
+  to {
+    opacity: var(--shown, 1);
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .first,
+  .second {
+    animation: none;
+  }
+
+  .second {
+    opacity: var(--shown);
+  }
+}

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { HeroTitle } from "@/features/stage/HeroTitle";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
 import { routes } from "@/lib/routes";
@@ -34,9 +35,6 @@ const stage = (s: number, a: number, b: number) => Math.min(1, Math.max(0, (s - 
 const smooth = (t: number) => t * t * (3 - 2 * t);
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
-
-/** The title's second word, a shade fainter than its first. */
-const ECHOES = [0.9];
 
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -224,14 +222,7 @@ export function PlanWalk() {
           <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         )}
 
-        <h1 className={styles.title} aria-label="Interior Revolution">
-          <span className={styles.titleMain}>Interior</span>
-          {ECHOES.map((o, i) => (
-            <span key={i} className={styles.titleEcho} style={{ "--echo": o, "--i": i + 1 } as CSSProperties} aria-hidden="true">
-              Revolution
-            </span>
-          ))}
-        </h1>
+        <HeroTitle />
 
         <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
           Design your room

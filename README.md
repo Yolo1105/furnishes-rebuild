@@ -22,8 +22,9 @@ app/
   (site)/layout.tsx     every public page: the bar, then the page
   (site)/page.tsx       landing: the plan walk over the moving wash
   (site)/sign-in/       sign-in (UI only, plus a demo account)
+  (site)/test/          a bare test page: the bar, the moving wash, the title
 shell/                  the bar: SiteHeader, CartLink, AccountLink
-features/stage/         the moving orange-to-cream background (Stage, LivingGradient, wash)
+features/stage/         the moving orange-to-cream background (Stage, LivingGradient, wash) and the landing title (HeroTitle)
 features/plan/          the plan walk: the HDB flat as a 3D drawing, and the scroll camera
 features/auth/          sign-in panel and the demo session
 lib/routes.ts           every address the site links to
