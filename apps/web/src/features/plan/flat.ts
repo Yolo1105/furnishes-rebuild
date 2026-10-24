@@ -153,6 +153,17 @@ export type Opening = {
   swing?: { hinge: "low" | "high"; side: -1 | 1; wall: number };
 };
 
+/** The household shelter's steel door, opening out into the hall. */
+export const SHELTER_DOOR: Opening = {
+  run: "ew",
+  at: 8500,
+  across: 4950,
+  width: 700,
+  bottom: 0,
+  top: DOOR_HEAD,
+  swing: { hinge: "high", side: -1, wall: PARTITION },
+};
+
 /** The doorways between rooms (as the playground places them) and the front door. */
 export const DOORS: readonly Opening[] = [
   { run: "ns", at: 4250, across: 9450, width: 1000, bottom: 0, top: DOOR_HEAD }, // living to hall
@@ -162,7 +173,7 @@ export const DOORS: readonly Opening[] = [
   { run: "ew", at: 5500, across: 3550, width: 750, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: -1, wall: PARTITION } }, // bedroom 3
   { run: "ew", at: 4000, across: 4950, width: 650, bottom: 0, top: DOOR_HEAD, swing: { hinge: "low", side: 1, wall: PARTITION } }, // bathroom
   { run: "ew", at: 2550, across: 1850, width: 650, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: PARTITION } }, // master bath
-  { run: "ew", at: 8500, across: 4950, width: 700, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: 1, wall: PARTITION } }, // shelter
+  SHELTER_DOOR,
   { run: "ns", at: 8000, across: 7550, width: 700, bottom: 0, top: DOOR_HEAD, swing: { hinge: "high", side: -1, wall: PARTITION } }, // yard
 ];
 
@@ -192,12 +203,47 @@ export const WINDOWS: readonly Opening[] = [
   win("ns", 2200, 15350, 1500), // living, east
   win("ew", 12000, 9050, 1000), // kitchen, south
   win("ns", 3900, -50, 1500), // master, west
-  win("ew", 7950, -50, 1200), // bedroom 2, north
-  win("ew", 4800, -50, 1500), // bedroom 3, north
   win("ew", 5150, 6850, 600, 1500, 2100), // bathroom, south
   win("ns", 450, -50, 600, 1500, 2100), // master bath, west
   win("ew", 6650, 9050, 1200), // yard, south
 ];
+
+// ---- what makes it an HDB flat ----------------------------------------------
+
+/**
+ * Reinforced-concrete columns, [x0, y0, x1, y1] mm: 300 square, flush with
+ * the outside face at the corners, centred on the wall where main walls meet.
+ */
+export const COLUMNS: readonly [number, number, number, number][] = [
+  [-100, -100, 200, 200], // north-west corner
+  [3000, -100, 3300, 200], // north wall, at the master bath and bedroom 3
+  [6300, -100, 6600, 200], // north wall, at bedrooms 3 and 2
+  [9300, -100, 9600, 200], // north wall, at bedroom 2 and the living room
+  [15100, -100, 15400, 200], // north-east corner
+  [15100, 6100, 15400, 6400], // south-east corner, by the front door
+  [9300, 3400, 9600, 3700], // the hall's end, at the living room
+  [9300, 6300, 9600, 6600], // where the living room, shelter and kitchen meet
+  [12500, 6400, 12800, 6700], // the kitchen's north-east corner
+];
+
+/** The household shelter's walls are reinforced concrete: this much thicker, inwards, mm. */
+export const SHELTER_WALL = 200;
+
+/**
+ * Bay windows on the north wall, mm: the wall is open from sill to head
+ * between x0 and x1, and a box of `depth` stands out beyond it, a seat
+ * ledge below and glazing all across its outer face.
+ */
+export const BAYS: readonly { x0: number; x1: number; sill: number; head: number; depth: number }[] = [
+  { x0: 4700, x1: 6000, sill: 500, head: 2300, depth: 500 }, // bedroom 3, over its desk
+  { x0: 7950, x1: 8750, sill: 500, head: 2300, depth: 500 }, // bedroom 2
+];
+
+/**
+ * The air-conditioner ledge outside the living room's east wall, mm: a
+ * slab at floor level, walled by a parapet `parapet` high.
+ */
+export const AC_LEDGE = { x0: 15400, y0: 300, x1: 16000, y1: 1300, parapet: 1000, wall: 100 } as const;
 
 /** The flat's bounds on the sheet, outer walls included, mm. */
 export const BOUNDS = (() => {

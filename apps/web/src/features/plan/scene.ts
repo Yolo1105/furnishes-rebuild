@@ -2,7 +2,24 @@ import * as THREE from "three";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
-import { BOUNDS, CEILING, DOOR_HEAD, DOORS, floorOf, FRONT_DOOR, ROOMS, wallBoxes, WINDOWS, type Opening } from "./flat";
+import {
+  AC_LEDGE,
+  BAYS,
+  BOUNDS,
+  CEILING,
+  COLUMNS,
+  DOOR_HEAD,
+  DOORS,
+  floorOf,
+  FRONT_DOOR,
+  OUTER_WALL,
+  ROOMS,
+  SHELTER_DOOR,
+  SHELTER_WALL,
+  wallBoxes,
+  WINDOWS,
+  type Opening,
+} from "./flat";
 import { FINISH } from "./finishes";
 import { BoxSolid } from "./solid";
 import { planSymbols } from "./symbols";
@@ -33,7 +50,7 @@ const PANEL = 0.018; // Furnishes board thickness, m
 /** Built-in wardrobes, [x0, z0, x1, z1] in metres: the plan marks each with a cross. */
 export const WARDROBES: readonly [number, number, number, number][] = [
   [0.05, 5.2, 2.0, 5.79], // master
-  [8.805, 0.05, 9.395, 2.2], // bedroom 2
+  [8.805, 0.25, 9.395, 2.4], // bedroom 2, clear of the column
   [3.35, 2.925, 4.95, 3.495], // bedroom 3
 ];
 
@@ -170,6 +187,38 @@ export function buildFlatScene(palette: Palette) {
     else shell.sub([across[0], y0, along[0]], [across[1], y1, along[1]]);
   };
   [...DOORS, FRONT_DOOR, ...WINDOWS].forEach(hole);
+
+  // ---- what makes it an HDB flat --------------------------------------------
+  // columns, full height
+  for (const [x0, y0, x1, y1] of COLUMNS) shell.add([x0 * M, -SLAB, y0 * M], [x1 * M, H, y1 * M]);
+  // the household shelter's thick concrete walls, inside its own floor; its door cut through again
+  const shelter = floorOf(ROOMS.find((r) => r.key === "shelter")!);
+  const [sx0, sz0, sx1, sz1] = [shelter.x0 * M, shelter.y0 * M, shelter.x1 * M, shelter.y1 * M];
+  const st = SHELTER_WALL * M;
+  shell.add([sx0, 0, sz0], [sx1, H, sz0 + st]);
+  shell.add([sx0, 0, sz1 - st], [sx1, H, sz1]);
+  shell.add([sx0, 0, sz0], [sx0 + st, H, sz1]);
+  shell.add([sx1 - st, 0, sz0], [sx1, H, sz1]);
+  hole(SHELTER_DOOR);
+  // bay windows: a box standing out from the north wall, open to the room
+  // from sill to head, a seat ledge below, glazed across its outer face
+  const face = -OUTER_WALL * M; // the north wall's outer face
+  for (const b of BAYS) {
+    const [x0, x1, sill, head, d] = [b.x0 * M, b.x1 * M, b.sill * M, b.head * M, b.depth * M];
+    const cheek = 0.1;
+    shell.add([x0 - cheek, -SLAB, face - d], [x1 + cheek, H, face]);
+    shell.sub([x0, sill, face - d + cheek], [x1, head, 0.01]);
+    shell.sub([x0 + 0.05, sill + 0.05, face - d - 0.01], [x1 - 0.05, head - 0.05, face - d + cheek + 0.01]);
+  }
+  // the air-conditioner ledge: a slab outside the living room, behind a parapet
+  {
+    const { x0, y0, x1, y1, parapet, wall } = AC_LEDGE;
+    const [lx0, lz0, lx1, lz1, ph, pw] = [x0 * M, y0 * M, x1 * M, y1 * M, parapet * M, wall * M];
+    shell.add([lx0, -SLAB, lz0], [lx1, 0, lz1]);
+    shell.add([lx1 - pw, 0, lz0], [lx1, ph, lz1]);
+    shell.add([lx0, 0, lz0], [lx1, ph, lz0 + pw]);
+    shell.add([lx0, 0, lz1 - pw], [lx1, ph, lz1]);
+  }
   // the walls' tops are ink, so once the cut clears them they read as it did
   solid(shell.build(), 1.2, insideMat, {
     inkFrom: H - 0.001,
@@ -326,7 +375,7 @@ export function buildFlatScene(palette: Palette) {
     piece(box(x0, 0, z0, x1, 0.03, z1), disc((x0 + x1) / 2, (z0 + z1) / 2, 0.05, 0.05, 0.03, 0.034));
   wc(1.3, 0.01, 1); // master bath
   basin(1.75, 0.01, 2.85, 0.5);
-  shower(0.01, 0.01, 0.9, 1.69);
+  shower(0.01, 0.21, 0.9, 1.69); // clear of the corner column
   wc(4.2, 6.79, -1); // bathroom
   basin(3.31, 6.0, 3.8, 6.79);
   shower(4.75, 5.01, 5.69, 6.79);
@@ -355,6 +404,9 @@ export function buildFlatScene(palette: Palette) {
     const top = DOOR_HEAD * M - 0.01;
     piece(d.run === "ew" ? box(along[0], 0, perp[0], along[1], top, perp[1]) : box(perp[0], 0, along[0], perp[1], top, along[1]));
   }
+
+  // the air-conditioner's condenser, out on its ledge
+  piece(box(15.5, 0, 0.45, 15.85, 0.6, 1.15));
 
   // the yard: a washing machine in its corner
   piece(box(5.92, 0, 8.36, 6.52, 0.85, 8.98), disc(6.22, 8.67, 0.2, 0.2, 0.85, 0.856));
@@ -525,6 +577,11 @@ export function addSheet(
     const small = r.w < 2400 || r.d < 1500;
     text([{ text: r.name.toUpperCase(), size: small ? 0.15 : 0.2, track: 0.08 }], x, z, { y: LABEL_Y });
   }
+  // the air-conditioner ledge, named along its outer side
+  text([{ text: "A/C LEDGE", size: 0.11, track: 0.08 }], AC_LEDGE.x1 / 1000 + 0.18, (AC_LEDGE.y0 + AC_LEDGE.y1) / 2000, {
+    rot: -Math.PI / 2,
+    fade: true,
+  });
 
   // the flat's outer bounds, m
   const b = { x0: BOUNDS.x0 / 1000, x1: BOUNDS.x1 / 1000, y0: BOUNDS.y0 / 1000, y1: BOUNDS.y1 / 1000 };
@@ -561,6 +618,12 @@ export function addSheet(
       const [a0, a1] = [wdw.at / 1000 - half, wdw.at / 1000 + half];
       glass.push(...(wdw.run === "ew" ? [a0, y, c, a1, y, c] : [c, y, a0, c, y, a1]));
     }
+  }
+  // a bay's glazing runs across its outer face, at its sill
+  for (const bay of BAYS) {
+    const z = (-OUTER_WALL - bay.depth + 50) / 1000;
+    const [a0, a1, y] = [(bay.x0 + 50) / 1000, (bay.x1 - 50) / 1000, bay.sill / 1000 + 0.002];
+    for (const k of [-0.025, 0.025]) glass.push(a0, y, z + k, a1, y, z + k);
   }
   segments(glass, 0.6, false);
 

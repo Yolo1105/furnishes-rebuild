@@ -160,7 +160,7 @@ export function planSymbols(wardrobes: readonly (readonly [number, number, numbe
   };
   wc(1.3, 0.01, 1); // master bath
   basin(1.75, 0.01, 2.85, 0.5, [2.3, 0.06]);
-  shower(0.01, 0.01, 0.9, 1.69);
+  shower(0.01, 0.21, 0.9, 1.69); // clear of the corner column
   wc(4.2, 6.79, -1); // bathroom
   basin(3.31, 6.0, 3.8, 6.79, [3.36, 6.4]);
   shower(4.75, 5.01, 5.69, 6.79);
@@ -181,6 +181,9 @@ export function planSymbols(wardrobes: readonly (readonly [number, number, numbe
   rect(fittings, 5.92, 8.36, 6.52, 8.98);
   ellipse(fittings, 6.22, 8.67, 0.2, 0.2);
   tags.push({ text: "WM", x: 6.22, z: 8.25 });
+  // the air-conditioner's condenser on its ledge: its case and fan
+  rect(fittings, 15.5, 0.45, 15.85, 1.15);
+  ellipse(fittings, 15.675, 0.8, 0.14, 0.14, 24);
 
   // ---- door leaves, standing open square to their walls --------------------------
   for (const d of [...DOORS, FRONT_DOOR]) {
