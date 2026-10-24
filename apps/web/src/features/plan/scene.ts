@@ -276,8 +276,8 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 /**
  * What an architect adds to a plan that is not the building: room names and
  * areas, tile joints, dimension strings round the outside, door swings,
- * window glass, wardrobe crosses, the structural grid and the north point,
- * and the metre grid on the ground. All of it lies on the floor or the
+ * window glass, wardrobe crosses and the north point, and the metre grid on
+ * the ground. All of it lies on the floor or the
  * ground. The notes that only make sense on a flat drawing fade as the walls
  * rise; room names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them.
@@ -513,49 +513,6 @@ export function addSheet(
   for (let x = gx0; x <= gx1; x++) for (let z = gz0; z < gz1; z++) put(x, z, x, z + 1);
   for (let z = gz0; z <= gz1; z++) for (let x = gx0; x < gx1; x++) put(x, z, x + 1, z);
   rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
-
-  // ---- structural grid: the axes through the main walls, with their bubbles
-  // numbered across the top, lettered down the side, as a plan sets them out
-  const o = OUTER_WALL / 1000;
-  const AXES_X = [-o / 2, 3.15, 6.45, 9.45, 12.7 + o / 2, 15.3 + o / 2]; // wall centres, m
-  const AXES_Z = [-o / 2, 3.55, 4.95, 6.45, 9.0 + o / 2];
-  const BUBBLE = 0.26;
-  const OUT = 2.35; // how far out the bubbles sit, past the dimension strings
-  /** Where the building begins, coming in along an axis from the north (x) or the west (z). */
-  const edge = (run: "x" | "z", at: number) =>
-    Math.min(
-      ...ROOMS.filter((r) =>
-        run === "x" ? r.x / 1000 - o <= at && at <= (r.x + r.w) / 1000 + o : r.y / 1000 - o <= at && at <= (r.y + r.d) / 1000 + o,
-      ).map((r) => (run === "x" ? r.y : r.x) / 1000 - o),
-    );
-  const axisLines: number[] = [];
-  const ringPts: number[] = [];
-  /** A chain line from a to b along one axis: long dash, dot, long dash. */
-  const dashDot = (P: (t: number) => number[], from: number, to: number) => {
-    const pattern = [0.5, 0.1, 0.04, 0.1];
-    for (let t = from, k = 0; t < to; t += pattern[k % 4]!, k++) {
-      if (k % 2 === 0) axisLines.push(...P(t), ...P(Math.min(t + pattern[k % 4]!, to)));
-    }
-  };
-  const bubble = (x: number, z: number, label: string) => {
-    for (let k = 0; k < 40; k++) {
-      const [a0, a1] = [(k / 40) * Math.PI * 2, ((k + 1) / 40) * Math.PI * 2];
-      ringPts.push(x + BUBBLE * Math.cos(a0), FLOOR, z + BUBBLE * Math.sin(a0), x + BUBBLE * Math.cos(a1), FLOOR, z + BUBBLE * Math.sin(a1));
-    }
-    text([{ text: label, size: 0.2 }], x, z, { fade: true });
-  };
-  AXES_X.forEach((x, i) => {
-    const z = b.y0 - OUT;
-    bubble(x, z, `${i + 1}`);
-    dashDot((t) => [x, FLOOR, t], z + BUBBLE, edge("x", x) - 0.1);
-  });
-  AXES_Z.forEach((z, i) => {
-    const x = b.x0 - OUT;
-    bubble(x, z, String.fromCharCode(65 + i));
-    dashDot((t) => [t, FLOOR, z], x + BUBBLE, edge("z", z) - 0.1);
-  });
-  segments(axisLines, 0.5, true);
-  segments(ringPts, 0.6, true);
 
   // ---- north point, by the north-east corner --------------------------------
   const [nx, nz, nr] = [b.x1 + 1.75, b.y0 + 0.9, 0.34];
