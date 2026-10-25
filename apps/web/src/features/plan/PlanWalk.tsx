@@ -44,16 +44,18 @@ const SHOW_AT = 0.55;
  * opening ends.
  */
 const INTRO_SCREENS = 4.5;
-/** The closest the opening comes on the living room (it comes less close if the room would not fit between its words). */
+/** The closest the opening comes on the living room (less close if the room would not fit beside the panel). */
 const INTRO_ZOOM = 1.8;
 /** The living room with its walls, [x0, z0, x1, z1] m: shown alone first. */
 const LIVING_ROOM = [9.3, -0.15, 16.1, 6.5] as const;
 /** The whole flat, the same way. */
 const FLAT = [BOUNDS.x0 / 1000, BOUNDS.y0 / 1000, BOUNDS.x1 / 1000, BOUNDS.y1 / 1000] as const;
-/** Room left round the plan inside the space between the opening's words, px. */
+/** Room left round the plan inside the space the panel leaves it, px. */
 const BREATHE = 40;
 /** Through the opening (0 to 1): when the rest of the flat grows in round the living room, and the view pulls back. */
 const WHOLE = { from: 0.62, to: 0.9 };
+/** Through the opening: when the photo has gone and the panel comes in on the one room. */
+const ROOM_SHOWN = 0.2;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -86,7 +88,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     let q = opening ? 0 : 1; // how far through the opening, 0 to 1
     let qShown = -1;
     const corner = new THREE.Vector3();
-    // the space the opening's words leave free for the plan, px (set on resize)
+    // the space the panel leaves free for the plan, px (set on resize)
     let free = { cx: 0, cy: 0, w: 1, h: 1 };
 
     let renderer: THREE.WebGLRenderer;
@@ -126,11 +128,22 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
      * steps move one for one with the scroll, however fast, as if the
      * panel scrolled natively.
      */
+    /**
+     * Where the panel opens and where each of its steps ends, as px of page
+     * scroll. After an opening it comes in on the one room: its first step
+     * ends as the rest of the flat starts to grow in, its second once the
+     * walls start to rise; from there, one step to each of the walk's stages.
+     */
+    const panelStops = () => {
+      const lead = introPx();
+      const run = track.offsetHeight - window.innerHeight - lead; // the walk's own scroll
+      const at = (s: number) => lead + run * s;
+      if (!opening) return [at(PANEL_OPEN), ...STEP_ENDS.map(at)];
+      return [lead * ROOM_SHOWN, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
+    };
     const steer = () => {
       const r = track.getBoundingClientRect();
-      const lead = introPx();
-      const run = r.height - window.innerHeight - lead; // the walk's own scroll
-      const from = lead + run * PANEL_OPEN; // px scrolled when the panel opens
+      const from = panelStops()[0]!; // px scrolled when the panel opens
       const want = -r.top >= from;
       if (want !== open) {
         open = want;
@@ -162,8 +175,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         const whole = smooth(stage(q, WHOLE.from, WHOLE.to));
         // the living room alone, then the rest of the flat growing in round it
         reveal(LIVING_ROOM, whole);
-        // the plan fits between the words either side of it (01's, then
-        // 02's), then, as the walls rise and 02 goes, fills the screen again
+        // the plan fits beside the panel (the one room, then the flat), then,
+        // as the walls rise, frames as the walk does, the panel over it
         const hold = smooth(Math.min(1, (1 - smooth(stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE))) / 0.25));
         const [w, h] = [canvas.clientWidth, canvas.clientHeight];
         // where the living room and the flat fall on the whole view, not on last frame's close-up
@@ -219,22 +232,18 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       camera.aspect = w / h;
       rig = makeRig(w / h);
       for (const m of lineMats) m.resolution.set(w, h);
-      // the space the opening's words leave free between them (data-side="left" / "right")
-      const sides = opening ? [...opening.querySelectorAll<HTMLElement>("[data-side]")] : [];
-      const lefts = sides.filter((e) => e.dataset.side === "left").map((e) => e.getBoundingClientRect().right);
-      const rights = sides.filter((e) => e.dataset.side === "right").map((e) => e.getBoundingClientRect().left);
-      const [fx0, fx1] = [Math.max(0, ...lefts) + BREATHE, Math.min(w, ...rights) - BREATHE];
-      const [fy0, fy1] = [parseFloat(css("--nav-h")) + BREATHE / 2, h - BREATHE];
+      // the space the panel leaves the plan: left of it, or above it where it rises from the foot
+      const pr = panel.getBoundingClientRect();
+      const atFoot = pr.top > h * 0.25;
+      const [fx0, fx1] = [BREATHE, (atFoot ? w : pr.left) - BREATHE];
+      const [fy0, fy1] = [parseFloat(css("--nav-h")) + BREATHE / 2, (atFoot ? pr.top : h) - BREATHE];
       free = { cx: (fx0 + fx1) / 2, cy: (fy0 + fy1) / 2, w: fx1 - fx0, h: fy1 - fy0 };
       // each step is as long as its stage, so it is up while the stage plays
       // out; the last runs on a screen further, so it ends with the walk
-      const run = track.offsetHeight - window.innerHeight - introPx();
-      // (after an opening the panel has no step for the plan: its first ends with the walls)
-      const ends = opening ? STEP_ENDS.slice(1) : STEP_ENDS;
+      const stops = panelStops();
       steps.forEach((step, i) => {
-        const from = i ? ends[i - 1]! : PANEL_OPEN;
         const extra = i === steps.length - 1 ? panel.clientHeight : 0;
-        step.style.setProperty("--step-h", `${(ends[i]! - from) * run + extra}px`);
+        step.style.setProperty("--step-h", `${stops[i + 1]! - stops[i]! + extra}px`);
       });
       steer();
       draw(eased);
@@ -255,7 +264,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       sticky.style.setProperty("--intro", q.toFixed(4));
       opening.toggleAttribute("data-scrolled", q > 0.01);
       opening.toggleAttribute("data-done", q >= 0.42); // the photo and its sketch have gone
-      opening.toggleAttribute("data-light-under-bar", q < 0.4); // until the sketch's paper has gone
+      opening.toggleAttribute("data-light-under-bar", q < ROOM_SHOWN); // until the photo has gone
     };
 
     // Ease the camera towards the scroll, then stop drawing until it moves.

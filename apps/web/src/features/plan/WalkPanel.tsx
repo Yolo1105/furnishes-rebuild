@@ -60,6 +60,20 @@ const STEPS: Step[] = [
   },
 ];
 
+/** After an opening (a photo of a room), the plan's part told in two: that one room, then the whole flat. */
+const OPENING_STEPS: Step[] = [
+  {
+    label: "One room",
+    lines: ["Every home starts", "with one room."],
+    body: "The room you love, drawn to scale: its walls and windows, and the furniture that lives in it.",
+  },
+  {
+    label: "The whole home",
+    lines: ["Then it becomes", "the whole plan."],
+    body: "The rest of the flat drawn in round it: a 5-room HDB flat, every wall, door and window where it really is.",
+  },
+];
+
 /** The bookcase from the plan, drawn in elevation with its two main sizes. */
 function BookcaseDrawing() {
   // 1 unit = 16 mm: 1600 wide, 1800 tall, standing on the line y = 142.5
@@ -101,14 +115,14 @@ function Swatches() {
 }
 
 /**
- * `afterOpening`: the walk had an opening that told the plan's part itself
- * (its own 01 and 02), so the panel leaves its first step out and numbers
- * the rest on from 03.
+ * `afterOpening`: the walk had an opening, so the panel comes in on its
+ * one room and tells the plan's part in two steps (OPENING_STEPS) in place
+ * of one.
  */
 export function WalkPanel({ ref, afterOpening = false }: { ref: Ref<HTMLElement>; afterOpening?: boolean }) {
-  const steps = (afterOpening ? STEPS.slice(1) : STEPS).map((step, i) => ({
+  const steps = (afterOpening ? [...OPENING_STEPS, ...STEPS.slice(1)] : STEPS).map((step, i) => ({
     ...step,
-    no: String(i + (afterOpening ? 3 : 1)).padStart(2, "0"),
+    no: String(i + 1).padStart(2, "0"),
   }));
   return (
     <aside ref={ref} className={styles.panel} aria-label="What you are looking at">

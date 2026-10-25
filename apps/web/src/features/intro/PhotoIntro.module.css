@@ -1,17 +1,11 @@
 /* The opening, over the walk. Everything here follows --intro, how far
    through the opening the scroll is (0 to 1, set by PlanWalk): the title
-   goes first, the lines draw in, the photo fades under them straight
-   to the page's own red-to-white, then the sketch fades on the living
-   room's plan beneath, told by 01 either side of it; then, as the rest
-   of the flat grows in, 02, which stays until the walls rise (--notes, from PlanWalk).
-   PlanWalk also marks it data-scrolled once the title has gone (the
-   button stops taking clicks) and data-done once the photo has. */
+   goes first, then the photo fades straight to the page's own red-to-white
+   and the plan beneath. PlanWalk also marks it data-scrolled once the title
+   has gone (the button stops taking clicks) and data-done once the photo has. */
 .intro {
   --title: calc(1 - clamp(0, var(--intro, 0) / 0.07, 1));
-  --photo: calc(1 - clamp(0, (var(--intro, 0) - 0.19) / 0.1, 1));
-  --sketch: calc(1 - clamp(0, (var(--intro, 0) - 0.31) / 0.08, 1));
-  --one: calc(clamp(0, (var(--intro, 0) - 0.36) / 0.05, 1) * (1 - clamp(0, (var(--intro, 0) - 0.58) / 0.05, 1)));
-  --two: calc(clamp(0, (var(--intro, 0) - 0.7) / 0.06, 1) * var(--notes, 1));
+  --photo: calc(1 - clamp(0, (var(--intro, 0) - 0.09) / 0.1, 1));
   position: absolute;
   z-index: var(--z-content);
   inset: 0;
@@ -29,9 +23,9 @@
   inset: 0;
 }
 
-/* The photo and its lines as one: sized to cover the screen, centred
-   across and set 60% down (so a little more floor than ceiling shows where
-   the screen is wider than the photo), as object-fit cover would. */
+/* The photo: sized to cover the screen, centred across and set 60% down
+   (so a little more floor than ceiling shows where the screen is wider
+   than the photo), as object-fit cover would. */
 .room {
   position: absolute;
   top: 60%;
@@ -45,23 +39,6 @@
   opacity: var(--photo);
 }
 
-/* Each line draws itself in turn: it starts at its --at share of the drawing. */
-.lines {
-  opacity: var(--sketch);
-  fill: none;
-  stroke: var(--color-rust);
-  stroke-width: 1.25;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.lines path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - clamp(0, (var(--intro, 0) - 0.02 - var(--at) * 0.18) / 0.07, 1));
-  vector-effect: non-scaling-stroke;
-}
-
 /* The title and the way in, until the scroll starts. */
 .hero {
   pointer-events: auto;
@@ -71,9 +48,9 @@
   pointer-events: none;
 }
 
-/* right under the bar */
+/* a little way under the bar */
 .intro .place {
-  top: var(--nav-h);
+  top: calc(var(--nav-h) + var(--space-7) * 2);
 }
 
 .slogan {
@@ -124,82 +101,4 @@
   .cue {
     animation: none;
   }
-}
-
-/* 01, then 02, either side of the plan: on the left the step and its
-   headline, on the right what it shows. Each pair fades in and rises a
-   little as its stage comes up. PlanWalk fits the plan between them. */
-.side {
-  --shown: 0;
-  position: absolute;
-  top: 50%;
-  width: min(20vw, 280px);
-  color: var(--color-ink);
-  opacity: var(--shown);
-  transform: translateY(calc(-50% + (1 - var(--shown)) * var(--space-4)));
-}
-
-.left {
-  left: var(--gutter);
-}
-
-.right {
-  right: var(--gutter);
-}
-
-.one {
-  --shown: var(--one);
-}
-
-.two {
-  --shown: var(--two);
-}
-
-.facts {
-  margin: var(--space-4) 0 0;
-  padding: var(--space-3) 0 0;
-  border-top: 1px solid currentColor;
-  list-style: none;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--track-wide);
-  line-height: 2;
-  text-transform: uppercase;
-  opacity: 0.75;
-}
-
-.no {
-  margin: 0 0 calc(var(--text-numeral) * -0.42);
-  color: transparent;
-  font-family: var(--font-sans);
-  font-size: var(--text-numeral);
-  font-weight: 200;
-  line-height: 1;
-  -webkit-text-stroke: 1px var(--color-ink);
-  opacity: 0.2;
-}
-
-.label {
-  position: relative;
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
-  opacity: 0.75;
-}
-
-.headline {
-  margin: var(--space-3) 0 0;
-  font-family: var(--font-sans);
-  font-size: var(--text-display);
-  font-weight: 600;
-  line-height: 1.12;
-}
-
-.body {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: var(--text-lede);
-  line-height: 1.7;
 }
