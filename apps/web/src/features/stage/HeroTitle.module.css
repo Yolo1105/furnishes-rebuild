@@ -38,7 +38,7 @@
 /* the second word, and any echoes of it (which set their own --shown and --i) */
 .second {
   --shown: 0.9;
-  font-size: 0.58em; /* a step under the first word */
+  font-size: 0.518em; /* a step under the first word: as wide as it, for this face */
   animation-delay: calc(var(--i, 1) * var(--stagger) * 1.5);
 }
 
