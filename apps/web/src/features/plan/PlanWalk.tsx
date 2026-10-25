@@ -65,6 +65,11 @@ const ROOM_SHOWN = 0.2;
  */
 const PANEL_AT = 0.21;
 const PANEL_IN = 0.35;
+/** Through the opening: where the page holds a moment when a scroll down runs past it, so 01 is never skipped. */
+const HOLD_AT = 0.42;
+/** How long it holds there at least, ms; and it goes on holding while the same scroll keeps coming (gaps under HOLD_GAP ms). */
+const HOLD_MS = 650;
+const HOLD_GAP = 160;
 /** How stiff the spring the panel's way in rides is, 1/s: it trails the scroll and eases in, about 4 / this seconds behind. */
 const PANEL_SPRING = 4.5;
 
@@ -334,7 +339,27 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       if (eased !== shown || q !== qShown || enter !== enterShown) draw(eased);
       if (eased !== target || enter !== goal) raf = requestAnimationFrame(tick);
     };
+    // a scroll down that runs past 01 stops there once, and the rest of it
+    // (a fling's momentum) is swallowed for a moment, so 01 is always seen
+    let lastY = window.scrollY;
+    let holdUntil = 0;
+    const hold = () => {
+      const y = window.scrollY;
+      const at = introPx() * HOLD_AT;
+      const now = performance.now();
+      if (opening && lastY < at - 1 && y > at + 1) holdUntil = now + HOLD_MS;
+      // held: pinned there, whatever the scroll already under way would do
+      if (now < holdUntil && Math.abs(y - at) > 1) window.scrollTo({ top: at, behavior: "instant" });
+      lastY = window.scrollY;
+    };
+    const swallow = (e: Event) => {
+      const now = performance.now();
+      if (now >= holdUntil || !e.cancelable) return;
+      e.preventDefault();
+      holdUntil = Math.max(holdUntil, now + HOLD_GAP); // the same fling, still coming
+    };
     const onScroll = () => {
+      hold();
       playIntro();
       steer();
       target = read();
@@ -344,6 +369,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     const sized = new ResizeObserver(resize);
     sized.observe(canvas);
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", swallow, { passive: false });
+    window.addEventListener("touchmove", swallow, { passive: false });
 
     // The plan's notes are drawn in the site's mono face, once it has loaded;
     // sizing again gives their lines the canvas's resolution.
@@ -366,6 +393,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       cancelAnimationFrame(raf);
       sized.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", swallow);
+      window.removeEventListener("touchmove", swallow);
       disposables.forEach((d) => d.dispose());
       renderer.dispose();
     };
