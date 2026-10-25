@@ -219,8 +219,10 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         // the living room alone, then the rest of the flat growing in round it
         reveal(LIVING_ROOM, whole);
         // the plan fits beside the panel (the one room, then the flat), then,
-        // as the walls rise, frames as the walk does, the panel over it
-        const hold = smooth(Math.min(1, (1 - smooth(stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE))) / 0.25));
+        // over the whole of the walls' rise, comes to frame as the walk does,
+        // the panel over it: in step with the camera's own move across to the
+        // living room, so the two never pull the view opposite ways
+        const hold = 1 - smooth(stage(s, STOPS.sheet + 0.04, STOPS.lifted));
         const [w, h] = [canvas.clientWidth, canvas.clientHeight];
         // where the living room and the flat fall on the whole view, not on last frame's close-up
         camera.clearViewOffset();
