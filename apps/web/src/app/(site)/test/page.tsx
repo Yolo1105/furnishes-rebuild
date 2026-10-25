@@ -15,7 +15,8 @@ export default function TestPage() {
         alt="A living room: a red sofa and an olive armchair round a dark coffee table, under a floor lamp"
         fill
         priority
-        sizes="100vw"
+        // the original file, untouched: re-encoding softens it, and it is only 2000 px wide to begin with
+        unoptimized
         placeholder="blur"
         className={styles.photo}
       />
