@@ -65,9 +65,7 @@ const ROOM_SHOWN = 0.2;
  */
 const PANEL_AT = 0.21;
 const PANEL_IN = 0.35;
-/** Through the opening: where the page holds a moment when a scroll down runs past it, so 01 is never skipped. */
-const HOLD_AT = 0.42;
-/** How long it holds there at least, ms; and it goes on holding while the same scroll keeps coming (gaps under HOLD_GAP ms). */
+/** How long a fast scroll is held at a step at least, ms; and it goes on holding while the same scroll keeps coming (gaps under HOLD_GAP ms). */
 const HOLD_MS = 650;
 const HOLD_GAP = 160;
 /** How stiff the spring the panel's way in rides is, 1/s: it trails the scroll and eases in, about 4 / this seconds behind. */
@@ -339,21 +337,30 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       if (eased !== shown || q !== qShown || enter !== enterShown) draw(eased);
       if (eased !== target || enter !== goal) raf = requestAnimationFrame(tick);
     };
-    // a scroll down that runs past 01 stops there once, and the rest of it
-    // (a fling's momentum) is swallowed for a moment, so 01 is always seen
+    // a scroll down that runs past a step stops there once, and the rest of
+    // it (a fling's momentum) is swallowed for a moment, so no step is ever
+    // skipped. Each step holds late in its stage, once the room has played
+    // it out and before the next step starts to come in (half a panel early).
+    const holds = () => {
+      const stops = panelStops();
+      return stops.slice(1, -1).map((end) => end - panel.clientHeight * 0.6);
+    };
     let lastY = window.scrollY;
+    let holdAt = 0;
     let holdUntil = 0;
+    let flung = -Infinity; // when the wheel or a finger last scrolled (only those are held, not a link or a restored scroll)
     const hold = () => {
       const y = window.scrollY;
-      const at = introPx() * HOLD_AT;
       const now = performance.now();
-      if (opening && lastY < at - 1 && y > at + 1) holdUntil = now + HOLD_MS;
+      const crossed = now - flung < 250 ? holds().find((at) => lastY < at - 1 && y > at + 1) : undefined;
+      if (crossed !== undefined) [holdAt, holdUntil] = [crossed, now + HOLD_MS];
       // held: pinned there, whatever the scroll already under way would do
-      if (now < holdUntil && Math.abs(y - at) > 1) window.scrollTo({ top: at, behavior: "instant" });
+      if (now < holdUntil && Math.abs(y - holdAt) > 1) window.scrollTo({ top: holdAt, behavior: "instant" });
       lastY = window.scrollY;
     };
     const swallow = (e: Event) => {
       const now = performance.now();
+      flung = now;
       if (now >= holdUntil || !e.cancelable) return;
       e.preventDefault();
       holdUntil = Math.max(holdUntil, now + HOLD_GAP); // the same fling, still coming
