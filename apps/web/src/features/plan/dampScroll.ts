@@ -2,14 +2,16 @@
  * Scrolling the walk a section at a time, with weight. `sections` gives the
  * page's resting places (px of scroll, in order); one scroll, however hard
  * (a wheel spin, a trackpad fling, a swipe, an arrow key), sends the page on
- * to the next one, and it glides there, closing a share of the gap each
- * frame, so every stage between plays out on its own. Within a section the
+ * to the next one, and it glides there like something with weight: it
+ * takes a moment to get going, gathers speed, and eases to a stop (a
+ * critically damped spring), so every stage between plays out on its own;
+ * another scroll mid-glide carries the speed on rather than starting over. Within a section the
  * wheel still nudges it a little either way, never far enough to leave it.
  * Off under prefers-reduced-motion. Returns a function that takes it off.
  */
 
-/** The share of the way to the target closed each frame. */
-const DAMP = 0.09;
+/** How stiff the spring the page glides on is, 1/s: about 4 / this seconds to settle. */
+const SPRING = 4.2;
 /** A pause this long between wheel events ends one scroll, ms; the next one moves on again. */
 const GESTURE_GAP = 180;
 /**
@@ -33,6 +35,8 @@ export function dampScroll(sections: () => number[]) {
   const max = () => root.scrollHeight - window.innerHeight;
   let target = root.scrollTop;
   let current = target;
+  let speed = 0; // px/s
+  let then = 0; // the last frame's time
   let raf = 0;
   let at = 0; // the section the page rests at, or is gliding to
   let nudge = 0;
@@ -48,21 +52,29 @@ export function dampScroll(sections: () => number[]) {
     return ps.reduce((best, p, i) => (Math.abs(p - y) < Math.abs(ps[best]! - y) ? i : best), 0);
   };
 
-  const glide = () => {
-    current += (target - current) * DAMP;
-    if (Math.abs(target - current) < 0.5) current = target;
+  const glide = (now: number) => {
+    const dt = Math.min(1 / 30, (now - then) / 1000 || 1 / 60);
+    then = now;
+    // pulled toward the target, held back by its own speed: no overshoot
+    speed += (SPRING * SPRING * (target - current) - 2 * SPRING * speed) * dt;
+    current += speed * dt;
+    if (Math.abs(target - current) < 0.5 && Math.abs(speed) < 20) [current, speed] = [target, 0];
     window.scrollTo({ top: current, behavior: "instant" });
     raf = current === target ? 0 : requestAnimationFrame(glide);
   };
   const go = () => {
     const ps = points();
     target = Math.min(Math.max(0, ps[at]! + nudge), max());
-    if (!raf) raf = requestAnimationFrame(glide);
+    if (!raf) {
+      then = performance.now();
+      raf = requestAnimationFrame(glide);
+    }
   };
   /** Pick up from wherever the page is, if something else (the scrollbar, a link) moved it. */
   const settle = () => {
     if (raf) return;
     current = target = root.scrollTop;
+    speed = 0;
     at = nearest(current);
     nudge = current - points()[at]!;
   };

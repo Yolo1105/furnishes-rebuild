@@ -157,8 +157,9 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     };
     /**
      * Where the page comes to rest, px of scroll: one section to a scroll.
-     * After an opening: the photo, the one room alone, the room beside the
-     * panel (01), the whole flat (02); then for the walk, each of its stages
+     * After an opening: the photo, then the room beside the panel (01: one
+     * scroll shows the room and the panel pushing it aside, as one move), the
+     * whole flat (02); then for the walk, each of its stages
      * played out, its own step still up in the panel.
      */
     const sections = () => {
@@ -169,7 +170,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         at,
       );
       if (!opening) return [0, at(STOPS.sheet), at(PANEL_OPEN + 0.02), ...walk];
-      return [0, lead * (ROOM_SHOWN + 0.05), lead * (PANEL_AT + 0.08), lead * (WHOLE.to + 0.03), ...walk];
+      return [0, lead * (PANEL_AT + 0.08), lead * (WHOLE.to + 0.03), ...walk];
     };
     const steer = () => {
       const r = track.getBoundingClientRect();
