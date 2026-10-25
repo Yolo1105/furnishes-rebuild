@@ -11,7 +11,6 @@ import button from "./InkButton.module.css";
 import styles from "./PlanWalk.module.css";
 import { BOUNDS } from "./flat";
 import { makeRig, STOPS } from "./rig";
-import { dampScroll } from "./dampScroll";
 import { addSheet, buildFlatScene } from "./scene";
 import { WalkPanel } from "./WalkPanel";
 
@@ -150,23 +149,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       const at = (s: number) => lead + run * s;
       if (!opening) return [at(PANEL_OPEN), ...STEP_ENDS.map(at)];
       return [lead * PANEL_AT, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
-    };
-    /**
-     * Where the page comes to rest, px of scroll: one section to a scroll.
-     * After an opening: the photo, then the room beside the panel (01: one
-     * scroll shows the room and the panel pushing it aside, as one move), the
-     * whole flat (02); then for the walk, each of its stages
-     * played out, its own step still up in the panel.
-     */
-    const sections = () => {
-      const lead = introPx();
-      const run = track.offsetHeight - window.innerHeight - lead;
-      const at = (s: number) => lead + run * s;
-      const walk = [STOPS.lifted, STOPS.walked - 0.01, STOPS.built - 0.005, STOPS.finished - 0.005, STOPS.laid, 1].map(
-        at,
-      );
-      if (!opening) return [0, at(STOPS.sheet), at(PANEL_OPEN + 0.02), ...walk];
-      return [0, lead * (PANEL_IN + 0.03), lead * (WHOLE.to + 0.03), ...walk];
     };
     const steer = () => {
       const r = track.getBoundingClientRect();
@@ -331,8 +313,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     const sized = new ResizeObserver(resize);
     sized.observe(canvas);
     window.addEventListener("scroll", onScroll, { passive: true });
-    // a scroll moves the page on a section, with some weight
-    const undamp = dampScroll(sections);
 
     // The plan's notes are drawn in the site's mono face, once it has loaded;
     // sizing again gives their lines the canvas's resolution.
@@ -355,7 +335,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       cancelAnimationFrame(raf);
       sized.disconnect();
       window.removeEventListener("scroll", onScroll);
-      undamp();
       disposables.forEach((d) => d.dispose());
       renderer.dispose();
     };
