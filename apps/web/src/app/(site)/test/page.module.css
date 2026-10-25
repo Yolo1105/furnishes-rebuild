@@ -20,8 +20,9 @@
   object-position: 50% 60%;
 }
 
-/* Bottom centre, a down arrow (the head only) resting low, that slowly
-   bounces up and settles again, fading in as it rises and out as it falls. */
+/* Bottom centre, a down arrow (the head only): it fades in where it rests,
+   bounces up and back once, solid all the while, then fades out; over and
+   over, slowly. */
 .cue {
   position: absolute;
   z-index: var(--z-content);
@@ -35,18 +36,29 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   translate: -50% 0;
-  animation: drift calc(var(--dur-slow) * 2) ease-in-out infinite;
+  animation: drift calc(var(--dur-slow) * 2.5) ease-in-out infinite;
 }
 
 @keyframes drift {
-  0%,
-  100% {
-    opacity: 0.15;
+  0% {
+    opacity: 0;
     transform: none;
   }
-  50% {
+  15% {
+    opacity: 1;
+    transform: none;
+  }
+  40% {
     opacity: 1;
     transform: translateY(calc(-1 * var(--space-3)));
+  }
+  65% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
   }
 }
 
