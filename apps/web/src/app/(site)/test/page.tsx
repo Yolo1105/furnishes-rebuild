@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { HeroTitle } from "@/features/stage/HeroTitle";
 import room from "../../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Test", robots: { index: false } };
 
-/** A bare test page: the bar over a photo of a living room (the live site's picture after "every room feels"). */
+/** A bare test page: the bar and the landing's title over a photo of a living room (the live site's picture after "every room feels"). */
 export default function TestPage() {
   return (
     // a light picture: the bar turns rust over it (SiteHeader)
@@ -22,6 +23,7 @@ export default function TestPage() {
           className={styles.photo}
         />
       </div>
+      <HeroTitle className={styles.title} />
     </section>
   );
 }
