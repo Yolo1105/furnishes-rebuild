@@ -312,16 +312,16 @@
   }
 }
 
-/* Set by PlanWalk while an opening's photo is (coming) back: the panel is
-   simply gone, so it never slides out over the photo. */
-.panel[data-snap],
-.panel[data-snap] .dots,
-.panel[data-snap] .numeral,
-.panel[data-snap] .line > span,
-.panel[data-snap] .card,
-.panel[data-snap] .cardArt,
-.panel[data-snap] .name,
-.panel[data-snap] .body,
-.panel[data-snap] .cta {
+/* Set by PlanWalk while, after an opening, the panel's way in follows the
+   scroll (it sets --lead and --trail itself): nothing here runs on a clock. */
+.panel[data-scrub],
+.panel[data-scrub] .dots,
+.panel[data-scrub] .numeral,
+.panel[data-scrub] .line > span,
+.panel[data-scrub] .card,
+.panel[data-scrub] .cardArt,
+.panel[data-scrub] .name,
+.panel[data-scrub] .body,
+.panel[data-scrub] .cta {
   transition: none;
 }

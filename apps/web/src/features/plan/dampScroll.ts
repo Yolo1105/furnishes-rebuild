@@ -1,18 +1,28 @@
 /**
  * Scrolling the walk a section at a time, with weight. `sections` gives the
- * page's resting places (px of scroll, in order); one scroll, however hard
- * (a wheel spin, a trackpad fling, a swipe, an arrow key), sends the page on
- * to the next one, and it glides there like something with weight: it
- * takes a moment to get going, gathers speed, and eases to a stop (a
- * critically damped spring), so every stage between plays out on its own;
- * another scroll mid-glide carries the speed on rather than starting over. Within a section the
- * wheel still nudges it a little either way, never far enough to leave it.
- * Off under prefers-reduced-motion. Returns a function that takes it off.
+ * page's resting places (px of scroll, in order).
+ *
+ * The page rides a spring, so it always moves with some lag and eases into
+ * where it is headed. While the wheel turns, the page follows it, but held
+ * back: it moves less than the wheel and trails it. Once a scroll has turned
+ * the wheel far enough to mean it, the page breaks loose and glides on to
+ * the next section, carrying the speed it had; the rest of that scroll (a
+ * trackpad's trailing momentum) is ignored, so it lands clean. A small
+ * scroll that never means it only shifts the page a little within its
+ * section. Keys and swipes move on a section too. Off under
+ * prefers-reduced-motion. Returns a function that takes it off.
  */
 
-/** How stiff the spring the page glides on is, 1/s: about 4 / this seconds to settle. */
-const SPRING = 4.2;
-/** A pause this long between wheel events ends one scroll, ms; the next one moves on again. */
+/** How stiff the spring is while it follows the wheel, and while it glides to a section, 1/s. */
+const FOLLOW = 9;
+const GLIDE = 4.6;
+/** How far the page moves for each px of wheel while it follows it. */
+const RESIST = 0.45;
+/** How much wheel in one scroll means moving on a section, px. */
+const MEANT = 90;
+/** How far a small scroll may shift the page off its section, px. */
+const SHIFT_MAX = 80;
+/** A pause this long between wheel events ends one scroll, ms. */
 const GESTURE_GAP = 180;
 /**
  * A trackpad's fling trails off over a second or more; a new swipe during it
@@ -21,30 +31,24 @@ const GESTURE_GAP = 180;
  */
 const SURGE = 2;
 const SURGE_AFTER = 120;
-/** How much wheel in one scroll it takes to move on a section, px. */
-const KICK = 24;
-/** How far the wheel may nudge the page off a resting place: a share of the way to the next, and at most this, px. */
-const NUDGE_SHARE = 0.08;
-const NUDGE_MAX = 90;
-/** The wheel counts for this little while nudging. */
-const NUDGE_RATE = 0.25;
 
 export function dampScroll(sections: () => number[]) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
   const root = document.scrollingElement ?? document.documentElement;
   const max = () => root.scrollHeight - window.innerHeight;
-  let target = root.scrollTop;
-  let current = target;
+  let current = root.scrollTop;
+  let target = current;
   let speed = 0; // px/s
+  let stiff = GLIDE;
   let then = 0; // the last frame's time
   let raf = 0;
   let at = 0; // the section the page rests at, or is gliding to
-  let nudge = 0;
+  let shift = 0; // how far a small scroll has moved the page off it
   let last = -Infinity; // when the wheel last turned
-  let wheel = 0; // how much wheel in this scroll
-  let moved = false; // whether this scroll has moved on a section yet
   let began = -Infinity; // when this scroll began
   let lastSize = 0; // how hard the wheel last turned
+  let wheel = 0; // how much wheel in this scroll
+  let done = false; // whether this scroll has already moved on a section
 
   const points = () => sections().map((p) => Math.min(Math.max(0, p), max()));
   const nearest = (y: number) => {
@@ -52,22 +56,22 @@ export function dampScroll(sections: () => number[]) {
     return ps.reduce((best, p, i) => (Math.abs(p - y) < Math.abs(ps[best]! - y) ? i : best), 0);
   };
 
-  const glide = (now: number) => {
+  const frame = (now: number) => {
     const dt = Math.min(1 / 30, (now - then) / 1000 || 1 / 60);
     then = now;
     // pulled toward the target, held back by its own speed: no overshoot
-    speed += (SPRING * SPRING * (target - current) - 2 * SPRING * speed) * dt;
+    speed += (stiff * stiff * (target - current) - 2 * stiff * speed) * dt;
     current += speed * dt;
     if (Math.abs(target - current) < 0.5 && Math.abs(speed) < 20) [current, speed] = [target, 0];
     window.scrollTo({ top: current, behavior: "instant" });
-    raf = current === target ? 0 : requestAnimationFrame(glide);
+    raf = current === target ? 0 : requestAnimationFrame(frame);
   };
-  const go = () => {
-    const ps = points();
-    target = Math.min(Math.max(0, ps[at]! + nudge), max());
+  const aim = (y: number, k: number) => {
+    target = Math.min(Math.max(0, y), max());
+    stiff = k;
     if (!raf) {
       then = performance.now();
-      raf = requestAnimationFrame(glide);
+      raf = requestAnimationFrame(frame);
     }
   };
   /** Pick up from wherever the page is, if something else (the scrollbar, a link) moved it. */
@@ -76,13 +80,13 @@ export function dampScroll(sections: () => number[]) {
     current = target = root.scrollTop;
     speed = 0;
     at = nearest(current);
-    nudge = current - points()[at]!;
+    shift = current - points()[at]!;
   };
   const step = (by: number) => {
     settle();
     at = Math.min(Math.max(0, at + by), points().length - 1);
-    nudge = 0;
-    go();
+    shift = 0;
+    aim(points()[at]!, GLIDE);
   };
 
   const onWheel = (e: WheelEvent) => {
@@ -91,28 +95,25 @@ export function dampScroll(sections: () => number[]) {
     e.preventDefault();
     const now = performance.now();
     const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
-    const surge = Math.abs(d) > KICK && Math.abs(d) > lastSize * SURGE && now - began > SURGE_AFTER;
+    const surge = Math.abs(d) > 24 && Math.abs(d) > lastSize * SURGE && now - began > SURGE_AFTER;
     if (now - last > GESTURE_GAP || surge) {
       settle();
       wheel = 0;
-      moved = false;
+      done = false;
       began = now;
     }
     last = now;
     lastSize = Math.abs(d);
+    if (done) return; // the rest of a scroll that has moved on: let the glide land
     wheel += d;
-    // one move on to a scroll, straight away, even mid-glide (it goes on from where that glide is headed)
-    if (!moved && Math.abs(wheel) > KICK) {
-      moved = true;
+    if (Math.abs(wheel) >= MEANT) {
+      done = true;
       step(Math.sign(wheel));
       return;
     }
-    // a little either way, within the section
-    const ps = points();
-    const next = ps[at + Math.sign(d)] ?? ps[at]!;
-    const room = Math.min(NUDGE_MAX, Math.abs(next - ps[at]!) * NUDGE_SHARE);
-    nudge = Math.min(room, Math.max(-room, nudge + d * NUDGE_RATE));
-    go();
+    // not yet meant: the page follows the wheel, held back
+    shift = Math.min(SHIFT_MAX, Math.max(-SHIFT_MAX, shift + d * RESIST));
+    aim(points()[at]! + shift, FOLLOW);
   };
 
   const KEYS: Record<string, number> = { ArrowDown: 1, PageDown: 1, " ": 1, ArrowUp: -1, PageUp: -1 };
@@ -120,11 +121,11 @@ export function dampScroll(sections: () => number[]) {
     const el = e.target as HTMLElement | null;
     if (e.altKey || e.ctrlKey || e.metaKey || el?.closest("input, textarea, select, [contenteditable]")) return;
     let by = KEYS[e.key];
-    if (e.key === "Home") by = -Infinity;
-    if (e.key === "End") by = Infinity;
+    if (e.key === "Home") by = -1e3;
+    if (e.key === "End") by = 1e3;
     if (by === undefined) return;
     e.preventDefault();
-    step(e.key === " " && e.shiftKey ? -1 : Number.isFinite(by) ? by : by > 0 ? 1e3 : -1e3);
+    step(e.key === " " && e.shiftKey ? -1 : by);
   };
 
   // a swipe moves on a section, however long

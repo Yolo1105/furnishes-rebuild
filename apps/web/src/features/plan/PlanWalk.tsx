@@ -57,10 +57,13 @@ const BREATHE = 40;
 const WHOLE = { from: 0.62, to: 0.9 };
 /** Through the opening: when the photo has gone and the panel comes in on the one room. */
 const ROOM_SHOWN = 0.2;
-/** Through the opening: when the panel comes in, pushing the room, alone in the middle till then, over to its left. */
-const PANEL_AT = 0.3;
-/** How long the room takes to move aside as the panel slides in, ms: the panel's own --dur-panel. */
-const PUSH_MS = 600;
+/**
+ * Through the opening: when the panel starts in and when it is all the way
+ * in, pushing the room (just shown in the middle) over to its left as it
+ * comes. Both follow the scroll, so they are one move with the room's coming.
+ */
+const PANEL_AT = 0.21;
+const PANEL_IN = 0.35;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -97,13 +100,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     type Space = { cx: number; cy: number; w: number; h: number };
     let full: Space = { cx: 0, cy: 0, w: 1, h: 1 };
     let beside: Space = full;
-    // how far the room has been pushed aside by the panel, 0 to 1: it moves with
-    // the panel's slide, in time, not with the scroll
-    const push = { from: 0, to: 0, start: -Infinity };
-    const pushNow = (now = performance.now()) => {
-      const t = Math.min(1, (now - push.start) / PUSH_MS);
-      return push.from + (push.to - push.from) * (still.matches ? 1 : t * t * t * (t * (t * 6 - 15) + 10));
-    };
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -170,7 +166,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         at,
       );
       if (!opening) return [0, at(STOPS.sheet), at(PANEL_OPEN + 0.02), ...walk];
-      return [0, lead * (PANEL_AT + 0.08), lead * (WHOLE.to + 0.03), ...walk];
+      return [0, lead * (PANEL_IN + 0.03), lead * (WHOLE.to + 0.03), ...walk];
     };
     const steer = () => {
       const r = track.getBoundingClientRect();
@@ -179,16 +175,21 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       if (want !== open) {
         open = want;
         panel.toggleAttribute("data-open", open);
-        Object.assign(push, { from: pushNow(), to: open ? 1 : 0, start: performance.now() });
-        if (!raf) raf = requestAnimationFrame(tick);
         // the bar turns brown while the panel is in
         document.documentElement.toggleAttribute("data-walk-panel", open);
       }
-      // once the photo is coming back, the panel is already gone and the room
-      // back in the middle: nothing still sliding shows over the photo
-      const snap = Boolean(opening) && q < ROOM_SHOWN + 0.02;
-      panel.toggleAttribute("data-snap", snap);
-      if (snap) Object.assign(push, { from: 0, to: 0, start: -Infinity });
+      // after an opening the panel's way in follows the scroll (its top end
+      // leading, as when it slides), so it and the room it pushes are one move
+      const scrub = Boolean(opening) && q < PANEL_IN;
+      panel.toggleAttribute("data-scrub", scrub);
+      if (scrub) {
+        const [top, foot] = [stage(q, PANEL_AT, PANEL_IN - 0.03), stage(q, PANEL_AT + 0.03, PANEL_IN)].map(smooth);
+        panel.style.setProperty("--lead", `${(1 - top!) * 100}%`);
+        panel.style.setProperty("--trail", `${(1 - foot!) * 100}%`);
+      } else {
+        panel.style.removeProperty("--lead");
+        panel.style.removeProperty("--trail");
+      }
       const y = Math.min(Math.max(0, -r.top - from), Math.max(0, scroller.scrollHeight - scroller.clientHeight));
       scroller.scrollTop = y;
       let up = 0;
@@ -228,7 +229,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         };
         const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
         // alone in the middle, then pushed aside as the panel comes in
-        const p = pushNow();
+        const p = smooth(stage(q, PANEL_AT, PANEL_IN));
         const mix = (k: keyof Space) => full[k] + (beside[k] - full[k]) * p;
         const free = { cx: mix("cx"), cy: mix("cy"), w: mix("w"), h: mix("h") };
         const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
@@ -317,9 +318,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
-      const pushing = opening && performance.now() - push.start < PUSH_MS + 50;
-      if (eased !== shown || q !== qShown || pushing) draw(eased);
-      if (eased !== target || pushing) raf = requestAnimationFrame(tick);
+      if (eased !== shown || q !== qShown) draw(eased);
+      if (eased !== target) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
       playIntro();
