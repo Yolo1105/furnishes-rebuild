@@ -56,6 +56,10 @@ const BREATHE = 40;
 const WHOLE = { from: 0.62, to: 0.9 };
 /** Through the opening: when the photo has gone and the panel comes in on the one room. */
 const ROOM_SHOWN = 0.2;
+/** Through the opening: when the panel comes in, pushing the room, alone in the middle till then, over to its left. */
+const PANEL_AT = 0.3;
+/** How long the room takes to move aside as the panel slides in, ms: the panel's own --dur-panel. */
+const PUSH_MS = 600;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -88,8 +92,17 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     let q = opening ? 0 : 1; // how far through the opening, 0 to 1
     let qShown = -1;
     const corner = new THREE.Vector3();
-    // the space the panel leaves free for the plan, px (set on resize)
-    let free = { cx: 0, cy: 0, w: 1, h: 1 };
+    // the space for the plan, px (set on resize): the whole screen, and what the panel leaves it
+    type Space = { cx: number; cy: number; w: number; h: number };
+    let full: Space = { cx: 0, cy: 0, w: 1, h: 1 };
+    let beside: Space = full;
+    // how far the room has been pushed aside by the panel, 0 to 1: it moves with
+    // the panel's slide, in time, not with the scroll
+    const push = { from: 0, to: 0, start: -Infinity };
+    const pushNow = (now = performance.now()) => {
+      const t = Math.min(1, (now - push.start) / PUSH_MS);
+      return push.from + (push.to - push.from) * (still.matches ? 1 : t * t * t * (t * (t * 6 - 15) + 10));
+    };
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -139,7 +152,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       const run = track.offsetHeight - window.innerHeight - lead; // the walk's own scroll
       const at = (s: number) => lead + run * s;
       if (!opening) return [at(PANEL_OPEN), ...STEP_ENDS.map(at)];
-      return [lead * ROOM_SHOWN, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
+      return [lead * PANEL_AT, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
     };
     const steer = () => {
       const r = track.getBoundingClientRect();
@@ -148,6 +161,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       if (want !== open) {
         open = want;
         panel.toggleAttribute("data-open", open);
+        Object.assign(push, { from: pushNow(), to: open ? 1 : 0, start: performance.now() });
+        if (!raf) raf = requestAnimationFrame(tick);
         // the bar turns brown while the panel is in
         document.documentElement.toggleAttribute("data-walk-panel", open);
       }
@@ -189,6 +204,10 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
           return { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
         };
         const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
+        // alone in the middle, then pushed aside as the panel comes in
+        const p = pushNow();
+        const mix = (k: keyof Space) => full[k] + (beside[k] - full[k]) * p;
+        const free = { cx: mix("cx"), cy: mix("cy"), w: mix("w"), h: mix("h") };
         const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
         const zRoom = Math.min(INTRO_ZOOM, fit(room));
         const zFlat = 1 + (Math.min(1, fit(flat)) - 1) * hold;
@@ -235,9 +254,12 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       // the space the panel leaves the plan: left of it, or above it where it rises from the foot
       const pr = panel.getBoundingClientRect();
       const atFoot = pr.top > h * 0.25;
-      const [fx0, fx1] = [BREATHE, (atFoot ? w : pr.left) - BREATHE];
-      const [fy0, fy1] = [parseFloat(css("--nav-h")) + BREATHE / 2, (atFoot ? pr.top : h) - BREATHE];
-      free = { cx: (fx0 + fx1) / 2, cy: (fy0 + fy1) / 2, w: fx1 - fx0, h: fy1 - fy0 };
+      const space = (x1: number, y1: number): Space => {
+        const [x0, y0] = [BREATHE, parseFloat(css("--nav-h")) + BREATHE / 2];
+        return { cx: (x0 + x1 - BREATHE) / 2, cy: (y0 + y1 - BREATHE) / 2, w: x1 - BREATHE - x0, h: y1 - BREATHE - y0 };
+      };
+      full = space(w, h);
+      beside = space(atFoot ? w : pr.left, atFoot ? pr.top : h);
       // each step is as long as its stage, so it is up while the stage plays
       // out; the last runs on a screen further, so it ends with the walk
       const stops = panelStops();
@@ -272,8 +294,9 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
-      if (eased !== shown || q !== qShown) draw(eased);
-      if (eased !== target) raf = requestAnimationFrame(tick);
+      const pushing = opening && performance.now() - push.start < PUSH_MS + 50;
+      if (eased !== shown || q !== qShown || pushing) draw(eased);
+      if (eased !== target || pushing) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
       playIntro();
