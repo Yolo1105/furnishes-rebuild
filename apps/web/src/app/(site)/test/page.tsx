@@ -32,6 +32,7 @@ export default function TestPage() {
         />
       </div>
       <HeroTitle>
+        <p className={styles.slogan}>Made for your room, to the millimetre.</p>
         <Link
           href={routes.studio}
           className={`${button.button} ${styles.start}`}

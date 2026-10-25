@@ -56,8 +56,16 @@
   }
 }
 
-/* Under the title, the way in: rust, like the bar over this light picture. */
+/* Under the title, a line of what we do, then the way in: rust, like the
+   bar over this light picture. */
+.slogan {
+  margin: var(--space-4) 0 0;
+  color: var(--color-rust-deep);
+  font-family: var(--font-sans);
+  font-size: var(--text-lede);
+}
+
 .start {
   --button-fg: var(--color-rust);
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
 }
