@@ -37,6 +37,7 @@
 
 .second {
   --shown: 0.9;
+  font-size: 0.58em; /* a step under the first word */
   animation-delay: calc(var(--stagger) * 1.5);
 }
 
