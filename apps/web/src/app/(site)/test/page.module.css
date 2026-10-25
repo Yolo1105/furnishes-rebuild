@@ -7,6 +7,9 @@
   background: var(--color-ink);
 }
 
+/* Where the screen is wider than the photo, it is cropped top and bottom:
+   keep a little more of its top than its foot, so the room sits a touch lower. */
 .photo {
   object-fit: cover;
+  object-position: 50% 30%;
 }
