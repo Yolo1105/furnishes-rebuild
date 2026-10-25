@@ -4,6 +4,11 @@
   height: var(--walk-length);
 }
 
+/* With an opening, its scroll comes first. */
+.track.withIntro {
+  height: calc(var(--walk-length) + var(--intro-length));
+}
+
 /* The view stays on screen while the track scrolls past it: the moving wash
    at the back, the flat over it. */
 .sticky {

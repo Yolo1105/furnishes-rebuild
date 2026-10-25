@@ -1,0 +1,118 @@
+/* The opening, over the walk. Everything here follows --intro, how far
+   through the opening the scroll is (0 to 1, set by PlanWalk): the title
+   goes first, the lines draw in, the photo fades under them, then the
+   sketch and its paper fade to show the plan beneath. PlanWalk also marks
+   it data-scrolled once the title has gone (the button stops taking
+   clicks) and data-done once it has all gone. */
+.intro {
+  --title: calc(1 - clamp(0, var(--intro, 0) / 0.12, 1));
+  --photo: calc(1 - clamp(0, (var(--intro, 0) - 0.34) / 0.18, 1));
+  --sketch: calc(1 - clamp(0, (var(--intro, 0) - 0.56) / 0.14, 1));
+  position: absolute;
+  z-index: var(--z-content);
+  inset: 0;
+  pointer-events: none;
+}
+
+.intro[data-done] {
+  display: none;
+}
+
+.paper {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  opacity: var(--sketch);
+}
+
+.room {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.photo {
+  opacity: var(--photo);
+}
+
+/* Each line draws itself in turn: it starts at its --at share of the drawing. */
+.lines {
+  opacity: var(--sketch);
+  fill: none;
+  stroke: var(--color-rust);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.lines path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--intro, 0) - 0.04 - var(--at) * 0.32) / 0.12, 1));
+  vector-effect: non-scaling-stroke;
+}
+
+/* The title and the way in, until the scroll starts. */
+.hero {
+  pointer-events: auto;
+}
+
+.intro[data-scrolled] .hero {
+  pointer-events: none;
+}
+
+/* right under the bar */
+.intro .place {
+  top: var(--nav-h);
+}
+
+.slogan {
+  margin: var(--space-4) 0 0;
+  color: var(--color-rust-deep);
+  font-family: var(--font-mono); /* set like the bar's links and the button */
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.start {
+  --button-fg: var(--color-rust);
+  margin-top: var(--space-5);
+}
+
+/* Bottom centre, a down arrow (the head only), solid: it rests low, bounces
+   up and back, then rests again; over and over, slowly. It goes with the title. */
+.cue {
+  position: absolute;
+  bottom: var(--space-5);
+  left: 50%;
+  width: var(--icon-lg);
+  height: var(--icon);
+  fill: none;
+  stroke: var(--color-rust);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: var(--title);
+  translate: -50% 0;
+  animation: bounce calc(var(--dur-slow) * 2.5) ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%,
+  15%,
+  65%,
+  100% {
+    transform: none;
+  }
+  40% {
+    transform: translateY(calc(-1 * var(--space-3)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue {
+    animation: none;
+  }
+}

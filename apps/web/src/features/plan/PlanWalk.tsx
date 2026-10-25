@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { HeroTitle } from "@/features/stage/HeroTitle";
 import { LivingGradient } from "@/features/stage/LivingGradient";
@@ -28,18 +28,44 @@ const NOTES_FADE = 0.06;
 /** Where in the walk the side panel opens: once the walls are well on their way up. It stays open to the end. */
 const PANEL_OPEN = STOPS.sheet + 0.06;
 /** Where in the walk each of the panel's steps ends: one step to a stage. */
-const STEP_ENDS = [STOPS.lifted, STOPS.landed, STOPS.walked, STOPS.built, STOPS.finished, 1];
+const STEP_ENDS = [
+  STOPS.lifted,
+  STOPS.landed,
+  STOPS.walked,
+  STOPS.built,
+  STOPS.finished,
+  1,
+];
 
 /** How far through the stretch from a to b the walk is, 0 to 1. */
-const stage = (s: number, a: number, b: number) => Math.min(1, Math.max(0, (s - a) / (b - a)));
+const stage = (s: number, a: number, b: number) =>
+  Math.min(1, Math.max(0, (s - a) / (b - a)));
 const smooth = (t: number) => t * t * (3 - 2 * t);
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
 
+/**
+ * With an opening (`intro`), this many screens of scroll come before the
+ * walk itself: the --intro-length in globals.css. The camera starts this
+ * much closer, on the living room, and pulls back to the whole flat as the
+ * opening ends.
+ */
+const INTRO_SCREENS = 2.5;
+const INTRO_ZOOM = 2.3;
+/** The middle of the living room, which the opening's close-up is on, m. */
+const LIVING = new THREE.Vector3(12.45, 0, 3.15);
 
-const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const css = (name: string) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-export function PlanWalk() {
+/**
+ * `intro`, if given, is laid over the walk and plays first: it is told how
+ * far through it the scroll is with --intro (0 to 1) on the sticky view,
+ * and marked data-scrolled once that is under way and data-done once past;
+ * it should carry data-intro, and data-light-under-bar while it shows a
+ * light picture. The walk's own title, button and cue give way to it.
+ */
+export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
   const trackRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,10 +81,21 @@ export function PlanWalk() {
     const scroller = panel.firstElementChild as HTMLElement;
     const steps = [...scroller.firstElementChild!.children] as HTMLElement[];
     const dots = [...panel.lastElementChild!.children];
+    const opening = sticky.querySelector<HTMLElement>("[data-intro]");
+    /** How many pixels of scroll the opening takes, before the walk. */
+    const introPx = () => (opening ? window.innerHeight * INTRO_SCREENS : 0);
+    let q = opening ? 0 : 1; // how far through the opening, 0 to 1
+    let qShown = -1;
+    const projected = new THREE.Vector3();
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
     } catch {
       setFailed(true);
       return;
@@ -68,7 +105,8 @@ export function PlanWalk() {
     renderer.setClearColor(0x000000, 0);
 
     const palette = { paper: css("--color-paper"), ink: css("--color-ink") };
-    const { scene, cut, lineMats, disposables, rise, later } = buildFlatScene(palette);
+    const { scene, cut, lineMats, disposables, rise, later } =
+      buildFlatScene(palette);
     const camera = new THREE.PerspectiveCamera(2, 1, 1, 500);
     camera.rotation.order = "YXZ";
     let rig = makeRig(1);
@@ -90,8 +128,9 @@ export function PlanWalk() {
      */
     const steer = () => {
       const r = track.getBoundingClientRect();
-      const run = r.height - window.innerHeight;
-      const from = run * PANEL_OPEN; // px scrolled when the panel opens
+      const lead = introPx();
+      const run = r.height - window.innerHeight - lead; // the walk's own scroll
+      const from = lead + run * PANEL_OPEN; // px scrolled when the panel opens
       const want = -r.top >= from;
       if (want !== open) {
         open = want;
@@ -99,7 +138,10 @@ export function PlanWalk() {
         // the bar turns brown while the panel is in
         document.documentElement.toggleAttribute("data-walk-panel", open);
       }
-      const y = Math.min(Math.max(0, -r.top - from), Math.max(0, scroller.scrollHeight - scroller.clientHeight));
+      const y = Math.min(
+        Math.max(0, -r.top - from),
+        Math.max(0, scroller.scrollHeight - scroller.clientHeight),
+      );
       scroller.scrollTop = y;
       let up = 0;
       steps.forEach((step, i) => {
@@ -118,6 +160,29 @@ export function PlanWalk() {
       camera.near = o.near;
       camera.far = o.far;
       camera.updateProjectionMatrix();
+      if (opening) {
+        // close on the living room through the opening, pulling back to the whole flat as it ends
+        const z = INTRO_ZOOM + (1 - INTRO_ZOOM) * smooth(stage(q, 0.62, 1));
+        if (z > 1.001) {
+          const [w, h] = [canvas.clientWidth, canvas.clientHeight];
+          // find the living room on the whole view, not on last frame's close-up
+          camera.clearViewOffset();
+          camera.updateMatrixWorld();
+          projected.copy(LIVING).project(camera);
+          const [px, py] = [
+            ((projected.x + 1) / 2) * w,
+            ((1 - projected.y) / 2) * h,
+          ];
+          camera.setViewOffset(
+            w,
+            h,
+            px - w / (2 * z),
+            py - h / (2 * z),
+            w / z,
+            h / z,
+          );
+        } else camera.clearViewOffset();
+      }
       cut.constant = o.cut;
       // the room come to life: the bookcase built once the camera is at it,
       // then the materials, then the second layout
@@ -128,16 +193,23 @@ export function PlanWalk() {
       const notes = 1 - t * t * (3 - 2 * t);
       sheet?.fade(notes);
       // the plan opens empty; the furniture is drawn in with the first scroll
-      sheet?.furnish(smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)));
+      // (after an opening, the plan arrives furnished)
+      sheet?.furnish(
+        opening ? 1 : smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)),
+      );
       // as the plan's symbols fade, the pieces they stand for rise out of the floor
       rise(1 - notes);
       // the page's own words beside the plan go with the plan's notes
       sticky.style.setProperty("--notes", notes.toFixed(3));
       sticky.toggleAttribute("data-walking", notes < 0.02);
       // the title goes as the walk reaches the front door (the panel's step 03)
-      sticky.style.setProperty("--title", (1 - smooth(stage(s, STOPS.landed - 0.03, STOPS.landed))).toFixed(3));
+      sticky.style.setProperty(
+        "--title",
+        (1 - smooth(stage(s, STOPS.landed - 0.03, STOPS.landed))).toFixed(3),
+      );
       renderer.render(scene, camera);
       shown = s;
+      qShown = q;
       canvas.dataset.progress = s.toFixed(3);
     };
 
@@ -151,21 +223,38 @@ export function PlanWalk() {
       for (const m of lineMats) m.resolution.set(w, h);
       // each step is as long as its stage, so it is up while the stage plays
       // out; the last runs on a screen further, so it ends with the walk
-      const run = track.offsetHeight - window.innerHeight;
+      const run = track.offsetHeight - window.innerHeight - introPx();
       steps.forEach((step, i) => {
         const from = i ? STEP_ENDS[i - 1]! : PANEL_OPEN;
         const extra = i === steps.length - 1 ? panel.clientHeight : 0;
-        step.style.setProperty("--step-h", `${(STEP_ENDS[i]! - from) * run + extra}px`);
+        step.style.setProperty(
+          "--step-h",
+          `${(STEP_ENDS[i]! - from) * run + extra}px`,
+        );
       });
       steer();
       draw(eased);
     };
 
-    /** Scroll progress through the track, 0 at its top to 1 at its end. */
+    /** Scroll progress through the walk, 0 at its start (after any opening) to 1 at its end. */
     const read = () => {
       const r = track.getBoundingClientRect();
-      const run = r.height - window.innerHeight;
-      return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
+      const lead = introPx();
+      const run = r.height - window.innerHeight - lead;
+      return run > 0 ? Math.min(1, Math.max(0, (-r.top - lead) / run)) : 0;
+    };
+
+    /** Follow the opening with the scroll: how far through it, and what of it is still showing. */
+    const playIntro = () => {
+      if (!opening) return;
+      q = Math.min(
+        1,
+        Math.max(0, -track.getBoundingClientRect().top / introPx()),
+      );
+      sticky.style.setProperty("--intro", q.toFixed(4));
+      opening.toggleAttribute("data-scrolled", q > 0.02);
+      opening.toggleAttribute("data-done", q >= 0.72);
+      opening.toggleAttribute("data-light-under-bar", q < 0.68); // until the sketch's paper has gone
     };
 
     // Ease the camera towards the scroll, then stop drawing until it moves.
@@ -173,10 +262,11 @@ export function PlanWalk() {
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
-      if (eased !== shown) draw(eased);
+      if (eased !== shown || q !== qShown) draw(eased);
       if (eased !== target) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
+      playIntro();
       steer();
       target = read();
       if (!raf) raf = requestAnimationFrame(tick);
@@ -196,6 +286,7 @@ export function PlanWalk() {
       resize();
     });
 
+    playIntro();
     target = read();
     eased = target;
     resize();
@@ -212,28 +303,49 @@ export function PlanWalk() {
   }, []);
 
   return (
-    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan">
+    <section
+      ref={trackRef}
+      className={intro ? `${styles.track} ${styles.withIntro}` : styles.track}
+      aria-label="A walk through a home, from its plan"
+    >
       {/* The wash in CSS until its canvas draws, as on every stage. */}
-      <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
+      <div
+        ref={stickyRef}
+        className={styles.sticky}
+        style={{ backgroundImage: WASH_CSS }}
+      >
         <LivingGradient />
         {failed ? (
-          <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
+          <p className={styles.fallback}>
+            This view needs WebGL, which this browser has turned off.
+          </p>
         ) : (
-          <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
+          <canvas
+            ref={canvasRef}
+            className={styles.canvas}
+            aria-hidden="true"
+          />
         )}
 
-        <HeroTitle />
+        {intro ?? (
+          <>
+            <HeroTitle />
 
-        <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
-          Design your room
-        </Link>
+            <Link
+              href={routes.studio}
+              className={`${button.button} ${styles.cta}`}
+            >
+              Design your room
+            </Link>
 
-        <p className={styles.cue} aria-hidden="true">
-          Scroll
-          <svg viewBox="0 0 16 24">
-            <path d="M8 2v19M2 15l6 6 6-6" />
-          </svg>
-        </p>
+            <p className={styles.cue} aria-hidden="true">
+              Scroll
+              <svg viewBox="0 0 16 24">
+                <path d="M8 2v19M2 15l6 6 6-6" />
+              </svg>
+            </p>
+          </>
+        )}
 
         {/* last, so it slides in over the button and the cue */}
         <WalkPanel ref={panelRef} />
