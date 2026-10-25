@@ -61,8 +61,10 @@
 .slogan {
   margin: var(--space-4) 0 0;
   color: var(--color-rust-deep);
-  font-family: var(--font-sans);
-  font-size: var(--text-lede);
+  font-family: var(--font-mono); /* set like the bar's links and the button */
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
 }
 
 .start {
