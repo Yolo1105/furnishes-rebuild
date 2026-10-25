@@ -27,6 +27,14 @@
   color: var(--color-rust-deep);
 }
 
+.title[data-tone="cream"] {
+  color: var(--color-on-orange);
+}
+
+.title[data-tone="cream"] .first {
+  color: var(--color-cream);
+}
+
 .second {
   --shown: 0.9;
   animation-delay: calc(var(--stagger) * 1.5);

@@ -1,14 +1,25 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { HeroTitle } from "@/features/stage/HeroTitle";
-import { Stage } from "@/features/stage/Stage";
+import room from "../../../../public/rooms/living-room.jpg";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Test", robots: { index: false } };
 
-/** A bare test page: the bar, the moving wash, and the landing's title. */
+/** A bare test page: the bar and the landing's title over a photo of a living room. */
 export default function TestPage() {
   return (
-    <Stage label="Test">
-      <HeroTitle />
-    </Stage>
+    <section className={styles.room} aria-label="Test">
+      <Image
+        src={room}
+        alt="A living room: a red sofa and an olive armchair round a dark coffee table, under a floor lamp"
+        fill
+        priority
+        sizes="100vw"
+        placeholder="blur"
+        className={styles.photo}
+      />
+      <HeroTitle tone="cream" />
+    </section>
   );
 }
