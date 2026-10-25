@@ -6,11 +6,21 @@ import styles from "./HeroTitle.module.css";
  * the one above. It sits at the top left of whatever stage it is on, lined
  * up with the bar's first link; a stage may fade it by setting --title.
  * It is rust over the orange wash, and cream (`tone="cream"`) over a dark
- * picture.
+ * picture; `className` lets a page move it.
  */
-export function HeroTitle({ tone = "rust" }: { tone?: "rust" | "cream" }) {
+export function HeroTitle({
+  tone = "rust",
+  className,
+}: {
+  tone?: "rust" | "cream";
+  className?: string;
+}) {
   return (
-    <h1 className={styles.title} data-tone={tone} aria-label="Interior Revolution">
+    <h1
+      className={className ? `${styles.title} ${className}` : styles.title}
+      data-tone={tone}
+      aria-label="Interior Revolution"
+    >
       <span className={styles.first} aria-hidden="true">
         Interior
       </span>

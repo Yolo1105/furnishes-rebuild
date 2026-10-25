@@ -20,3 +20,8 @@
   object-fit: cover;
   object-position: 50% 43%;
 }
+
+/* The title sits inside the photo's frame, in from its edge. */
+.room .title {
+  left: calc(var(--gutter) + var(--space-6));
+}
