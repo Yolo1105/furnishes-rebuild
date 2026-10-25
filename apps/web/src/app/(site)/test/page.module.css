@@ -20,11 +20,6 @@
   object-position: 50% 60%;
 }
 
-/* The title, a little higher than its usual place: closer under the bar. */
-.room .title {
-  top: var(--nav-h);
-}
-
 /* Bottom centre, a down arrow (the head only) resting low, that slowly
    bounces up and settles again, fading in as it rises and out as it falls. */
 .cue {

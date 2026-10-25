@@ -23,7 +23,7 @@ export default function TestPage() {
           className={styles.photo}
         />
       </div>
-      <HeroTitle className={styles.title} />
+      <HeroTitle />
       {/* the page goes on below */}
       <svg className={styles.cue} viewBox="0 0 24 12" aria-hidden="true">
         <path d="M2 2l10 8 10-8" />
