@@ -9,11 +9,16 @@
  */
 
 /** The share of the way to the target closed each frame. */
-const DAMP = 0.06;
+const DAMP = 0.09;
 /** A pause this long between wheel events ends one scroll, ms; the next one moves on again. */
-const GESTURE_GAP = 350;
-/** A new scroll moves on again only once the glide is this close to done (a share of the way still to go). */
-const READY = 0.1;
+const GESTURE_GAP = 180;
+/**
+ * A trackpad's fling trails off over a second or more; a new swipe during it
+ * shows as the wheel suddenly turning this many times harder, and is a new
+ * scroll (once the last has run this long, ms).
+ */
+const SURGE = 2;
+const SURGE_AFTER = 120;
 /** How much wheel in one scroll it takes to move on a section, px. */
 const KICK = 24;
 /** How far the wheel may nudge the page off a resting place: a share of the way to the next, and at most this, px. */
@@ -34,7 +39,8 @@ export function dampScroll(sections: () => number[]) {
   let last = -Infinity; // when the wheel last turned
   let wheel = 0; // how much wheel in this scroll
   let moved = false; // whether this scroll has moved on a section yet
-  let leap = 0; // how far the last move on was, px
+  let began = -Infinity; // when this scroll began
+  let lastSize = 0; // how hard the wheel last turned
 
   const points = () => sections().map((p) => Math.min(Math.max(0, p), max()));
   const nearest = (y: number) => {
@@ -65,32 +71,29 @@ export function dampScroll(sections: () => number[]) {
     at = Math.min(Math.max(0, at + by), points().length - 1);
     nudge = 0;
     go();
-    leap = Math.abs(target - current);
   };
-  /** Whether the page has (all but) arrived where the last move on sent it. */
-  const ready = () => !raf || Math.abs(target - current) <= leap * READY;
 
   const onWheel = (e: WheelEvent) => {
     // leave pinch-zoom (ctrl) and sideways scrolls to the browser
     if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
     e.preventDefault();
     const now = performance.now();
-    if (now - last > GESTURE_GAP) {
+    const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+    const surge = Math.abs(d) > KICK && Math.abs(d) > lastSize * SURGE && now - began > SURGE_AFTER;
+    if (now - last > GESTURE_GAP || surge) {
       settle();
       wheel = 0;
       moved = false;
+      began = now;
     }
     last = now;
-    const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+    lastSize = Math.abs(d);
     wheel += d;
-    // one move on to a scroll; a scroll that starts while the last glide is
-    // still well under way only nudges
+    // one move on to a scroll, straight away, even mid-glide (it goes on from where that glide is headed)
     if (!moved && Math.abs(wheel) > KICK) {
       moved = true;
-      if (ready()) {
-        step(Math.sign(wheel));
-        return;
-      }
+      step(Math.sign(wheel));
+      return;
     }
     // a little either way, within the section
     const ps = points();
