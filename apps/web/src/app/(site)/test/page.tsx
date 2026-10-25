@@ -11,16 +11,18 @@ export default function TestPage() {
   return (
     // a light picture: the bar turns rust over it (SiteHeader)
     <section className={styles.room} aria-label="Test" data-light-under-bar>
-      <Image
-        src={room}
-        alt="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
-        fill
-        priority
-        // the original file, untouched: re-encoding softens it, and it is only 2000 px wide to begin with
-        unoptimized
-        placeholder="blur"
-        className={styles.photo}
-      />
+      <div className={styles.frame}>
+        <Image
+          src={room}
+          alt="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
+          fill
+          priority
+          // the original file, untouched: re-encoding softens it, and it is only 2000 px wide to begin with
+          unoptimized
+          placeholder="blur"
+          className={styles.photo}
+        />
+      </div>
       <HeroTitle />
     </section>
   );

@@ -1,13 +1,20 @@
-/* A screen-high section with the room photo filling it behind the title. */
+/* A screen-high section of paper, the room photo set into it: from just
+   under the bar, with a margin at the sides and foot. */
 .room {
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
-  background: var(--color-ink);
+  background: var(--color-paper);
 }
 
-/* Cropped to fill the screen, a touch above centre, so the room sits a
+.frame {
+  position: absolute;
+  inset: var(--nav-h) var(--gutter) var(--gutter);
+  overflow: hidden;
+}
+
+/* Cropped to fill its frame, a touch above centre, so the room sits a
    little lower. */
 .photo {
   object-fit: cover;
