@@ -23,7 +23,7 @@ export default function TestPage() {
           className={styles.photo}
         />
       </div>
-      <HeroTitle echoes={2} />
+      <HeroTitle echoes={2} className={styles.title} />
     </section>
   );
 }
