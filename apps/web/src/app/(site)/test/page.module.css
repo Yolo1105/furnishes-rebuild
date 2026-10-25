@@ -14,11 +14,11 @@
   overflow: hidden;
 }
 
-/* Cropped to fill its frame, a touch above centre, so the room sits a
-   little lower. */
+/* Cropped to fill its frame, a little below centre: the picture slides up
+   inside the frame, showing more of the room and less of the ceiling. */
 .photo {
   object-fit: cover;
-  object-position: 50% 43%;
+  object-position: 50% 60%;
 }
 
 /* The title sits inside the photo's frame, in from its edge. */
