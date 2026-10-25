@@ -312,8 +312,8 @@
   }
 }
 
-/* Set by PlanWalk while, after an opening, the panel's way in follows the
-   scroll (it sets --lead and --trail itself): nothing here runs on a clock. */
+/* Set by PlanWalk while the panel's way in or out follows the scroll (it
+   sets --lead and --trail itself): nothing here runs on a clock. */
 .panel[data-scrub],
 .panel[data-scrub] .dots,
 .panel[data-scrub] .numeral,

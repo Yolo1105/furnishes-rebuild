@@ -26,7 +26,12 @@ import { WalkPanel } from "./WalkPanel";
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
 const NOTES_FADE = 0.06;
-/** Where in the walk the side panel opens: once the walls are well on their way up. It stays open to the end. */
+/**
+ * Where in the walk the side panel starts in (as the walls start to rise) and
+ * where it is all the way in. It follows the scroll between the two, both
+ * ways, so scrolled back to the plan it has already gone. It stays to the end.
+ */
+const PANEL_FROM = STOPS.sheet + 0.005;
 const PANEL_OPEN = STOPS.sheet + 0.06;
 /** Where in the walk each of the panel's steps ends: one step to a stage. */
 const STEP_ENDS = [STOPS.lifted, STOPS.landed, STOPS.walked, STOPS.built, STOPS.finished, 1];
@@ -65,9 +70,6 @@ const ROOM_SHOWN = 0.2;
  */
 const PANEL_AT = 0.21;
 const PANEL_IN = 0.35;
-/** How long a fast scroll is held at a step at least, ms; and it goes on holding while the same scroll keeps coming (gaps under HOLD_GAP ms). */
-const HOLD_MS = 650;
-const HOLD_GAP = 160;
 /** How stiff the spring the panel's way in rides is, 1/s: it trails the scroll and eases in, about 4 / this seconds behind. */
 const PANEL_SPRING = 4.5;
 
@@ -161,7 +163,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       const lead = introPx();
       const run = track.offsetHeight - window.innerHeight - lead; // the walk's own scroll
       const at = (s: number) => lead + (run * (s - walkFrom)) / (1 - walkFrom);
-      if (!opening) return [at(PANEL_OPEN), ...STEP_ENDS.map(at)];
+      if (!opening) return [at(PANEL_FROM), ...STEP_ENDS.map(at)];
       return [lead * PANEL_AT, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
     };
     const steer = () => {
@@ -198,6 +200,19 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       camera.near = o.near;
       camera.far = o.far;
       camera.updateProjectionMatrix();
+      // the panel's way in (its top end leading, as when it slides), following
+      // the scroll a little behind; with an opening, the room it pushes moves with it
+      const scrub = enter < 1;
+      panel.toggleAttribute("data-scrub", scrub);
+      if (scrub) {
+        const [top, foot] = [enter / 0.8, (enter - 0.2) / 0.8].map((t) => smooth(Math.min(1, Math.max(0, t))));
+        panel.style.setProperty("--lead", `${(1 - top!) * 100}%`);
+        panel.style.setProperty("--trail", `${(1 - foot!) * 100}%`);
+      } else {
+        panel.style.removeProperty("--lead");
+        panel.style.removeProperty("--trail");
+      }
+      enterShown = enter;
       if (opening) {
         // close on the living room through the opening, pulling back to the whole flat as it ends
         const whole = smooth(stage(q, WHOLE.from, WHOLE.to));
@@ -219,19 +234,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
         // alone in the middle, then pushed aside as the panel comes in
         const p = smooth(enter);
-        // the panel's way in (its top end leading, as when it slides), with the
-        // room it pushes: one move, trailing the scroll a little
-        const scrub = enter < 1;
-        panel.toggleAttribute("data-scrub", scrub);
-        if (scrub) {
-          const [top, foot] = [enter / 0.8, (enter - 0.2) / 0.8].map((t) => smooth(Math.min(1, Math.max(0, t))));
-          panel.style.setProperty("--lead", `${(1 - top!) * 100}%`);
-          panel.style.setProperty("--trail", `${(1 - foot!) * 100}%`);
-        } else {
-          panel.style.removeProperty("--lead");
-          panel.style.removeProperty("--trail");
-        }
-        enterShown = enter;
         const mix = (k: keyof Space) => full[k] + (beside[k] - full[k]) * p;
         const free = { cx: mix("cx"), cy: mix("cy"), w: mix("w"), h: mix("h") };
         const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
@@ -329,44 +331,17 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       const now = performance.now();
       const dt = Math.min(1 / 30, (now - ticked) / 1000);
       ticked = now;
-      const goal = opening ? stage(q, PANEL_AT, PANEL_IN) : 1;
+      const goal = opening ? stage(q, PANEL_AT, PANEL_IN) : stage(target, PANEL_FROM, PANEL_OPEN);
       enterSpeed += (PANEL_SPRING * PANEL_SPRING * (goal - enter) - 2 * PANEL_SPRING * enterSpeed) * dt;
       enter += enterSpeed * dt;
+      // on the way back it never lags: it is out by the time the photo returns
+      if (enter > goal) [enter, enterSpeed] = [goal, Math.min(0, enterSpeed)];
       if (still.matches || (Math.abs(goal - enter) < 1e-3 && Math.abs(enterSpeed) < 1e-2))
         [enter, enterSpeed] = [goal, 0];
       if (eased !== shown || q !== qShown || enter !== enterShown) draw(eased);
       if (eased !== target || enter !== goal) raf = requestAnimationFrame(tick);
     };
-    // a scroll down that runs past a step stops there once, and the rest of
-    // it (a fling's momentum) is swallowed for a moment, so no step is ever
-    // skipped. Each step holds late in its stage, once the room has played
-    // it out and before the next step starts to come in (half a panel early).
-    const holds = () => {
-      const stops = panelStops();
-      return stops.slice(1, -1).map((end) => end - panel.clientHeight * 0.6);
-    };
-    let lastY = window.scrollY;
-    let holdAt = 0;
-    let holdUntil = 0;
-    let flung = -Infinity; // when the wheel or a finger last scrolled (only those are held, not a link or a restored scroll)
-    const hold = () => {
-      const y = window.scrollY;
-      const now = performance.now();
-      const crossed = now - flung < 250 ? holds().find((at) => lastY < at - 1 && y > at + 1) : undefined;
-      if (crossed !== undefined) [holdAt, holdUntil] = [crossed, now + HOLD_MS];
-      // held: pinned there, whatever the scroll already under way would do
-      if (now < holdUntil && Math.abs(y - holdAt) > 1) window.scrollTo({ top: holdAt, behavior: "instant" });
-      lastY = window.scrollY;
-    };
-    const swallow = (e: Event) => {
-      const now = performance.now();
-      flung = now;
-      if (now >= holdUntil || !e.cancelable) return;
-      e.preventDefault();
-      holdUntil = Math.max(holdUntil, now + HOLD_GAP); // the same fling, still coming
-    };
     const onScroll = () => {
-      hold();
       playIntro();
       steer();
       target = read();
@@ -376,8 +351,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     const sized = new ResizeObserver(resize);
     sized.observe(canvas);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("wheel", swallow, { passive: false });
-    window.addEventListener("touchmove", swallow, { passive: false });
 
     // The plan's notes are drawn in the site's mono face, once it has loaded;
     // sizing again gives their lines the canvas's resolution.
@@ -400,8 +373,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       cancelAnimationFrame(raf);
       sized.disconnect();
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("wheel", swallow);
-      window.removeEventListener("touchmove", swallow);
       disposables.forEach((d) => d.dispose());
       renderer.dispose();
     };
