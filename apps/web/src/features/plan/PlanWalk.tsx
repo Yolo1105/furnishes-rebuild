@@ -102,6 +102,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     /** How many pixels of scroll the opening takes, before the walk. */
     const introPx = () => (opening ? window.innerHeight * INTRO_SCREENS : 0);
     let q = opening ? 0 : 1; // how far through the opening, 0 to 1
+    let qEased = q; // the same, closing on it a share each frame as the walk's camera does, so the opening glides too
     // after an opening the plan is already up, so the walk's scroll starts where the walls start to rise
     const walkFrom = opening ? STOPS.sheet : 0;
     let qShown = -1;
@@ -215,7 +216,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       enterShown = enter;
       if (opening) {
         // close on the living room through the opening, pulling back to the whole flat as it ends
-        const whole = smooth(stage(q, WHOLE.from, WHOLE.to));
+        const whole = smooth(stage(qEased, WHOLE.from, WHOLE.to));
         // the living room alone, then the rest of the flat growing in round it
         reveal(LIVING_ROOM, whole);
         // the plan fits beside the panel (the one room, then the flat), then,
@@ -262,7 +263,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       // (after an opening, the one room's furniture is drawn in across it once the panel is in)
       if (opening) {
         const [x0, , x1] = LIVING_ROOM;
-        sheet?.furnishTo(x0 + (x1 + 1 - x0) * smooth(stage(q, FURNISH_ROOM.from, FURNISH_ROOM.to)));
+        sheet?.furnishTo(x0 + (x1 + 1 - x0) * smooth(stage(qEased, FURNISH_ROOM.from, FURNISH_ROOM.to)));
       } else sheet?.furnish(smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)));
       // as the plan's symbols fade, the pieces they stand for rise out of the floor
       rise(1 - notes);
@@ -273,7 +274,13 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       sticky.style.setProperty("--title", (1 - smooth(stage(s, STOPS.landed - 0.03, STOPS.landed))).toFixed(3));
       renderer.render(scene, camera);
       shown = s;
-      qShown = q;
+      qShown = qEased;
+      // the opening's own fades (the title, the photo, the plan coming in) on the eased progress too
+      if (opening) {
+        sticky.style.setProperty("--intro", qEased.toFixed(4));
+        opening.toggleAttribute("data-done", qEased >= 0.42); // the photo has gone
+        opening.toggleAttribute("data-light-under-bar", qEased < ROOM_SHOWN); // until the photo has gone
+      }
       canvas.dataset.progress = s.toFixed(3);
     };
 
@@ -318,10 +325,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     const playIntro = () => {
       if (!opening) return;
       q = Math.min(1, Math.max(0, -track.getBoundingClientRect().top / introPx()));
-      sticky.style.setProperty("--intro", q.toFixed(4));
       opening.toggleAttribute("data-scrolled", q > 0.01);
-      opening.toggleAttribute("data-done", q >= 0.42); // the photo and its sketch have gone
-      opening.toggleAttribute("data-light-under-bar", q < ROOM_SHOWN); // until the photo has gone
     };
 
     // Ease the camera towards the scroll, then stop drawing until it moves.
@@ -329,6 +333,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
+      qEased = still.matches ? q : qEased + (q - qEased) * EASE;
+      if (Math.abs(q - qEased) < 1e-4) qEased = q;
       // the panel's way in chases the scroll on its spring
       const now = performance.now();
       const dt = Math.min(1 / 30, (now - ticked) / 1000);
@@ -340,8 +346,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       if (enter > goal) [enter, enterSpeed] = [goal, Math.min(0, enterSpeed)];
       if (still.matches || (Math.abs(goal - enter) < 1e-3 && Math.abs(enterSpeed) < 1e-2))
         [enter, enterSpeed] = [goal, 0];
-      if (eased !== shown || q !== qShown || enter !== enterShown) draw(eased);
-      if (eased !== target || enter !== goal) raf = requestAnimationFrame(tick);
+      if (eased !== shown || qEased !== qShown || enter !== enterShown) draw(eased);
+      if (eased !== target || qEased !== q || enter !== goal) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
       playIntro();
