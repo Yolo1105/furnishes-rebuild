@@ -1,0 +1,224 @@
+/* The live site's intro loader (furnishes_prod, landing.module.css "Intro
+   loader"), as it is there, with its tokens mapped onto this site's: the
+   wash comes from wash.ts and the exit and reveal durations from
+   LOADER_TIMING (both set inline); colours, fonts, easing and the bar's
+   height from globals.css. */
+
+/* The page under it stays at its top while it plays. */
+:global(html):has(.intro) {
+  overflow: hidden;
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  overflow: hidden;
+  color: var(--color-on-orange);
+  /* Solid fallback only while the cover is up. Do NOT transition this:
+     fading shell + cover together blends #e83200 into cream, a pink flash. */
+  background-color: var(--color-orange-top);
+  font-family: var(--font-sans);
+}
+
+.introCover {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  /* Transition always on: applying it only with opacity:0 skips the fade. */
+  transition: opacity var(--reveal) var(--ease-title);
+}
+
+.introExit {
+  pointer-events: none;
+}
+
+/* After collapse / during wipe: hide loader chrome. Brand stays visible.
+   Cover is the only wash that fades on wipe. */
+.introHold .introCanvas,
+.introHold .introCount,
+.introHold .introMeta,
+.introWipe .introCanvas,
+.introWipe .introCount,
+.introWipe .introMeta {
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+
+.introHold .introCover,
+.introWipe .introCover {
+  z-index: 10;
+}
+
+.introWipe .introCover {
+  opacity: 0;
+}
+
+.introHold .introBrand,
+.introWipe .introBrand {
+  z-index: 12;
+}
+
+/* Instantly clear the solid shell when wipe begins: cover is still fully
+   opaque that frame, then fades alone over the matching stage wash. */
+.introWipe {
+  background-color: transparent;
+}
+
+@keyframes introTxtExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+.introExit:not(.introWipe):not(.introHold) .introCount,
+.introExit:not(.introWipe):not(.introHold) .introMeta {
+  animation: introTxtExit var(--exit) var(--ease-title) forwards;
+}
+
+.introCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+@keyframes introBrandIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes introElIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Must sit exactly where the bar's wordmark does, set as it is. */
+.introBrand {
+  composes: wordmark from "../../shell/SiteHeader.module.css";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: var(--color-on-orange);
+  pointer-events: none;
+  animation: introBrandIn 1s var(--ease-title) 0.35s both;
+}
+
+.introCount {
+  position: absolute;
+  left: clamp(20px, 5vw, 64px);
+  bottom: clamp(34px, 7vh, 72px);
+  line-height: 0.78;
+  z-index: 3;
+  animation: introElIn 0.9s var(--ease-title) 0.35s both;
+}
+
+.introCountLabel {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: clamp(10px, 0.85vw, 12px);
+  color: var(--color-ink-soft);
+  margin-bottom: clamp(8px, 1.4vh, 16px);
+}
+
+.introCountNum {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-size: clamp(44px, 7vw, 96px);
+  color: var(--color-rust-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.introBrO,
+.introBrC {
+  font-weight: 400;
+  font-size: 0.5em;
+  opacity: 0.38;
+}
+
+.introBrO {
+  vertical-align: 0.5em;
+  margin-right: 0.04em;
+}
+
+.introBrC {
+  vertical-align: -0.06em;
+  margin-left: 0.04em;
+}
+
+.introPct {
+  font-weight: 600;
+  font-size: 0.32em;
+  opacity: 0.5;
+  vertical-align: 0.92em;
+  margin-left: 0.05em;
+}
+
+.introMeta {
+  position: absolute;
+  right: clamp(20px, 5vw, 64px);
+  bottom: clamp(34px, 7vh, 72px);
+  text-align: right;
+  z-index: 3;
+  animation: introElIn 0.9s var(--ease-title) 0.55s both;
+}
+
+.introMetaTop {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-stretch: 78%;
+  font-size: clamp(26px, 3vw, 44px);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--color-rust-deep);
+}
+
+.introMetaMono {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 15px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  margin-bottom: clamp(10px, 1.4vh, 14px);
+}
+
+@media (max-width: 760px) {
+  .introCountNum {
+    font-size: clamp(38px, 12vw, 68px);
+  }
+
+  .introMeta {
+    display: none;
+  }
+}

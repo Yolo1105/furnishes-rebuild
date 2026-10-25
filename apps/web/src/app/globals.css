@@ -18,6 +18,7 @@
   /* Colours made from the brand ones */
   --color-line: color-mix(in srgb, var(--color-ink) 20%, transparent);
   --color-line-strong: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  --color-ink-soft: color-mix(in srgb, var(--color-ink) 62%, transparent); /* faded small labels */
   --color-tint: color-mix(in srgb, var(--color-orange) 8%, transparent);
   --color-card: color-mix(in srgb, var(--color-cream) 86%, transparent);
   --color-card-edge: color-mix(in srgb, var(--color-white) 50%, transparent);
@@ -94,6 +95,7 @@
   /* Layers */
   --z-content: 1;
   --z-header: 60;
+  --z-loader: 100; /* the opening screen, over the bar */
 }
 
 *,
