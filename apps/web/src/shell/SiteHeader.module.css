@@ -1,8 +1,8 @@
 /* Type and colour follow the live header (furnishes_prod public-shell):
    cream on the orange that always sits at the top of the page. While the
-   landing walk's side panel is in (the walk marks the page), the bar turns
-   the landing title's rust brown, to read over the panel's paper and the
-   room's pale walls. The bar has no background of its own: the page
+   landing walk's side panel is in (the walk marks the page), or on a page
+   whose top is a light picture (marked data-light-under-bar), the bar turns
+   the landing title's rust brown, to read over the paper or the picture. The bar has no background of its own: the page
    shows through it. */
 .header {
   position: fixed;
@@ -24,7 +24,8 @@
   line-height: 1;
 }
 
-:global(html[data-walk-panel]) .header {
+:global(html[data-walk-panel]) .header,
+:global(html:has([data-light-under-bar])) .header {
   --bar-fg: var(--color-rust);
   --bar-on-fg: var(--color-cream);
 }

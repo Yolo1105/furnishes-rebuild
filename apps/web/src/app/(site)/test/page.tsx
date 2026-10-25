@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { HeroTitle } from "@/features/stage/HeroTitle";
-import room from "../../../../public/rooms/orange-living-room.jpg";
+import room from "../../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Test", robots: { index: false } };
 
-/** A bare test page: the bar and the landing's title over a photo of a living room (the live site's "we shape light" picture). */
+/** A bare test page: the bar and the landing's title over a photo of a living room (the live site's picture after "every room feels"). */
 export default function TestPage() {
   return (
-    <section className={styles.room} aria-label="Test">
+    // a light picture: the bar turns rust over it (SiteHeader)
+    <section className={styles.room} aria-label="Test" data-light-under-bar>
       <Image
         src={room}
-        alt="A warm orange living room: armchairs round a wooden table on a patterned rug, a stone fireplace and a frosted tree"
+        alt="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
         fill
         priority
         // the original file, untouched: re-encoding softens it, and it is only 2000 px wide to begin with
@@ -20,7 +21,7 @@ export default function TestPage() {
         placeholder="blur"
         className={styles.photo}
       />
-      <HeroTitle tone="cream" />
+      <HeroTitle />
     </section>
   );
 }

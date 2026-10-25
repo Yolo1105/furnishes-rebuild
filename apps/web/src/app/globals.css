@@ -106,10 +106,12 @@ body {
   margin: 0;
 }
 
-/* The page's base is the wash's top colour, so pulling past the top of the
-   page, or anything behind the stage, never shows a different colour. */
+/* The page stops dead at its top and foot, with no bounce past them, so its
+   base never shows above a picture; that base is the wash's top colour
+   anyway, for anything behind the stage. */
 html {
   background: var(--color-orange-top);
+  overscroll-behavior-y: none;
   /* The page still scrolls; it just shows no bar. */
   scrollbar-width: none;
 }

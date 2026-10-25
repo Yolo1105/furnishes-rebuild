@@ -1,5 +1,4 @@
-/* A screen-high section with the room photo filling it behind the title.
-   The title sits over the shade (z-index from HeroTitle). */
+/* A screen-high section with the room photo filling it behind the title. */
 .room {
   position: relative;
   min-height: 100vh;
@@ -10,14 +9,4 @@
 
 .photo {
   object-fit: cover;
-}
-
-/* Shade the top of the photo, so the bar and the title read over it. */
-.room::after {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 45%;
-  background: linear-gradient(var(--color-shadow), transparent);
-  content: "";
-  pointer-events: none;
 }
