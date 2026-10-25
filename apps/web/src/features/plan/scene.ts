@@ -731,5 +731,9 @@ export function addSheet(
       const [x0, x1] = [BOUNDS.x0 / 1000 - 0.5, BOUNDS.x1 / 1000 + 1.5];
       drawnTo.constant = x0 + (x1 - x0) * t;
     },
+    /** The same, drawn as far east as x, metres. */
+    furnishTo(x: number) {
+      drawnTo.constant = x;
+    },
   };
 }

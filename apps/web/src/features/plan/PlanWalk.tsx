@@ -53,7 +53,9 @@ const FLAT = [BOUNDS.x0 / 1000, BOUNDS.y0 / 1000, BOUNDS.x1 / 1000, BOUNDS.y1 / 
 /** Room left round the plan inside the space the panel leaves it, px. */
 const BREATHE = 40;
 /** Through the opening (0 to 1): when the rest of the flat grows in round the living room, and the view pulls back. */
-const WHOLE = { from: 0.62, to: 0.9 };
+const WHOLE = { from: 0.6, to: 1 };
+/** Through the opening: while the living room's furniture is drawn in, once the panel is in (till the flat grows round it). */
+const FURNISH_ROOM = { from: 0.34, to: 0.58 };
 /** Through the opening: when the photo has gone and the panel comes in on the one room. */
 const ROOM_SHOWN = 0.2;
 /**
@@ -63,6 +65,8 @@ const ROOM_SHOWN = 0.2;
  */
 const PANEL_AT = 0.21;
 const PANEL_IN = 0.35;
+/** How stiff the spring the panel's way in rides is, 1/s: it trails the scroll and eases in, about 4 / this seconds behind. */
+const PANEL_SPRING = 4.5;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -93,6 +97,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     /** How many pixels of scroll the opening takes, before the walk. */
     const introPx = () => (opening ? window.innerHeight * INTRO_SCREENS : 0);
     let q = opening ? 0 : 1; // how far through the opening, 0 to 1
+    // after an opening the plan is already up, so the walk's scroll starts where the walls start to rise
+    const walkFrom = opening ? STOPS.sheet : 0;
     let qShown = -1;
     const corner = new THREE.Vector3();
     // the space for the plan, px (set on resize): the whole screen, and what the panel leaves it
@@ -126,6 +132,11 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     let target = 0;
     let shown = -1;
     let eased = 0;
+    // how far in the panel is after an opening, 0 to 1: it chases the scroll on a spring
+    let enter = 0;
+    let enterSpeed = 0;
+    let enterShown = -1;
+    let ticked = 0; // the last frame's time
     let raf = 0;
     let sheet: ReturnType<typeof addSheet> | null = null;
 
@@ -146,7 +157,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     const panelStops = () => {
       const lead = introPx();
       const run = track.offsetHeight - window.innerHeight - lead; // the walk's own scroll
-      const at = (s: number) => lead + run * s;
+      const at = (s: number) => lead + (run * (s - walkFrom)) / (1 - walkFrom);
       if (!opening) return [at(PANEL_OPEN), ...STEP_ENDS.map(at)];
       return [lead * PANEL_AT, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
     };
@@ -160,19 +171,12 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         // the bar turns brown while the panel is in
         document.documentElement.toggleAttribute("data-walk-panel", open);
       }
-      // after an opening the panel's way in follows the scroll (its top end
-      // leading, as when it slides), so it and the room it pushes are one move
-      const scrub = Boolean(opening) && q < PANEL_IN;
-      panel.toggleAttribute("data-scrub", scrub);
-      if (scrub) {
-        const [top, foot] = [stage(q, PANEL_AT, PANEL_IN - 0.03), stage(q, PANEL_AT + 0.03, PANEL_IN)].map(smooth);
-        panel.style.setProperty("--lead", `${(1 - top!) * 100}%`);
-        panel.style.setProperty("--trail", `${(1 - foot!) * 100}%`);
-      } else {
-        panel.style.removeProperty("--lead");
-        panel.style.removeProperty("--trail");
-      }
-      const y = Math.min(Math.max(0, -r.top - from), Math.max(0, scroller.scrollHeight - scroller.clientHeight));
+      // half a panel behind the page, so each step takes over from the last
+      // just as its stage starts in the room, not a screen before
+      const y = Math.min(
+        Math.max(0, -r.top - from - panel.clientHeight / 2),
+        Math.max(0, scroller.scrollHeight - scroller.clientHeight),
+      );
       scroller.scrollTop = y;
       let up = 0;
       steps.forEach((step, i) => {
@@ -211,7 +215,20 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         };
         const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
         // alone in the middle, then pushed aside as the panel comes in
-        const p = smooth(stage(q, PANEL_AT, PANEL_IN));
+        const p = smooth(enter);
+        // the panel's way in (its top end leading, as when it slides), with the
+        // room it pushes: one move, trailing the scroll a little
+        const scrub = enter < 1;
+        panel.toggleAttribute("data-scrub", scrub);
+        if (scrub) {
+          const [top, foot] = [enter / 0.8, (enter - 0.2) / 0.8].map((t) => smooth(Math.min(1, Math.max(0, t))));
+          panel.style.setProperty("--lead", `${(1 - top!) * 100}%`);
+          panel.style.setProperty("--trail", `${(1 - foot!) * 100}%`);
+        } else {
+          panel.style.removeProperty("--lead");
+          panel.style.removeProperty("--trail");
+        }
+        enterShown = enter;
         const mix = (k: keyof Space) => full[k] + (beside[k] - full[k]) * p;
         const free = { cx: mix("cx"), cy: mix("cy"), w: mix("w"), h: mix("h") };
         const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
@@ -235,7 +252,11 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       sheet?.fade(notes);
       // the plan opens empty; the furniture is drawn in with the first scroll
       // (after an opening, the plan arrives furnished)
-      sheet?.furnish(opening ? 1 : smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)));
+      // (after an opening, the one room's furniture is drawn in across it once the panel is in)
+      if (opening) {
+        const [x0, , x1] = LIVING_ROOM;
+        sheet?.furnishTo(x0 + (x1 + 1 - x0) * smooth(stage(q, FURNISH_ROOM.from, FURNISH_ROOM.to)));
+      } else sheet?.furnish(smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)));
       // as the plan's symbols fade, the pieces they stand for rise out of the floor
       rise(1 - notes);
       // the page's own words beside the plan go with the plan's notes
@@ -282,7 +303,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       const r = track.getBoundingClientRect();
       const lead = introPx();
       const run = r.height - window.innerHeight - lead;
-      return run > 0 ? Math.min(1, Math.max(0, (-r.top - lead) / run)) : 0;
+      const t = run > 0 ? Math.min(1, Math.max(0, (-r.top - lead) / run)) : 0;
+      return walkFrom + t * (1 - walkFrom);
     };
 
     /** Follow the opening with the scroll: how far through it, and what of it is still showing. */
@@ -300,8 +322,17 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
-      if (eased !== shown || q !== qShown) draw(eased);
-      if (eased !== target) raf = requestAnimationFrame(tick);
+      // the panel's way in chases the scroll on its spring
+      const now = performance.now();
+      const dt = Math.min(1 / 30, (now - ticked) / 1000);
+      ticked = now;
+      const goal = opening ? stage(q, PANEL_AT, PANEL_IN) : 1;
+      enterSpeed += (PANEL_SPRING * PANEL_SPRING * (goal - enter) - 2 * PANEL_SPRING * enterSpeed) * dt;
+      enter += enterSpeed * dt;
+      if (still.matches || (Math.abs(goal - enter) < 1e-3 && Math.abs(enterSpeed) < 1e-2))
+        [enter, enterSpeed] = [goal, 0];
+      if (eased !== shown || q !== qShown || enter !== enterShown) draw(eased);
+      if (eased !== target || enter !== goal) raf = requestAnimationFrame(tick);
     };
     const onScroll = () => {
       playIntro();
