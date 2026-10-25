@@ -297,7 +297,6 @@
     height: var(--walk-panel-h);
     clip-path: polygon(0 var(--lead), 100% var(--trail), 100% 100%, 0 100%);
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -311,4 +310,18 @@
   .cta {
     transition: none;
   }
+}
+
+/* Set by PlanWalk while an opening's photo is (coming) back: the panel is
+   simply gone, so it never slides out over the photo. */
+.panel[data-snap],
+.panel[data-snap] .dots,
+.panel[data-snap] .numeral,
+.panel[data-snap] .line > span,
+.panel[data-snap] .card,
+.panel[data-snap] .cardArt,
+.panel[data-snap] .name,
+.panel[data-snap] .body,
+.panel[data-snap] .cta {
+  transition: none;
 }

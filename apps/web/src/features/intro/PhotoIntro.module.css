@@ -23,15 +23,15 @@
   inset: 0;
 }
 
-/* The photo: sized to cover the screen, centred across and set 60% down
-   (so a little more floor than ceiling shows where the screen is wider
-   than the photo), as object-fit cover would. */
+/* The photo, from just below its ceiling (PhotoIntro's CEILING, here as
+   the 1074 px left of its 1334): sized to cover the screen, centred across
+   and set 60% down, as object-fit cover would. */
 .room {
   position: absolute;
   top: 60%;
   left: 50%;
-  width: max(100%, 100dvh * 2000 / 1334);
-  aspect-ratio: 2000 / 1334;
+  width: max(100%, 100dvh * 2000 / 1074);
+  aspect-ratio: 2000 / 1074;
   translate: -50% -60%;
 }
 
@@ -50,7 +50,7 @@
 
 /* a little way under the bar */
 .intro .place {
-  top: calc(var(--nav-h) + var(--space-7) * 2);
+  top: calc(var(--nav-h) + var(--space-4));
 }
 
 .slogan {

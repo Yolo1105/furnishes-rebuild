@@ -13,6 +13,9 @@ import styles from "./PhotoIntro.module.css";
  * flat as it grows in round it, and on).
  */
 
+/** Where the ceiling meets the window wall, in the photo's own pixels (2000 x 1334): the photo is shown from just below it. */
+const CEILING = 260;
+
 export function PhotoIntro() {
   return (
     // a light picture under the bar (PlanWalk clears it once the photo has gone); the wordmark at the bar's left
@@ -20,7 +23,7 @@ export function PhotoIntro() {
       <div className={styles.scene}>
         <svg
           className={styles.room}
-          viewBox="0 0 2000 1334"
+          viewBox={`0 ${CEILING} 2000 ${1334 - CEILING}`}
           role="img"
           aria-label="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
         >
