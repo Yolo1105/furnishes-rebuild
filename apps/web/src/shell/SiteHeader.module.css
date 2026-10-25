@@ -35,9 +35,19 @@
   color: var(--color-on-orange);
 }
 
-/* Over a light picture, the wordmark is white. */
-:global(html:has([data-light-under-bar])) .wordmark {
-  color: var(--color-white);
+/* A page can ask for the wordmark at the far left (data-wordmark-left), the
+   links following it, instead of centred between them. */
+:global(html:has([data-wordmark-left])) .header {
+  display: flex;
+}
+
+:global(html:has([data-wordmark-left])) .wordmark {
+  order: -1;
+  margin-right: var(--nav-gap);
+}
+
+:global(html:has([data-wordmark-left])) .end {
+  margin-left: auto;
 }
 
 .start,

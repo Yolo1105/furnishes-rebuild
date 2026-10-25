@@ -9,8 +9,8 @@ export const metadata: Metadata = { title: "Test", robots: { index: false } };
 /** A bare test page: the bar and the landing's title over a photo of a living room (the live site's picture after "every room feels"). */
 export default function TestPage() {
   return (
-    // a light picture: the bar turns rust over it (SiteHeader)
-    <section className={styles.room} aria-label="Test" data-light-under-bar>
+    // a light picture, so the bar turns rust over it; and the wordmark at the bar's left (SiteHeader)
+    <section className={styles.room} aria-label="Test" data-light-under-bar data-wordmark-left>
       <div className={styles.frame}>
         <Image
           src={room}
