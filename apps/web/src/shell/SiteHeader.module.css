@@ -35,6 +35,11 @@
   color: var(--color-on-orange);
 }
 
+/* Over a light picture, the wordmark is white. */
+:global(html:has([data-light-under-bar])) .wordmark {
+  color: var(--color-white);
+}
+
 .start,
 .end {
   display: flex;

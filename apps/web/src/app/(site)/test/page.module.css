@@ -19,8 +19,3 @@
   object-fit: cover;
   object-position: 50% 60%;
 }
-
-/* The title, a little lower than its usual place. */
-.room .title {
-  top: calc(var(--nav-h) + var(--space-6));
-}
