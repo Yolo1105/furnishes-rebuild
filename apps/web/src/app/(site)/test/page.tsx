@@ -24,6 +24,10 @@ export default function TestPage() {
         />
       </div>
       <HeroTitle echoes={2} className={styles.title} />
+      {/* the page goes on below */}
+      <svg className={styles.cue} viewBox="0 0 24 12" aria-hidden="true">
+        <path d="M2 2l10 8 10-8" />
+      </svg>
     </section>
   );
 }
