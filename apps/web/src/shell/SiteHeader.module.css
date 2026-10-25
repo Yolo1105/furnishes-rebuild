@@ -35,15 +35,20 @@
   color: var(--color-on-orange);
 }
 
-/* A page can ask for the wordmark at the far left (data-wordmark-left), the
-   links following it, instead of centred between them. */
+/* A page can ask for the wordmark at the far left (data-wordmark-left), set
+   like the links following it, instead of centred between them. */
 :global(html:has([data-wordmark-left])) .header {
   display: flex;
 }
 
 :global(html:has([data-wordmark-left])) .wordmark {
   order: -1;
-  margin-right: var(--nav-gap);
+  margin-right: calc(var(--nav-gap) - var(--space-6)); /* with the bar's gap, the links' own spacing */
+  /* set like the links beside it */
+  font-size: var(--text-nav);
+  font-weight: 400;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
 }
 
 :global(html:has([data-wordmark-left])) .end {
