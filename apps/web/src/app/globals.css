@@ -64,7 +64,7 @@
   --icon-lg: 32px;
   --card-w: 400px;
   --walk-length: 1200vh; /* scrolling the plan walk takes: half to walk in, half for the room */
-  --intro-length: 250vh; /* a photo opening before the walk (PlanWalk's INTRO_SCREENS) */
+  --intro-length: 450vh; /* a photo opening before the walk (PlanWalk's INTRO_SCREENS) */
   --walk-panel: 28vw; /* the walk's side panel, on a wide screen */
   --walk-panel-h: 54dvh; /* the same panel, rising from the foot on a tall one */
   --panel-pad: clamp(24px, 5vw, 80px);

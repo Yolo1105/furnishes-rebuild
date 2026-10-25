@@ -67,8 +67,8 @@ export function makeRig(aspect: number) {
   const cx = (BOUNDS.x0 + BOUNDS.x1) / 2000;
   const cz = (BOUNDS.y0 + BOUNDS.y1) / 2000;
   // the sheet frames the whole flat, with a margin
-  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 9.5;
-  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 8;
+  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 6;
+  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 5;
   const frame0 = Math.max(flatD, flatW / aspect);
 
   const door = { x: FRONT_DOOR.at / 1000, z: FRONT_DOOR.across / 1000 };

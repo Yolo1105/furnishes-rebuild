@@ -27,7 +27,7 @@ export const ROOMS: readonly Room[] = [
 /** Wall height, and thickness round the outside and between rooms, mm. */
 export const CEILING = 2600;
 export const OUTER_WALL = 100;
-export const PARTITION = 75;
+export const PARTITION = 100; // as thick as the outside walls: every wall in the plan is one width
 const GAP = 300; // between neighbouring rooms in ROOMS
 
 type Side = {
@@ -226,8 +226,11 @@ export const COLUMNS: readonly [number, number, number, number][] = [
   [12500, 6400, 12800, 6700], // the kitchen's north-east corner
 ];
 
-/** The household shelter's walls are reinforced concrete: this much thicker, inwards, mm. */
-export const SHELTER_WALL = 200;
+/**
+ * How much thicker the household shelter's walls are drawn, inwards, mm:
+ * none, so every wall in the plan is one width.
+ */
+export const SHELTER_WALL = 0;
 
 /**
  * Bay windows on the north wall, mm: the wall is open from sill to head

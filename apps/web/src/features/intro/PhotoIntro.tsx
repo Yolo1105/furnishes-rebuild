@@ -10,7 +10,9 @@ import styles from "./PhotoIntro.module.css";
  * The walk's opening, laid over it: a photo of a real room, the title and
  * the way in. As the page scrolls (PlanWalk sets --intro, 0 to 1) the
  * room's main lines draw themselves over the photo, the photo fades away
- * under them, and then the sketch fades too, leaving the plan beneath.
+ * under them, and then the sketch fades too, leaving the plan of that one
+ * room beneath (01, told on the left); then the rest of the flat grows in
+ * round it (02, on the right).
  *
  * The lines are traced from the photo, in its own pixels (2000 x 1334).
  */
@@ -65,52 +67,63 @@ const LINES: Line[] = [
   { d: "M643 1020m-147 0a147 115 0 1 0 294 0a147 115 0 1 0 -294 0", at: 0.7 },
 ];
 
+/** The two steps the opening tells beside the plan, before the walk's own panel takes over at 03. */
+const SIDES = [
+  {
+    no: "01",
+    at: "one",
+    label: "An idea",
+    headline: "Every home starts with an idea.",
+    body: "A room you love, a feeling you want to come home to. We begin where you do: with one room.",
+  },
+  {
+    no: "02",
+    at: "two",
+    label: "The whole home",
+    headline: "Then it becomes a plan.",
+    body: "Your idea, drawn into the whole flat: every room to scale, every wall and window where it really is.",
+  },
+] as const;
+
 export function PhotoIntro() {
   return (
     // a light picture under the bar (PlanWalk clears it once the photo has gone); the wordmark at the bar's left
-    <div
-      className={styles.intro}
-      data-intro
-      data-light-under-bar
-      data-wordmark-left
-    >
-      <div className={styles.paper} />
-      <svg
-        className={styles.room}
-        viewBox="0 0 2000 1334"
-        role="img"
-        aria-label="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
-      >
-        <image
-          className={styles.photo}
-          href={room.src}
-          width="2000"
-          height="1334"
-        />
-        <g className={styles.lines}>
-          {LINES.map((l, i) => (
-            <path
-              key={i}
-              d={l.d}
-              pathLength={1}
-              style={{ "--at": l.at } as CSSProperties}
-            />
-          ))}
-        </g>
-      </svg>
+    <div className={styles.intro} data-intro data-light-under-bar data-wordmark-left>
+      <div className={styles.scene}>
+        <div className={styles.paper} />
+        <svg
+          className={styles.room}
+          viewBox="0 0 2000 1334"
+          role="img"
+          aria-label="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
+        >
+          <image className={styles.photo} href={room.src} width="2000" height="1334" />
+          <g className={styles.lines}>
+            {LINES.map((l, i) => (
+              <path key={i} d={l.d} pathLength={1} style={{ "--at": l.at } as CSSProperties} />
+            ))}
+          </g>
+        </svg>
+      </div>
       <div className={styles.hero}>
         <HeroTitle className={styles.place}>
-          <p className={styles.slogan}>
-            Made for your room, to the millimetre.
-          </p>
-          <Link
-            href={routes.studio}
-            className={`${button.button} ${styles.start}`}
-          >
+          <p className={styles.slogan}>Made for your room, to the millimetre.</p>
+          <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
             Explore your journey
           </Link>
         </HeroTitle>
       </div>
+      {/* once the sketch has turned into the living room's plan, then as the rest of the flat grows round it */}
+      {SIDES.map((side) => (
+        <section key={side.no} className={`${styles.side} ${styles[side.at]}`}>
+          <p className={styles.no}>{side.no}</p>
+          <p className={styles.label}>
+            {side.no} · {side.label}
+          </p>
+          <h2 className={styles.headline}>{side.headline}</h2>
+          <p className={styles.body}>{side.body}</p>
+        </section>
+      ))}
       {/* the page goes on below */}
       <svg className={styles.cue} viewBox="0 0 24 12" aria-hidden="true">
         <path d="M2 2l10 8 10-8" />

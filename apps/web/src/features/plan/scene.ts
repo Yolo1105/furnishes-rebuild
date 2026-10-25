@@ -54,6 +54,9 @@ export const WARDROBES: readonly [number, number, number, number][] = [
   [3.35, 2.925, 4.95, 3.495], // bedroom 3
 ];
 
+/** A clipping plane's constant far enough off to clip nothing, m. */
+const OPEN = 1e4;
+
 /** One shade a face, from which way it faces: up is the paper itself. */
 const SHADE = { up: 1, x: 0.93, z: 0.87, down: 0.8 };
 
@@ -67,12 +70,24 @@ export function buildFlatScene(palette: Palette) {
 
   /** Everything is cut by this plane: it keeps what lies below its height. */
   const cut = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1.2);
+  /**
+   * And by these four, a box on the floor that keeps what lies inside it:
+   * wide open, unless `reveal` closes it round one room to show that alone.
+   */
+  const roomBox = [
+    new THREE.Plane(new THREE.Vector3(1, 0, 0), OPEN),
+    new THREE.Plane(new THREE.Vector3(-1, 0, 0), OPEN),
+    new THREE.Plane(new THREE.Vector3(0, 0, 1), OPEN),
+    new THREE.Plane(new THREE.Vector3(0, 0, -1), OPEN),
+  ];
+  /** One shared list, so every material follows the planes as they move. */
+  const clipping = [cut, ...roomBox];
   const lineMats: LineMaterial[] = [];
   const disposables: { dispose(): void }[] = [];
 
   const faceMat = new THREE.MeshBasicMaterial({
     vertexColors: true,
-    clippingPlanes: [cut],
+    clippingPlanes: clipping,
     polygonOffset: true,
     polygonOffsetFactor: 1,
     polygonOffsetUnits: 1,
@@ -104,7 +119,7 @@ export function buildFlatScene(palette: Palette) {
   const insideMat = new THREE.MeshBasicMaterial({
     color: ink,
     side: THREE.BackSide,
-    clippingPlanes: [cut],
+    clippingPlanes: clipping,
     polygonOffset: true,
     polygonOffsetFactor: 1,
     polygonOffsetUnits: 1,
@@ -112,6 +127,7 @@ export function buildFlatScene(palette: Palette) {
   // A cut piece of furniture is not poché: only the building's walls are.
   const pieceInsideMat = insideMat.clone();
   pieceInsideMat.color.copy(paper);
+  pieceInsideMat.clippingPlanes = clipping; // a clone has copies of the planes, which would not move
   disposables.push(faceMat, insideMat, pieceInsideMat);
 
   /** What a face is made of: a colour, or one picked by which way the face looks and how high it is. */
@@ -149,7 +165,7 @@ export function buildFlatScene(palette: Palette) {
     const edges = new THREE.EdgesGeometry(g, 20);
     const lg = new LineSegmentsGeometry().setPositions(edges.attributes.position!.array as Float32Array);
     edges.dispose();
-    const mat = new LineMaterial({ color: ink, linewidth: width, worldUnits: false, clippingPlanes: [cut] });
+    const mat = new LineMaterial({ color: ink, linewidth: width, worldUnits: false, clippingPlanes: clipping });
     lineMats.push(mat);
     disposables.push(lg, mat);
     return new LineSegments2(lg, mat);
@@ -191,15 +207,17 @@ export function buildFlatScene(palette: Palette) {
   // ---- what makes it an HDB flat --------------------------------------------
   // columns, full height
   for (const [x0, y0, x1, y1] of COLUMNS) shell.add([x0 * M, -SLAB, y0 * M], [x1 * M, H, y1 * M]);
-  // the household shelter's thick concrete walls, inside its own floor; its door cut through again
+  // the household shelter's walls, thickened inwards by SHELTER_WALL if it is set; its door cut through again
   const shelter = floorOf(ROOMS.find((r) => r.key === "shelter")!);
   const [sx0, sz0, sx1, sz1] = [shelter.x0 * M, shelter.y0 * M, shelter.x1 * M, shelter.y1 * M];
   const st = SHELTER_WALL * M;
-  shell.add([sx0, 0, sz0], [sx1, H, sz0 + st]);
-  shell.add([sx0, 0, sz1 - st], [sx1, H, sz1]);
-  shell.add([sx0, 0, sz0], [sx0 + st, H, sz1]);
-  shell.add([sx1 - st, 0, sz0], [sx1, H, sz1]);
-  hole(SHELTER_DOOR);
+  if (st > 0) {
+    shell.add([sx0, 0, sz0], [sx1, H, sz0 + st]);
+    shell.add([sx0, 0, sz1 - st], [sx1, H, sz1]);
+    shell.add([sx0, 0, sz0], [sx0 + st, H, sz1]);
+    shell.add([sx1 - st, 0, sz0], [sx1, H, sz1]);
+    hole(SHELTER_DOOR);
+  }
   // bay windows: a box standing out from the north wall, open to the room
   // from sill to head, a seat ledge below, glazed across its outer face
   const face = -OUTER_WALL * M; // the north wall's outer face
@@ -452,7 +470,25 @@ export function buildFlatScene(palette: Palette) {
     },
   };
 
-  return { scene, cut, lineMats, disposables, rise, later };
+  /**
+   * Show one room alone, or the flat round it: 0 keeps only the box `room`
+   * ([x0, z0, x1, z1], m), 1 the whole flat; between, the box grows out from
+   * the room to the flat's bounds, and past them.
+   */
+  const reveal = (room: readonly [number, number, number, number], t: number) => {
+    if (t >= 1) {
+      for (const p of roomBox) p.constant = OPEN;
+      return;
+    }
+    const all = [BOUNDS.x0 / 1000 - 4, BOUNDS.y0 / 1000 - 4, BOUNDS.x1 / 1000 + 4, BOUNDS.y1 / 1000 + 4];
+    const [x0, z0, x1, z1] = room.map((v, i) => v + (all[i]! - v) * t) as [number, number, number, number];
+    roomBox[0]!.constant = -x0;
+    roomBox[1]!.constant = x1;
+    roomBox[2]!.constant = -z0;
+    roomBox[3]!.constant = z1;
+  };
+
+  return { scene, cut, roomBox, lineMats, disposables, rise, later, reveal };
 }
 
 /** A line material and the objects that use it, so the plan's notes can fade. */
@@ -473,6 +509,7 @@ export function addSheet(
   font: string,
   disposables: { dispose(): void }[],
   lineMats: LineMaterial[],
+  box: THREE.Plane[] = [],
 ) {
   const PX = 220; // canvas pixels a metre
   const FLOOR = 0.003; // notes lie this far over the floor, m
@@ -500,8 +537,14 @@ export function addSheet(
   // The furniture and fittings are drawn in across the plan, west to east,
   // with the first scroll: they are cut away east of this plane.
   const drawnTo = new THREE.Plane(new THREE.Vector3(-1, 0, 0), BOUNDS.x0 / 1000 - 1);
-  /** The planes what is drawn next is clipped by: set while the furniture is drawn. */
-  let clip: THREE.Plane[] | undefined;
+  /**
+   * What is drawn next is clipped by the scene's room box (`box`, so the
+   * notes show only where the flat does) and by `clip`, set while the
+   * furniture is drawn; the ground grid, drawn with `grounded`, by neither.
+   */
+  let clip: THREE.Plane[] = [];
+  let grounded = false;
+  const planes = () => (grounded ? [] : [...box, ...clip]);
 
   const text = (
     rows: { text: string; size: number; weight?: number; track?: number }[],
@@ -536,7 +579,7 @@ export function addSheet(
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8;
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, clippingPlanes: clip });
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, clippingPlanes: planes() });
     const geo = new THREE.PlaneGeometry(c.width / PX, c.height / PX);
     disposables.push(tex, mat, geo);
     const m = new THREE.Mesh(geo, mat);
@@ -555,7 +598,7 @@ export function addSheet(
       worldUnits: false,
       transparent: fade || opacity < 1,
       opacity,
-      clippingPlanes: clip,
+      clippingPlanes: planes(),
     });
     lineMats.push(mat);
     disposables.push(geo, mat);
@@ -651,7 +694,7 @@ export function addSheet(
   segments(onFloor(symbols.furniture), 0.7, true, furnitureInk);
   segments(onFloor(symbols.light), 0.5, true, lightInk);
   for (const t of symbols.tags) text([{ text: t.text, size: 0.11, track: 0.08 }], t.x, t.z, { fade: true });
-  clip = undefined;
+  clip = [];
 
   // ---- the drafting grid: a metre grid on the ground the flat stands on ----
   // It thins out away from the flat, in rings, and stays once the walls rise.
@@ -673,7 +716,9 @@ export function addSheet(
   };
   for (let x = gx0; x <= gx1; x++) for (let z = gz0; z < gz1; z++) put(x, z, x, z + 1);
   for (let z = gz0; z <= gz1; z++) for (let x = gx0; x < gx1; x++) put(x, z, x + 1, z);
+  grounded = true;
   rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
+  grounded = false;
 
   return {
     /** How much of the flat-drawing notes shows, 0 to 1. */

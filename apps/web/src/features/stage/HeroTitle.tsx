@@ -28,11 +28,7 @@ export function HeroTitle({
 }) {
   return (
     <div className={className ? `${styles.hero} ${className}` : styles.hero}>
-      <h1
-        className={styles.title}
-        data-tone={tone}
-        aria-label="Interior Revolution"
-      >
+      <h1 className={styles.title} data-tone={tone} aria-label="Interior Revolution">
         <span className={styles.first} aria-hidden="true">
           Interior
         </span>

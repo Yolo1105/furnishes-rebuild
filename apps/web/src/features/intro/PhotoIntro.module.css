@@ -1,21 +1,32 @@
 /* The opening, over the walk. Everything here follows --intro, how far
    through the opening the scroll is (0 to 1, set by PlanWalk): the title
    goes first, the lines draw in, the photo fades under them, then the
-   sketch and its paper fade to show the plan beneath. PlanWalk also marks
-   it data-scrolled once the title has gone (the button stops taking
-   clicks) and data-done once it has all gone. */
+   sketch and its paper fade to show the living room's plan beneath, told
+   by 01 on the left; then, as the rest of the flat grows in, 02 on the
+   right, which stays until the walls rise (--notes, from PlanWalk).
+   PlanWalk also marks it data-scrolled once the title has gone (the
+   button stops taking clicks) and data-done once the photo has. */
 .intro {
-  --title: calc(1 - clamp(0, var(--intro, 0) / 0.12, 1));
-  --photo: calc(1 - clamp(0, (var(--intro, 0) - 0.34) / 0.18, 1));
-  --sketch: calc(1 - clamp(0, (var(--intro, 0) - 0.56) / 0.14, 1));
+  --title: calc(1 - clamp(0, var(--intro, 0) / 0.07, 1));
+  --photo: calc(1 - clamp(0, (var(--intro, 0) - 0.19) / 0.1, 1));
+  --sketch: calc(1 - clamp(0, (var(--intro, 0) - 0.31) / 0.08, 1));
+  --one: calc(clamp(0, (var(--intro, 0) - 0.36) / 0.05, 1) * (1 - clamp(0, (var(--intro, 0) - 0.58) / 0.05, 1)));
+  --two: calc(clamp(0, (var(--intro, 0) - 0.7) / 0.06, 1) * var(--notes, 1));
   position: absolute;
   z-index: var(--z-content);
   inset: 0;
   pointer-events: none;
 }
 
-.intro[data-done] {
+.intro[data-done] .scene,
+.intro[data-done] .hero,
+.intro[data-done] .cue {
   display: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
 }
 
 .paper {
@@ -54,7 +65,7 @@
 
 .lines path {
   stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - clamp(0, (var(--intro, 0) - 0.04 - var(--at) * 0.32) / 0.12, 1));
+  stroke-dashoffset: calc(1 - clamp(0, (var(--intro, 0) - 0.02 - var(--at) * 0.18) / 0.07, 1));
   vector-effect: non-scaling-stroke;
 }
 
@@ -120,4 +131,62 @@
   .cue {
     animation: none;
   }
+}
+
+/* 01 on the left and 02 on the right of the plan: each fades in and rises a
+   little as its stage comes up. */
+.side {
+  position: absolute;
+  top: 50%;
+  width: min(26vw, 360px);
+  color: var(--color-ink);
+  translate: 0 -50%;
+}
+
+.one {
+  left: var(--gutter);
+  opacity: var(--one);
+  transform: translateY(calc((1 - var(--one)) * var(--space-4)));
+}
+
+.two {
+  right: var(--gutter);
+  opacity: var(--two);
+  transform: translateY(calc((1 - var(--two)) * var(--space-4)));
+}
+
+.no {
+  margin: 0 0 calc(var(--text-numeral) * -0.42);
+  color: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-numeral);
+  font-weight: 200;
+  line-height: 1;
+  -webkit-text-stroke: 1px var(--color-ink);
+  opacity: 0.2;
+}
+
+.label {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.headline {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-display);
+  font-weight: 600;
+  line-height: 1.12;
+}
+
+.body {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-lede);
+  line-height: 1.7;
 }
