@@ -25,11 +25,16 @@
   opacity: var(--sketch);
 }
 
+/* The photo and its lines as one: sized to cover the screen, centred
+   across and set 60% down (so a little more floor than ceiling shows where
+   the screen is wider than the photo), as object-fit cover would. */
 .room {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 60%;
+  left: 50%;
+  width: max(100%, 100dvh * 2000 / 1334);
+  aspect-ratio: 2000 / 1334;
+  translate: -50% -60%;
 }
 
 .photo {

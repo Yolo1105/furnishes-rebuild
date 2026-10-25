@@ -78,7 +78,6 @@ export function PhotoIntro() {
       <svg
         className={styles.room}
         viewBox="0 0 2000 1334"
-        preserveAspectRatio="xMidYMid slice"
         role="img"
         aria-label="A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
       >
