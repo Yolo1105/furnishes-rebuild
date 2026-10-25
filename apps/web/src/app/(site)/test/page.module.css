@@ -55,3 +55,9 @@
     animation: none;
   }
 }
+
+/* Under the title, the way in: rust, like the bar over this light picture. */
+.start {
+  --button-fg: var(--color-rust);
+  margin-top: var(--space-6);
+}

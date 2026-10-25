@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import button from "@/features/plan/InkButton.module.css";
 import { HeroTitle } from "@/features/stage/HeroTitle";
+import { routes } from "@/lib/routes";
 import room from "../../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./page.module.css";
 
@@ -10,7 +13,12 @@ export const metadata: Metadata = { title: "Test", robots: { index: false } };
 export default function TestPage() {
   return (
     // a light picture, so the bar turns rust over it; and the wordmark at the bar's left (SiteHeader)
-    <section className={styles.room} aria-label="Test" data-light-under-bar data-wordmark-left>
+    <section
+      className={styles.room}
+      aria-label="Test"
+      data-light-under-bar
+      data-wordmark-left
+    >
       <div className={styles.frame}>
         <Image
           src={room}
@@ -23,7 +31,14 @@ export default function TestPage() {
           className={styles.photo}
         />
       </div>
-      <HeroTitle />
+      <HeroTitle>
+        <Link
+          href={routes.studio}
+          className={`${button.button} ${styles.start}`}
+        >
+          Explore your journey
+        </Link>
+      </HeroTitle>
       {/* the page goes on below */}
       <svg className={styles.cue} viewBox="0 0 24 12" aria-hidden="true">
         <path d="M2 2l10 8 10-8" />

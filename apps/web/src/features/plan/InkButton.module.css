@@ -1,10 +1,11 @@
-/* The walk's one kind of button: an ink outline that fills on hover. */
+/* The walk's one kind of button: an outline that fills on hover; ink, unless
+   a page sets --button-fg. */
 .button {
   display: inline-block;
   padding: 0.75em 1.1em;
-  border: 1px solid var(--color-ink);
+  border: 1px solid var(--button-fg, var(--color-ink));
   border-radius: var(--radius-sm);
-  color: var(--color-ink);
+  color: var(--button-fg, var(--color-ink));
   font-family: var(--font-mono);
   font-size: var(--text-nav);
   letter-spacing: var(--track);
@@ -16,6 +17,6 @@
 }
 
 .button:hover {
-  background: var(--color-ink);
+  background: var(--button-fg, var(--color-ink));
   color: var(--color-cream);
 }
