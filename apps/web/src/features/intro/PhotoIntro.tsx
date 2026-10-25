@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { type CSSProperties, Fragment } from "react";
 import button from "@/features/plan/InkButton.module.css";
 import { HeroTitle } from "@/features/stage/HeroTitle";
 import { routes } from "@/lib/routes";
@@ -75,6 +75,7 @@ const SIDES = [
     label: "An idea",
     headline: "Every home starts with an idea.",
     body: "A room you love, a feeling you want to come home to. We begin where you do: with one room.",
+    facts: ["Living & dining", "6.8 × 6.6 m", "Drawn to scale"],
   },
   {
     no: "02",
@@ -82,6 +83,7 @@ const SIDES = [
     label: "The whole home",
     headline: "Then it becomes a plan.",
     body: "Your idea, drawn into the whole flat: every room to scale, every wall and window where it really is.",
+    facts: ["5-room HDB flat", "3 bedrooms · 2 bathrooms", "Kitchen, yard and shelter"],
   },
 ] as const;
 
@@ -115,14 +117,24 @@ export function PhotoIntro() {
       </div>
       {/* once the sketch has turned into the living room's plan, then as the rest of the flat grows round it */}
       {SIDES.map((side) => (
-        <section key={side.no} className={`${styles.side} ${styles[side.at]}`}>
-          <p className={styles.no}>{side.no}</p>
-          <p className={styles.label}>
-            {side.no} · {side.label}
-          </p>
-          <h2 className={styles.headline}>{side.headline}</h2>
-          <p className={styles.body}>{side.body}</p>
-        </section>
+        <Fragment key={side.no}>
+          {/* the plan sits between: what the stage is on its left, what it shows on its right */}
+          <section className={`${styles.side} ${styles.left} ${styles[side.at]}`} data-side="left">
+            <p className={styles.no}>{side.no}</p>
+            <p className={styles.label}>
+              {side.no} · {side.label}
+            </p>
+            <h2 className={styles.headline}>{side.headline}</h2>
+          </section>
+          <section className={`${styles.side} ${styles.right} ${styles[side.at]}`} data-side="right">
+            <p className={styles.body}>{side.body}</p>
+            <ul className={styles.facts}>
+              {side.facts.map((fact) => (
+                <li key={fact}>{fact}</li>
+              ))}
+            </ul>
+          </section>
+        </Fragment>
       ))}
       {/* the page goes on below */}
       <svg className={styles.cue} viewBox="0 0 24 12" aria-hidden="true">

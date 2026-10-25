@@ -9,6 +9,7 @@ import { WASH_CSS } from "@/features/stage/wash";
 import { routes } from "@/lib/routes";
 import button from "./InkButton.module.css";
 import styles from "./PlanWalk.module.css";
+import { BOUNDS } from "./flat";
 import { makeRig, STOPS } from "./rig";
 import { addSheet, buildFlatScene } from "./scene";
 import { WalkPanel } from "./WalkPanel";
@@ -43,14 +44,15 @@ const SHOW_AT = 0.55;
  * opening ends.
  */
 const INTRO_SCREENS = 4.5;
+/** The closest the opening comes on the living room (it comes less close if the room would not fit between its words). */
 const INTRO_ZOOM = 1.8;
-/** The middle of the living room, which the opening's close-up is on, m. */
-const LIVING = new THREE.Vector3(12.65, 0, 3.15);
 /** The living room with its walls, [x0, z0, x1, z1] m: shown alone first. */
 const LIVING_ROOM = [9.3, -0.15, 16.1, 6.5] as const;
+/** The whole flat, the same way. */
+const FLAT = [BOUNDS.x0 / 1000, BOUNDS.y0 / 1000, BOUNDS.x1 / 1000, BOUNDS.y1 / 1000] as const;
+/** Room left round the plan inside the space between the opening's words, px. */
+const BREATHE = 40;
 /** Through the opening (0 to 1): when the rest of the flat grows in round the living room, and the view pulls back. */
-/** How far the plan sits off centre, as shares of the width, beside 01 and beside 02. */
-const ASIDE = { one: 0.1, two: -0.12 };
 const WHOLE = { from: 0.62, to: 0.9 };
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -83,7 +85,9 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     const introPx = () => (opening ? window.innerHeight * INTRO_SCREENS : 0);
     let q = opening ? 0 : 1; // how far through the opening, 0 to 1
     let qShown = -1;
-    const projected = new THREE.Vector3();
+    const corner = new THREE.Vector3();
+    // the space the opening's words leave free for the plan, px (set on resize)
+    let free = { cx: 0, cy: 0, w: 1, h: 1 };
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -158,23 +162,29 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         const whole = smooth(stage(q, WHOLE.from, WHOLE.to));
         // the living room alone, then the rest of the flat growing in round it
         reveal(LIVING_ROOM, whole);
-        const z = INTRO_ZOOM + (1 - INTRO_ZOOM) * whole;
-        // the plan stands clear of the words beside it: right of centre beside
-        // 01, left of it beside 02, back to the middle as the walls rise
-        // (it holds until 02 has all but gone, so the two never cross)
-        const notesNow = smooth(Math.min(1, (1 - smooth(stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE))) / 0.25));
+        // the plan fits between the words either side of it (01's, then
+        // 02's), then, as the walls rise and 02 goes, fills the screen again
+        const hold = smooth(Math.min(1, (1 - smooth(stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE))) / 0.25));
         const [w, h] = [canvas.clientWidth, canvas.clientHeight];
-        const d = (ASIDE.one + (ASIDE.two - ASIDE.one) * whole) * w * notesNow;
-        if (z > 1.001 || Math.abs(d) > 0.5) {
-          // find the living room on the whole view, not on last frame's close-up
-          camera.clearViewOffset();
-          camera.updateMatrixWorld();
-          projected.copy(LIVING).project(camera);
-          // close on the living room, the anchor sliding to the flat's middle as it pulls back
-          const ax = ((projected.x + 1) / 2) * w * (1 - whole) + (w / 2) * whole;
-          const ay = ((1 - projected.y) / 2) * h * (1 - whole) + (h / 2) * whole;
-          camera.setViewOffset(w, h, ax - (w / 2 + d) / z, ay - h / (2 * z), w / z, h / z);
-        } else camera.clearViewOffset();
+        // where the living room and the flat fall on the whole view, not on last frame's close-up
+        camera.clearViewOffset();
+        camera.updateMatrixWorld();
+        const box = ([x0, z0, x1, z1]: readonly [number, number, number, number]) => {
+          const [a, b] = [corner.set(x0, 0, z0).project(camera).clone(), corner.set(x1, 0, z1).project(camera)];
+          const [ax, bx] = [((a.x + 1) / 2) * w, ((b.x + 1) / 2) * w];
+          const [ay, by] = [((1 - a.y) / 2) * h, ((1 - b.y) / 2) * h];
+          return { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
+        };
+        const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
+        const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
+        const zRoom = Math.min(INTRO_ZOOM, fit(room));
+        const zFlat = 1 + (Math.min(1, fit(flat)) - 1) * hold;
+        const z = zRoom + (zFlat - zRoom) * whole;
+        // centred on the living room, then on the flat, in the middle of the free space
+        const [ax, ay] = [room.cx + (flat.cx - room.cx) * whole, room.cy + (flat.cy - room.cy) * whole];
+        const [tx, ty] = [free.cx + (w / 2 - free.cx) * (1 - hold), free.cy + (h / 2 - free.cy) * (1 - hold)];
+        const [bx, by] = [ax + (w / 2 - ax) * (1 - hold), ay + (h / 2 - ay) * (1 - hold)];
+        if (Math.abs(z - 1) > 0.001 || hold > 0.001) camera.setViewOffset(w, h, bx - tx / z, by - ty / z, w / z, h / z);
       }
       cut.constant = o.cut;
       // the room come to life: the bookcase built once the camera is at it,
@@ -209,6 +219,13 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       camera.aspect = w / h;
       rig = makeRig(w / h);
       for (const m of lineMats) m.resolution.set(w, h);
+      // the space the opening's words leave free between them (data-side="left" / "right")
+      const sides = opening ? [...opening.querySelectorAll<HTMLElement>("[data-side]")] : [];
+      const lefts = sides.filter((e) => e.dataset.side === "left").map((e) => e.getBoundingClientRect().right);
+      const rights = sides.filter((e) => e.dataset.side === "right").map((e) => e.getBoundingClientRect().left);
+      const [fx0, fx1] = [Math.max(0, ...lefts) + BREATHE, Math.min(w, ...rights) - BREATHE];
+      const [fy0, fy1] = [parseFloat(css("--nav-h")) + BREATHE / 2, h - BREATHE];
+      free = { cx: (fx0 + fx1) / 2, cy: (fy0 + fy1) / 2, w: fx1 - fx0, h: fy1 - fy0 };
       // each step is as long as its stage, so it is up while the stage plays
       // out; the last runs on a screen further, so it ends with the walk
       const run = track.offsetHeight - window.innerHeight - introPx();
