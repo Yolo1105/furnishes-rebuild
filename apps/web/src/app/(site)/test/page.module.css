@@ -7,7 +7,9 @@
   background: var(--color-ink);
 }
 
-/* Cropped to fill the screen, centred. */
+/* Cropped to fill the screen, a touch above centre, so the room sits a
+   little lower. */
 .photo {
   object-fit: cover;
+  object-position: 50% 45%;
 }
