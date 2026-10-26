@@ -25,9 +25,14 @@ type Step = {
 
 const STEPS: Step[] = [
   {
-    label: "The plan",
-    lines: ["Every home", "starts as a plan."],
-    body: "A 5-room HDB flat, drawn to scale: every wall, door and window where it really is, and the furniture that lives there.",
+    label: "One room",
+    lines: ["Every home starts", "with one room."],
+    body: "The room you love, drawn to scale: its walls and windows, and the furniture that lives in it.",
+  },
+  {
+    label: "The whole home",
+    lines: ["Then it becomes", "the whole plan."],
+    body: "The rest of the flat drawn in round it: a 5-room HDB flat, every wall, door and window where it really is.",
   },
   {
     label: "The walls",
@@ -57,20 +62,6 @@ const STEPS: Step[] = [
     lines: ["Try another layout.", "Make it yours."],
     body: "Turn the sofa, move the table, see what fits. Then start on your own room.",
     cta: true,
-  },
-];
-
-/** After an opening (a photo of a room), the plan's part told in two: that one room, then the whole flat. */
-const OPENING_STEPS: Step[] = [
-  {
-    label: "One room",
-    lines: ["Every home starts", "with one room."],
-    body: "The room you love, drawn to scale: its walls and windows, and the furniture that lives in it.",
-  },
-  {
-    label: "The whole home",
-    lines: ["Then it becomes", "the whole plan."],
-    body: "The rest of the flat drawn in round it: a 5-room HDB flat, every wall, door and window where it really is.",
   },
 ];
 
@@ -114,16 +105,8 @@ function Swatches() {
   );
 }
 
-/**
- * `afterOpening`: the walk had an opening, so the panel comes in on its
- * one room and tells the plan's part in two steps (OPENING_STEPS) in place
- * of one.
- */
-export function WalkPanel({ ref, afterOpening = false }: { ref: Ref<HTMLElement>; afterOpening?: boolean }) {
-  const steps = (afterOpening ? [...OPENING_STEPS, ...STEPS.slice(1)] : STEPS).map((step, i) => ({
-    ...step,
-    no: String(i + 1).padStart(2, "0"),
-  }));
+export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
+  const steps = STEPS.map((step, i) => ({ ...step, no: String(i + 1).padStart(2, "0") }));
   return (
     <aside ref={ref} className={styles.panel} aria-label="What you are looking at">
       <div className={styles.scroller}>

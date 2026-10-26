@@ -1,13 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { HeroTitle } from "@/features/stage/HeroTitle";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
-import { routes } from "@/lib/routes";
-import button from "./InkButton.module.css";
 import styles from "./PlanWalk.module.css";
 import { BOUNDS } from "./flat";
 import { makeRig, STOPS } from "./rig";
@@ -15,10 +11,12 @@ import { addSheet, buildFlatScene } from "./scene";
 import { WalkPanel } from "./WalkPanel";
 
 /**
- * The landing's first screen: the flat drawn as a plan over the moving
- * orange wash, in a tall stretch of page whose scroll drives one camera.
- * Scrolling raises the walls out of the drawing, brings the camera down to
- * the front door, and walks it into the living room. The 3D canvas is clear,
+ * The landing: an opening (`intro`, a photo of a room), then the flat drawn
+ * as a plan over the moving orange wash, in a tall stretch of page whose
+ * scroll drives one camera. Through the opening the plan comes in as one
+ * room, beside the side panel, and grows into the whole flat; then the walls
+ * rise out of the drawing, the camera comes down to the front door and walks
+ * into the living room, and the room comes to life. The 3D canvas is clear,
  * so the wash shows round the flat and above its walls.
  */
 
@@ -26,15 +24,8 @@ import { WalkPanel } from "./WalkPanel";
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
 const NOTES_FADE = 0.06;
-/**
- * Where in the walk the side panel starts in (as the walls start to rise) and
- * where it is all the way in. It follows the scroll between the two, both
- * ways, so scrolled back to the plan it has already gone. It stays to the end.
- */
-const PANEL_FROM = STOPS.sheet + 0.005;
-const PANEL_OPEN = STOPS.sheet + 0.06;
-/** Where in the walk each of the panel's steps ends: one step to a stage. */
-const STEP_ENDS = [STOPS.lifted, STOPS.landed, STOPS.walked, STOPS.built, STOPS.finished, 1];
+/** Where in the walk each of the panel's steps from 03 (the walls) on ends: one step to a stage. */
+const STEP_ENDS = [STOPS.landed, STOPS.walked, STOPS.built, STOPS.finished, 1];
 
 /** How far through the stretch from a to b the walk is, 0 to 1. */
 const stage = (s: number, a: number, b: number) => Math.min(1, Math.max(0, (s - a) / (b - a)));
@@ -43,10 +34,9 @@ const smooth = (t: number) => t * t * (3 - 2 * t);
 const SHOW_AT = 0.55;
 
 /**
- * With an opening (`intro`), this many screens of scroll come before the
- * walk itself: the --intro-length in globals.css. The camera starts this
- * much closer, on the living room, and pulls back to the whole flat as the
- * opening ends.
+ * This many screens of scroll go to the opening, before the walk itself: the
+ * --intro-length in globals.css. The camera starts closer, on the living
+ * room, and pulls back to the whole flat as the opening ends.
  */
 const INTRO_SCREENS = 4.5;
 /** The closest the opening comes on the living room (less close if the room would not fit beside the panel). */
@@ -70,41 +60,40 @@ const ROOM_SHOWN = 0.2;
  */
 const PANEL_AT = 0.21;
 const PANEL_IN = 0.35;
-/** How stiff the spring the panel's way in rides is, 1/s: it trails the scroll and eases in, about 4 / this seconds behind. */
+/** How stiff the spring the panel's way in rides is, 1/s: it trails the scroll and eases in, about 4 / this seconds behind (and never lags on the way out). */
 const PANEL_SPRING = 4.5;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 /**
- * `intro`, if given, is laid over the walk and plays first: it is told how
- * far through it the scroll is with --intro (0 to 1) on the sticky view,
- * and marked data-scrolled once that is under way and data-done once past;
- * it should carry data-intro, and data-light-under-bar while it shows a
- * light picture. The walk's own title, button and cue give way to it.
+ * `intro` is laid over the walk and plays first: it is told how far through
+ * it the scroll is with --intro (0 to 1) on the sticky view, and marked
+ * data-scrolled once that is under way, data-done once its photo has gone,
+ * and data-light-under-bar while it shows that light picture. It must carry
+ * data-intro.
  */
-export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
+export function PlanWalk({ intro }: { intro: ReactNode }) {
   const trackRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const panelRef = useRef<HTMLElement>(null);
-  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const track = trackRef.current;
     const sticky = stickyRef.current;
     const canvas = canvasRef.current;
     const panel = panelRef.current;
-    if (!track || !sticky || !canvas || !panel) return;
+    const opening = sticky?.querySelector<HTMLElement>("[data-intro]");
+    if (!track || !sticky || !canvas || !panel || !opening) return;
     const scroller = panel.firstElementChild as HTMLElement;
     const steps = [...scroller.firstElementChild!.children] as HTMLElement[];
     const dots = [...panel.lastElementChild!.children];
-    const opening = sticky.querySelector<HTMLElement>("[data-intro]");
     /** How many pixels of scroll the opening takes, before the walk. */
-    const introPx = () => (opening ? window.innerHeight * INTRO_SCREENS : 0);
-    let q = opening ? 0 : 1; // how far through the opening, 0 to 1
+    const introPx = () => window.innerHeight * INTRO_SCREENS;
+    let q = 0; // how far through the opening, 0 to 1
     let qEased = q; // the same, closing on it a share each frame as the walk's camera does, so the opening glides too
-    // after an opening the plan is already up, so the walk's scroll starts where the walls start to rise
-    const walkFrom = opening ? STOPS.sheet : 0;
+    // the opening has put the plan up, so the walk's scroll starts where the walls start to rise
+    const walkFrom = STOPS.sheet;
     let qShown = -1;
     const corner = new THREE.Vector3();
     // the space for the plan, px (set on resize): the whole screen, and what the panel leaves it
@@ -121,7 +110,8 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         powerPreference: "high-performance",
       });
     } catch {
-      setFailed(true);
+      // no WebGL: the sticky view says so in place of the canvas (see .fallback)
+      sticky.toggleAttribute("data-no-webgl", true);
       return;
     }
     renderer.localClippingEnabled = true;
@@ -138,7 +128,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     let target = 0;
     let shown = -1;
     let eased = 0;
-    // how far in the panel is after an opening, 0 to 1: it chases the scroll on a spring
+    // how far in the panel is, 0 to 1: it chases the scroll on a spring
     let enter = 0;
     let enterSpeed = 0;
     let enterShown = -1;
@@ -149,24 +139,23 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
     let open = false;
 
     /**
-     * Open or close the panel, scroll its steps, and show each as it comes
-     * up. This follows the page's own scroll, not the eased camera: the
-     * steps move one for one with the scroll, however fast, as if the
-     * panel scrolled natively.
-     */
-    /**
      * Where the panel opens and where each of its steps ends, as px of page
-     * scroll. After an opening it comes in on the one room: its first step
-     * ends as the rest of the flat starts to grow in, its second once the
-     * walls start to rise; from there, one step to each of the walk's stages.
+     * scroll. It comes in on the one room: its first step ends as the rest
+     * of the flat starts to grow in, its second once the walls start to
+     * rise; from there, one step to each of the walk's stages.
      */
     const panelStops = () => {
       const lead = introPx();
       const run = track.offsetHeight - window.innerHeight - lead; // the walk's own scroll
       const at = (s: number) => lead + (run * (s - walkFrom)) / (1 - walkFrom);
-      if (!opening) return [at(PANEL_FROM), ...STEP_ENDS.map(at)];
-      return [lead * PANEL_AT, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.slice(1).map(at)];
+      return [lead * PANEL_AT, lead * WHOLE.from, at(STOPS.sheet + 0.02), ...STEP_ENDS.map(at)];
     };
+    /**
+     * Open or close the panel, scroll its steps, and show each as it comes
+     * up. This follows the page's own scroll, not the eased camera: the
+     * steps move one for one with the scroll, however fast, as if the
+     * panel scrolled natively.
+     */
     const steer = () => {
       const r = track.getBoundingClientRect();
       const from = panelStops()[0]!; // px scrolled when the panel opens
@@ -202,7 +191,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       camera.far = o.far;
       camera.updateProjectionMatrix();
       // the panel's way in (its top end leading, as when it slides), following
-      // the scroll a little behind; with an opening, the room it pushes moves with it
+      // the scroll a little behind, the room it pushes aside moving with it
       const scrub = enter < 1;
       panel.toggleAttribute("data-scrub", scrub);
       if (scrub) {
@@ -214,73 +203,59 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
         panel.style.removeProperty("--trail");
       }
       enterShown = enter;
-      if (opening) {
-        // close on the living room through the opening, pulling back to the whole flat as it ends
-        const whole = smooth(stage(qEased, WHOLE.from, WHOLE.to));
-        // the living room alone, then the rest of the flat growing in round it
-        reveal(LIVING_ROOM, whole);
-        // the plan fits beside the panel (the one room, then the flat), then,
-        // over the whole of the walls' rise, comes to frame as the walk does,
-        // the panel over it: in step with the camera's own move across to the
-        // living room, so the two never pull the view opposite ways
-        const hold = 1 - smooth(stage(s, STOPS.sheet + 0.04, STOPS.lifted));
-        const [w, h] = [canvas.clientWidth, canvas.clientHeight];
-        // where the living room and the flat fall on the whole view, not on last frame's close-up
-        camera.clearViewOffset();
-        camera.updateMatrixWorld();
-        const box = ([x0, z0, x1, z1]: readonly [number, number, number, number]) => {
-          const [a, b] = [corner.set(x0, 0, z0).project(camera).clone(), corner.set(x1, 0, z1).project(camera)];
-          const [ax, bx] = [((a.x + 1) / 2) * w, ((b.x + 1) / 2) * w];
-          const [ay, by] = [((1 - a.y) / 2) * h, ((1 - b.y) / 2) * h];
-          return { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
-        };
-        const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
-        // alone in the middle, then pushed aside as the panel comes in
-        const p = smooth(enter);
-        const mix = (k: keyof Space) => full[k] + (beside[k] - full[k]) * p;
-        const free = { cx: mix("cx"), cy: mix("cy"), w: mix("w"), h: mix("h") };
-        const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
-        const zRoom = Math.min(INTRO_ZOOM, fit(room));
-        const zFlat = 1 + (Math.min(1, fit(flat)) - 1) * hold;
-        const z = zRoom + (zFlat - zRoom) * whole;
-        // centred on the living room, then on the flat, in the middle of the free space
-        const [ax, ay] = [room.cx + (flat.cx - room.cx) * whole, room.cy + (flat.cy - room.cy) * whole];
-        const [tx, ty] = [free.cx + (w / 2 - free.cx) * (1 - hold), free.cy + (h / 2 - free.cy) * (1 - hold)];
-        const [bx, by] = [ax + (w / 2 - ax) * (1 - hold), ay + (h / 2 - ay) * (1 - hold)];
-        if (Math.abs(z - 1) > 0.001 || hold > 0.001) camera.setViewOffset(w, h, bx - tx / z, by - ty / z, w / z, h / z);
-      }
+      // close on the living room through the opening, pulling back to the whole flat as it ends
+      const whole = smooth(stage(qEased, WHOLE.from, WHOLE.to));
+      // the living room alone, then the rest of the flat growing in round it
+      reveal(LIVING_ROOM, whole);
+      // the plan fits beside the panel (the one room, then the flat), then,
+      // over the whole of the walls' rise, comes to frame as the walk does,
+      // the panel over it: in step with the camera's own move across to the
+      // living room, so the two never pull the view opposite ways
+      const hold = 1 - smooth(stage(s, STOPS.sheet + 0.04, STOPS.lifted));
+      const [w, h] = [canvas.clientWidth, canvas.clientHeight];
+      // where the living room and the flat fall on the whole view, not on last frame's close-up
+      camera.clearViewOffset();
+      camera.updateMatrixWorld();
+      const box = ([x0, z0, x1, z1]: readonly [number, number, number, number]) => {
+        const [a, b] = [corner.set(x0, 0, z0).project(camera).clone(), corner.set(x1, 0, z1).project(camera)];
+        const [ax, bx] = [((a.x + 1) / 2) * w, ((b.x + 1) / 2) * w];
+        const [ay, by] = [((1 - a.y) / 2) * h, ((1 - b.y) / 2) * h];
+        return { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
+      };
+      const [room, flat] = [box(LIVING_ROOM), box(FLAT)];
+      // alone in the middle, then pushed aside as the panel comes in
+      const p = smooth(enter);
+      const mix = (k: keyof Space) => full[k] + (beside[k] - full[k]) * p;
+      const free = { cx: mix("cx"), cy: mix("cy"), w: mix("w"), h: mix("h") };
+      const fit = (b: { w: number; h: number }) => Math.min(free.w / b.w, free.h / b.h);
+      const zRoom = Math.min(INTRO_ZOOM, fit(room));
+      const zFlat = 1 + (Math.min(1, fit(flat)) - 1) * hold;
+      const z = zRoom + (zFlat - zRoom) * whole;
+      // centred on the living room, then on the flat, in the middle of the free space
+      const [ax, ay] = [room.cx + (flat.cx - room.cx) * whole, room.cy + (flat.cy - room.cy) * whole];
+      const [tx, ty] = [free.cx + (w / 2 - free.cx) * (1 - hold), free.cy + (h / 2 - free.cy) * (1 - hold)];
+      const [bx, by] = [ax + (w / 2 - ax) * (1 - hold), ay + (h / 2 - ay) * (1 - hold)];
+      if (Math.abs(z - 1) > 0.001 || hold > 0.001) camera.setViewOffset(w, h, bx - tx / z, by - ty / z, w / z, h / z);
       cut.constant = o.cut;
       // the room come to life: the bookcase built once the camera is at it,
       // then the materials, then the second layout
       later.build(stage(s, STOPS.walked + 0.05, STOPS.built));
       later.sweep(stage(s, STOPS.built + 0.02, STOPS.finished));
       later.layout(smooth(stage(s, STOPS.finished + 0.04, STOPS.laid)));
-      const t = stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE);
-      const notes = 1 - t * t * (3 - 2 * t);
+      const notes = 1 - smooth(stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE));
       sheet?.fade(notes);
-      // the plan opens empty; the furniture is drawn in with the first scroll
-      // (after an opening, the plan arrives furnished)
-      // (after an opening, the one room's furniture is drawn in across it once the panel is in)
-      if (opening) {
-        const [x0, , x1] = LIVING_ROOM;
-        sheet?.furnishTo(x0 + (x1 + 1 - x0) * smooth(stage(qEased, FURNISH_ROOM.from, FURNISH_ROOM.to)));
-      } else sheet?.furnish(smooth(stage(s, STOPS.sheet * 0.12, STOPS.sheet * 0.85)));
+      // the one room's furniture is drawn in across it once the panel is in
+      const [x0, , x1] = LIVING_ROOM;
+      sheet?.furnishTo(x0 + (x1 + 1 - x0) * smooth(stage(qEased, FURNISH_ROOM.from, FURNISH_ROOM.to)));
       // as the plan's symbols fade, the pieces they stand for rise out of the floor
       rise(1 - notes);
-      // the page's own words beside the plan go with the plan's notes
-      sticky.style.setProperty("--notes", notes.toFixed(3));
-      sticky.toggleAttribute("data-walking", notes < 0.02);
-      // the title goes as the walk reaches the front door (the panel's step 03)
-      sticky.style.setProperty("--title", (1 - smooth(stage(s, STOPS.landed - 0.03, STOPS.landed))).toFixed(3));
       renderer.render(scene, camera);
       shown = s;
       qShown = qEased;
       // the opening's own fades (the title, the photo, the plan coming in) on the eased progress too
-      if (opening) {
-        sticky.style.setProperty("--intro", qEased.toFixed(4));
-        opening.toggleAttribute("data-done", qEased >= 0.42); // the photo has gone
-        opening.toggleAttribute("data-light-under-bar", qEased < ROOM_SHOWN); // until the photo has gone
-      }
+      sticky.style.setProperty("--intro", qEased.toFixed(4));
+      opening.toggleAttribute("data-done", qEased >= 0.42); // the photo has gone
+      opening.toggleAttribute("data-light-under-bar", qEased < ROOM_SHOWN); // until the photo has gone
       canvas.dataset.progress = s.toFixed(3);
     };
 
@@ -312,7 +287,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       draw(eased);
     };
 
-    /** Scroll progress through the walk, 0 at its start (after any opening) to 1 at its end. */
+    /** Scroll progress through the walk, from where the opening leaves it to 1 at its end. */
     const read = () => {
       const r = track.getBoundingClientRect();
       const lead = introPx();
@@ -323,7 +298,6 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
 
     /** Follow the opening with the scroll: how far through it, and what of it is still showing. */
     const playIntro = () => {
-      if (!opening) return;
       q = Math.min(1, Math.max(0, -track.getBoundingClientRect().top / introPx()));
       opening.toggleAttribute("data-scrolled", q > 0.01);
     };
@@ -339,7 +313,7 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
       const now = performance.now();
       const dt = Math.min(1 / 30, (now - ticked) / 1000);
       ticked = now;
-      const goal = opening ? stage(q, PANEL_AT, PANEL_IN) : stage(target, PANEL_FROM, PANEL_OPEN);
+      const goal = stage(q, PANEL_AT, PANEL_IN);
       enterSpeed += (PANEL_SPRING * PANEL_SPRING * (goal - enter) - 2 * PANEL_SPRING * enterSpeed) * dt;
       enter += enterSpeed * dt;
       // on the way back it never lags: it is out by the time the photo returns
@@ -387,39 +361,17 @@ export function PlanWalk({ intro }: { intro?: ReactNode } = {}) {
   }, []);
 
   return (
-    <section
-      ref={trackRef}
-      className={intro ? `${styles.track} ${styles.withIntro}` : styles.track}
-      aria-label="A walk through a home, from its plan"
-    >
+    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan">
       {/* The wash in CSS until its canvas draws, as on every stage. */}
       <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
         <LivingGradient />
-        {failed ? (
-          <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
-        ) : (
-          <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
-        )}
+        <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
+        <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
 
-        {intro ?? (
-          <>
-            <HeroTitle />
+        {intro}
 
-            <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
-              Design your room
-            </Link>
-
-            <p className={styles.cue} aria-hidden="true">
-              Scroll
-              <svg viewBox="0 0 16 24">
-                <path d="M8 2v19M2 15l6 6 6-6" />
-              </svg>
-            </p>
-          </>
-        )}
-
-        {/* last, so it slides in over the button and the cue */}
-        <WalkPanel ref={panelRef} afterOpening={Boolean(intro)} />
+        {/* last, so it slides in over the opening */}
+        <WalkPanel ref={panelRef} />
       </div>
     </section>
   );

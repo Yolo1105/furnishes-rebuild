@@ -726,12 +726,7 @@ export function addSheet(
       for (const m of fader.mats) m.opacity = t;
       for (const o of fader.objects) o.visible = t > 0.001;
     },
-    /** How far across the plan the furniture and fittings are drawn, 0 (none: an empty flat) to 1 (all). */
-    furnish(t: number) {
-      const [x0, x1] = [BOUNDS.x0 / 1000 - 0.5, BOUNDS.x1 / 1000 + 1.5];
-      drawnTo.constant = x0 + (x1 - x0) * t;
-    },
-    /** The same, drawn as far east as x, metres. */
+    /** How far across the plan the furniture and fittings are drawn: as far east as x, metres (none until then). */
     furnishTo(x: number) {
       drawnTo.constant = x;
     },

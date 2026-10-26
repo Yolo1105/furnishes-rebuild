@@ -24,7 +24,7 @@ export function SignInPanel() {
   if (demo) {
     return (
       <div className={styles.panel}>
-        <h1 className={styles.title}>You're in the demo</h1>
+        <h1 className={styles.title}>You&rsquo;re in the demo</h1>
         <p className={styles.lede}>
           Signed in as the demo account, in this browser only. Nothing you do is saved to a real account.
         </p>

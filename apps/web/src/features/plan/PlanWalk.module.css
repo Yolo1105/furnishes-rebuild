@@ -1,11 +1,7 @@
-/* The walk's length on the page: how much scrolling the whole move takes. */
+/* The walk's length on the page: how much scrolling the whole move takes,
+   the opening's first. */
 .track {
   position: relative;
-  height: var(--walk-length);
-}
-
-/* With an opening, its scroll comes first. */
-.track.withIntro {
   height: calc(var(--walk-length) + var(--intro-length));
 }
 
@@ -28,16 +24,18 @@
   height: 100%;
 }
 
-/* After an opening's photo, the plan comes in only once the photo has gone
-   (--intro, 0 to 1 through the opening), under the sketch still on it. */
-.withIntro .canvas {
+/* The plan comes in only once the opening's photo has gone (--intro, 0 to 1
+   through the opening). */
+.canvas {
   opacity: clamp(0, (var(--intro, 1) - 0.15) / 0.06, 1);
 }
 
+/* Shown in place of the canvas when the browser has no WebGL (PlanWalk marks
+   the sticky view data-no-webgl). */
 .fallback {
   position: relative;
   z-index: var(--z-content);
-  display: grid;
+  display: none;
   place-items: center;
   height: 100%;
   margin: 0;
@@ -46,67 +44,10 @@
   text-align: center;
 }
 
-/* Over the plan's foot: the way into the studio at the bottom right, and a
-   cue in the middle that the page scrolls. Both are the drawing's colour,
-   and go as its notes go, once the walls start to rise. On a narrow screen
-   the button sits above the cue. */
-.cta,
-.cue {
-  position: absolute;
-  z-index: var(--z-content);
-  color: var(--color-ink);
-  opacity: var(--notes, 1);
-  transform: translateY(calc((1 - var(--notes, 1)) * var(--space-4)));
+.sticky[data-no-webgl] .fallback {
+  display: grid;
 }
 
-.sticky[data-walking] .cta,
-.sticky[data-walking] .cue {
-  visibility: hidden;
-}
-
-.cta {
-  right: var(--gutter);
-  bottom: var(--space-6);
-}
-
-@media (max-width: 760px) {
-  .cta {
-    bottom: calc(var(--space-7) * 3);
-  }
-}
-
-.cue {
-  left: 50%;
-  bottom: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--track);
-  text-transform: uppercase;
-  translate: -50% 0;
-}
-
-.cue svg {
-  width: var(--icon);
-  height: calc(var(--icon) * 1.5);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.25;
-  animation: nudge var(--dur-slow) ease-in-out infinite alternate;
-}
-
-@keyframes nudge {
-  to {
-    translate: 0 var(--space-2);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cue svg {
-    animation: none;
-  }
+.sticky[data-no-webgl] .canvas {
+  display: none;
 }
