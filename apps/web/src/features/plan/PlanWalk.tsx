@@ -183,6 +183,9 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
     };
 
     const draw = (s: number) => {
+      // nothing to draw into yet (a hidden or zero-size view): sizes of 0
+      // would make the camera's aspect NaN, and the scene can't render that
+      if (!canvas.clientWidth || !canvas.clientHeight) return;
       const o = rig(s);
       camera.position.set(o.x, o.y, o.z);
       camera.rotation.set(o.pitch, o.yaw, 0);
@@ -262,6 +265,7 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
     const resize = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
+      if (!w || !h) return; // sized again by the observer once it has a size
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
