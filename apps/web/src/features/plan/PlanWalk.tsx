@@ -1,11 +1,12 @@
 "use client";
 
-import { type ReactNode, useEffect, useRef } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from "three";
 import { LivingGradient } from "@/features/stage/LivingGradient";
 import { WASH_CSS } from "@/features/stage/wash";
 import styles from "./PlanWalk.module.css";
-import { BOUNDS } from "./flat";
+import { clamp01, smooth, stage } from "./ease";
+import { BOUNDS_M } from "./flat";
 import { makeRig, STOPS } from "./rig";
 import { addSheet, buildFlatScene } from "./scene";
 import { WalkPanel } from "./WalkPanel";
@@ -27,15 +28,12 @@ const NOTES_FADE = 0.06;
 /** Where in the walk each of the panel's steps from 03 (the walls) on ends: one step to a stage. */
 const STEP_ENDS = [STOPS.landed, STOPS.walked, STOPS.built, STOPS.finished, 1];
 
-/** How far through the stretch from a to b the walk is, 0 to 1. */
-const stage = (s: number, a: number, b: number) => Math.min(1, Math.max(0, (s - a) / (b - a)));
-const smooth = (t: number) => t * t * (3 - 2 * t);
 /** A step is shown once its top is this far up the panel. */
 const SHOW_AT = 0.55;
 
 /**
- * This many screens of scroll go to the opening, before the walk itself: the
- * --intro-length in globals.css. The camera starts closer, on the living
+ * This many screens of scroll go to the opening, before the walk itself (set
+ * on the track as --intro-length). The camera starts closer, on the living
  * room, and pulls back to the whole flat as the opening ends.
  */
 const INTRO_SCREENS = 4.5;
@@ -44,18 +42,26 @@ const INTRO_ZOOM = 1.8;
 /** The living room with its walls, [x0, z0, x1, z1] m: shown alone first. */
 const LIVING_ROOM = [9.3, -0.15, 16.1, 6.5] as const;
 /** The whole flat, the same way. */
-const FLAT = [BOUNDS.x0 / 1000, BOUNDS.y0 / 1000, BOUNDS.x1 / 1000, BOUNDS.y1 / 1000] as const;
+const FLAT = [BOUNDS_M.x0, BOUNDS_M.y0, BOUNDS_M.x1, BOUNDS_M.y1] as const;
 /** Room left round the plan inside the space the panel leaves it, px. */
 const BREATHE = 40;
-/** Through the opening (0 to 1): when the rest of the flat grows in round the living room, and the view pulls back. */
-const WHOLE = { from: 0.6, to: 1 };
-/** Through the opening: while the living room's furniture is drawn in, once the panel is in (till the flat grows round it). */
-const FURNISH_ROOM = { from: 0.34, to: 0.58 };
-/** Through the opening: when the photo has gone and the panel comes in on the one room. */
-const ROOM_SHOWN = 0.2;
 /**
- * Through the opening: when the panel starts in and when it is all the way
- * in, pushing the room (just shown in the middle) over to its left as it
+ * The opening's phases, as shares of it (0 to 1). They are the one place its
+ * timing lives: PlanWalk sets the fades they drive on the sticky view
+ * (--title, --photo, --plan), and the opening's CSS only reads them.
+ */
+/** The title, its button and the arrow fade out. */
+const TITLE_GOES = { from: 0, to: 0.07 };
+/** The photo fades straight to the wash beneath. */
+const PHOTO_GOES = { from: 0.09, to: 0.19 };
+/** The plan (the one room) fades in under it. */
+const PLAN_COMES = { from: 0.15, to: 0.21 };
+/** When the rest of the flat grows in round the living room, and the view pulls back. */
+const WHOLE = { from: 0.6, to: 1 };
+/** While the living room's furniture is drawn in, once the panel is in (till the flat grows round it). */
+const FURNISH_ROOM = { from: 0.34, to: 0.58 };
+/**
+ * When the panel starts in and when it is all the way in, pushing the room (just shown in the middle) over to its left as it
  * comes. Both follow the scroll, so they are one move with the room's coming.
  */
 const PANEL_AT = 0.21;
@@ -66,30 +72,50 @@ const PANEL_SPRING = 4.5;
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 /**
- * `intro` is laid over the walk and plays first: it is told how far through
- * it the scroll is with --intro (0 to 1) on the sticky view, and marked
- * data-scrolled once that is under way, data-done once its photo has gone,
- * and data-light-under-bar while it shows that light picture. It must carry
- * data-intro.
+ * Whether the page's opening loader has finished: it marks <html> with
+ * data-loading while it plays, and the walk's 3D waits for it, so the two
+ * never draw at once. Without that mark, the walk starts straight away.
+ */
+function useLoaderDone() {
+  return useSyncExternalStore(
+    (changed) => {
+      const watch = new MutationObserver(changed);
+      watch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-loading"] });
+      return () => watch.disconnect();
+    },
+    () => !document.documentElement.hasAttribute("data-loading"),
+    () => false,
+  );
+}
+
+/**
+ * `intro` is laid over the walk and plays first. It must carry data-intro;
+ * it is given its fades (--title, --photo) on the sticky view, and marked
+ * data-scrolled once the scroll is under way, data-done once its photo has
+ * gone, and data-light-under-bar while that light photo still shows.
  */
 export function PlanWalk({ intro }: { intro: ReactNode }) {
   const trackRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const panelRef = useRef<HTMLElement>(null);
+  const introEndRef = useRef<HTMLDivElement>(null);
+  const loaderDone = useLoaderDone();
 
   useEffect(() => {
+    if (!loaderDone) return;
     const track = trackRef.current;
     const sticky = stickyRef.current;
     const canvas = canvasRef.current;
     const panel = panelRef.current;
+    const introEnd = introEndRef.current;
     const opening = sticky?.querySelector<HTMLElement>("[data-intro]");
-    if (!track || !sticky || !canvas || !panel || !opening) return;
-    const scroller = panel.firstElementChild as HTMLElement;
-    const steps = [...scroller.firstElementChild!.children] as HTMLElement[];
-    const dots = [...panel.lastElementChild!.children];
-    /** How many pixels of scroll the opening takes, before the walk. */
-    const introPx = () => window.innerHeight * INTRO_SCREENS;
+    const scroller = panel?.querySelector<HTMLElement>("[data-scroller]");
+    if (!track || !sticky || !canvas || !panel || !introEnd || !opening || !scroller) return;
+    const steps = [...panel.querySelectorAll<HTMLElement>("[data-step]")];
+    const dots = [...panel.querySelectorAll("[data-dot]")];
+    /** How many pixels of scroll the opening takes, before the walk: measured, so it is the track's own (vh, not the visible height, on phones). */
+    const introPx = () => introEnd.offsetTop;
     let q = 0; // how far through the opening, 0 to 1
     let qEased = q; // the same, closing on it a share each frame as the walk's camera does, so the opening glides too
     // the opening has put the plan up, so the walk's scroll starts where the walls start to rise
@@ -125,6 +151,7 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
     let rig = makeRig(1);
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = window.matchMedia("(pointer: coarse)");
     let target = 0;
     let shown = -1;
     let eased = 0;
@@ -137,6 +164,7 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
     let sheet: ReturnType<typeof addSheet> | null = null;
 
     let open = false;
+    let stepTops: number[] = []; // each step's top in the panel's scroll, measured on resize
 
     /**
      * Where the panel opens and where each of its steps ends, as px of page
@@ -175,7 +203,7 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
       scroller.scrollTop = y;
       let up = 0;
       steps.forEach((step, i) => {
-        const shown = open && step.offsetTop - y < panel.clientHeight * SHOW_AT;
+        const shown = open && stepTops[i]! - y < panel.clientHeight * SHOW_AT;
         step.toggleAttribute("data-shown", shown);
         if (shown) up = i;
       });
@@ -198,7 +226,7 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
       const scrub = enter < 1;
       panel.toggleAttribute("data-scrub", scrub);
       if (scrub) {
-        const [top, foot] = [enter / 0.8, (enter - 0.2) / 0.8].map((t) => smooth(Math.min(1, Math.max(0, t))));
+        const [top, foot] = [enter / 0.8, (enter - 0.2) / 0.8].map((t) => smooth(clamp01(t)));
         panel.style.setProperty("--lead", `${(1 - top!) * 100}%`);
         panel.style.setProperty("--trail", `${(1 - foot!) * 100}%`);
       } else {
@@ -255,18 +283,20 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
       renderer.render(scene, camera);
       shown = s;
       qShown = qEased;
-      // the opening's own fades (the title, the photo, the plan coming in) on the eased progress too
-      sticky.style.setProperty("--intro", qEased.toFixed(4));
-      opening.toggleAttribute("data-done", qEased >= 0.42); // the photo has gone
-      opening.toggleAttribute("data-light-under-bar", qEased < ROOM_SHOWN); // until the photo has gone
-      canvas.dataset.progress = s.toFixed(3);
+      // the opening's own fades, on the eased progress too
+      sticky.style.setProperty("--title", (1 - stage(qEased, TITLE_GOES.from, TITLE_GOES.to)).toFixed(3));
+      sticky.style.setProperty("--photo", (1 - stage(qEased, PHOTO_GOES.from, PHOTO_GOES.to)).toFixed(3));
+      sticky.style.setProperty("--plan", stage(qEased, PLAN_COMES.from, PLAN_COMES.to).toFixed(3));
+      opening.toggleAttribute("data-done", qEased >= PHOTO_GOES.to);
+      opening.toggleAttribute("data-light-under-bar", qEased < PHOTO_GOES.to);
     };
 
     const resize = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       if (!w || !h) return; // sized again by the observer once it has a size
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      // a little less sharp on touch screens (phones, tablets), to spare their GPUs and batteries
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse.matches ? 1.5 : 2));
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       rig = makeRig(w / h);
@@ -287,6 +317,7 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
         const extra = i === steps.length - 1 ? panel.clientHeight : 0;
         step.style.setProperty("--step-h", `${stops[i + 1]! - stops[i]! + extra}px`);
       });
+      stepTops = steps.map((step) => step.offsetTop);
       steer();
       draw(eased);
     };
@@ -296,13 +327,13 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
       const r = track.getBoundingClientRect();
       const lead = introPx();
       const run = r.height - window.innerHeight - lead;
-      const t = run > 0 ? Math.min(1, Math.max(0, (-r.top - lead) / run)) : 0;
+      const t = run > 0 ? clamp01((-r.top - lead) / run) : 0;
       return walkFrom + t * (1 - walkFrom);
     };
 
     /** Follow the opening with the scroll: how far through it, and what of it is still showing. */
     const playIntro = () => {
-      q = Math.min(1, Math.max(0, -track.getBoundingClientRect().top / introPx()));
+      q = clamp01(-track.getBoundingClientRect().top / introPx());
       opening.toggleAttribute("data-scrolled", q > 0.01);
     };
 
@@ -337,6 +368,12 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
     const sized = new ResizeObserver(resize);
     sized.observe(canvas);
     window.addEventListener("scroll", onScroll, { passive: true });
+    // if the browser drops the 3D context (a GPU reset, too many tabs), three
+    // rebuilds it on its return; draw again then
+    const lost = (e: Event) => e.preventDefault();
+    const restored = () => resize();
+    canvas.addEventListener("webglcontextlost", lost);
+    canvas.addEventListener("webglcontextrestored", restored);
 
     // The plan's notes are drawn in the site's mono face, once it has loaded;
     // sizing again gives their lines the canvas's resolution.
@@ -359,13 +396,23 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
       cancelAnimationFrame(raf);
       sized.disconnect();
       window.removeEventListener("scroll", onScroll);
+      canvas.removeEventListener("webglcontextlost", lost);
+      canvas.removeEventListener("webglcontextrestored", restored);
       disposables.forEach((d) => d.dispose());
       renderer.dispose();
+      renderer.forceContextLoss(); // free the context now, not when the browser gets round to it
     };
-  }, []);
+  }, [loaderDone]);
 
   return (
-    <section ref={trackRef} className={styles.track} aria-label="A walk through a home, from its plan">
+    <section
+      ref={trackRef}
+      className={styles.track}
+      style={{ "--intro-length": `${INTRO_SCREENS * 100}vh` } as CSSProperties}
+      aria-label="A walk through a home, from its plan"
+    >
+      {/* where the opening's scroll ends and the walk's begins (measured, see introPx) */}
+      <div ref={introEndRef} className={styles.introEnd} aria-hidden="true" />
       {/* The wash in CSS until its canvas draws, as on every stage. */}
       <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
         <LivingGradient />

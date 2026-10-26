@@ -299,8 +299,26 @@
   }
 }
 
+/* A short, wide screen (a phone on its side): a wider panel, and its words a
+   size or two down, so a step still fits under the bar. */
+@media (min-aspect-ratio: 1/1) and (max-height: 520px) {
+  .panel {
+    --text-numeral: calc(var(--text-title) * 2);
+    --text-display: calc(var(--text-title) * 0.72);
+    --text-lede: var(--text-md);
+    width: var(--walk-panel-short);
+  }
+
+  .stepBody {
+    top: calc(var(--nav-h) + var(--space-2));
+    padding-bottom: var(--space-4);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .panel,
+  .dots,
+  .dots li,
   .numeral,
   .line > span,
   .card,

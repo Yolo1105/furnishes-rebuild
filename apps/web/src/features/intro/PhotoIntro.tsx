@@ -1,5 +1,5 @@
 import Link from "next/link";
-import button from "@/features/plan/InkButton.module.css";
+import button from "@/ui/InkButton.module.css";
 import { HeroTitle } from "@/features/stage/HeroTitle";
 import { routes } from "@/lib/routes";
 import room from "../../../public/rooms/a-frame-living-room.jpg";
@@ -31,7 +31,7 @@ export function PhotoIntro() {
         </svg>
       </div>
       <div className={styles.hero}>
-        <HeroTitle className={styles.place}>
+        <HeroTitle>
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
           <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
             Explore your journey

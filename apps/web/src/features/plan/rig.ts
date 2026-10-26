@@ -1,4 +1,5 @@
-import { BOUNDS, CEILING, FRONT_DOOR } from "./flat";
+import { clamp01, smooth, smoother } from "./ease";
+import { BOUNDS_M, CEILING, FRONT_DOOR } from "./flat";
 
 /**
  * The camera as a function of scroll progress s, 0 to 1. One camera does it
@@ -29,9 +30,6 @@ export const STOPS = {
   laid: 0.92, // the furniture in its second layout
 };
 
-const smooth = (t: number) => t * t * (3 - 2 * t);
-const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
-const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 const rad = Math.PI / 180;
 
 type Ease = (t: number) => number;
@@ -62,13 +60,13 @@ export type Shot = {
 };
 
 export function makeRig(aspect: number) {
-  const portrait = aspect < 0.9;
+  const portrait = aspect < 1; // as the side panel: below square it rises from the foot (WalkPanel.module.css)
   const fovWalk = portrait ? 70 : aspect < 1.5 ? 58 : 52;
-  const cx = (BOUNDS.x0 + BOUNDS.x1) / 2000;
-  const cz = (BOUNDS.y0 + BOUNDS.y1) / 2000;
+  const cx = (BOUNDS_M.x0 + BOUNDS_M.x1) / 2;
+  const cz = (BOUNDS_M.y0 + BOUNDS_M.y1) / 2;
   // the sheet frames the whole flat, with a margin
-  const flatW = (BOUNDS.x1 - BOUNDS.x0) / 1000 + 6;
-  const flatD = (BOUNDS.y1 - BOUNDS.y0) / 1000 + 5;
+  const flatW = BOUNDS_M.x1 - BOUNDS_M.x0 + 6;
+  const flatD = BOUNDS_M.y1 - BOUNDS_M.y0 + 5;
   const frame0 = Math.max(flatD, flatW / aspect);
 
   const door = { x: FRONT_DOOR.at / 1000, z: FRONT_DOOR.across / 1000 };

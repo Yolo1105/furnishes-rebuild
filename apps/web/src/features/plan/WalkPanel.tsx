@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { CSSProperties, Ref } from "react";
 import { routes } from "@/lib/routes";
 import { SWATCHES } from "./finishes";
-import button from "./InkButton.module.css";
+import button from "@/ui/InkButton.module.css";
 import styles from "./WalkPanel.module.css";
 
 /**
@@ -109,10 +109,11 @@ export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
   const steps = STEPS.map((step, i) => ({ ...step, no: String(i + 1).padStart(2, "0") }));
   return (
     <aside ref={ref} className={styles.panel} aria-label="What you are looking at">
-      <div className={styles.scroller}>
+      {/* PlanWalk finds these by their data- marks: the scroller, each step, each dot */}
+      <div className={styles.scroller} data-scroller>
         <div className={styles.content}>
           {steps.map((step) => (
-            <section key={step.no} className={styles.step}>
+            <section key={step.no} className={styles.step} data-step>
               <div className={styles.stepBody}>
                 <p className={styles.numeral} aria-hidden="true">
                   {step.no}
@@ -148,7 +149,7 @@ export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
       </div>
       <ol className={styles.dots} aria-hidden="true">
         {steps.map((step) => (
-          <li key={step.no} />
+          <li key={step.no} data-dot />
         ))}
       </ol>
     </aside>

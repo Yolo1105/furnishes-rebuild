@@ -1,11 +1,9 @@
-/* The opening, over the walk. Everything here follows --intro, how far
-   through the opening the scroll is (0 to 1, set by PlanWalk): the title
-   goes first, then the photo fades straight to the page's own red-to-white
-   and the plan beneath. PlanWalk also marks it data-scrolled once the title
-   has gone (the button stops taking clicks) and data-done once the photo has. */
+/* The opening, over the walk. PlanWalk sets its fades as the scroll goes
+   (--title: the title, button and arrow; --photo: the photo, which fades
+   straight to the page's own red-to-white and the plan beneath). It also
+   marks it data-scrolled once the scroll is under way (the button stops
+   taking clicks) and data-done once the photo has gone. */
 .intro {
-  --title: calc(1 - clamp(0, var(--intro, 0) / 0.07, 1));
-  --photo: calc(1 - clamp(0, (var(--intro, 0) - 0.09) / 0.1, 1));
   position: absolute;
   z-index: var(--z-content);
   inset: 0;
@@ -36,7 +34,7 @@
 }
 
 .photo {
-  opacity: var(--photo);
+  opacity: var(--photo, 1);
 }
 
 /* The title and the way in, until the scroll starts. */
@@ -46,11 +44,6 @@
 
 .intro[data-scrolled] .hero {
   pointer-events: none;
-}
-
-/* a little way under the bar */
-.intro .place {
-  top: calc(var(--nav-h) + var(--space-4));
 }
 
 .slogan {
@@ -80,7 +73,7 @@
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: var(--title);
+  opacity: var(--title, 1);
   translate: -50% 0;
   animation: bounce calc(var(--dur-slow) * 2.5) ease-in-out infinite;
 }

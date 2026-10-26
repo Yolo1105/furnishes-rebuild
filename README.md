@@ -28,6 +28,7 @@ features/loader/        the opening loader: furniture assembling in 3D, over the
 features/intro/         the photo opening: a real room, the title and the way in
 features/plan/          the plan walk: the HDB flat as a 3D drawing, the scroll camera and the side panel
 features/auth/          sign-in panel and the demo session
+ui/                     styles shared across features (the ink button)
 lib/routes.ts           every address the site links to
 ```
 

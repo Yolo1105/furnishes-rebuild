@@ -6,12 +6,12 @@ import styles from "./HeroTitle.module.css";
  * hairline caps in rust, its second word a shade fainter, each line rising
  * in after the one above. It sits at the top left of whatever stage it is
  * on, lined up with the bar's first link; a stage may fade it by setting
- * --title, and `className` lets a page move it. Anything passed as children
- * sits right under it, and moves and fades with it.
+ * --title. Anything passed as children sits right under it, and moves and
+ * fades with it.
  */
-export function HeroTitle({ className, children }: { className?: string; children?: ReactNode }) {
+export function HeroTitle({ children }: { children?: ReactNode }) {
   return (
-    <div className={className ? `${styles.hero} ${className}` : styles.hero}>
+    <div className={styles.hero}>
       <h1 className={styles.title} aria-label="Interior Revolution">
         <span className={styles.first} aria-hidden="true">
           Interior

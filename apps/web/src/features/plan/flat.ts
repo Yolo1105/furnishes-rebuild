@@ -259,3 +259,6 @@ export const BOUNDS = (() => {
     y1: Math.max(...ys) + OUTER_WALL,
   };
 })();
+
+/** The same, in metres (the 3D scene's unit). */
+export const BOUNDS_M = { x0: BOUNDS.x0 / 1000, y0: BOUNDS.y0 / 1000, x1: BOUNDS.x1 / 1000, y1: BOUNDS.y1 / 1000 };

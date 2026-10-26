@@ -1,4 +1,4 @@
-/* The walk's one kind of button: an outline that fills on hover; ink, unless
+/* The site's one kind of button: an outline that fills on hover; ink, unless
    a page sets --button-fg. */
 .button {
   display: inline-block;

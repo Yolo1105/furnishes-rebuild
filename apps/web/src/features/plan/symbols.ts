@@ -7,7 +7,7 @@ import { DOORS, FRONT_DOOR } from "./flat";
  * rise), so every place and size here mirrors a piece in scene.ts.
  *
  * The door leaves are the building's, drawn from the start; the rest is
- * drawn in once the flat is shown empty. Lines come in tiers, heaviest
+ * drawn in across the living room as the opening goes. Lines come in tiers, heaviest
  * first: fittings built into the flat (the kitchen, bathrooms, wardrobes),
  * then furniture, then the
  * lightest marks (rugs, shower falls, door swings live in addSheet). Each

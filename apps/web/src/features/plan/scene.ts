@@ -5,7 +5,7 @@ import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeome
 import {
   AC_LEDGE,
   BAYS,
-  BOUNDS,
+  BOUNDS_M,
   CEILING,
   COLUMNS,
   DOOR_HEAD,
@@ -20,6 +20,7 @@ import {
   WINDOWS,
   type Opening,
 } from "./flat";
+import { smooth, stage } from "./ease";
 import { FINISH } from "./finishes";
 import { BoxSolid } from "./solid";
 import { planSymbols } from "./symbols";
@@ -429,10 +430,6 @@ export function buildFlatScene(palette: Palette) {
   // the yard: a washing machine in its corner
   piece(box(5.92, 0, 8.36, 6.52, 0.85, 8.98), disc(6.22, 8.67, 0.2, 0.2, 0.85, 0.856));
 
-  const smooth = (a: number, b: number, t: number) => {
-    const x = Math.min(1, Math.max(0, (t - a) / (b - a)));
-    return x * x * (3 - 2 * x);
-  };
 
   /**
    * The furniture and fittings standing up out of the floor, 0 (flat and
@@ -452,9 +449,9 @@ export function buildFlatScene(palette: Palette) {
      * each on a little arc.
      */
     build(t: number) {
-      const out = smooth(0, 0.22, t);
+      const out = smooth(stage(t, 0, 0.22));
       boards.forEach((board, i) => {
-        const back = smooth(0.3 + i * 0.085, 0.42 + i * 0.085, t);
+        const back = smooth(stage(t, 0.3 + i * 0.085, 0.42 + i * 0.085));
         const away = out * (1 - back);
         board.position.set(away * (0.9 + i * 0.16), away * 0.12 + Math.sin(Math.PI * back) * 0.18 * out, 0);
       });
@@ -480,7 +477,7 @@ export function buildFlatScene(palette: Palette) {
       for (const p of roomBox) p.constant = OPEN;
       return;
     }
-    const all = [BOUNDS.x0 / 1000 - 4, BOUNDS.y0 / 1000 - 4, BOUNDS.x1 / 1000 + 4, BOUNDS.y1 / 1000 + 4];
+    const all = [BOUNDS_M.x0 - 4, BOUNDS_M.y0 - 4, BOUNDS_M.x1 + 4, BOUNDS_M.y1 + 4];
     const [x0, z0, x1, z1] = room.map((v, i) => v + (all[i]! - v) * t) as [number, number, number, number];
     roomBox[0]!.constant = -x0;
     roomBox[1]!.constant = x1;
@@ -497,7 +494,7 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 /**
  * What an architect adds to a plan that is not the building: room names,
  * tile joints, door swings, window glass, the furniture and fittings drawn
- * as symbols (symbols.ts, drawn in across the plan by `furnish`), and the
+ * as symbols (symbols.ts, drawn in across the plan by `furnishTo`), and the
  * metre grid on the ground. All of it lies on the floor or the ground. The
  * notes that only make sense on a flat drawing fade as the walls rise; room
  * names, tiles, window glass and the ground grid stay.
@@ -530,13 +527,9 @@ export function addSheet(
     }
   };
 
-  /**
-   * Text drawn into a canvas and laid flat at height `y`, turned `rot`
-   * radians; `track` spaces its letters, in ems.
-   */
   // The furniture and fittings are drawn in across the plan, west to east,
-  // with the first scroll: they are cut away east of this plane.
-  const drawnTo = new THREE.Plane(new THREE.Vector3(-1, 0, 0), BOUNDS.x0 / 1000 - 1);
+  // as the opening goes (`furnishTo`): they are cut away east of this plane.
+  const drawnTo = new THREE.Plane(new THREE.Vector3(-1, 0, 0), BOUNDS_M.x0 - 1);
   /**
    * What is drawn next is clipped by the scene's room box (`box`, so the
    * notes show only where the flat does) and by `clip`, set while the
@@ -546,6 +539,10 @@ export function addSheet(
   let grounded = false;
   const planes = () => (grounded ? [] : [...box, ...clip]);
 
+  /**
+   * Text drawn into a canvas and laid flat at height `y`, turned `rot`
+   * radians; `track` spaces its letters, in ems.
+   */
   const text = (
     rows: { text: string; size: number; weight?: number; track?: number }[],
     x: number,
@@ -641,7 +638,7 @@ export function addSheet(
   });
 
   // the flat's outer bounds, m
-  const b = { x0: BOUNDS.x0 / 1000, x1: BOUNDS.x1 / 1000, y0: BOUNDS.y0 / 1000, y1: BOUNDS.y1 / 1000 };
+  const b = BOUNDS_M;
 
   // ---- door swings: the arc each leaf sweeps (the leaves themselves stand open in the model)
   const swings: number[] = [];

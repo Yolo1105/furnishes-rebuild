@@ -2,7 +2,15 @@
    the opening's first. */
 .track {
   position: relative;
-  height: calc(var(--walk-length) + var(--intro-length));
+  height: calc(var(--walk-length) + var(--intro-length)); /* --intro-length is set by PlanWalk */
+}
+
+/* Where the opening's scroll ends: PlanWalk measures it. */
+.introEnd {
+  position: absolute;
+  top: var(--intro-length);
+  width: 0;
+  height: 0;
 }
 
 /* The view stays on screen while the track scrolls past it: the moving wash
@@ -22,12 +30,7 @@
   display: block;
   width: 100%;
   height: 100%;
-}
-
-/* The plan comes in only once the opening's photo has gone (--intro, 0 to 1
-   through the opening). */
-.canvas {
-  opacity: clamp(0, (var(--intro, 1) - 0.15) / 0.06, 1);
+  opacity: var(--plan, 0); /* the plan comes in as the opening's photo goes (set by PlanWalk) */
 }
 
 /* Shown in place of the canvas when the browser has no WebGL (PlanWalk marks

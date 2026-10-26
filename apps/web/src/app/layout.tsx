@@ -28,8 +28,8 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Read here so the page is sent already showing the demo state, if any.
   const demo = (await cookies()).get(DEMO_COOKIE)?.value === "1";
-  // The loader's inline script marks <html> before React hydrates (so a
-  // returning visitor never sees it flash); that one attribute is expected.
+  // Browser extensions and the page's own scripts (the walk marks <html> as
+  // its panel comes in) add attributes to <html>; React need not warn of them.
   return (
     <html lang="en" className={`${archivo.variable} ${spaceMono.variable}`} suppressHydrationWarning>
       <body>
