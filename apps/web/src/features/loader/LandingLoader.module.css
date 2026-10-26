@@ -121,6 +121,7 @@
   top: 0;
   left: 0;
   right: 0;
+  justify-self: stretch; /* the bar's wordmark centres itself in its grid; this one spans the screen */
   height: var(--nav-h);
   z-index: 6;
   display: flex;
@@ -131,6 +132,13 @@
   color: var(--color-on-orange);
   pointer-events: none;
   animation: introBrandIn 1s var(--ease-title) 0.35s both;
+}
+
+/* Where the page sets the bar's wordmark at the far left (the photo
+   opening does), the loader's sits there with it. */
+:global(html:has([data-wordmark-left])) .introBrand {
+  justify-content: flex-start;
+  padding: 0 var(--gutter);
 }
 
 .introCount {
