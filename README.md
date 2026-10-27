@@ -20,7 +20,7 @@ app/
   layout.tsx            fonts, metadata, the demo sign-in read from its cookie
   globals.css           design tokens: every colour, size, space and timing
   (site)/layout.tsx     every public page: the bar, then the page
-  (site)/page.tsx       landing: the loader, then the photo opening and the plan walk
+  (site)/page.tsx       landing: the loader, then the rooms of the photo opening and the plan walk
   (site)/sign-in/       sign-in (UI only, plus a demo account)
 shell/                  the bar: SiteHeader, CartLink, AccountLink
 features/stage/         the moving orange-to-cream background (Stage, LivingGradient, wash) and the landing title (HeroTitle)
