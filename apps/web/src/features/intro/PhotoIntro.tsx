@@ -35,44 +35,55 @@ export type IntroPhoto = {
 const A_FRAME: IntroPhoto = { src: room, spot: "left", tone: "ink" };
 
 /**
- * With more than one photo, each holds for ROTATE_MS then crossfades into
- * the next over FADE_MS (the live site's carousel pace). At each turn the
- * title steps out over SWAP_MS, moves to the next photo's spot, and comes
- * back in as that photo fades up.
+ * With more than one photo, each holds for ROTATE_MS, then crossfades into
+ * the next over FADE_MS (the live site's carousel pace). The title moves in
+ * step with it: it fades out over SWAP_MS as the old photo starts to go,
+ * moves to the next photo's spot once it is out of sight, and fades back in
+ * over the last SWAP_MS of the crossfade, landing as the new photo does.
  */
 const ROTATE_MS = 5000;
 const FADE_MS = 1600;
-const SWAP_MS = 400;
+const SWAP_MS = 450;
 
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
-/** Which photo is in view, and whether the title is between spots. */
+/** Which photo is in view, which photo the title is placed for, and whether the title is out between them. */
 function useRotation(count: number) {
-  const [active, setActive] = useState(0);
-  const [swapping, setSwapping] = useState(false);
+  const [photo, setPhoto] = useState(0);
+  const [placedFor, setPlacedFor] = useState(0);
+  const [hidden, setHidden] = useState(false);
   useEffect(() => {
     if (count < 2 || window.matchMedia(REDUCED).matches) return;
-    let swap = 0;
-    const turn = window.setInterval(() => {
-      setSwapping(true);
-      swap = window.setTimeout(() => {
-        setActive((i) => (i + 1) % count);
-        setSwapping(false);
-      }, SWAP_MS);
-    }, ROTATE_MS);
-    return () => {
-      window.clearInterval(turn);
-      window.clearTimeout(swap);
+    const timers = new Set<number>();
+    const later = (ms: number, step: () => void) => {
+      const id = window.setTimeout(() => {
+        timers.delete(id);
+        step();
+      }, ms);
+      timers.add(id);
     };
+    let next = 0;
+    const turn = () => {
+      next = (next + 1) % count;
+      const to = next;
+      // the crossfade and the title's way out start together
+      setPhoto(to);
+      setHidden(true);
+      later(SWAP_MS, () => setPlacedFor(to));
+      later(FADE_MS - SWAP_MS, () => setHidden(false));
+      later(ROTATE_MS, turn);
+    };
+    later(ROTATE_MS, turn);
+    return () => timers.forEach((id) => window.clearTimeout(id));
   }, [count]);
-  return { active, swapping };
+  return { photo, placedFor, hidden };
 }
 
 /** `photos`: the room shown, or the rooms shown in turn. All 2000 px wide, at least 1334 tall. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
   const rotating = photos.length > 1;
-  const { active, swapping } = useRotation(photos.length);
-  const shown = photos[active]!;
+  const { photo, placedFor, hidden } = useRotation(photos.length);
+  const place = photos[placedFor]!;
   const pace = { "--fade": `${FADE_MS}ms`, "--swap": `${SWAP_MS}ms` } as CSSProperties;
   return (
     // a light picture under the bar (PlanWalk clears it once the photo has gone); the wordmark at the bar's left
@@ -81,9 +92,9 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       data-intro
       data-light-under-bar
       data-wordmark-left
-      data-spot={shown.spot}
-      data-tone={shown.tone}
-      data-swapping={swapping || undefined}
+      data-spot={place.spot}
+      data-tone={place.tone}
+      data-swapping={hidden || undefined}
       style={pace}
     >
       <div className={styles.scene}>
@@ -99,7 +110,7 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
         >
           <g className={styles.photo}>
             {photos.map(({ src }, i) => (
-              <image key={src.src} className={styles.slide} href={src.src} width="2000" height="1334" data-active={i === active || undefined} />
+              <image key={src.src} className={styles.slide} href={src.src} width="2000" height="1334" data-active={i === photo || undefined} />
             ))}
           </g>
         </svg>

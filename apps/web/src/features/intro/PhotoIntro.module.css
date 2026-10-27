@@ -106,7 +106,7 @@
 /* Between photos the title steps out, moves to the next photo's plain
    area, and comes back in. */
 .textSwap {
-  transition: opacity var(--swap) ease;
+  transition: opacity var(--swap) ease-in-out;
 }
 
 .intro[data-swapping] .textSwap {
