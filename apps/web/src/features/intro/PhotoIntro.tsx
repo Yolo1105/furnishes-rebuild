@@ -10,8 +10,8 @@ import room from "../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./PhotoIntro.module.css";
 
 /**
- * The walk's opening, laid over it: a photo of a real room, the title and
- * the way in. As the page scrolls (PlanWalk sets --intro, 0 to 1) the title
+ * The walk's opening, laid over it: a photo of a real room, the live site's
+ * greeting, the title, what Furnishes does and the way in. As the page scrolls (PlanWalk sets --intro, 0 to 1) the title
  * goes, then the photo fades straight to the plan of one room beneath; from
  * there PlanWalk's side panel tells the rest (01 the room, 02 the whole
  * flat as it grows in round it, and on).
@@ -19,6 +19,9 @@ import styles from "./PhotoIntro.module.css";
 
 /** Where the ceiling meets the window wall, in the photo's own pixels (2000 x 1334): the photo is shown from just below it. */
 const CEILING = 260;
+
+/** What Furnishes does, as the live site's landing tags it. */
+const TAGS = ["AI interiors", "3D layouts", "Custom pieces"] as const;
 
 /** A room for the opening: the photo, where it has plain space for the title, and how to ink the title on it. */
 export type IntroPhoto = {
@@ -102,8 +105,23 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
         </svg>
       </div>
       <div className={`${styles.hero} ${styles.textSwap}`}>
-        <HeroTitle>
+        <HeroTitle
+          greeting={
+            <p className={styles.greeting}>
+              Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
+              <span className={styles.accent}>.</span>
+            </p>
+          }
+        >
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
+          <ul className={styles.tags}>
+            {TAGS.map((tag, i) => (
+              <li key={tag} style={{ "--i": i } as CSSProperties}>
+                <span className={styles.accent}>#</span>
+                {tag}
+              </li>
+            ))}
+          </ul>
           <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
             Explore your journey
           </Link>

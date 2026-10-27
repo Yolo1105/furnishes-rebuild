@@ -36,8 +36,8 @@
       linear-gradient(
         to top,
         color-mix(in srgb, var(--color-paper) 94%, transparent),
-        color-mix(in srgb, var(--color-paper) 82%, transparent) 30%,
-        transparent 46%
+        color-mix(in srgb, var(--color-paper) 86%, transparent) 44%,
+        transparent 60%
       );
   }
 
@@ -64,6 +64,13 @@
   .hero .start {
     display: block; /* over the ink button's inline-block */
     text-align: center;
+  }
+}
+
+/* Short phones: no room for the tags as well; the photo keeps its share. */
+@media (max-width: 600px) and (orientation: portrait) and (max-height: 700px) {
+  .hero .tags {
+    display: none; /* over the tags' own flex, set further down */
   }
 }
 
@@ -136,6 +143,56 @@
   pointer-events: none;
 }
 
+/* The live site's greeting over the title, its stops in the accent; and
+   its tags under the slogan, each rising in after the title. */
+.greeting {
+  margin: 0 0 var(--space-3);
+  color: var(--hero-ink-strong, var(--color-rust-deep));
+  font-family: var(--font-mono);
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  animation: rise var(--dur-title) var(--ease-title) both;
+}
+
+.accent {
+  color: var(--color-orange);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--hero-ink-strong, var(--color-rust-deep));
+  font-family: var(--font-mono);
+  font-size: var(--text-nav);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+}
+
+.intro[data-spot="right"] .tags {
+  justify-content: flex-end;
+}
+
+.tags li {
+  animation: rise var(--dur-title) var(--ease-title) both;
+  animation-delay: calc(var(--stagger) * (4 + var(--i) * 3));
+}
+
+.tags .accent {
+  margin-right: 0.5ch;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-4));
+  }
+}
+
 .slogan {
   margin: var(--space-3) 0 0;
   color: var(--hero-ink-strong, var(--color-rust-deep));
@@ -181,7 +238,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cue {
+  .cue,
+  .greeting,
+  .tags li {
     animation: none;
   }
 }
