@@ -23,11 +23,6 @@
   animation-delay: calc(var(--stagger) * 1.5);
 }
 
-/* the full stop in the orange, whatever ink the rest is in */
-.stop {
-  color: var(--color-orange);
-}
-
 @keyframes rise {
   from {
     opacity: 0;
