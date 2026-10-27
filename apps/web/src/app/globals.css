@@ -117,6 +117,14 @@ html {
   overscroll-behavior-y: none;
   /* The page still scrolls; it just shows no bar. */
   scrollbar-width: none;
+  /* no grey flash over what a finger taps */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* A click or tap leaves no ring round what was clicked; moving with the
+   keyboard still shows one (:focus-visible), so nobody loses their place. */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 html::-webkit-scrollbar {
