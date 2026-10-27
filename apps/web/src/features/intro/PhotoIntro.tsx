@@ -11,9 +11,10 @@ import styles from "./PhotoIntro.module.css";
 
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
- * turn) filling the screen, dimmed a little and evenly so cream type reads
- * on any of them, and on it, at the foot, the title with the slogan and the
- * way in under it: a few large words, nothing more. As the page scrolls (PlanWalk sets --title and --photo) the words go,
+ * turn) filling the screen, each drifting slowly closer while it is in
+ * view; and along its foot, on the bar's grid, a row of the slogan, the
+ * room's caption and count, and the way in, over the title set on one line
+ * from edge to edge. As the page scrolls (PlanWalk sets --title and --photo) the words go,
  * then the photo fades straight to the plan of one room beneath; from there
  * PlanWalk's side panel tells the rest.
  */
@@ -23,7 +24,8 @@ const CEILING = 260;
 
 /**
  * With more than one photo, each holds for ROTATE_MS, then crossfades into
- * the next over FADE_MS (the live site's carousel pace).
+ * the next over FADE_MS (the live site's carousel pace), drifting closer
+ * all the while it shows.
  */
 const ROTATE_MS = 5000;
 const FADE_MS = 1600;
@@ -41,9 +43,18 @@ function useRotation(count: number) {
   return photo;
 }
 
-/** `photos`: the room shown, or the rooms shown in turn. All 2000 x 1334. */
-export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) {
+/** The ink that reads on a part of a photo: cream where it is dark, rust where it is bright. */
+type Ink = "cream" | "rust";
+
+/** A room for the opening: the photo (2000 x 1334), its caption, and the ink for the bar over its top and the words along its foot. */
+export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; foot: Ink } };
+
+const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", foot: "cream" } };
+
+/** `photos`: the room shown, or the rooms shown in turn. */
+export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
   const photo = useRotation(photos.length);
+  const count = (n: number) => String(n).padStart(2, "0");
   return (
     // the bar sits over the dimmed photo until it has gone; the wordmark at the bar's left
     <div
@@ -51,7 +62,10 @@ export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) 
       data-intro
       data-dark-under-bar
       data-wordmark-left
-      style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}
+      data-rotating={photos.length > 1 || undefined}
+      data-bar={photos[photo]!.ink.bar}
+      data-foot={photos[photo]!.ink.foot}
+      style={{ "--fade": `${FADE_MS}ms`, "--drift": `${ROTATE_MS + FADE_MS}ms` } as CSSProperties}
     >
       <div className={styles.frame}>
         <svg
@@ -65,26 +79,29 @@ export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) 
               : "A bright A-frame living room: two orange velvet chairs and a cream sofa under triangular windows onto pine woods, an open stair and a stone kitchen island"
           }
         >
-          {photos.map((src, i) => (
+          {photos.map(({ src }, i) => (
             <image key={src.src} className={styles.slide} href={src.src} width="2000" height="1334" data-active={i === photo || undefined} />
           ))}
         </svg>
       </div>
 
       <div className={styles.foot}>
-        <HeroTitle />
-        <div className={styles.details}>
+        {/* on the bar's grid: the slogan, the room in view, the way in */}
+        <div className={styles.info}>
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
+          <p className={styles.caption} aria-live="polite">
+            <span className={styles.counter}>
+              {count(photo + 1)} / {count(photos.length)}
+            </span>
+            {photos[photo]!.caption}
+          </p>
           <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
             Explore your journey
           </Link>
         </div>
+        <HeroTitle line />
       </div>
 
-      {/* the page goes on below */}
-      <svg className={styles.cue} viewBox="0 0 24 12" aria-hidden="true">
-        <path d="M2 2l10 8 10-8" />
-      </svg>
     </div>
   );
 }

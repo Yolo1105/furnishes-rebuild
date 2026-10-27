@@ -36,6 +36,46 @@
   animation-delay: calc(var(--stagger) * 1.5);
 }
 
+/* On one line: one size, the hairline then a heavier, narrower word. */
+.line {
+  white-space: nowrap;
+}
+
+.line .first,
+.line .second {
+  display: inline-block;
+  font-size: 1em;
+}
+
+.line .second {
+  --shown: 1;
+  margin-left: 0.28em;
+  font-variation-settings:
+    "wght" 420,
+    "wdth" 100;
+}
+
+/* Phones held upright: no room for one line; the words stack again. */
+@media (max-width: 600px) and (orientation: portrait) {
+  .line {
+    white-space: normal;
+  }
+
+  .line .first,
+  .line .second {
+    display: block;
+    margin-left: 0;
+  }
+
+  .line .first {
+    font-size: 0.7em;
+  }
+
+  .line .second {
+    font-size: 0.62em;
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;

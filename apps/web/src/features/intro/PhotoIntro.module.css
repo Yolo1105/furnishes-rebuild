@@ -1,12 +1,12 @@
-/* The opening, over the walk: the photo filling the screen, dimmed a little
-   and evenly, and the words on it in cream. PlanWalk sets its fades as the
-   scroll goes (--title: the words and the arrow; --photo: the photo, which
-   fades straight to the plan beneath), marks it data-scrolled once the
-   scroll is under way (the button stops taking clicks) and data-done once
-   the photo has gone.
+/* The opening, over the walk: the photo filling the screen as it is, and
+   along its foot, on the bar's grid, a row of small words over the title,
+   one line from edge to edge. PlanWalk sets its fades as the scroll goes
+   (--title: the words; --photo: the photo, which fades straight to the plan
+   beneath), marks it data-scrolled once the scroll is under way (the button
+   stops taking clicks) and data-done once the photo has gone.
 
-   The edges are the bar's (--gutter). Two sizes only: the title, and the
-   slogan a step over the bar's links. */
+   The words are in cream with a soft shadow round their letters, no box and
+   no edge; over a bright photo (data-foot="rust") in the rust instead. */
 .intro {
   position: absolute;
   z-index: var(--z-content);
@@ -15,9 +15,11 @@
   --ink: var(--color-on-orange);
   --hero-ink: var(--ink);
   --hero-ink-strong: var(--ink);
-  --text-slogan: calc(var(--text-nav) * 1.15);
-  --text-hero: min(9vw, 17vh);
-  --foot-bottom: calc(var(--space-5) * 2 + var(--icon)); /* clear of the arrow */
+  --shade:
+    0 1px 2px color-mix(in srgb, var(--color-night) 40%, transparent),
+    0 0 28px color-mix(in srgb, var(--color-night) 35%, transparent);
+  /* the title on one line fills the width between the bar's edges */
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 12.6);
 }
 
 .intro[data-done] {
@@ -25,20 +27,12 @@
 }
 
 /* The photo, filling the screen as object-fit cover would, from just below
-   its ceiling (the viewBox); evenly dimmed, so the cream reads on any
-   photo, bright or busy. */
+   its ceiling (the viewBox). */
 .frame {
   position: absolute;
   inset: 0;
   overflow: hidden;
   opacity: var(--photo, 1);
-}
-
-.frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: color-mix(in srgb, var(--color-night) 38%, transparent);
 }
 
 .room {
@@ -48,126 +42,136 @@
   height: 100%;
 }
 
-/* Rotating (PhotoIntro's clock marks the photo in view data-active), each
-   photo crossfades into the next over --fade. */
+/* Each photo drifts a little closer while it is in view (--drift), and
+   crossfades into the next over --fade (PhotoIntro marks the one in view
+   data-active); once it has faded out it goes back, unseen. */
 .slide {
   opacity: 0;
-  transition: opacity var(--fade) ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity var(--fade) ease-in-out,
+    transform 0s var(--fade);
 }
 
 .slide[data-active] {
   opacity: 1;
+  transform: scale(1.06);
+  transition:
+    opacity var(--fade) ease-in-out,
+    transform var(--drift) linear;
 }
 
-.foot,
-.cue {
-  opacity: var(--title, 1);
+/* one photo alone drifts slower, and further */
+.intro:not([data-rotating]) .slide[data-active] {
+  transform: scale(1.08);
+  transition:
+    opacity var(--fade) ease-in-out,
+    transform 30s linear;
 }
 
-/* The foot: the title, and right under it one row of the slogan and the
-   way in, their feet on one line. */
+/* Over a bright foot (data-foot="rust"), the words in the rust, their shadow
+   a soft light one. */
+.intro[data-foot="rust"] {
+  --ink: var(--color-rust-deep);
+  --shade:
+    0 0 2px color-mix(in srgb, var(--color-paper) 50%, transparent),
+    0 0 28px color-mix(in srgb, var(--color-paper) 45%, transparent);
+}
+
+.intro[data-foot="rust"] .start {
+  --button-on: var(--color-cream);
+}
+
+/* The foot: the row of small words, then the title. */
 .foot {
   position: absolute;
   right: var(--gutter);
-  bottom: var(--foot-bottom);
+  bottom: var(--space-4);
   left: var(--gutter);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-6);
-  pointer-events: auto;
-}
-
-.intro[data-scrolled] .foot {
-  pointer-events: none;
-}
-
-.details {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-7);
+  gap: var(--space-5);
   color: var(--ink);
+  transition: color var(--fade) ease-in-out;
+  text-shadow: var(--shade);
+  opacity: var(--title, 1);
+}
+
+/* Three columns on the bar's grid: the slogan, the room in view and its
+   count, the way in at the right. */
+.info {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: var(--space-6);
   font-family: var(--font-mono);
+  text-transform: uppercase;
 }
 
 .slogan {
   max-width: 24ch; /* two lines */
   margin: 0;
-  font-size: var(--text-slogan);
+  font-size: calc(var(--text-nav) * 1.1);
   line-height: 1.6;
   letter-spacing: var(--track);
-  text-transform: uppercase;
-  text-wrap: balance;
+}
+
+.caption {
+  margin: 0;
+  font-size: var(--text-xs);
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+}
+
+.counter {
+  margin-right: 2ch;
+  opacity: 0.75;
 }
 
 .start {
   --button-fg: var(--ink);
   --button-on: var(--color-rust-deep);
-  flex-shrink: 0;
+  justify-self: end;
+  text-shadow: none;
+  box-shadow: var(--shade);
+  pointer-events: auto;
 }
 
-/* Bottom centre, a down arrow (the head only), solid: it rests low, bounces
-   up and back, then rests again; over and over, slowly. It goes with the words. */
-.cue {
-  position: absolute;
-  bottom: var(--space-5);
-  left: 50%;
-  width: var(--icon-lg);
-  height: var(--icon);
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  translate: -50% 0;
-  animation: bounce calc(var(--dur-slow) * 2.5) ease-in-out infinite;
+.intro[data-scrolled] .start {
+  pointer-events: none;
 }
 
-@keyframes bounce {
-  0%,
-  15%,
-  65%,
-  100% {
-    transform: none;
-  }
-  40% {
-    transform: translateY(calc(-1 * var(--space-3)));
-  }
-}
-
-/* Upright screens: the title may take more of the width. */
-@media (orientation: portrait) {
-  .intro {
-    --text-hero: min(15vw, 10vh);
-  }
-}
-
-/* Phones held upright: the title as wide as the screen, the details
-   stacked under it, the way in under the thumb. */
+/* Phones held upright: the title on two lines as wide as the screen, then
+   the slogan, the way in under the thumb; the room's caption over them. */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
     --text-hero: 22vw;
   }
 
   .foot {
-    align-items: stretch;
-    gap: var(--space-5);
+    bottom: var(--space-5);
+    flex-direction: column-reverse;
   }
 
-  .details {
-    flex-direction: column;
-    align-items: stretch;
+  .info {
+    grid-template-columns: 1fr;
     gap: var(--space-4);
   }
 
-  .details .start {
-    display: block; /* over the ink button's inline-block */
+  .caption {
+    order: -1;
+  }
+
+  .start {
+    justify-self: stretch;
     text-align: center;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cue {
-    animation: none;
+  .slide[data-active],
+  .intro:not([data-rotating]) .slide[data-active] {
+    transform: none;
   }
 }
