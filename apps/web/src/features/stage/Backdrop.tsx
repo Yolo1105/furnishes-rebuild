@@ -12,10 +12,9 @@ import { WASH_CSS } from "./wash";
  */
 const BACKDROP: "wash" | "peach" = "peach";
 
-/** The background, filling its (positioned) parent; `still`, the wash without its motion (as under the loader). */
-export function Backdrop({ still = false }: { still?: boolean }) {
+/** The background, filling its (positioned) parent. */
+export function Backdrop() {
   if (BACKDROP === "wash") {
-    if (still) return <div className={styles.layer} style={{ backgroundImage: WASH_CSS }} />;
     return (
       // The CSS wash shows until the canvas draws, and stays if WebGL is unavailable.
       <div className={styles.layer} style={{ backgroundImage: WASH_CSS }}>

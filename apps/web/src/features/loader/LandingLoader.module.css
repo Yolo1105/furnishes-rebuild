@@ -1,7 +1,7 @@
 /* The live site's intro loader (furnishes_prod, landing.module.css "Intro
    loader"), as it is there, with its tokens mapped onto this site's: the
-   background is the site's (Backdrop), the exit and reveal durations come
-   from LOADER_TIMING (set inline); colours, fonts, easing and the bar's
+   wash comes from wash.ts and the exit and reveal durations from
+   LOADER_TIMING (both set inline); colours, fonts, easing and the bar's
    height from globals.css. */
 
 /* The page under it stays at its top while it plays. */
@@ -141,16 +141,6 @@
   color: var(--color-on-orange);
   pointer-events: none;
   animation: introBrandIn 1s var(--ease-title) 0.35s both;
-}
-
-/* On a light background (Backdrop's peach), the cover's base and the
-   wordmark take the bar's dark ink, as the bar does. */
-.intro:has([data-light-backdrop]) {
-  background-color: var(--color-paper);
-}
-
-.intro:has([data-light-backdrop]) .introBrand {
-  color: var(--color-rust);
 }
 
 /* Where the page sets the bar's wordmark at the far left (the photo
