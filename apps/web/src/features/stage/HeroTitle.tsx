@@ -5,7 +5,7 @@ import styles from "./HeroTitle.module.css";
  * Archivo caps in rust, every o in the orange, as the live site marks the o
  * of "home". Two lines, "Interior" a hairline at its widest and
  * "Revolution" a shade fainter, a little heavier and narrower; or, `line`,
- * both words on one line set alike, the same hairline at its widest. Each
+ * both words on one line set alike, the same hairline, narrow and tall. Each
  * word rises in after the one before. It sets only the type: where it sits
  * is the page's to say, and a page may ink it (--hero-ink, --hero-ink-strong).
  */
