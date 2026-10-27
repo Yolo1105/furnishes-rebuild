@@ -21,22 +21,37 @@ const CEILING = 260;
 
 /**
  * With more than one photo, each holds for ROTATE_MS, then fades into the
- * next over FADE_MS (the live site's carousel pace).
+ * next over FADE_MS (the live site's carousel pace); the words stay.
  */
 const ROTATE_MS = 5000;
 const FADE_MS = 1600;
 
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
-/** Which photo is in view. */
+/**
+ * Which photo is in view, and which one the words are set for: they switch
+ * halfway through the fade, when the new photo is as much in view as the
+ * old, rather than fading out and in with it.
+ */
 function useRotation(count: number) {
   const [photo, setPhoto] = useState(0);
+  const [words, setWords] = useState(0);
   useEffect(() => {
     if (count < 2 || window.matchMedia(REDUCED).matches) return;
-    const turn = window.setInterval(() => setPhoto((i) => (i + 1) % count), ROTATE_MS);
-    return () => window.clearInterval(turn);
+    let next = 0;
+    let half = 0;
+    const turn = window.setInterval(() => {
+      next = (next + 1) % count;
+      const to = next;
+      setPhoto(to);
+      half = window.setTimeout(() => setWords(to), FADE_MS / 2);
+    }, ROTATE_MS);
+    return () => {
+      window.clearInterval(turn);
+      window.clearTimeout(half);
+    };
   }, [count]);
-  return photo;
+  return { photo, words };
 }
 
 /** The ink that reads on a part of a photo: cream where it is dark, rust where it is bright. */
@@ -53,7 +68,8 @@ const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { 
 
 /** `photos`: the room shown, or the rooms shown in turn. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
-  const photo = useRotation(photos.length);
+  const { photo, words } = useRotation(photos.length);
+  const { caption, ink } = photos[words]!;
   return (
     // the bar sits over the photo until it has gone; the wordmark at the bar's left
     <div
@@ -61,7 +77,7 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       data-intro
       data-dark-under-bar
       data-wordmark-left
-      data-bar={photos[photo]!.ink.bar}
+      data-bar={ink.bar}
       style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}
     >
       <div
@@ -82,30 +98,19 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
         ))}
       </div>
 
-      {/* the words, once per photo, inked for it and fading with it (only the set in view can be read) */}
-      {photos.map(({ src, caption, ink }, i) => (
-        <div
-          key={src.src}
-          className={styles.foot}
-          data-title={ink.title}
-          data-small={ink.small}
-          data-active={i === photo || undefined}
-          inert={i !== photo}
-        >
-          {/* one line over the title: the room at its start, the slogan at its end */}
-          <div className={styles.info}>
-            <p className={styles.caption}>
-              <span className={styles.captionText}>{caption}</span>
-            </p>
-            <p className={styles.slogan}>
-              Made for your room, to the millimetre<span className={styles.accent}>.</span>
-            </p>
-          </div>
-          <div className={styles.headline}>
-            <HeroTitle line />
-          </div>
+      {/* the words, set for the photo in view: they stay, and switch with it */}
+      <div className={styles.foot} data-title={ink.title} data-small={ink.small}>
+        {/* one line over the title: the room at its start, the slogan at its end */}
+        <div className={styles.info}>
+          <p className={styles.caption}>{caption}</p>
+          <p className={styles.slogan}>
+            Made for your room, to the millimetre<span className={styles.accent}>.</span>
+          </p>
         </div>
-      ))}
+        <div className={styles.headline}>
+          <HeroTitle line />
+        </div>
+      </div>
     </div>
   );
 }

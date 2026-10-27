@@ -16,8 +16,12 @@
   --hero-ink-strong: var(--ink);
   /* only a wide, soft one: a tight shadow thickens the hairline */
   --shade: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
-  /* the title on one line fills the width between the bar's edges */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 14.2);
+  /* the title on one line, set smaller so its hairline stays fine, and
+     tracked out so it still fills the width between the bar's edges: the
+     width is 18 em of it, its letters (and the gap between the words) take
+     14.3 em, and the 17 gaps between its 18 letters share the rest */
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 18);
+  --title-track: calc((18em - 14.3em) / 17);
 }
 
 .intro[data-done] {
@@ -55,11 +59,11 @@
 }
 
 /* The words along the bottom: the line of small words, then the title,
-   from edge to edge. One
-   set per photo, all in one place, each fading with its photo (data-active),
-   so their inks change as the picture does. Each part in cream with a soft
-   shadow round its letters (no box, no edge), or in the rust, bare, where
-   its photo is bright under it (data-title, data-small = "rust"). */
+   from edge to edge. They stay as the photos change; their inks and the
+   caption switch to the next photo's halfway through its fade. Each part in
+   cream with a soft shadow round its letters (no box, no edge), or in the
+   rust, bare, where the photo is bright under it (data-title, data-small =
+   "rust"). */
 .foot {
   position: absolute;
   right: var(--gutter);
@@ -68,17 +72,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  opacity: 0;
-  transition: opacity var(--fade) ease-in-out;
-}
-
-.foot[data-active] {
   opacity: var(--title, 1);
 }
 
 .headline {
   color: var(--ink);
   text-shadow: var(--shade);
+}
+
+/* the last letter's tracking hangs past the right edge, so the ink ends on it */
+.headline h1 {
+  margin-right: calc(-1 * var(--title-track));
+  letter-spacing: var(--title-track);
 }
 
 .info {
@@ -121,24 +126,12 @@
   margin: 0;
 }
 
-/* the caption rises in with each photo, as it fades up */
-.foot[data-active] .captionText {
-  display: inline-block;
-  animation: rise var(--dur-title) var(--ease-title) calc(var(--fade) * 0.4) both;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--space-3));
-  }
-}
-
 /* Phones held upright: the title on two lines as wide as the screen, the
    caption over it and the slogan under it. */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
     --text-hero: calc((100vw - 2 * var(--gutter)) / 8.1); /* "Revolution", the longer line, fills it */
+    --title-track: -0.01em; /* stacked, it is not tracked out */
   }
 
   .foot {
@@ -160,12 +153,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide,
-  .foot {
+  .slide {
     transition: none;
-  }
-
-  .foot[data-active] .captionText {
-    animation: none;
   }
 }
