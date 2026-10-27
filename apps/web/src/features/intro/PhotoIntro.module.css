@@ -19,36 +19,6 @@
 .scene {
   position: absolute;
   inset: 0;
-  /* How strongly the light veil (below) calms the photo, and how far it
-     reaches: faint on wide screens, where plain wall sits behind the title;
-     stronger on narrow ones, where the busy window frames do. Light, so
-     the photo stays clear: just enough to steady the thin ink. */
-  --veil: 45%;
-  --veil-reach: 60% 55%;
-}
-
-/* A light veil over the photo's top left, under the bar and the title, so
-   their thin ink reads on any crop; it goes with the title. */
-.scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      ellipse var(--veil-reach) at 0 0,
-      color-mix(in srgb, var(--color-paper) var(--veil), transparent) 35%,
-      transparent
-    ),
-    linear-gradient(color-mix(in srgb, var(--color-paper) 35%, transparent), transparent calc(var(--nav-h) * 1.5));
-  opacity: var(--title, 1);
-  pointer-events: none;
-}
-
-@media (max-width: 900px) {
-  .scene {
-    --veil: 58%;
-    --veil-reach: 80% 60%;
-  }
 }
 
 /* Phones held upright: the photo turns to the sitting area (the orange
@@ -57,14 +27,18 @@
    wash rising from the floor, with the way in under the thumb. */
 @media (max-width: 600px) and (orientation: portrait) {
   .scene::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: var(--title, 1);
+    pointer-events: none;
     background:
       linear-gradient(
         to top,
         color-mix(in srgb, var(--color-paper) 94%, transparent),
         color-mix(in srgb, var(--color-paper) 82%, transparent) 30%,
         transparent 46%
-      ),
-      linear-gradient(color-mix(in srgb, var(--color-paper) 55%, transparent), transparent calc(var(--nav-h) * 1.5));
+      );
   }
 
   /* a little closer in, and its foot on the screen's: the chair and the
@@ -111,37 +85,45 @@
   opacity: var(--photo, 1);
 }
 
-/* Rotating: every photo (--i, from 0) runs the same loop, a hold apart, and
-   the first starts already in. Cut for PhotoIntro's SLIDES (5): each has a
-   fifth of the loop, 20%, to fade in (FADE_S of the 25s loop, 6.4%) and
-   hold, then fades out as the next comes in. */
-.intro[data-rotating] .slide {
+/* Rotating (PhotoIntro's clock marks the photo in view data-active): each
+   crossfades over the next's --fade. */
+.slide {
   opacity: 0;
-  animation: turn calc(var(--hold) * 5) linear infinite;
-  animation-delay: calc(var(--i) * var(--hold) - var(--fade));
+  transition: opacity var(--fade) ease-in-out;
 }
 
-@keyframes turn {
-  0% {
-    opacity: 0;
-  }
-  6.4%,
-  20% {
-    opacity: 1;
-  }
-  26.4%,
-  100% {
-    opacity: 0;
-  }
+.slide[data-active] {
+  opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .intro[data-rotating] .slide {
-    animation: none;
+/* Between photos the title steps out, moves to the next photo's plain
+   area, and comes back in. */
+.textSwap {
+  transition: opacity var(--swap) ease;
+}
+
+.intro[data-swapping] .textSwap {
+  opacity: 0;
+}
+
+/* Where each photo has room for the title (data-spot), and whether it is a
+   dark photo that needs light ink (data-tone); phones held upright keep the
+   title at the foot on its wash, so this is for every other screen. */
+@media not ((max-width: 600px) and (orientation: portrait)) {
+  .intro[data-spot="right"] .hero {
+    --hero-left: auto;
+    --hero-right: var(--gutter);
+    text-align: right;
   }
 
-  .intro[data-rotating] .slide:first-child {
-    opacity: 1;
+  .intro[data-spot="bottom"] .hero {
+    --hero-top: auto;
+    --hero-bottom: calc(var(--space-5) * 3 + var(--icon));
+  }
+
+  .intro[data-tone="light"] {
+    --hero-ink: var(--color-on-orange);
+    --hero-ink-strong: var(--color-on-orange);
   }
 }
 
@@ -156,7 +138,7 @@
 
 .slogan {
   margin: var(--space-3) 0 0;
-  color: var(--color-rust-deep);
+  color: var(--hero-ink-strong, var(--color-rust-deep));
   font-family: var(--font-mono); /* set like the bar's links and the button */
   font-size: var(--text-nav);
   letter-spacing: var(--track-wide);
@@ -164,7 +146,7 @@
 }
 
 .start {
-  --button-fg: var(--color-rust);
+  --button-fg: var(--hero-ink, var(--color-rust));
   margin-top: var(--space-4);
 }
 
@@ -177,7 +159,7 @@
   width: var(--icon-lg);
   height: var(--icon);
   fill: none;
-  stroke: var(--color-rust);
+  stroke: var(--hero-ink, var(--color-rust));
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;

@@ -32,6 +32,13 @@
   --bar-on-fg: var(--color-cream);
 }
 
+/* Over a dark photo in the opening (PhotoIntro's data-tone="light"), the
+   bar keeps its cream, whatever the background. */
+:global(html:has([data-light-under-bar][data-tone="light"])) .header {
+  --bar-fg: var(--color-on-orange);
+  --bar-on-fg: var(--color-orange-top);
+}
+
 /* The wordmark keeps its cream: it sits over the room, not the panel
    (unless the background itself is light). */
 :global(html[data-walk-panel]:not(:has([data-light-backdrop]))) .wordmark {

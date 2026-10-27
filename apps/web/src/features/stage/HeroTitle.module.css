@@ -1,18 +1,19 @@
 /* The title and whatever sits under it: placed at the stage's top left,
-   unless a stage moves it (--hero-top, --hero-bottom, --hero-right). */
+   unless a stage moves it (--hero-top, --hero-right, --hero-bottom,
+   --hero-left) or inks it (--hero-ink, --hero-ink-strong). */
 .hero {
   position: absolute;
   z-index: var(--z-content);
   top: var(--hero-top, var(--nav-h));
   right: var(--hero-right, auto);
   bottom: var(--hero-bottom, auto);
-  left: var(--gutter);
+  left: var(--hero-left, var(--gutter));
   opacity: var(--title, 1);
 }
 
 .title {
   margin: 0 0 0 -0.09em; /* the wide caps sit inside their box: line the ink up with the bar */
-  color: var(--color-rust);
+  color: var(--hero-ink, var(--color-rust));
   font-family: var(--font-sans);
   font-size: var(--text-hero);
   line-height: 0.92;
@@ -31,7 +32,7 @@
 }
 
 .first {
-  color: var(--color-rust-deep);
+  color: var(--hero-ink-strong, var(--color-rust-deep));
 }
 
 /* the second word, a shade fainter */

@@ -1,4 +1,6 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { type CSSProperties, useEffect, useState } from "react";
 import type { StaticImageData } from "next/image";
 import Link from "next/link";
 import button from "@/ui/InkButton.module.css";
@@ -18,23 +20,69 @@ import styles from "./PhotoIntro.module.css";
 /** Where the ceiling meets the window wall, in the photo's own pixels (2000 x 1334): the photo is shown from just below it. */
 const CEILING = 260;
 
-/**
- * With more than one photo, each holds for HOLD_S then crossfades into the
- * next over FADE_S, round and round (the live site's carousel pace). The
- * keyframes in the CSS are cut for SLIDES photos at this pace.
- */
-const HOLD_S = 5;
-const FADE_S = 1.6;
-const SLIDES = 5;
+/** A room for the opening: the photo, where it has plain space for the title, and how to ink the title on it. */
+export type IntroPhoto = {
+  src: StaticImageData;
+  /** Its plain area: top left (as the bar's links), top right, or bottom left. */
+  spot: "left" | "right" | "bottom";
+  /** "ink" (the rust) on a light photo; "light" (cream) on a dark one. */
+  tone: "ink" | "light";
+};
 
-/** `photos`: the room shown, or (exactly SLIDES of them) the rooms shown in turn. All 2000 px wide, at least 1334 tall. */
-export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) {
+const A_FRAME: IntroPhoto = { src: room, spot: "left", tone: "ink" };
+
+/**
+ * With more than one photo, each holds for ROTATE_MS then crossfades into
+ * the next over FADE_MS (the live site's carousel pace). At each turn the
+ * title steps out over SWAP_MS, moves to the next photo's spot, and comes
+ * back in as that photo fades up.
+ */
+const ROTATE_MS = 5000;
+const FADE_MS = 1600;
+const SWAP_MS = 400;
+
+const REDUCED = "(prefers-reduced-motion: reduce)";
+
+/** Which photo is in view, and whether the title is between spots. */
+function useRotation(count: number) {
+  const [active, setActive] = useState(0);
+  const [swapping, setSwapping] = useState(false);
+  useEffect(() => {
+    if (count < 2 || window.matchMedia(REDUCED).matches) return;
+    let swap = 0;
+    const turn = window.setInterval(() => {
+      setSwapping(true);
+      swap = window.setTimeout(() => {
+        setActive((i) => (i + 1) % count);
+        setSwapping(false);
+      }, SWAP_MS);
+    }, ROTATE_MS);
+    return () => {
+      window.clearInterval(turn);
+      window.clearTimeout(swap);
+    };
+  }, [count]);
+  return { active, swapping };
+}
+
+/** `photos`: the room shown, or the rooms shown in turn. All 2000 px wide, at least 1334 tall. */
+export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
   const rotating = photos.length > 1;
-  if (rotating && photos.length !== SLIDES) throw new Error(`PhotoIntro rotates exactly ${SLIDES} photos`);
-  const pace = { "--hold": `${HOLD_S}s`, "--fade": `${FADE_S}s` } as CSSProperties;
+  const { active, swapping } = useRotation(photos.length);
+  const shown = photos[active]!;
+  const pace = { "--fade": `${FADE_MS}ms`, "--swap": `${SWAP_MS}ms` } as CSSProperties;
   return (
     // a light picture under the bar (PlanWalk clears it once the photo has gone); the wordmark at the bar's left
-    <div className={styles.intro} data-intro data-light-under-bar data-wordmark-left data-rotating={rotating || undefined} style={pace}>
+    <div
+      className={styles.intro}
+      data-intro
+      data-light-under-bar
+      data-wordmark-left
+      data-spot={shown.spot}
+      data-tone={shown.tone}
+      data-swapping={swapping || undefined}
+      style={pace}
+    >
       <div className={styles.scene}>
         <svg
           className={styles.room}
@@ -47,13 +95,13 @@ export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) 
           }
         >
           <g className={styles.photo}>
-            {photos.map((photo, i) => (
-              <image key={photo.src} className={styles.slide} href={photo.src} width="2000" height="1334" style={{ "--i": i } as CSSProperties} />
+            {photos.map(({ src }, i) => (
+              <image key={src.src} className={styles.slide} href={src.src} width="2000" height="1334" data-active={i === active || undefined} />
             ))}
           </g>
         </svg>
       </div>
-      <div className={styles.hero}>
+      <div className={`${styles.hero} ${styles.textSwap}`}>
         <HeroTitle>
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
           <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
