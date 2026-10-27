@@ -76,13 +76,9 @@
   opacity: var(--title, 1);
 }
 
-/* The title drawn in outline, a hairline round each letter: the face's
-   lightest weight still reads heavy this large. The orange o's too. */
 .headline {
-  --hero-ink: transparent;
-  --hero-ink-strong: transparent;
-  --hero-accent: transparent;
-  -webkit-text-stroke: 1.25px var(--ink);
+  color: var(--ink);
+  text-shadow: var(--shade);
 }
 
 .info {
@@ -94,6 +90,11 @@
 .foot[data-small="rust"] .info {
   --ink: var(--color-rust-deep);
   --shade: none;
+}
+
+.foot[data-title="rust"] .headline {
+  --hero-ink: var(--ink);
+  --hero-ink-strong: var(--ink);
 }
 
 .accent {
