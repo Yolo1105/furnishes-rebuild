@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from "react";
+import { useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { LandingLoader } from "./LandingLoader";
 
 const REDUCED = "(prefers-reduced-motion: reduce)";
@@ -19,14 +19,28 @@ function useReducedMotion() {
 }
 
 /**
+ * Whether the page has finished loading. Read from the document itself, so a
+ * load that lands before anything listens is never missed; false on the server.
+ */
+function usePageLoaded() {
+  return useSyncExternalStore(
+    (changed) => {
+      window.addEventListener("load", changed);
+      return () => window.removeEventListener("load", changed);
+    },
+    () => document.readyState === "complete",
+    () => false,
+  );
+}
+
+/**
  * The home page's opening screen: the live site's loader, finishing once the
  * page behind it has loaded, then gone for good. While it shows, <html>
  * carries data-loading, and the walk's 3D waits for it to go, so the two never
  * draw at once. With reduced motion asked for, there is no loader at all.
  */
 export function BuildLoader() {
-  // Already loaded if this first renders in the browser after the load event.
-  const [loaded, setLoaded] = useState(() => typeof document !== "undefined" && document.readyState === "complete");
+  const loaded = usePageLoaded();
   const [gone, setGone] = useState(false);
   const reduced = useReducedMotion();
   const showing = !gone && !reduced;
@@ -38,13 +52,6 @@ export function BuildLoader() {
     root.setAttribute("data-loading", "");
     return () => root.removeAttribute("data-loading");
   }, [showing]);
-
-  useEffect(() => {
-    if (loaded) return;
-    const onLoad = () => setLoaded(true);
-    window.addEventListener("load", onLoad, { once: true });
-    return () => window.removeEventListener("load", onLoad);
-  }, [loaded]);
 
   if (!showing) return null;
   return <LandingLoader ready={loaded} allowReveal={loaded} onDone={() => setGone(true)} />;
