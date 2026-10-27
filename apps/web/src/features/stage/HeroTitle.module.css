@@ -1,5 +1,6 @@
-/* The title's type; a page places it, sizes it (--text-hero) and may ink it
-   (--hero-ink). */
+/* The title's type; a page places it, sizes it (--text-hero), may ink it
+   (--hero-ink), and may set its two words on one line (--title-line:
+   inline-block, with --title-gap between them; on two lines unless). */
 .title {
   margin: 0 0 0 -0.05em; /* the caps sit inside their box: line the ink up with what is beside it */
   color: var(--hero-ink, var(--color-rust-deep));
@@ -7,16 +8,18 @@
   font-size: var(--text-hero);
   font-weight: 300;
   line-height: 0.92;
+  white-space: nowrap;
   text-transform: uppercase;
   pointer-events: none;
 }
 
 .word {
-  display: block;
+  display: var(--title-line, block);
   animation: rise var(--dur-title) var(--ease-title) both;
 }
 
 .word + .word {
+  margin-left: var(--title-gap, 0);
   animation-delay: calc(var(--stagger) * 1.5);
 }
 

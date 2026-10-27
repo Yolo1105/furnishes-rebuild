@@ -1,7 +1,8 @@
 import styles from "./HeroTitle.module.css";
 
 /**
- * The landing's title: "Interior / Revolution" on two lines, in Jost Light
+ * The landing's title: "Interior / Revolution" on two lines (or one, if the
+ * page says), in Jost Light
  * caps in rust, closed with a full stop in the orange, the one mark of it,
  * as the live site closes "Welcome home." Each word rises in after the one
  * before. It sets only the type: where it sits and how large is the page's

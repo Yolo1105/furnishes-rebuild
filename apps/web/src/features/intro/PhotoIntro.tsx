@@ -8,8 +8,9 @@ import styles from "./PhotoIntro.module.css";
 
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
- * turn) filling the screen, and at its bottom left the title on two lines,
- * with one quiet line over it: the room's caption, then the slogan. As the
+ * turn) filling the screen, and along its bottom the title on one line
+ * from edge to edge (on phones, two lines at the bottom left), with one
+ * quiet line over it: the room's caption, then the slogan. As the
  * page scrolls (PlanWalk sets --title and --photo) the words go, then the
  * photo fades straight to the plan of one room beneath; from there
  * PlanWalk's side panel tells the rest.
@@ -63,7 +64,7 @@ type Ink = "cream" | "rust";
  */
 export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
 
-const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "cream", small: "cream" } };
+const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "rust", small: "rust" } };
 
 /** `photos`: the room shown, or the rooms shown in turn. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
@@ -101,9 +102,9 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       <div className={styles.foot} data-title={ink.title} data-small={ink.small}>
         {/* one quiet line over the title: the room in view, then the slogan */}
         <p className={styles.info}>
-          {caption}
+          <span>{caption}</span>
           <span className={styles.dot}> · </span>
-          Made for your room, to the millimetre
+          <span>Made for your room, to the millimetre</span>
         </p>
         <div className={styles.headline}>
           <HeroTitle />
