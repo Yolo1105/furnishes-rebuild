@@ -12,18 +12,14 @@ import styles from "./PhotoIntro.module.css";
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
  * turn) filling the screen, dimmed a little and evenly so cream type reads
- * on any of them, and on it the live site's greeting under the bar and, at
- * the foot, the title with a row of what Furnishes does and the way in under
- * it. As the page scrolls (PlanWalk sets --title and --photo) the words go,
+ * on any of them, and on it, at the foot, the title with the slogan and the
+ * way in under it: a few large words, nothing more. As the page scrolls (PlanWalk sets --title and --photo) the words go,
  * then the photo fades straight to the plan of one room beneath; from there
  * PlanWalk's side panel tells the rest.
  */
 
 /** Where the ceiling meets the window wall, in the photos' own pixels (2000 x 1334): they are shown from just below it. */
 const CEILING = 260;
-
-/** What Furnishes does, as the live site's landing tags it. */
-const TAGS = ["AI interiors", "3D layouts", "Custom pieces"] as const;
 
 /**
  * With more than one photo, each holds for ROTATE_MS, then crossfades into
@@ -75,22 +71,10 @@ export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) 
         </svg>
       </div>
 
-      <p className={styles.greeting}>
-        Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
-        <span className={styles.accent}>.</span>
-      </p>
       <div className={styles.foot}>
         <HeroTitle />
         <div className={styles.details}>
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
-          <ul className={styles.tags}>
-            {TAGS.map((tag, i) => (
-              <li key={tag} style={{ "--i": i } as CSSProperties}>
-                <span className={styles.accent}>#</span>
-                {tag}
-              </li>
-            ))}
-          </ul>
           <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
             Explore your journey
           </Link>

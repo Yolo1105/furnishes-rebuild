@@ -111,6 +111,39 @@
   opacity: 0.7;
 }
 
+/* The live site's greeting over the first step, and its tags over the last
+   step's way in: captions, set wide, their marks in the orange. */
+.greeting,
+.tags {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}
+
+.greeting {
+  margin: 0 0 var(--space-2);
+  letter-spacing: 0.22em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+  letter-spacing: 0.18em;
+}
+
+.accent {
+  color: var(--color-orange);
+}
+
+.tags .accent {
+  margin-right: 0.8ch;
+}
+
 .headline {
   position: relative;
   margin: var(--space-3) 0 0;
@@ -206,8 +239,10 @@
   border-radius: 50%;
 }
 
+.greeting,
 .name,
 .body,
+.tags,
 .cta {
   opacity: 0;
   transform: translateY(var(--space-4));
@@ -242,8 +277,10 @@
 .step[data-shown] .line > span,
 .step[data-shown] .card,
 .step[data-shown] .cardArt,
+.step[data-shown] .greeting,
 .step[data-shown] .name,
 .step[data-shown] .body,
+.step[data-shown] .tags,
 .step[data-shown] .cta {
   opacity: 1;
   transform: none;
@@ -323,8 +360,10 @@
   .line > span,
   .card,
   .cardArt,
+  .greeting,
   .name,
   .body,
+  .tags,
   .cta {
     transition: none;
   }

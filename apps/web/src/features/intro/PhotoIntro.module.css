@@ -5,9 +5,8 @@
    scroll is under way (the button stops taking clicks) and data-done once
    the photo has gone.
 
-   The edges are the bar's (--gutter). Three sizes only: the title; the
-   slogan, a step over the bar's links; and captions (the greeting, the
-   tags) a step under, set wide. */
+   The edges are the bar's (--gutter). Two sizes only: the title, and the
+   slogan a step over the bar's links. */
 .intro {
   position: absolute;
   z-index: var(--z-content);
@@ -16,7 +15,6 @@
   --ink: var(--color-on-orange);
   --hero-ink: var(--ink);
   --hero-ink-strong: var(--ink);
-  --text-caption: calc(var(--text-nav) * 0.93);
   --text-slogan: calc(var(--text-nav) * 1.15);
   --text-hero: min(9vw, 17vh);
   --foot-bottom: calc(var(--space-5) * 2 + var(--icon)); /* clear of the arrow */
@@ -61,33 +59,13 @@
   opacity: 1;
 }
 
-.greeting,
 .foot,
 .cue {
   opacity: var(--title, 1);
 }
 
-/* The live site's greeting, a caption just under the bar's wordmark. */
-.greeting {
-  position: absolute;
-  top: calc(var(--nav-h) + var(--space-1));
-  left: var(--gutter);
-  margin: 0;
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  animation: rise var(--dur-title) var(--ease-title) both;
-}
-
-/* the live site's orange, lifted a little so it holds on the dimmed photo */
-.accent {
-  color: color-mix(in srgb, var(--color-orange) 72%, var(--color-on-orange));
-}
-
-/* The foot: the title, and right under it one row of the slogan, the tags
-   and the way in, their feet on one line. */
+/* The foot: the title, and right under it one row of the slogan and the
+   way in, their feet on one line. */
 .foot {
   position: absolute;
   right: var(--gutter);
@@ -122,37 +100,10 @@
   text-wrap: balance;
 }
 
-.tags {
-  display: grid;
-  gap: var(--space-1);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--text-caption);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.tags li {
-  animation: rise var(--dur-title) var(--ease-title) both;
-  animation-delay: calc(var(--stagger) * (5 + var(--i) * 2));
-}
-
-.tags .accent {
-  margin-right: 0.8ch;
-}
-
 .start {
   --button-fg: var(--ink);
   --button-on: var(--color-rust-deep);
   flex-shrink: 0;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--space-4));
-  }
 }
 
 /* Bottom centre, a down arrow (the head only), solid: it rests low, bounces
@@ -209,29 +160,14 @@
     gap: var(--space-4);
   }
 
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1) var(--space-5);
-  }
-
   .details .start {
     display: block; /* over the ink button's inline-block */
     text-align: center;
   }
 }
 
-/* Short phones: no room for the tags as well. */
-@media (max-width: 600px) and (orientation: portrait) and (max-height: 700px) {
-  .details .tags {
-    display: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .cue,
-  .greeting,
-  .tags li {
+  .cue {
     animation: none;
   }
 }

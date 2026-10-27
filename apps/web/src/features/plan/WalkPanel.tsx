@@ -20,12 +20,19 @@ type Step = {
   /** a card above the words: the bookcase drawn, or the finishes */
   card?: "bookcase" | "swatches";
   name?: string;
+  /** the live site's greeting, over the first step: the panel says hello as it comes in */
+  greeting?: boolean;
+  /** what Furnishes does, as the live site's landing tags it, over the last step's way in */
+  tags?: boolean;
   cta?: boolean;
 };
+
+const TAGS = ["AI interiors", "3D layouts", "Custom pieces"] as const;
 
 const STEPS: Step[] = [
   {
     label: "One room",
+    greeting: true,
     lines: ["Every home starts", "with one room."],
     body: "The room you love, drawn to scale: its walls and windows, and the furniture that lives in it.",
   },
@@ -61,6 +68,7 @@ const STEPS: Step[] = [
     label: "Your turn",
     lines: ["Try another layout.", "Make it yours."],
     body: "Turn the sofa, move the table, see what fits. Then start on your own room.",
+    tags: true,
     cta: true,
   },
 ];
@@ -115,6 +123,12 @@ export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
           {steps.map((step) => (
             <section key={step.no} className={styles.step} data-step>
               <div className={styles.stepBody}>
+                {step.greeting && (
+                  <p className={styles.greeting}>
+                    Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
+                    <span className={styles.accent}>.</span>
+                  </p>
+                )}
                 <p className={styles.numeral} aria-hidden="true">
                   {step.no}
                 </p>
@@ -137,6 +151,16 @@ export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
                 )}
                 {step.name && <p className={styles.name}>{step.name}</p>}
                 <p className={styles.body}>{step.body}</p>
+                {step.tags && (
+                  <ul className={styles.tags}>
+                    {TAGS.map((tag) => (
+                      <li key={tag}>
+                        <span className={styles.accent}>#</span>
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {step.cta && (
                   <Link href={routes.studio} className={`${button.button} ${styles.cta}`}>
                     Design your room
