@@ -12,7 +12,8 @@ import styles from "./PhotoIntro.module.css";
 /**
  * The walk's opening, laid over it: a photo of a real room, and on it a
  * page laid out on the bar's grid. The live site's greeting sits just under
- * the bar; at the foot, the title on one side and, on the other, what Furnishes does and the way in. As the page
+ * the bar; at the foot, on the photo's calm side, the title and under it a
+ * row of what Furnishes does and the way in. As the page
  * scrolls (PlanWalk sets --title and --photo) the words go, then the photo
  * fades straight to the plan of one room beneath; from there PlanWalk's side
  * panel tells the rest.
@@ -27,10 +28,10 @@ const TAGS = ["AI interiors", "3D layouts", "Custom pieces"] as const;
 /** A room for the opening: the photo, and how the words sit on it. */
 export type IntroPhoto = {
   src: StaticImageData;
-  /** Which side of the foot is calm enough for the title; what Furnishes does takes the other. */
+  /** Which side of the foot is calm enough for the title and the row of details under it. */
   side: "left" | "right";
-  /** The ink that reads on each: "ink" (the rust) where the photo under it is light, "light" (cream) where it is dark. */
-  ink: { title: Ink; details: Ink };
+  /** The ink that reads there: "ink" (the rust) where the photo is light, "light" (cream) where it is dark. */
+  ink: Ink;
   /** The same for the bar's left (and the greeting under it) and right; rust unless said. */
   bar?: BarInk;
   /** And on phones held upright, which crop the photo differently. */
@@ -42,7 +43,7 @@ type BarInk = { start: Ink; end: Ink };
 
 const INK: BarInk = { start: "ink", end: "ink" };
 
-const A_FRAME: IntroPhoto = { src: room, side: "right", ink: { title: "ink", details: "ink" } };
+const A_FRAME: IntroPhoto = { src: room, side: "right", ink: "ink" };
 
 /**
  * With more than one photo, each holds for ROTATE_MS, then crossfades into
@@ -75,11 +76,9 @@ function Words({ side, ink, bar = INK, phoneBar = INK }: Omit<IntroPhoto, "src">
         Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
         <span className={styles.accent}>.</span>
       </p>
-      <div className={styles.foot} data-side={side}>
-        <div className={styles.headline} data-ink={ink.title}>
-          <HeroTitle />
-        </div>
-        <div className={styles.details} data-ink={ink.details}>
+      <div className={styles.foot} data-side={side} data-ink={ink}>
+        <HeroTitle />
+        <div className={styles.details}>
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
           <ul className={styles.tags}>
             {TAGS.map((tag, i) => (
@@ -111,7 +110,7 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       data-intro
       data-light-under-bar
       data-wordmark-left
-      data-tone={shown.ink.title}
+      data-tone={shown.ink}
       data-bar-start={(shown.bar ?? INK).start}
       data-bar-end={(shown.bar ?? INK).end}
       data-phone-bar-start={(shown.phoneBar ?? INK).start}

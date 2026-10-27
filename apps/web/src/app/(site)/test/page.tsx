@@ -9,32 +9,32 @@ import main2 from "../../../../public/rooms/landing-main-2.jpg";
 /**
  * Ours, then four of the live site's (its cabin from above swapped for a
  * brighter room: it has no calm area), each with the side of its foot calm
- * enough for the title, and the inks that read where the words fall.
+ * enough for the title and its details, and the ink that reads there.
  */
 const ROOMS: IntroPhoto[] = [
-  { src: aFrame, side: "right", ink: { title: "ink", details: "ink" } },
+  { src: aFrame, side: "right", ink: "ink" },
   {
     src: banner2,
     side: "right",
-    ink: { title: "light", details: "light" },
+    ink: "light",
     bar: { start: "light", end: "light" },
     phoneBar: { start: "light", end: "light" },
   },
   {
     src: banner1,
     side: "left",
-    ink: { title: "light", details: "light" },
+    ink: "light",
     bar: { start: "light", end: "ink" },
     phoneBar: { start: "ink", end: "light" },
   },
   {
     src: main2,
     side: "left",
-    ink: { title: "light", details: "ink" },
+    ink: "light",
     bar: { start: "light", end: "ink" },
     phoneBar: { start: "light", end: "light" },
   },
-  { src: bright, side: "left", ink: { title: "ink", details: "ink" }, phoneBar: { start: "light", end: "ink" } },
+  { src: bright, side: "left", ink: "ink", phoneBar: { start: "light", end: "ink" } },
 ];
 
 /** A trial of the landing with its opening photo rotating through rooms, the words laid out for each; no loader. */

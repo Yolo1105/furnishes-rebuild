@@ -93,49 +93,46 @@
   color: var(--color-orange);
 }
 
-/* The foot: the title on one side, the details on the other. data-side
-   says which side the title takes. */
+/* The foot: the title on the photo's calm side (data-side), and right
+   under it the details in one row: the slogan, the tags, the way in. */
 .foot {
   position: absolute;
   right: var(--gutter);
   bottom: var(--foot-bottom);
   left: var(--gutter);
-  display: grid;
-  grid-template-areas: "headline details";
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
   opacity: var(--title, 1);
-  pointer-events: auto;
-}
-
-.foot[data-side="right"] {
-  grid-template-areas: "details headline";
-  grid-template-columns: auto 1fr;
-}
-
-.intro[data-scrolled] .foot {
   pointer-events: none;
 }
 
-.headline {
-  grid-area: headline;
-}
-
-.foot[data-side="right"] .headline {
-  justify-self: end;
+.foot[data-side="right"] {
+  align-items: flex-end;
   text-align: right;
 }
 
-/* What Furnishes does and the way in: a narrow column, set small. */
+.foot > * {
+  pointer-events: auto;
+}
+
+.intro[data-scrolled] .foot > * {
+  pointer-events: none;
+}
+
+/* What Furnishes does and the way in: three short columns, set small,
+   their feet on one line. */
 .details {
-  grid-area: details;
-  max-width: 34ch;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-7);
   color: var(--hero-ink-strong, var(--color-rust-deep));
   font-family: var(--font-mono);
 }
 
 .slogan {
+  max-width: 24ch; /* two lines */
   margin: 0;
   font-size: var(--text-slogan);
   line-height: 1.55;
@@ -147,7 +144,7 @@
 .tags {
   display: grid;
   gap: var(--space-1);
-  margin: var(--space-4) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
   font-size: var(--text-caption);
@@ -167,7 +164,7 @@
 
 .start {
   --button-fg: var(--hero-ink, var(--color-rust));
-  margin-top: var(--space-5);
+  flex-shrink: 0;
 }
 
 @keyframes rise {
@@ -207,6 +204,14 @@
   }
 }
 
+/* Tablets held upright: the screen is narrow for its height, so the title
+   may take more of its width. */
+@media (orientation: portrait) {
+  .intro {
+    --text-hero: min(16vw, 19vh);
+  }
+}
+
 /* Phones held upright: the photo turns to the sitting area (the orange
    chair, the sofa, the window); the greeting stays under the bar, and the
    foot stacks: the title as wide as the screen, the details under it, the
@@ -239,13 +244,7 @@
     --focus-y: 100%;
   }
 
-  .intro .headline[data-ink="light"] {
-    --hero-ink: var(--color-rust);
-    --hero-ink-strong: var(--color-rust-deep);
-  }
-
-  /* on the wash the details are in the rust */
-  .intro .details {
+  .intro .foot[data-ink="light"] {
     --hero-ink: var(--color-rust);
     --hero-ink-strong: var(--color-rust-deep);
   }
@@ -260,18 +259,19 @@
 
   .foot,
   .foot[data-side="right"] {
-    grid-template-areas: "headline" "details";
-    grid-template-columns: 1fr;
+    align-items: stretch;
     gap: var(--space-5);
-  }
-
-  .foot[data-side="right"] .headline {
-    justify-self: start;
     text-align: left;
   }
 
-  .foot .details {
-    max-width: none;
+  .details {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+  }
+
+  .slogan {
+    max-width: 22ch;
   }
 
   .tags {
