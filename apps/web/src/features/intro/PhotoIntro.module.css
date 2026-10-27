@@ -30,44 +30,48 @@
    its ceiling (the viewBox). */
 .frame {
   position: absolute;
+  isolation: isolate; /* the photos' layers stay inside, under the words */
   inset: 0;
   overflow: hidden;
   opacity: var(--photo, 1);
 }
 
+/* Each photo in its own layer, the one in view on top (PhotoIntro marks it
+   data-active). The next is drawn across the last from the right over
+   --fade, a clean edge rather than two photos through each other; the last
+   stays whole under it till covered, then steps back, unseen. */
+.slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 0s var(--fade);
+}
+
+.slide[data-active] {
+  z-index: 1;
+  clip-path: inset(0);
+  transition: clip-path var(--fade) var(--ease-panel);
+}
+
+/* While in view a photo drifts a little closer (--drift); one alone drifts
+   slower, and further. */
 .room {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  transition: transform 0s var(--fade);
 }
 
-/* Each photo drifts a little closer while it is in view (--drift), and
-   crossfades into the next over --fade (PhotoIntro marks the one in view
-   data-active); once it has faded out it goes back, unseen. */
-.slide {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transition:
-    opacity var(--fade) ease-in-out,
-    transform 0s var(--fade);
-}
-
-.slide[data-active] {
-  opacity: 1;
+.slide[data-active] .room {
   transform: scale(1.06);
-  transition:
-    opacity var(--fade) ease-in-out,
-    transform var(--drift) linear;
+  transition: transform var(--drift) linear;
 }
 
-/* one photo alone drifts slower, and further */
-.intro:not([data-rotating]) .slide[data-active] {
+.intro:not([data-rotating]) .slide[data-active] .room {
   transform: scale(1.08);
-  transition:
-    opacity var(--fade) ease-in-out,
-    transform 30s linear;
+  transition: transform 30s linear;
 }
 
 /* Over a bright foot (data-foot="rust"), the words in the rust, bare. */
@@ -91,38 +95,46 @@
   opacity: var(--title, 1);
 }
 
-/* On the bar's grid: the slogan, and the room in view and its count. */
+/* One line over the title, its two ends at the title's: the room in view
+   and its count at the start, the slogan at the end. Both the same small
+   caps, on one baseline. */
 .info {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   gap: var(--space-6);
   font-family: var(--font-mono);
-  text-transform: uppercase;
-}
-
-.slogan {
-  max-width: 24ch; /* two lines */
-  margin: 0;
-  font-size: calc(var(--text-nav) * 1.1);
-  line-height: 1.6;
-  letter-spacing: var(--track);
-}
-
-.caption {
-  margin: 0;
   font-size: var(--text-xs);
   letter-spacing: 0.2em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
+.caption,
+.slogan {
+  margin: 0;
+}
+
+/* the caption rises in with each photo, as its curtain is half drawn */
+.captionText {
+  display: inline-block;
+  animation: rise var(--dur-title) var(--ease-title) calc(var(--fade) * 0.4) both;
+}
+
 .counter {
-  margin-right: 2ch;
+  margin-right: 2.5ch;
   opacity: 0.75;
 }
 
-/* Phones held upright: the title on two lines as wide as the screen, then
-   the room's caption and the slogan. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
+}
+
+/* Phones held upright: the title on two lines as wide as the screen, the
+   caption over it and the slogan under it. */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
     --text-hero: 22vw;
@@ -130,23 +142,34 @@
 
   .foot {
     bottom: var(--space-5);
-    flex-direction: column-reverse;
   }
 
   .info {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+    display: contents;
   }
 
   .caption {
     order: -1;
   }
 
+  .slogan {
+    order: 1;
+    white-space: normal;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide[data-active],
-  .intro:not([data-rotating]) .slide[data-active] {
+  .slide,
+  .slide[data-active] {
+    transition: none;
+  }
+
+  .slide[data-active] .room,
+  .intro:not([data-rotating]) .slide[data-active] .room {
     transform: none;
+  }
+
+  .captionText {
+    animation: none;
   }
 }
