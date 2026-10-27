@@ -2,7 +2,7 @@
 .hero {
   position: absolute;
   z-index: var(--z-content);
-  top: calc(var(--nav-h) + var(--space-4));
+  top: var(--nav-h);
   left: var(--gutter);
   opacity: var(--title, 1);
 }
