@@ -1,22 +1,12 @@
-/* The title and whatever sits under it: placed at the stage's top left,
-   unless a stage moves it (--hero-top, --hero-right, --hero-bottom,
-   --hero-left) or inks it (--hero-ink, --hero-ink-strong). */
-.hero {
-  position: absolute;
-  z-index: var(--z-content);
-  top: var(--hero-top, var(--nav-h));
-  right: var(--hero-right, auto);
-  bottom: var(--hero-bottom, auto);
-  left: var(--hero-left, var(--gutter));
-  opacity: var(--title, 1);
-}
-
+/* The title's type; a page places it, sizes it (--text-hero) and may ink it
+   (--hero-ink, --hero-ink-strong). */
 .title {
-  margin: 0 0 0 -0.09em; /* the wide caps sit inside their box: line the ink up with the bar */
+  margin: 0 0 0 -0.06em; /* the caps sit inside their box: line the ink up with what is beside it */
   color: var(--hero-ink, var(--color-rust));
   font-family: var(--font-sans);
   font-size: var(--text-hero);
-  line-height: 0.92;
+  line-height: 0.86;
+  letter-spacing: -0.01em; /* large caps read loose at their book spacing */
   text-transform: uppercase;
   pointer-events: none;
 }
@@ -24,21 +14,25 @@
 .first,
 .second {
   display: block;
-  font-size: 0.7em;
-  font-variation-settings:
-    "wght" 100,
-    "wdth" 118;
   animation: rise var(--dur-title) var(--ease-title) both;
 }
 
+/* the first word: a hairline at the face's widest */
 .first {
   color: var(--hero-ink-strong, var(--color-rust-deep));
+  font-size: 0.7em;
+  font-variation-settings:
+    "wght" 100,
+    "wdth" 125;
 }
 
-/* the second word, a shade fainter */
+/* the second: fainter, a little heavier and narrower, as wide as the first */
 .second {
-  --shown: 0.9;
-  font-size: 0.518em; /* a step under the first word: as wide as it, for this face */
+  --shown: 0.88;
+  font-size: 0.62em;
+  font-variation-settings:
+    "wght" 260,
+    "wdth" 100;
   animation-delay: calc(var(--stagger) * 1.5);
 }
 

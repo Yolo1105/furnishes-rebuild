@@ -10,11 +10,12 @@ import room from "../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./PhotoIntro.module.css";
 
 /**
- * The walk's opening, laid over it: a photo of a real room, the live site's
- * greeting, the title, what Furnishes does and the way in. As the page scrolls (PlanWalk sets --intro, 0 to 1) the title
- * goes, then the photo fades straight to the plan of one room beneath; from
- * there PlanWalk's side panel tells the rest (01 the room, 02 the whole
- * flat as it grows in round it, and on).
+ * The walk's opening, laid over it: a photo of a real room, and on it a
+ * page laid out on the bar's grid. The live site's greeting sits just under
+ * the bar; at the foot, the title on one side and, on the other, what Furnishes does and the way in. As the page
+ * scrolls (PlanWalk sets --title and --photo) the words go, then the photo
+ * fades straight to the plan of one room beneath; from there PlanWalk's side
+ * panel tells the rest.
  */
 
 /** Where the ceiling meets the window wall, in the photo's own pixels (2000 x 1334): the photo is shown from just below it. */
@@ -23,14 +24,14 @@ const CEILING = 260;
 /** What Furnishes does, as the live site's landing tags it. */
 const TAGS = ["AI interiors", "3D layouts", "Custom pieces"] as const;
 
-/** A room for the opening: the photo, where it has plain space for the title, and how to ink the title on it. */
+/** A room for the opening: the photo, and how the words sit on it. */
 export type IntroPhoto = {
   src: StaticImageData;
-  /** Its plain area: top left (as the bar's links), top right, or bottom left. */
-  spot: "left" | "right" | "bottom";
-  /** The title's ink: "ink" (the rust) where its spot is light; "light" (cream) where it is dark. */
-  tone: Ink;
-  /** The same for the bar's left and right, under which the photo may differ; rust unless said. */
+  /** Which side of the foot is calm enough for the title; what Furnishes does takes the other. */
+  side: "left" | "right";
+  /** The ink that reads on each: "ink" (the rust) where the photo under it is light, "light" (cream) where it is dark. */
+  ink: { title: Ink; details: Ink };
+  /** The same for the bar's left (and the greeting under it) and right; rust unless said. */
   bar?: BarInk;
   /** And on phones held upright, which crop the photo differently. */
   phoneBar?: BarInk;
@@ -39,13 +40,15 @@ export type IntroPhoto = {
 type Ink = "ink" | "light";
 type BarInk = { start: Ink; end: Ink };
 
-const A_FRAME: IntroPhoto = { src: room, spot: "left", tone: "ink" };
+const INK: BarInk = { start: "ink", end: "ink" };
+
+const A_FRAME: IntroPhoto = { src: room, side: "right", ink: { title: "ink", details: "ink" } };
 
 /**
  * With more than one photo, each holds for ROTATE_MS, then crossfades into
  * the next over FADE_MS (the live site's carousel pace). Each photo carries
- * its own copy of the title, set in its own spot and ink, and the copy fades
- * with its photo: the title goes as its photo goes and comes as the next
+ * its own copy of the words, laid out and inked for it, and the copy fades
+ * with its photo: the words go as their photo goes and come as the next
  * comes, never apart from the picture under it.
  */
 const ROTATE_MS = 5000;
@@ -64,30 +67,34 @@ function useRotation(count: number) {
   return photo;
 }
 
-/** The greeting, the title, what Furnishes does and the way in. */
-function Words() {
+/** The words, laid out for one photo. */
+function Words({ side, ink, bar = INK, phoneBar = INK }: Omit<IntroPhoto, "src">) {
   return (
-    <HeroTitle
-      greeting={
-        <p className={styles.greeting}>
-          Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
-          <span className={styles.accent}>.</span>
-        </p>
-      }
-    >
-      <p className={styles.slogan}>Made for your room, to the millimetre.</p>
-      <ul className={styles.tags}>
-        {TAGS.map((tag, i) => (
-          <li key={tag} style={{ "--i": i } as CSSProperties}>
-            <span className={styles.accent}>#</span>
-            {tag}
-          </li>
-        ))}
-      </ul>
-      <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
-        Explore your journey
-      </Link>
-    </HeroTitle>
+    <>
+      <p className={styles.greeting} data-ink={bar.start} data-phone-ink={phoneBar.start}>
+        Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
+        <span className={styles.accent}>.</span>
+      </p>
+      <div className={styles.foot} data-side={side}>
+        <div className={styles.headline} data-ink={ink.title}>
+          <HeroTitle />
+        </div>
+        <div className={styles.details} data-ink={ink.details}>
+          <p className={styles.slogan}>Made for your room, to the millimetre.</p>
+          <ul className={styles.tags}>
+            {TAGS.map((tag, i) => (
+              <li key={tag} style={{ "--i": i } as CSSProperties}>
+                <span className={styles.accent}>#</span>
+                {tag}
+              </li>
+            ))}
+          </ul>
+          <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
+            Explore your journey
+          </Link>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -95,6 +102,7 @@ function Words() {
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
   const rotating = photos.length > 1;
   const photo = useRotation(photos.length);
+  const shown = photos[photo]!;
   const pace = { "--fade": `${FADE_MS}ms` } as CSSProperties;
   return (
     // a light picture under the bar (PlanWalk clears it once the photo has gone); the wordmark at the bar's left
@@ -103,11 +111,11 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       data-intro
       data-light-under-bar
       data-wordmark-left
-      data-tone={photos[photo]!.tone}
-      data-bar-start={photos[photo]!.bar?.start ?? "ink"}
-      data-bar-end={photos[photo]!.bar?.end ?? "ink"}
-      data-phone-bar-start={photos[photo]!.phoneBar?.start ?? "ink"}
-      data-phone-bar-end={photos[photo]!.phoneBar?.end ?? "ink"}
+      data-tone={shown.ink.title}
+      data-bar-start={(shown.bar ?? INK).start}
+      data-bar-end={(shown.bar ?? INK).end}
+      data-phone-bar-start={(shown.phoneBar ?? INK).start}
+      data-phone-bar-end={(shown.phoneBar ?? INK).end}
       style={pace}
     >
       <div className={styles.scene}>
@@ -128,17 +136,10 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
           </g>
         </svg>
       </div>
-      {/* the title, once per photo (only the one in view can be read or clicked) */}
-      {photos.map(({ src, spot, tone }, i) => (
-        <div
-          key={src.src}
-          className={`${styles.hero} ${styles.copy}`}
-          data-spot={spot}
-          data-tone={tone}
-          data-active={i === photo || undefined}
-          inert={i !== photo}
-        >
-          <Words />
+      {/* the words, once per photo (only the set in view can be read or clicked) */}
+      {photos.map(({ src, ...layout }, i) => (
+        <div key={src.src} className={styles.copy} data-active={i === photo || undefined} inert={i !== photo}>
+          <Words {...layout} />
         </div>
       ))}
       {/* the page goes on below */}
