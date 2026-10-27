@@ -8,12 +8,11 @@ import styles from "./PhotoIntro.module.css";
 
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
- * turn) filling the screen, and along its foot the title on one line from
- * edge to edge, with one line of small words over it: the room's caption
- * at its start, the slogan at its end. As the page scrolls
- * (PlanWalk sets --title and --photo) the words go, then the photo fades
- * straight to the plan of one room beneath; from there PlanWalk's side
- * panel tells the rest.
+ * turn) filling the screen, and at its bottom left the title on two lines,
+ * with one quiet line over it: the room's caption, then the slogan. As the
+ * page scrolls (PlanWalk sets --title and --photo) the words go, then the
+ * photo fades straight to the plan of one room beneath; from there
+ * PlanWalk's side panel tells the rest.
  */
 
 /** Where the ceiling meets the window wall, in the photos' own pixels (2000 x 1334): they are shown from just below it. */
@@ -64,7 +63,7 @@ type Ink = "cream" | "rust";
  */
 export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
 
-const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "rust", small: "rust" } };
+const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "cream", small: "cream" } };
 
 /** `photos`: the room shown, or the rooms shown in turn. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
@@ -100,13 +99,12 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
 
       {/* the words, set for the photo in view: they stay, and switch with it */}
       <div className={styles.foot} data-title={ink.title} data-small={ink.small}>
-        {/* one line over the title: the room at its start, the slogan at its end */}
-        <div className={styles.info}>
-          <p className={styles.caption}>{caption}</p>
-          <p className={styles.slogan}>
-            Made for your room, to the millimetre<span className={styles.accent}>.</span>
-          </p>
-        </div>
+        {/* one quiet line over the title: the room in view, then the slogan */}
+        <p className={styles.info}>
+          {caption}
+          <span className={styles.dot}> · </span>
+          Made for your room, to the millimetre
+        </p>
         <div className={styles.headline}>
           <HeroTitle />
         </div>

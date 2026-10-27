@@ -15,8 +15,8 @@
   --hero-ink: var(--ink);
   /* only a wide, soft one: a tight shadow thickens the hairline */
   --shade: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
-  /* the title on one line fills the width between the bar's edges */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 9.72);
+  /* the title: large, but never taller than the screen can spare */
+  --text-hero: min(8.2vw, 14vh);
 }
 
 .intro[data-done] {
@@ -53,29 +53,23 @@
   height: 100%;
 }
 
-/* The words along the bottom: the line of small words, then the title,
-   from edge to edge. They stay as the photos change; their inks and the
-   caption switch to the next photo's halfway through its fade. Each part in
-   cream with a soft shadow round its letters (no box, no edge), or in the
-   rust, bare, where the photo is bright under it (data-title, data-small =
-   "rust"). */
+/* The words at the bottom left: one quiet line, then the title. They stay
+   as the photos change; their inks and the caption switch to the next
+   photo's halfway through its fade. Each part in cream with a soft shadow
+   round its letters (no box, no edge), or in the rust, bare, where the photo
+   is bright under it (data-title, data-small = "rust"). */
 .foot {
   position: absolute;
-  right: var(--gutter);
-  bottom: var(--space-4);
+  bottom: calc(var(--space-7) + var(--space-2));
   left: var(--gutter);
+  max-width: calc(100% - 2 * var(--gutter));
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
   opacity: var(--title, 1);
 }
 
-.headline {
-  color: var(--ink);
-  text-shadow: var(--shade);
-}
-
-
+.headline,
 .info {
   color: var(--ink);
   text-shadow: var(--shade);
@@ -91,52 +85,29 @@
   --hero-ink: var(--ink);
 }
 
-.accent {
+/* the room in view, then the slogan, in small caps on one line */
+.info {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.dot {
   color: var(--color-orange);
 }
 
-/* One line over the title, its two ends at the title's: the room in view
-   at the start, the slogan at the end. Both the same small caps, on one
-   baseline. */
-.info {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-6);
-  font-family: var(--font-mono);
-  font-size: calc(var(--text-nav) * 1.15); /* a step over the bar's links */
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.caption,
-.slogan {
-  margin: 0;
-}
-
-/* Phones held upright: the title on two lines as wide as the screen, the
-   caption over it and the slogan under it. */
+/* Phones held upright: the title a little smaller, "Revolution" filling the
+   width; the line over it may wrap. */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
-    --text-hero: calc((100vw - 2 * var(--gutter)) / 5.56); /* "Revolution", the longer line, fills it */
+    --text-hero: calc((100vw - 2 * var(--gutter)) / 6.2);
   }
 
   .foot {
-    bottom: var(--space-5);
-  }
-
-  .info {
-    display: contents;
-  }
-
-  .caption {
-    order: -1;
-  }
-
-  .slogan {
-    order: 1;
-    white-space: normal;
+    bottom: var(--space-6);
+    gap: var(--space-4);
   }
 }
 

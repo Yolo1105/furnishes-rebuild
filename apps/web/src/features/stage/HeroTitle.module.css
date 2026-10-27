@@ -1,45 +1,28 @@
 /* The title's type; a page places it, sizes it (--text-hero) and may ink it
    (--hero-ink). */
 .title {
-  margin: 0 0 0 -0.04em; /* the caps sit inside their box: line the ink up with what is beside it */
+  margin: 0 0 0 -0.05em; /* the caps sit inside their box: line the ink up with what is beside it */
   color: var(--hero-ink, var(--color-rust-deep));
   font-family: var(--font-title);
   font-size: var(--text-hero);
-  font-weight: 200;
-  line-height: 0.86;
-  white-space: nowrap;
+  font-weight: 300;
+  line-height: 0.92;
   text-transform: uppercase;
   pointer-events: none;
 }
 
 .word {
-  display: inline-block;
+  display: block;
   animation: rise var(--dur-title) var(--ease-title) both;
 }
 
 .word + .word {
-  margin-left: 0.3em;
   animation-delay: calc(var(--stagger) * 1.5);
 }
 
-/* the marked letters in the orange, whatever ink the rest is in */
-.accent {
+/* the full stop in the orange, whatever ink the rest is in */
+.stop {
   color: var(--color-orange);
-}
-
-/* Phones held upright: no room for one line; the words stack. */
-@media (max-width: 600px) and (orientation: portrait) {
-  .title {
-    white-space: normal;
-  }
-
-  .word {
-    display: block;
-  }
-
-  .word + .word {
-    margin-left: 0;
-  }
 }
 
 @keyframes rise {
