@@ -14,7 +14,8 @@
   --ink: var(--color-on-orange);
   --hero-ink: var(--ink);
   /* only a wide, soft one: a tight shadow thickens the hairline */
-  --shade: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
+  --shade-soft: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
+  --shade: var(--shade-soft);
   /* the title on one line fills the width between the bar's edges */
   --text-hero: calc((100vw - 2 * var(--gutter)) / 9.72);
 }
@@ -53,20 +54,21 @@
   height: 100%;
 }
 
-/* The words along the bottom: one quiet line, then the title on one line
-   from edge to edge. They stay as the photos change; their inks and the
-   caption switch to the next photo's halfway through its fade. Each part in
-   cream with a soft shadow round its letters (no box, no edge), or in the
-   rust, bare, where the photo is bright under it (data-title, data-small =
-   "rust"). */
-.foot {
+/* The words, as a masthead: the title on one line from edge to edge just
+   under the bar, where the photos are calm (wall, window, ceiling), and one
+   quiet line under it, the slogan at its start and the room at its end;
+   the furniture below is left clear. They stay as the photos change; their
+   inks and the caption switch to the next photo's halfway through its fade.
+   Cream with a soft shadow round the letters (no box, no edge), or the rust,
+   bare, where the photo is bright up there (data-top = "rust"). */
+.words {
   position: absolute;
+  top: var(--nav-h);
   right: var(--gutter);
-  bottom: var(--space-4);
   left: var(--gutter);
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   opacity: var(--title, 1);
   --title-line: inline-block;
   --title-gap: 0.3em;
@@ -78,17 +80,31 @@
   text-shadow: var(--shade);
 }
 
-.foot[data-title="rust"] .headline,
-.foot[data-small="rust"] .info {
+.words[data-top="rust"] :is(.headline, .info) {
   --ink: var(--color-rust-deep);
+  --hero-ink: var(--ink);
   --shade: none;
 }
 
-.foot[data-title="rust"] .headline {
-  --hero-ink: var(--ink);
+/* Dark on the left and bright on the right up there (data-top="split"):
+   the masthead turns from cream to the rust across the screen, and the line
+   under it starts in cream and ends in the rust. (Phones set their words at
+   the foot, inked their own way.) */
+@media not ((max-width: 600px) and (orientation: portrait)) {
+  .words[data-top="split"] .headline {
+    --shade: none;
+    --hero-ink: transparent;
+    background: linear-gradient(to right, var(--color-on-orange) 50%, var(--color-rust-deep) 62%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .words[data-top="split"] .caption {
+    color: var(--color-rust-deep);
+    text-shadow: none;
+  }
 }
 
-/* the room in view at the line's start, the slogan at its end */
 .info {
   display: flex;
   justify-content: space-between;
@@ -107,31 +123,55 @@
   color: var(--color-orange);
 }
 
-/* Phones held upright: the title on two lines at the bottom left,
-   "Revolution" filling the width; over it the room, an orange dot and the
-   slogan run on as one line, wrapping as they need. */
+/* Phones held upright: the words at the bottom left instead, the room, an
+   orange dot and the slogan as one line wrapping as it needs, then the title
+   on two lines, "Revolution" filling the width. Inked for the photo's foot
+   (data-title, data-small). */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
     --text-hero: calc((100vw - 2 * var(--gutter)) / 6.2);
   }
 
-  .foot {
+  .words {
+    top: auto;
     right: auto;
     bottom: var(--space-6);
-    gap: var(--space-4);
+    flex-direction: column-reverse;
     max-width: calc(100% - 2 * var(--gutter));
     --title-line: block;
     --title-gap: 0;
   }
 
+  .words[data-top] :is(.headline, .info) {
+    --ink: var(--color-on-orange);
+    --hero-ink: var(--ink);
+    --shade: var(--shade-soft);
+  }
+
+  .words[data-title="rust"] .headline,
+  .words[data-small="rust"] .info {
+    --ink: var(--color-rust-deep);
+    --hero-ink: var(--ink);
+    --shade: none;
+  }
+
   .info {
-    display: block;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0;
     font-size: var(--text-nav);
     white-space: normal;
   }
 
+  /* the room first, then the dot, then the slogan */
+  .caption {
+    order: -2;
+  }
+
   .dot {
     display: inline;
+    order: -1;
+    white-space: pre;
   }
 }
 

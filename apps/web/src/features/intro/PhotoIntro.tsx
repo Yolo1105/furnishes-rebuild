@@ -8,9 +8,10 @@ import styles from "./PhotoIntro.module.css";
 
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
- * turn) filling the screen, and along its bottom the title on one line
- * from edge to edge (on phones, two lines at the bottom left), with one
- * quiet line over it: the room's caption, then the slogan. As the
+ * turn) filling the screen, and over it, like a magazine's masthead, the
+ * title on one line from edge to edge under the bar, with one quiet line
+ * under it: the slogan, and the room in view. On phones the words sit at
+ * the bottom left instead, the title on two lines. As the
  * page scrolls (PlanWalk sets --title and --photo) the words go, then the
  * photo fades straight to the plan of one room beneath; from there
  * PlanWalk's side panel tells the rest.
@@ -61,10 +62,15 @@ type Ink = "cream" | "rust";
 
 /**
  * A room for the opening: the photo (2000 x 1334), its caption, and the ink
- * that reads on it under the bar, under the title, and under the small words
- * over the title (the orange marks keep their orange whatever these are).
+ * that reads on it under the bar and the masthead under it, and, on phones,
+ * under the title and the small words at its foot.
  */
-export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
+export type IntroPhoto = {
+  src: StaticImageData;
+  caption: string;
+  /** `top`, the masthead's, defaults to the bar's; "split" where the photo is dark on the left and bright on the right up there. */
+  ink: { bar: Ink; top?: Ink | "split"; title: Ink; small: Ink };
+};
 
 
 /** `photos`: the room shown, or the rooms shown in turn. */
@@ -100,16 +106,16 @@ export function PhotoIntro({ photos }: { photos: IntroPhoto[] }) {
       </div>
 
       {/* the words, set for the photo in view: they stay, and switch with it */}
-      <div className={styles.foot} data-title={ink.title} data-small={ink.small}>
-        {/* one quiet line over the title: the room in view, then the slogan */}
-        <p className={styles.info}>
-          <span>{caption}</span>
-          <span className={styles.dot}> · </span>
-          <span>Made for your room, to the millimetre</span>
-        </p>
+      <div className={styles.words} data-top={ink.top ?? ink.bar} data-title={ink.title} data-small={ink.small}>
         <div className={styles.headline}>
           <HeroTitle />
         </div>
+        {/* one quiet line with the title: the slogan, and the room in view */}
+        <p className={styles.info}>
+          <span className={styles.slogan}>Made for your room, to the millimetre</span>
+          <span className={styles.dot}> · </span>
+          <span className={styles.caption}>{caption}</span>
+        </p>
       </div>
     </div>
   );
