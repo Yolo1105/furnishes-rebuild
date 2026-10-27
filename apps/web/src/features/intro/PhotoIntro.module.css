@@ -21,9 +21,10 @@
   inset: 0;
   /* How strongly the light veil (below) calms the photo, and how far it
      reaches: faint on wide screens, where plain wall sits behind the title;
-     stronger on narrow ones, where the busy window frames do. */
-  --veil: 65%;
-  --veil-reach: 75% 65%;
+     stronger on narrow ones, where the busy window frames do. Light, so
+     the photo stays clear: just enough to steady the thin ink. */
+  --veil: 45%;
+  --veil-reach: 60% 55%;
 }
 
 /* A light veil over the photo's top left, under the bar and the title, so
@@ -38,15 +39,15 @@
       color-mix(in srgb, var(--color-paper) var(--veil), transparent) 35%,
       transparent
     ),
-    linear-gradient(color-mix(in srgb, var(--color-paper) var(--veil), transparent), transparent calc(var(--nav-h) * 2));
+    linear-gradient(color-mix(in srgb, var(--color-paper) 35%, transparent), transparent calc(var(--nav-h) * 1.5));
   opacity: var(--title, 1);
   pointer-events: none;
 }
 
 @media (max-width: 900px) {
   .scene {
-    --veil: 78%;
-    --veil-reach: 120% 75%;
+    --veil: 58%;
+    --veil-reach: 80% 60%;
   }
 }
 
