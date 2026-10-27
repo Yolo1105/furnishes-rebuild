@@ -110,6 +110,40 @@
   opacity: var(--photo, 1);
 }
 
+/* Rotating: every photo (--i, from 0) runs the same loop, a hold apart, and
+   the first starts already in. Cut for PhotoIntro's SLIDES (5): each has a
+   fifth of the loop, 20%, to fade in (FADE_S of the 25s loop, 6.4%) and
+   hold, then fades out as the next comes in. */
+.intro[data-rotating] .slide {
+  opacity: 0;
+  animation: turn calc(var(--hold) * 5) linear infinite;
+  animation-delay: calc(var(--i) * var(--hold) - var(--fade));
+}
+
+@keyframes turn {
+  0% {
+    opacity: 0;
+  }
+  6.4%,
+  20% {
+    opacity: 1;
+  }
+  26.4%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro[data-rotating] .slide {
+    animation: none;
+  }
+
+  .intro[data-rotating] .slide:first-child {
+    opacity: 1;
+  }
+}
+
 /* The title and the way in, until the scroll starts. */
 .hero {
   pointer-events: auto;
