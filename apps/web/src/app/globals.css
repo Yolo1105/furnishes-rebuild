@@ -28,6 +28,7 @@
   /* Type */
   --font-sans: var(--font-archivo), "Archivo", sans-serif;
   --font-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
+  --font-title: var(--font-jost), "Jost", sans-serif; /* the landing title, Thin */
   --text-2xs: 10.5px;
   --text-xs: 11px;
   --text-sm: 12px;

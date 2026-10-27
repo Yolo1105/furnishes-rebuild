@@ -108,7 +108,7 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
           </p>
         </div>
         <div className={styles.headline}>
-          <HeroTitle line />
+          <HeroTitle />
         </div>
       </div>
     </div>

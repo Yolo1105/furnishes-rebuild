@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Archivo, Space_Mono } from "next/font/google";
+import { Archivo, Jost, Space_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { DEMO_COOKIE } from "@/features/auth/demo-account";
 import { DemoSessionProvider } from "@/features/auth/demo-session";
 import "./globals.css";
 
-// The same two faces as the live site (furnishes_prod).
+// The same two faces as the live site (furnishes_prod), and one for the landing title.
 const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-archivo",
   display: "swap",
   axes: ["wdth"],
+});
+
+// The landing title's face: Jost at its Thin, finer than Archivo goes.
+const jost = Jost({
+  subsets: ["latin"],
+  weight: "100",
+  variable: "--font-jost",
+  display: "swap",
 });
 
 const spaceMono = Space_Mono({
@@ -31,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Browser extensions and the page's own scripts (the walk marks <html> as
   // its panel comes in) add attributes to <html>; React need not warn of them.
   return (
-    <html lang="en" className={`${archivo.variable} ${spaceMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} ${jost.variable} ${spaceMono.variable}`} suppressHydrationWarning>
       <body>
         <DemoSessionProvider initial={demo}>{children}</DemoSessionProvider>
       </body>

@@ -1,74 +1,25 @@
 /* The title's type; a page places it, sizes it (--text-hero) and may ink it
-   (--hero-ink, --hero-ink-strong). */
+   (--hero-ink). */
 .title {
-  margin: 0 0 0 -0.06em; /* the caps sit inside their box: line the ink up with what is beside it */
-  color: var(--hero-ink, var(--color-rust));
-  font-family: var(--font-sans);
+  margin: 0 0 0 -0.04em; /* the caps sit inside their box: line the ink up with what is beside it */
+  color: var(--hero-ink, var(--color-rust-deep));
+  font-family: var(--font-title);
   font-size: var(--text-hero);
+  font-weight: 100;
   line-height: 0.86;
-  letter-spacing: -0.01em; /* large caps read loose at their book spacing */
+  white-space: nowrap;
   text-transform: uppercase;
   pointer-events: none;
 }
 
-.first,
-.second {
-  display: block;
+.word {
+  display: inline-block;
   animation: rise var(--dur-title) var(--ease-title) both;
 }
 
-/* the first word: a hairline at the face's widest */
-.first {
-  color: var(--hero-ink-strong, var(--color-rust-deep));
-  font-size: 0.7em;
-  font-variation-settings:
-    "wght" 100,
-    "wdth" 125;
-}
-
-/* the second: fainter, a little heavier and narrower, as wide as the first */
-.second {
-  --shown: 0.88;
-  font-size: 0.62em;
-  font-variation-settings:
-    "wght" 260,
-    "wdth" 100;
-  animation-delay: calc(var(--stagger) * 1.5);
-}
-
-/* On one line: both words one size and one style, the hairline narrow. */
-.line {
-  white-space: nowrap;
-}
-
-.line .first,
-.line .second {
-  display: inline-block;
-  font-size: 1em;
-  /* narrow, so the hairline letters stand slim and tall */
-  font-variation-settings:
-    "wght" 100,
-    "wdth" 88;
-}
-
-/* the second word set just as the first */
-.line .second {
-  --shown: 1;
+.word + .word {
   margin-left: 0.3em;
-  color: var(--hero-ink-strong, var(--color-rust-deep));
-}
-
-/* Phones held upright: no room for one line; the words stack again. */
-@media (max-width: 600px) and (orientation: portrait) {
-  .line {
-    white-space: normal;
-  }
-
-  .line .first,
-  .line .second {
-    display: block;
-    margin-left: 0;
-  }
+  animation-delay: calc(var(--stagger) * 1.5);
 }
 
 /* the o's in the orange, whatever ink the rest is in */
@@ -76,24 +27,30 @@
   color: var(--color-orange);
 }
 
+/* Phones held upright: no room for one line; the words stack. */
+@media (max-width: 600px) and (orientation: portrait) {
+  .title {
+    white-space: normal;
+  }
+
+  .word {
+    display: block;
+  }
+
+  .word + .word {
+    margin-left: 0;
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
     transform: translateY(var(--space-4));
   }
-  to {
-    opacity: var(--shown, 1);
-    transform: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .first,
-  .second {
+  .word {
     animation: none;
-  }
-
-  .second {
-    opacity: var(--shown);
   }
 }
