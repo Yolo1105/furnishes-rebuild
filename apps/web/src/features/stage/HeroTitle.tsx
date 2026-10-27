@@ -2,9 +2,9 @@ import styles from "./HeroTitle.module.css";
 
 /**
  * The landing's title: "Interior / Revolution" on two lines (or one, if the
- * page says), in Jost Light caps in rust. Each word rises in after the one
- * before. It sets only the type: where it sits and how large is the page's
- * to say (--text-hero), and a page may ink it (--hero-ink).
+ * page says), in Jost ExtraLight caps in rust. Each word rises in after the
+ * one before. It sets only the type: where it sits and how large is the
+ * page's to say (--text-hero), and a page may ink it (--hero-ink).
  */
 export function HeroTitle() {
   return (

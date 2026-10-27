@@ -16,7 +16,7 @@
   /* only a wide, soft one: a tight shadow thickens the hairline */
   --shade: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
   /* the title on one line fills the width between the bar's edges */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 9.99);
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 9.72);
 }
 
 .intro[data-done] {

@@ -6,7 +6,7 @@
   color: var(--hero-ink, var(--color-rust-deep));
   font-family: var(--font-title);
   font-size: var(--text-hero);
-  font-weight: 300;
+  font-weight: 200;
   line-height: 0.92;
   white-space: nowrap;
   text-transform: uppercase;
