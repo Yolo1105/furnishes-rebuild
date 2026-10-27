@@ -1,0 +1,98 @@
+/* A stage's background, under whatever stands on it. */
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The playground's background (furnishes-playground globals.css), as it is
+   there: its colours named once here. */
+.peach {
+  --peach-paper: #fff4e3;
+  --peach-mid: #ffd1ad;
+  --peach-deep: #f8b78a;
+  --peach-blob-1: rgb(255 232 200 / 0.85);
+  --peach-blob-2: rgb(255 198 156 / 0.7);
+  --peach-blob-3: rgb(255 248 235 / 0.9);
+  background: linear-gradient(135deg, var(--peach-paper) 0%, var(--peach-mid) 55%, var(--peach-deep) 100%);
+}
+
+/* Behind everything, the same paper, so nothing darker shows at the page's edges. */
+:global(html:has([data-light-backdrop])) {
+  background: var(--color-paper);
+}
+
+/* Three soft blobs drifting on their own loops (29s, 41s, 53s), so the
+   whole never quite repeats. */
+.blob {
+  position: absolute;
+  width: 90vmax;
+  height: 90vmax;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.one {
+  top: -20%;
+  left: -25%;
+  background: radial-gradient(circle, var(--peach-blob-1) 0%, transparent 60%);
+  animation: drift-1 29s ease-in-out infinite;
+}
+
+.two {
+  top: -10%;
+  right: -30%;
+  background: radial-gradient(circle, var(--peach-blob-2) 0%, transparent 60%);
+  animation: drift-2 41s ease-in-out infinite;
+}
+
+.three {
+  bottom: -25%;
+  left: 10%;
+  background: radial-gradient(circle, var(--peach-blob-3) 0%, transparent 60%);
+  animation: drift-3 53s ease-in-out infinite;
+}
+
+@keyframes drift-1 {
+  22% {
+    transform: translate(35vmax, 18vmax);
+  }
+  47% {
+    transform: translate(20vmax, 40vmax);
+  }
+  71% {
+    transform: translate(-12vmax, 28vmax);
+  }
+}
+
+@keyframes drift-2 {
+  19% {
+    transform: translate(-28vmax, 22vmax);
+  }
+  43% {
+    transform: translate(-45vmax, -8vmax);
+  }
+  68% {
+    transform: translate(-14vmax, 35vmax);
+  }
+}
+
+@keyframes drift-3 {
+  27% {
+    transform: translate(28vmax, -32vmax);
+  }
+  54% {
+    transform: translate(45vmax, 8vmax);
+  }
+  79% {
+    transform: translate(8vmax, -22vmax);
+  }
+}
+
+/* With less motion asked for, the blobs stay where they start. */
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none;
+  }
+}

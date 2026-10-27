@@ -1,16 +1,14 @@
-import { LivingGradient } from "./LivingGradient";
+import { Backdrop } from "./Backdrop";
 import styles from "./Stage.module.css";
-import { WASH_CSS } from "./wash";
 
 /**
- * A full-height section on the site's moving orange-to-cream wash. Whatever
- * is passed in sits above the background, centred and clear of the bar.
+ * A full-height section on the site's background (Backdrop). Whatever is
+ * passed in sits above it, centred and clear of the bar.
  */
 export function Stage({ label, children }: { label: string; children?: React.ReactNode }) {
   return (
-    // The CSS wash shows until the canvas draws, and stays if WebGL is unavailable.
-    <section className={styles.stage} aria-label={label} style={{ backgroundImage: WASH_CSS }}>
-      <LivingGradient />
+    <section className={styles.stage} aria-label={label}>
+      <Backdrop />
       {children ? <div className={styles.content}>{children}</div> : null}
     </section>
   );

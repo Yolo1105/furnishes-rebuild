@@ -2,8 +2,7 @@
 
 import { type CSSProperties, type ReactNode, useEffect, useRef, useSyncExternalStore } from "react";
 import * as THREE from "three";
-import { LivingGradient } from "@/features/stage/LivingGradient";
-import { WASH_CSS } from "@/features/stage/wash";
+import { Backdrop } from "@/features/stage/Backdrop";
 import styles from "./PlanWalk.module.css";
 import { clamp01, smooth, stage } from "./ease";
 import { BOUNDS_M } from "./flat";
@@ -413,9 +412,8 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
     >
       {/* where the opening's scroll ends and the walk's begins (measured, see introPx) */}
       <div ref={introEndRef} className={styles.introEnd} aria-hidden="true" />
-      {/* The wash in CSS until its canvas draws, as on every stage. */}
-      <div ref={stickyRef} className={styles.sticky} style={{ backgroundImage: WASH_CSS }}>
-        <LivingGradient />
+      <div ref={stickyRef} className={styles.sticky}>
+        <Backdrop />
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
 
