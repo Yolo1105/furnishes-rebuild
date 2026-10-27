@@ -1,5 +1,5 @@
 /* The site's one kind of button: an outline that fills on hover; ink, unless
-   a page sets --button-fg (and --button-on, the text on the fill). */
+   a page sets --button-fg. */
 .button {
   display: inline-block;
   padding: 0.75em 1.1em;
@@ -18,5 +18,5 @@
 
 .button:hover {
   background: var(--button-fg, var(--color-ink));
-  color: var(--button-on, var(--color-cream));
+  color: var(--color-cream);
 }

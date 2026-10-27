@@ -2,19 +2,16 @@
 
 import { type CSSProperties, useEffect, useState } from "react";
 import type { StaticImageData } from "next/image";
-import Link from "next/link";
-import button from "@/ui/InkButton.module.css";
 import { HeroTitle } from "@/features/stage/HeroTitle";
-import { routes } from "@/lib/routes";
 import room from "../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./PhotoIntro.module.css";
 
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
  * turn) filling the screen, each drifting slowly closer while it is in
- * view; and along its foot, on the bar's grid, a row of the slogan, the
- * room's caption and count, and the way in, over the title set on one line
- * from edge to edge. As the page scrolls (PlanWalk sets --title and --photo) the words go,
+ * view; and along its foot, on the bar's grid, a row of the slogan and the
+ * room's caption and count, over the title set on one line from edge to
+ * edge. As the page scrolls (PlanWalk sets --title and --photo) the words go,
  * then the photo fades straight to the plan of one room beneath; from there
  * PlanWalk's side panel tells the rest.
  */
@@ -86,7 +83,7 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       </div>
 
       <div className={styles.foot}>
-        {/* on the bar's grid: the slogan, the room in view, the way in */}
+        {/* on the bar's grid: the slogan, and the room in view */}
         <div className={styles.info}>
           <p className={styles.slogan}>Made for your room, to the millimetre.</p>
           <p className={styles.caption} aria-live="polite">
@@ -95,9 +92,6 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
             </span>
             {photos[photo]!.caption}
           </p>
-          <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
-            Explore your journey
-          </Link>
         </div>
         <HeroTitle line />
       </div>
