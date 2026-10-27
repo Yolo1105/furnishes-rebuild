@@ -76,8 +76,10 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
  * it is given its fades (--title, --photo) on the sticky view, and marked
  * data-scrolled once the scroll is under way, data-done once its photo has
  * gone, and data-light-under-bar while that light photo still shows.
+ * `swapGrounds` swaps the two grounds: the walk on plain paper, the panel
+ * on the site's background.
  */
-export function PlanWalk({ intro }: { intro: ReactNode }) {
+export function PlanWalk({ intro, swapGrounds = false }: { intro: ReactNode; swapGrounds?: boolean }) {
   const trackRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -397,14 +399,15 @@ export function PlanWalk({ intro }: { intro: ReactNode }) {
       {/* where the opening's scroll ends and the walk's begins (measured, see introPx) */}
       <div ref={introEndRef} className={styles.introEnd} aria-hidden="true" />
       <div ref={stickyRef} className={styles.sticky}>
-        <Backdrop />
+        {/* the site's background; or, swapped, plain paper here and the background in the panel */}
+        {swapGrounds ? <div className={styles.paper} data-light-backdrop aria-hidden="true" /> : <Backdrop />}
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <p className={styles.fallback}>This view needs WebGL, which this browser has turned off.</p>
 
         {intro}
 
         {/* last, so it slides in over the opening */}
-        <WalkPanel ref={panelRef} />
+        <WalkPanel ref={panelRef} ground={swapGrounds} />
       </div>
     </section>
   );

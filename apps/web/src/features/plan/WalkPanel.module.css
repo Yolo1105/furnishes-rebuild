@@ -67,6 +67,20 @@
   pointer-events: none;
 }
 
+/* On the site's background (data-ground) the panel has no paper of its own,
+   and the steps fade out under the bar by a mask instead. */
+.panel[data-ground] {
+  background: none;
+}
+
+.panel[data-ground]::before {
+  display: none;
+}
+
+.panel[data-ground] .scroller {
+  mask-image: linear-gradient(transparent calc(var(--nav-h) * 0.6), black calc(var(--nav-h) * 1.6));
+}
+
 /* A step is as long as its stage (PlanWalk sets each); its words stay
    pinned near the top while the stage plays out, until the next step's
    push them on up. */

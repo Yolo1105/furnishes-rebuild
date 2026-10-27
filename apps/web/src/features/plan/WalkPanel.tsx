@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties, Ref } from "react";
 import { routes } from "@/lib/routes";
+import { Backdrop } from "@/features/stage/Backdrop";
 import { SWATCHES } from "./finishes";
 import button from "@/ui/InkButton.module.css";
 import styles from "./WalkPanel.module.css";
@@ -113,10 +114,12 @@ function Swatches() {
   );
 }
 
-export function WalkPanel({ ref }: { ref: Ref<HTMLElement> }) {
+/** `ground`: the panel on the site's background (Backdrop) rather than plain paper. */
+export function WalkPanel({ ref, ground = false }: { ref: Ref<HTMLElement>; ground?: boolean }) {
   const steps = STEPS.map((step, i) => ({ ...step, no: String(i + 1).padStart(2, "0") }));
   return (
-    <aside ref={ref} className={styles.panel} aria-label="What you are looking at">
+    <aside ref={ref} className={styles.panel} data-ground={ground || undefined} aria-label="What you are looking at">
+      {ground && <Backdrop />}
       {/* PlanWalk finds these by their data- marks: the scroller, each step, each dot */}
       <div className={styles.scroller} data-scroller>
         <div className={styles.content}>

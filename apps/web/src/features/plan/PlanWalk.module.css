@@ -23,6 +23,13 @@
   overflow: hidden;
 }
 
+/* the walk's ground when the panel has the site's background (swapGrounds) */
+.paper {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+}
+
 .canvas {
   position: absolute;
   inset: 0;
