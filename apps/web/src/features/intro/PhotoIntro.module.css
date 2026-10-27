@@ -51,6 +51,15 @@
   height: 100%;
 }
 
+/* Read out, not drawn. */
+.unseen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
 /* The words, on larger screens, on a band of the page's paper along the
    foot: one quiet line, the room at its start and the slogan at its end, and
    under it the title on one line from edge to edge, in Jost Light (a step

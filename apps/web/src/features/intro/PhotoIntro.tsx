@@ -67,8 +67,8 @@ type Ink = "cream" | "rust";
  */
 export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
 
-/** `photos`: the room shown, or the rooms shown in turn. */
-export function PhotoIntro({ photos }: { photos: IntroPhoto[] }) {
+/** `photos`: the room shown, or the rooms shown in turn; `bare`, the photos alone, with no words on them. */
+export function PhotoIntro({ photos, bare = false }: { photos: IntroPhoto[]; bare?: boolean }) {
   const { photo, words } = useRotation(photos.length);
   const { caption, ink } = photos[words]!;
   return (
@@ -100,17 +100,24 @@ export function PhotoIntro({ photos }: { photos: IntroPhoto[] }) {
       </div>
 
       {/* the words, set for the photo in view: they stay, and switch with it */}
-      <div className={styles.words} data-title={ink.title} data-small={ink.small}>
-        {/* one quiet line over the title: the room in view, and the slogan */}
-        <p className={styles.info}>
-          <span className={styles.slogan}>Made for your room, to the millimetre</span>
-          <span className={styles.dot}> · </span>
-          <span className={styles.caption}>{caption}</span>
-        </p>
-        <div className={styles.headline}>
+      {bare ? (
+        // the page keeps its heading for readers
+        <div className={styles.unseen}>
           <HeroTitle />
         </div>
-      </div>
+      ) : (
+        <div className={styles.words} data-title={ink.title} data-small={ink.small}>
+          {/* one quiet line over the title: the room in view, and the slogan */}
+          <p className={styles.info}>
+            <span className={styles.slogan}>Made for your room, to the millimetre</span>
+            <span className={styles.dot}> · </span>
+            <span className={styles.caption}>{caption}</span>
+          </p>
+          <div className={styles.headline}>
+            <HeroTitle />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
