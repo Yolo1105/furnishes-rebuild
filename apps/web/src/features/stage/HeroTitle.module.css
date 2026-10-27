@@ -36,7 +36,7 @@
   animation-delay: calc(var(--stagger) * 1.5);
 }
 
-/* On one line: one size, the hairline then a heavier, narrower word. */
+/* On one line: both words one size and one style, the hairline at its widest. */
 .line {
   white-space: nowrap;
 }
@@ -47,12 +47,14 @@
   font-size: 1em;
 }
 
+/* the second word set just as the first */
 .line .second {
   --shown: 1;
-  margin-left: 0.28em;
+  margin-left: 0.3em;
+  color: var(--hero-ink-strong, var(--color-rust-deep));
   font-variation-settings:
-    "wght" 420,
-    "wdth" 100;
+    "wght" 100,
+    "wdth" 125;
 }
 
 /* Phones held upright: no room for one line; the words stack again. */
@@ -65,14 +67,6 @@
   .line .second {
     display: block;
     margin-left: 0;
-  }
-
-  .line .first {
-    font-size: 0.7em;
-  }
-
-  .line .second {
-    font-size: 0.62em;
   }
 }
 

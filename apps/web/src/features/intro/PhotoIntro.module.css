@@ -5,8 +5,7 @@
    beneath), marks it data-scrolled once the scroll is under way and
    data-done once the photo has gone.
 
-   The words are in cream with a soft shadow round their letters, no box and
-   no edge; over a bright photo (data-foot="rust") in the rust instead. */
+   Each photo carries its own words, inked for it. */
 .intro {
   position: absolute;
   z-index: var(--z-content);
@@ -19,7 +18,7 @@
     0 1px 2px color-mix(in srgb, var(--color-night) 40%, transparent),
     0 0 28px color-mix(in srgb, var(--color-night) 35%, transparent);
   /* the title on one line fills the width between the bar's edges */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 12.6);
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 14.2);
 }
 
 .intro[data-done] {
@@ -56,13 +55,11 @@
   height: 100%;
 }
 
-/* Over a bright foot (data-foot="rust"), the words in the rust, bare. */
-.intro[data-foot="rust"] {
-  --ink: var(--color-rust-deep);
-  --shade: none;
-}
-
-/* The foot: the row of small words, then the title. */
+/* The words along the foot: the line of small words, then the title. One
+   set per photo, all in one place, each fading with its photo (data-active),
+   so their inks change as the picture does. Each part in cream with a soft
+   shadow round its letters (no box, no edge), or in the rust, bare, where
+   its photo is bright under it (data-title, data-small = "rust"). */
 .foot {
   position: absolute;
   right: var(--gutter);
@@ -71,10 +68,37 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  color: var(--ink);
-  transition: color var(--fade) ease-in-out;
-  text-shadow: var(--shade);
+  opacity: 0;
+  transition: opacity var(--fade) ease-in-out;
+}
+
+.foot[data-active] {
   opacity: var(--title, 1);
+}
+
+.headline {
+  color: var(--ink);
+  text-shadow: var(--shade);
+}
+
+.info {
+  color: var(--ink);
+  text-shadow: var(--shade);
+}
+
+.foot[data-title="rust"] .headline,
+.foot[data-small="rust"] .info {
+  --ink: var(--color-rust-deep);
+  --shade: none;
+}
+
+.foot[data-title="rust"] .headline {
+  --hero-ink: var(--ink);
+  --hero-ink-strong: var(--ink);
+}
+
+.accent {
+  color: var(--color-orange);
 }
 
 /* One line over the title, its two ends at the title's: the room in view
@@ -98,14 +122,14 @@
 }
 
 /* the caption rises in with each photo, as it fades up */
-.captionText {
+.foot[data-active] .captionText {
   display: inline-block;
   animation: rise var(--dur-title) var(--ease-title) calc(var(--fade) * 0.4) both;
 }
 
 .counter {
   margin-right: 2.5ch;
-  opacity: 0.75;
+  color: var(--color-orange);
 }
 
 @keyframes rise {
@@ -119,7 +143,7 @@
    caption over it and the slogan under it. */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
-    --text-hero: 22vw;
+    --text-hero: calc((100vw - 2 * var(--gutter)) / 8.1); /* "Revolution", the longer line, fills it */
   }
 
   .foot {
@@ -141,11 +165,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide {
+  .slide,
+  .foot {
     transition: none;
   }
 
-  .captionText {
+  .foot[data-active] .captionText {
     animation: none;
   }
 }

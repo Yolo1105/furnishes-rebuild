@@ -42,10 +42,14 @@ function useRotation(count: number) {
 /** The ink that reads on a part of a photo: cream where it is dark, rust where it is bright. */
 type Ink = "cream" | "rust";
 
-/** A room for the opening: the photo (2000 x 1334), its caption, and the ink for the bar over its top and the words along its foot. */
-export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; foot: Ink } };
+/**
+ * A room for the opening: the photo (2000 x 1334), its caption, and the ink
+ * that reads on it under the bar, under the title, and under the small words
+ * over the title (the orange marks keep their orange whatever these are).
+ */
+export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
 
-const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", foot: "cream" } };
+const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "cream", small: "rust" } };
 
 /** `photos`: the room shown, or the rooms shown in turn. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
@@ -59,7 +63,6 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       data-dark-under-bar
       data-wordmark-left
       data-bar={photos[photo]!.ink.bar}
-      data-foot={photos[photo]!.ink.foot}
       style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}
     >
       <div
@@ -80,22 +83,35 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
         ))}
       </div>
 
-      <div className={styles.foot}>
-        {/* one line over the title: the room in view at its start, the slogan at its end */}
-        <div className={styles.info}>
-          <p className={styles.caption} aria-live="polite">
-            {/* keyed, so each room's caption rises in afresh as its photo comes */}
-            <span key={photo} className={styles.captionText}>
-              <span className={styles.counter}>
-                {count(photo + 1)} / {count(photos.length)}
+      {/* the words, once per photo, inked for it and fading with it (only the set in view can be read) */}
+      {photos.map(({ src, caption, ink }, i) => (
+        <div
+          key={src.src}
+          className={styles.foot}
+          data-title={ink.title}
+          data-small={ink.small}
+          data-active={i === photo || undefined}
+          inert={i !== photo}
+        >
+          {/* one line over the title: the room at its start, the slogan at its end */}
+          <div className={styles.info}>
+            <p className={styles.caption}>
+              <span className={styles.captionText}>
+                <span className={styles.counter}>
+                  {count(i + 1)} / {count(photos.length)}
+                </span>
+                {caption}
               </span>
-              {photos[photo]!.caption}
-            </span>
-          </p>
-          <p className={styles.slogan}>Made for your room, to the millimetre.</p>
+            </p>
+            <p className={styles.slogan}>
+              Made for your room, to the millimetre<span className={styles.accent}>.</span>
+            </p>
+          </div>
+          <div className={styles.headline}>
+            <HeroTitle line />
+          </div>
         </div>
-        <HeroTitle line />
-      </div>
+      ))}
     </div>
   );
 }
