@@ -1,6 +1,5 @@
 /* The opening, over the walk: the photo filling the screen as it is, and
-   along its foot, on the bar's grid, a row of small words over the title,
-   one line from edge to edge. PlanWalk sets its fades as the scroll goes
+   along its foot a band of paper with the title cut out of it. PlanWalk sets its fades as the scroll goes
    (--title: the words; --photo: the photo, which fades straight to the plan
    beneath), marks it data-scrolled once the scroll is under way and
    data-done once the photo has gone.
@@ -16,8 +15,6 @@
   /* only a wide, soft one: a tight shadow thickens the hairline */
   --shade-soft: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
   --shade: var(--shade-soft);
-  /* the title on one line fills the width between the bar's edges */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 9.72);
 }
 
 .intro[data-done] {
@@ -54,58 +51,41 @@
   height: 100%;
 }
 
-/* The words, as a masthead: the title on one line from edge to edge just
-   under the bar, where the photos are calm (wall, window, ceiling), and one
-   quiet line under it, the slogan at its start and the room at its end;
-   the furniture below is left clear. They stay as the photos change; their
-   inks and the caption switch to the next photo's halfway through its fade.
-   Cream with a soft shadow round the letters (no box, no edge), or the rust,
-   bare, where the photo is bright up there (data-top = "rust"). */
+/* The words, on larger screens, as a band of the page's paper along the
+   foot: one quiet line in the rust, the room at its start and the slogan at
+   its end, and under it the title cut out of the band (PhotoIntro's svg
+   mask) from edge to edge, so the photos show through its letters, whatever
+   their light. The title's text (an h1, HeroTitle) is kept for readers but
+   drawn only on phones. The words stay as the photos change; the caption
+   switches to the next photo's halfway through its fade. */
 .words {
   position: absolute;
-  top: var(--nav-h);
-  right: var(--gutter);
-  left: var(--gutter);
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  isolation: isolate;
+  overflow: hidden; /* the cut-out's paper fills it, and stops at its edges */
+  padding: var(--space-4) var(--gutter) var(--space-5);
+  color: var(--color-rust-deep);
   opacity: var(--title, 1);
-  --title-line: inline-block;
-  --title-gap: 0.3em;
 }
 
-.headline,
-.info {
-  color: var(--ink);
-  text-shadow: var(--shade);
-}
-
-.words[data-top="rust"] :is(.headline, .info) {
-  --ink: var(--color-rust-deep);
-  --hero-ink: var(--ink);
-  --shade: none;
-}
-
-/* Dark on the left and bright on the right up there (data-top="split"):
-   the masthead turns from cream to the rust across the screen, and the line
-   under it starts in cream and ends in the rust. (Phones set their words at
-   the foot, inked their own way.) */
-@media not ((max-width: 600px) and (orientation: portrait)) {
-  .words[data-top="split"] .headline {
-    --shade: none;
-    --hero-ink: transparent;
-    background: linear-gradient(to right, var(--color-on-orange) 50%, var(--color-rust-deep) 62%);
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-
-  .words[data-top="split"] .caption {
-    color: var(--color-rust-deep);
-    text-shadow: none;
-  }
+/* Under the paper, a shade over the photo: it shows only through the
+   letters, so a pale floor still reads through them. */
+.words::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-night) 34%, transparent);
 }
 
 .info {
+  position: relative; /* over the cut-out's paper */
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   gap: var(--space-6);
@@ -117,10 +97,39 @@
   white-space: nowrap;
 }
 
+/* the room at the start, the slogan at the end */
+.caption {
+  order: -1;
+}
+
 /* between the two, on phones only */
 .dot {
   display: none;
   color: var(--color-orange);
+}
+
+/* the title's words, for readers only on these screens */
+.headline {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.cut {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  fill: var(--color-paper);
+}
+
+/* a step heavier than the title elsewhere: its strokes are windows onto the photo */
+.cut text {
+  font-family: var(--font-title);
+  font-size: 100px;
+  font-weight: 300;
 }
 
 /* Phones held upright: the words at the bottom left instead, the room, an
@@ -133,19 +142,33 @@
   }
 
   .words {
-    top: auto;
     right: auto;
     bottom: var(--space-6);
-    flex-direction: column-reverse;
+    left: var(--gutter);
     max-width: calc(100% - 2 * var(--gutter));
+    padding: 0;
+    overflow: visible;
     --title-line: block;
     --title-gap: 0;
   }
 
-  .words[data-top] :is(.headline, .info) {
-    --ink: var(--color-on-orange);
-    --hero-ink: var(--ink);
-    --shade: var(--shade-soft);
+  .headline,
+  .info {
+    color: var(--ink);
+    text-shadow: var(--shade);
+  }
+
+  .headline {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+
+  .cut,
+  .words::before {
+    display: none;
   }
 
   .words[data-title="rust"] .headline,

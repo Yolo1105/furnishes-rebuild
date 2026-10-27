@@ -45,17 +45,6 @@
   --bar-on-fg: var(--color-cream);
 }
 
-/* A photo dark at the left and bright at the right up top (the opening's
-   masthead marks it data-top="split") turns the bar's right side to the
-   rust as well, on the screens where the masthead is there. */
-@media not ((max-width: 600px) and (orientation: portrait)) {
-  :global(html:has([data-dark-under-bar]:not([data-done]) [data-top="split"])) .end {
-    --bar-fg: var(--color-rust);
-    --bar-on-fg: var(--color-cream);
-    color: var(--bar-fg);
-  }
-}
-
 /* The wordmark keeps its cream: it sits over the room, not the panel
    (unless the background itself is light). */
 :global(html[data-walk-panel]:not(:has([data-light-backdrop]))) .wordmark {
