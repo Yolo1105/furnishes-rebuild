@@ -10,12 +10,12 @@ import room from "../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./PhotoIntro.module.css";
 
 /**
- * The walk's opening, laid over it, as a spread: on the page's own
- * background a column of words (the live site's greeting, the title, what
- * Furnishes does and the way in), and beside it a large framed photo of a
- * real room, or several in turn. The words never sit on the photo. As the
- * page scrolls (PlanWalk sets --title and --photo) the words go, then the
- * photo fades straight to the plan of one room beneath; from there
+ * The walk's opening, laid over it: a photo of a real room (or several in
+ * turn) filling the screen, dimmed a little and evenly so cream type reads
+ * on any of them, and on it the live site's greeting under the bar and, at
+ * the foot, the title with a row of what Furnishes does and the way in under
+ * it. As the page scrolls (PlanWalk sets --title and --photo) the words go,
+ * then the photo fades straight to the plan of one room beneath; from there
  * PlanWalk's side panel tells the rest.
  */
 
@@ -49,38 +49,14 @@ function useRotation(count: number) {
 export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) {
   const photo = useRotation(photos.length);
   return (
-    // the bar sits over the page's light background (PlanWalk clears this once the photo has gone); the wordmark at the bar's left
+    // the bar sits over the dimmed photo until it has gone; the wordmark at the bar's left
     <div
       className={styles.intro}
       data-intro
-      data-light-under-bar
+      data-dark-under-bar
       data-wordmark-left
       style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}
     >
-      <div className={styles.words}>
-        <p className={styles.greeting}>
-          Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
-          <span className={styles.accent}>.</span>
-        </p>
-        <div className={styles.lead}>
-          <HeroTitle />
-          <p className={styles.slogan}>Made for your room, to the millimetre.</p>
-        </div>
-        <div className={styles.close}>
-          <ul className={styles.tags}>
-            {TAGS.map((tag, i) => (
-              <li key={tag} style={{ "--i": i } as CSSProperties}>
-                <span className={styles.accent}>#</span>
-                {tag}
-              </li>
-            ))}
-          </ul>
-          <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
-            Explore your journey
-          </Link>
-        </div>
-      </div>
-
       <div className={styles.frame}>
         <svg
           className={styles.room}
@@ -97,6 +73,28 @@ export function PhotoIntro({ photos = [room] }: { photos?: StaticImageData[] }) 
             <image key={src.src} className={styles.slide} href={src.src} width="2000" height="1334" data-active={i === photo || undefined} />
           ))}
         </svg>
+      </div>
+
+      <p className={styles.greeting}>
+        Hello<span className={styles.accent}>!</span> Welcome h<span className={styles.accent}>o</span>me
+        <span className={styles.accent}>.</span>
+      </p>
+      <div className={styles.foot}>
+        <HeroTitle />
+        <div className={styles.details}>
+          <p className={styles.slogan}>Made for your room, to the millimetre.</p>
+          <ul className={styles.tags}>
+            {TAGS.map((tag, i) => (
+              <li key={tag} style={{ "--i": i } as CSSProperties}>
+                <span className={styles.accent}>#</span>
+                {tag}
+              </li>
+            ))}
+          </ul>
+          <Link href={routes.studio} className={`${button.button} ${styles.start}`}>
+            Explore your journey
+          </Link>
+        </div>
       </div>
 
       {/* the page goes on below */}

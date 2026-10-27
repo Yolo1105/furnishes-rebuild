@@ -1,9 +1,9 @@
-/* The opening, over the walk, as a spread on the page's own background: a
-   column of words, and a large framed photo beside it (above them on
-   upright screens). PlanWalk sets its fades as the scroll goes (--title:
-   the words and the arrow; --photo: the photo, which fades straight to the
-   plan beneath), marks it data-scrolled once the scroll is under way (the
-   button stops taking clicks) and data-done once the photo has gone.
+/* The opening, over the walk: the photo filling the screen, dimmed a little
+   and evenly, and the words on it in cream. PlanWalk sets its fades as the
+   scroll goes (--title: the words and the arrow; --photo: the photo, which
+   fades straight to the plan beneath), marks it data-scrolled once the
+   scroll is under way (the button stops taking clicks) and data-done once
+   the photo has gone.
 
    The edges are the bar's (--gutter). Three sizes only: the title; the
    slogan, a step over the bar's links; and captions (the greeting, the
@@ -12,129 +12,35 @@
   position: absolute;
   z-index: var(--z-content);
   inset: 0;
-  display: grid;
-  grid-template:
-    "greeting frame" auto
-    "lead frame" 1fr
-    "close frame" auto
-    / minmax(300px, 34%) 1fr;
-  gap: var(--space-6) clamp(var(--space-7), 4vw, 72px);
-  padding: calc(var(--nav-h) + var(--space-2)) var(--gutter) calc(var(--space-5) * 2 + var(--icon));
   pointer-events: none;
-  --text-caption: calc(var(--text-nav) * 0.86);
+  --ink: var(--color-on-orange);
+  --hero-ink: var(--ink);
+  --hero-ink-strong: var(--ink);
+  --text-caption: calc(var(--text-nav) * 0.93);
   --text-slogan: calc(var(--text-nav) * 1.15);
-  --text-hero: min(7.2vw, 15vh);
+  --text-hero: min(9vw, 17vh);
+  --foot-bottom: calc(var(--space-5) * 2 + var(--icon)); /* clear of the arrow */
 }
 
 .intro[data-done] {
   display: none;
 }
 
-/* the words lay themselves straight onto the spread's grid */
-.words {
-  display: contents;
-}
-
-.greeting,
-.lead,
-.close,
-.cue {
-  opacity: var(--title, 1);
-}
-
-.lead,
-.close {
-  pointer-events: auto;
-}
-
-.intro[data-scrolled] :is(.lead, .close) {
-  pointer-events: none;
-}
-
-/* The live site's greeting, a caption just under the bar's wordmark. */
-.greeting {
-  grid-area: greeting;
-  margin: 0;
-  color: var(--color-rust-deep);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  animation: rise var(--dur-title) var(--ease-title) both;
-}
-
-.accent {
-  color: var(--color-orange);
-}
-
-/* The title, and the slogan under it. */
-.lead {
-  grid-area: lead;
-  align-self: end;
-}
-
-.slogan {
-  max-width: 24ch;
-  margin: var(--space-6) 0 0;
-  color: var(--color-rust-deep);
-  font-family: var(--font-mono);
-  font-size: var(--text-slogan);
-  line-height: 1.6;
-  letter-spacing: var(--track);
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-
-/* What Furnishes does, and the way in. */
-.close {
-  grid-area: close;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--color-rust-deep);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-
-.tags li {
-  animation: rise var(--dur-title) var(--ease-title) both;
-  animation-delay: calc(var(--stagger) * (5 + var(--i) * 2));
-}
-
-.tags .accent {
-  margin-right: 0.8ch;
-}
-
-.start {
-  --button-fg: var(--color-rust);
-  margin-top: var(--space-5);
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--space-4));
-  }
-}
-
-/* The photo, framed: filling its frame as object-fit cover would, from
-   just below its ceiling (the viewBox). */
+/* The photo, filling the screen as object-fit cover would, from just below
+   its ceiling (the viewBox); evenly dimmed, so the cream reads on any
+   photo, bright or busy. */
 .frame {
-  grid-area: frame;
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  min-height: 0;
-  border-radius: var(--radius-sm);
   opacity: var(--photo, 1);
+}
+
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-night) 38%, transparent);
 }
 
 .room {
@@ -155,6 +61,100 @@
   opacity: 1;
 }
 
+.greeting,
+.foot,
+.cue {
+  opacity: var(--title, 1);
+}
+
+/* The live site's greeting, a caption just under the bar's wordmark. */
+.greeting {
+  position: absolute;
+  top: calc(var(--nav-h) + var(--space-1));
+  left: var(--gutter);
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  animation: rise var(--dur-title) var(--ease-title) both;
+}
+
+/* the live site's orange, lifted a little so it holds on the dimmed photo */
+.accent {
+  color: color-mix(in srgb, var(--color-orange) 72%, var(--color-on-orange));
+}
+
+/* The foot: the title, and right under it one row of the slogan, the tags
+   and the way in, their feet on one line. */
+.foot {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--foot-bottom);
+  left: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+  pointer-events: auto;
+}
+
+.intro[data-scrolled] .foot {
+  pointer-events: none;
+}
+
+.details {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-7);
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+
+.slogan {
+  max-width: 24ch; /* two lines */
+  margin: 0;
+  font-size: var(--text-slogan);
+  line-height: 1.6;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.tags {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-caption);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tags li {
+  animation: rise var(--dur-title) var(--ease-title) both;
+  animation-delay: calc(var(--stagger) * (5 + var(--i) * 2));
+}
+
+.tags .accent {
+  margin-right: 0.8ch;
+}
+
+.start {
+  --button-fg: var(--ink);
+  --button-on: var(--color-rust-deep);
+  flex-shrink: 0;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-4));
+  }
+}
+
 /* Bottom centre, a down arrow (the head only), solid: it rests low, bounces
    up and back, then rests again; over and over, slowly. It goes with the words. */
 .cue {
@@ -164,7 +164,7 @@
   width: var(--icon-lg);
   height: var(--icon);
   fill: none;
-  stroke: var(--color-rust);
+  stroke: var(--ink);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -184,46 +184,47 @@
   }
 }
 
-/* Upright screens: the greeting, then the photo, then the words under it. */
+/* Upright screens: the title may take more of the width. */
 @media (orientation: portrait) {
   .intro {
-    grid-template:
-      "greeting" auto
-      "frame" minmax(0, 1fr)
-      "lead" auto
-      "close" auto
-      / 1fr;
-    row-gap: var(--space-5);
-    --text-hero: min(15vw, 9vh);
-  }
-
-  .slogan {
-    margin-top: var(--space-4);
+    --text-hero: min(15vw, 10vh);
   }
 }
 
-/* Phones held upright: the title as wide as the screen, the way in under
-   the thumb. */
+/* Phones held upright: the title as wide as the screen, the details
+   stacked under it, the way in under the thumb. */
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
-    row-gap: var(--space-4);
-    --text-hero: min(22vw, 11vh);
+    --text-hero: 22vw;
   }
 
-  .close .start {
+  .foot {
+    align-items: stretch;
+    gap: var(--space-5);
+  }
+
+  .details {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-5);
+  }
+
+  .details .start {
     display: block; /* over the ink button's inline-block */
     text-align: center;
   }
 }
 
-/* Short phones: no room for the tags as well; the photo keeps its share. */
+/* Short phones: no room for the tags as well. */
 @media (max-width: 600px) and (orientation: portrait) and (max-height: 700px) {
-  .close .tags {
+  .details .tags {
     display: none;
-  }
-
-  .close .start {
-    margin-top: 0;
   }
 }
 

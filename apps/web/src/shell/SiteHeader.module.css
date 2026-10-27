@@ -32,6 +32,13 @@
   --bar-on-fg: var(--color-cream);
 }
 
+/* Over the opening's photo (PhotoIntro marks it data-dark-under-bar; PlanWalk
+   marks it data-done once the photo has gone), the bar is in cream. */
+:global(html:has([data-dark-under-bar]:not([data-done]))) .header {
+  --bar-fg: var(--color-on-orange);
+  --bar-on-fg: var(--color-rust-deep);
+}
+
 /* The wordmark keeps its cream: it sits over the room, not the panel
    (unless the background itself is light). */
 :global(html[data-walk-panel]:not(:has([data-light-backdrop]))) .wordmark {
