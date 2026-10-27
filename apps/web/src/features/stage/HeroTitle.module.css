@@ -70,6 +70,11 @@
   }
 }
 
+/* the one letter in the orange, whatever ink the rest is in */
+.accent {
+  color: var(--color-orange);
+}
+
 @keyframes rise {
   from {
     opacity: 0;

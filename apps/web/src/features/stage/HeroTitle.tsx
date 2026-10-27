@@ -2,13 +2,12 @@ import styles from "./HeroTitle.module.css";
 
 /**
  * The landing's title, as on the live site: "Interior Revolution" in
- * Archivo caps in rust. "Interior" is a hairline at its widest; "Revolution"
- * a shade fainter, a little heavier and narrower, so the two words differ in
- * weight as well as size and come out about as wide as each other. Each line
- * rises in after the one above. Or, `line`, both words on one line, set
- * alike: one size, the same hairline at its widest. It sets only the type: where it
- * sits is the page's to say, and a page may ink it (--hero-ink,
- * --hero-ink-strong).
+ * Archivo caps in rust, the o of "Revolution" in the orange, as the live site
+ * marks the o of "home". Two lines, "Interior" a hairline at its widest and
+ * "Revolution" a shade fainter, a little heavier and narrower; or, `line`,
+ * both words on one line set alike, the same hairline at its widest. Each
+ * word rises in after the one before. It sets only the type: where it sits
+ * is the page's to say, and a page may ink it (--hero-ink, --hero-ink-strong).
  */
 export function HeroTitle({ line = false }: { line?: boolean }) {
   return (
@@ -17,7 +16,7 @@ export function HeroTitle({ line = false }: { line?: boolean }) {
         Interior
       </span>
       <span className={styles.second} aria-hidden="true">
-        Revolution
+        Rev<span className={styles.accent}>o</span>lution
       </span>
     </h1>
   );

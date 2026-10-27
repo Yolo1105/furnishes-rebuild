@@ -102,8 +102,8 @@
 }
 
 /* One line over the title, its two ends at the title's: the room in view
-   and its count at the start, the slogan at the end. Both the same small
-   caps, on one baseline. */
+   at the start, the slogan at the end. Both the same small caps, on one
+   baseline. */
 .info {
   display: flex;
   align-items: baseline;
@@ -125,11 +125,6 @@
 .foot[data-active] .captionText {
   display: inline-block;
   animation: rise var(--dur-title) var(--ease-title) calc(var(--fade) * 0.4) both;
-}
-
-.counter {
-  margin-right: 2.5ch;
-  color: var(--color-orange);
 }
 
 @keyframes rise {

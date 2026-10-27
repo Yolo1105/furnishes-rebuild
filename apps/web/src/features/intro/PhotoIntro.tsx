@@ -9,8 +9,8 @@ import styles from "./PhotoIntro.module.css";
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
  * turn) filling the screen, and along its foot the title on one line from
- * edge to edge, with one line of small words over it: the room's count and
- * caption at its start, the slogan at its end. As the page scrolls
+ * edge to edge, with one line of small words over it: the room's caption
+ * at its start, the slogan at its end. As the page scrolls
  * (PlanWalk sets --title and --photo) the words go, then the photo fades
  * straight to the plan of one room beneath; from there PlanWalk's side
  * panel tells the rest.
@@ -54,7 +54,6 @@ const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { 
 /** `photos`: the room shown, or the rooms shown in turn. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
   const photo = useRotation(photos.length);
-  const count = (n: number) => String(n).padStart(2, "0");
   return (
     // the bar sits over the photo until it has gone; the wordmark at the bar's left
     <div
@@ -96,12 +95,7 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
           {/* one line over the title: the room at its start, the slogan at its end */}
           <div className={styles.info}>
             <p className={styles.caption}>
-              <span className={styles.captionText}>
-                <span className={styles.counter}>
-                  {count(i + 1)} / {count(photos.length)}
-                </span>
-                {caption}
-              </span>
+              <span className={styles.captionText}>{caption}</span>
             </p>
             <p className={styles.slogan}>
               Made for your room, to the millimetre<span className={styles.accent}>.</span>
