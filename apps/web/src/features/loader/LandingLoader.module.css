@@ -1,8 +1,8 @@
 /* The live site's intro loader (furnishes_prod, landing.module.css "Intro
    loader"), as it is there, with its tokens mapped onto this site's: the
    wash comes from wash.ts and the exit and reveal durations from
-   LOADER_TIMING (both set inline); colours, fonts, easing and the bar's
-   height from globals.css. */
+   LOADER_TIMING (both set inline); colours, fonts (its large type in the
+   landing title's face), easing and the bar's height from globals.css. */
 
 /* The page under it stays at its top while it plays. */
 :global(html):has(.intro) {
@@ -168,10 +168,12 @@
   margin-bottom: var(--intro-label-gap);
 }
 
+/* the count and the line under it in the landing title's face and weight,
+   so the loader hands over to the page in one voice */
 .introCountNum {
-  font-family: var(--font-sans);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-family: var(--font-title);
+  font-weight: 200;
+  letter-spacing: -0.02em;
   font-size: var(--intro-count);
   color: var(--color-rust-deep);
   font-variant-numeric: tabular-nums;
@@ -179,7 +181,6 @@
 
 .introBrO,
 .introBrC {
-  font-weight: 400;
   font-size: 0.5em;
   opacity: 0.38;
 }
@@ -195,7 +196,6 @@
 }
 
 .introPct {
-  font-weight: 600;
   font-size: 0.32em;
   opacity: 0.5;
   vertical-align: 0.92em;
@@ -212,12 +212,11 @@
 }
 
 .introMetaTop {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-stretch: 78%;
+  font-family: var(--font-title);
+  font-weight: 200;
   font-size: var(--intro-title);
-  letter-spacing: -0.02em;
   line-height: 0.95;
+  text-transform: uppercase;
   color: var(--color-rust-deep);
 }
 
