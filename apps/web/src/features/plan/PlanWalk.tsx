@@ -1,7 +1,8 @@
 "use client";
 
-import { type CSSProperties, type ReactNode, useEffect, useRef, useSyncExternalStore } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useRef } from "react";
 import * as THREE from "three";
+import { useLoaderDone } from "@/features/loader/useLoaderDone";
 import { Backdrop } from "@/features/stage/Backdrop";
 import styles from "./PlanWalk.module.css";
 import { clamp01, smooth, stage } from "./ease";
@@ -69,23 +70,6 @@ const PANEL_IN = 0.35;
 const PANEL_SPRING = 4.5;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-
-/**
- * Whether the page's opening loader has finished: it marks <html> with
- * data-loading while it plays, and the walk's 3D waits for it, so the two
- * never draw at once. Without that mark, the walk starts straight away.
- */
-function useLoaderDone() {
-  return useSyncExternalStore(
-    (changed) => {
-      const watch = new MutationObserver(changed);
-      watch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-loading"] });
-      return () => watch.disconnect();
-    },
-    () => !document.documentElement.hasAttribute("data-loading"),
-    () => false,
-  );
-}
 
 /**
  * `intro` is laid over the walk and plays first. It must carry data-intro;

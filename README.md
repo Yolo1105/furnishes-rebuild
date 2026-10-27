@@ -25,7 +25,7 @@ app/
 shell/                  the bar: SiteHeader, CartLink, AccountLink
 features/stage/         the moving orange-to-cream background (Stage, LivingGradient, wash) and the landing title (HeroTitle)
 features/loader/        the opening loader: furniture assembling in 3D, over the wash
-features/intro/         the photo opening: a real room, the title and the way in
+features/intro/         the photo opening: real rooms in turn, the title over them
 features/plan/          the plan walk: the HDB flat as a 3D drawing, the scroll camera and the side panel
 features/auth/          sign-in panel and the demo session
 ui/                     styles shared across features (the ink button)

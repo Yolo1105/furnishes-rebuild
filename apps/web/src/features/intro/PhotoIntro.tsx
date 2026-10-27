@@ -2,8 +2,8 @@
 
 import { type CSSProperties, useEffect, useState } from "react";
 import type { StaticImageData } from "next/image";
+import { useLoaderDone } from "@/features/loader/useLoaderDone";
 import { HeroTitle } from "@/features/stage/HeroTitle";
-import room from "../../../public/rooms/a-frame-living-room.jpg";
 import styles from "./PhotoIntro.module.css";
 
 /**
@@ -36,8 +36,10 @@ const REDUCED = "(prefers-reduced-motion: reduce)";
 function useRotation(count: number) {
   const [photo, setPhoto] = useState(0);
   const [words, setWords] = useState(0);
+  // the first photo is the one seen first: none turns while the loader covers it
+  const loaderDone = useLoaderDone();
   useEffect(() => {
-    if (count < 2 || window.matchMedia(REDUCED).matches) return;
+    if (!loaderDone || count < 2 || window.matchMedia(REDUCED).matches) return;
     let next = 0;
     let half = 0;
     const turn = window.setInterval(() => {
@@ -50,7 +52,7 @@ function useRotation(count: number) {
       window.clearInterval(turn);
       window.clearTimeout(half);
     };
-  }, [count]);
+  }, [count, loaderDone]);
   return { photo, words };
 }
 
@@ -64,10 +66,9 @@ type Ink = "cream" | "rust";
  */
 export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
 
-const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "rust", small: "rust" } };
 
 /** `photos`: the room shown, or the rooms shown in turn. */
-export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
+export function PhotoIntro({ photos }: { photos: IntroPhoto[] }) {
   const { photo, words } = useRotation(photos.length);
   const { caption, ink } = photos[words]!;
   return (
