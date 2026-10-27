@@ -16,9 +16,8 @@
   --hero-ink-strong: var(--ink);
   /* only a wide, soft one: a tight shadow thickens the hairline */
   --shade: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
-  /* the title on one line, about three quarters of the width between the
-     bar's edges: larger, and the hairline would read heavy */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 19);
+  /* the title on one line fills the width between the bar's edges */
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 14.2);
 }
 
 .intro[data-done] {
@@ -55,8 +54,8 @@
   height: 100%;
 }
 
-/* The words at the bottom right: the line of small words, then the title,
-   the line as wide as the title. One
+/* The words along the bottom: the line of small words, then the title,
+   from edge to edge. One
    set per photo, all in one place, each fading with its photo (data-active),
    so their inks change as the picture does. Each part in cream with a soft
    shadow round its letters (no box, no edge), or in the rust, bare, where
@@ -65,6 +64,7 @@
   position: absolute;
   right: var(--gutter);
   bottom: var(--space-4);
+  left: var(--gutter);
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
@@ -76,9 +76,13 @@
   opacity: var(--title, 1);
 }
 
+/* The title drawn in outline, a hairline round each letter: the face's
+   lightest weight still reads heavy this large. The orange o's too. */
 .headline {
-  color: var(--ink);
-  text-shadow: var(--shade);
+  --hero-ink: transparent;
+  --hero-ink-strong: transparent;
+  --hero-accent: transparent;
+  -webkit-text-stroke: 1.25px var(--ink);
 }
 
 .info {
@@ -90,11 +94,6 @@
 .foot[data-small="rust"] .info {
   --ink: var(--color-rust-deep);
   --shade: none;
-}
-
-.foot[data-title="rust"] .headline {
-  --hero-ink: var(--ink);
-  --hero-ink-strong: var(--ink);
 }
 
 .accent {
@@ -143,7 +142,6 @@
 
   .foot {
     bottom: var(--space-5);
-    left: var(--gutter);
   }
 
   .info {

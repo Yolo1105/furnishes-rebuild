@@ -49,7 +49,7 @@ type Ink = "cream" | "rust";
  */
 export type IntroPhoto = { src: StaticImageData; caption: string; ink: { bar: Ink; title: Ink; small: Ink } };
 
-const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "cream", small: "rust" } };
+const A_FRAME: IntroPhoto = { src: room, caption: "A-frame living room", ink: { bar: "rust", title: "rust", small: "rust" } };
 
 /** `photos`: the room shown, or the rooms shown in turn. */
 export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {

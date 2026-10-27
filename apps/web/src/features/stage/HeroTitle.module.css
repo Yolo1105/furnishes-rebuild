@@ -70,9 +70,11 @@
   }
 }
 
-/* the o's in the orange, whatever ink the rest is in */
+/* the o's in the orange, whatever ink the rest is in (drawn in outline
+   too, if the page sets the title in outline: --hero-accent transparent) */
 .accent {
-  color: var(--color-orange);
+  color: var(--hero-accent, var(--color-orange));
+  -webkit-text-stroke-color: var(--color-orange);
 }
 
 @keyframes rise {
