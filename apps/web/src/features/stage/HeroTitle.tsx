@@ -5,8 +5,8 @@ import styles from "./HeroTitle.module.css";
  * The landing's title, as on the live site: "Interior Revolution" in wide
  * hairline caps in rust, its second word a shade fainter, each line rising
  * in after the one above. It sits at the top left of whatever stage it is
- * on, lined up with the bar's first link; a stage may fade it by setting
- * --title. Anything passed as children sits right under it, and moves and
+ * on, lined up with the bar's first link; a stage may move it (--hero-top,
+ * --hero-bottom, --hero-right) or fade it (--title). Anything passed as children sits right under it, and moves and
  * fades with it.
  */
 export function HeroTitle({ children }: { children?: ReactNode }) {

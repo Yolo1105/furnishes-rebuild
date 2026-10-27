@@ -50,16 +50,60 @@
   }
 }
 
+/* Phones held upright: the photo turns to the sitting area (the orange
+   chair, the sofa, the window), the top is left clear but for the bar, and
+   the title, a headline as wide as the screen, sits at the foot on a light
+   wash rising from the floor, with the way in under the thumb. */
+@media (max-width: 600px) and (orientation: portrait) {
+  .scene::after {
+    background:
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--color-paper) 94%, transparent),
+        color-mix(in srgb, var(--color-paper) 82%, transparent) 30%,
+        transparent 46%
+      ),
+      linear-gradient(color-mix(in srgb, var(--color-paper) 55%, transparent), transparent calc(var(--nav-h) * 1.5));
+  }
+
+  /* a little closer in, and its foot on the screen's: the chair and the
+     sofa sit above the title, not behind it */
+  .room {
+    --zoom: 1.5;
+    --focus-x: 25%;
+    --focus-y: 100%;
+  }
+
+  .hero {
+    --text-hero: 21vw;
+    --hero-top: auto;
+    --hero-right: var(--gutter);
+    --hero-bottom: calc(var(--space-5) * 2 + var(--icon));
+  }
+
+  .slogan {
+    max-width: 22ch; /* two lines */
+    line-height: 1.6;
+  }
+
+  .hero .start {
+    display: block; /* over the ink button's inline-block */
+    text-align: center;
+  }
+}
+
 /* The photo, from just below its ceiling (PhotoIntro's CEILING, here as
-   the 1074 px left of its 1334): sized to cover the screen, centred across
-   and set 60% down, as object-fit cover would. */
+   the 1074 px left of its 1334): sized to cover the screen (--zoom times
+   over, if a screen asks), with its point --focus-x across and --focus-y
+   down kept at the same place on the screen, as object-fit cover and
+   object-position would. */
 .room {
   position: absolute;
-  top: 60%;
-  left: 50%;
-  width: max(100%, 100dvh * 2000 / 1074);
+  top: var(--focus-y, 60%);
+  left: var(--focus-x, 50%);
+  width: max(100%, var(--zoom, 1) * 100dvh * 2000 / 1074);
   aspect-ratio: 2000 / 1074;
-  translate: -50% -60%;
+  translate: calc(-1 * var(--focus-x, 50%)) calc(-1 * var(--focus-y, 60%));
 }
 
 .photo {

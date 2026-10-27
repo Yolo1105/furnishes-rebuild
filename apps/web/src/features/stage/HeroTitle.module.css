@@ -1,8 +1,11 @@
-/* The title and whatever sits under it: placed at the stage's top left. */
+/* The title and whatever sits under it: placed at the stage's top left,
+   unless a stage moves it (--hero-top, --hero-bottom, --hero-right). */
 .hero {
   position: absolute;
   z-index: var(--z-content);
-  top: var(--nav-h);
+  top: var(--hero-top, var(--nav-h));
+  right: var(--hero-right, auto);
+  bottom: var(--hero-bottom, auto);
   left: var(--gutter);
   opacity: var(--title, 1);
 }
