@@ -36,42 +36,24 @@
   opacity: var(--photo, 1);
 }
 
-/* Each photo in its own layer, the one in view on top (PhotoIntro marks it
-   data-active). The next is drawn across the last from the right over
-   --fade, a clean edge rather than two photos through each other; the last
-   stays whole under it till covered, then steps back, unseen. */
+/* Each photo in its own layer; the one in view (PhotoIntro marks it
+   data-active) fades in as the last fades out, over --fade. */
 .slide {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  clip-path: inset(0 0 0 100%);
-  transition: clip-path 0s var(--fade);
+  opacity: 0;
+  transition: opacity var(--fade) ease-in-out;
 }
 
 .slide[data-active] {
-  z-index: 1;
-  clip-path: inset(0);
-  transition: clip-path var(--fade) var(--ease-panel);
+  opacity: 1;
 }
 
-/* While in view a photo drifts a little closer (--drift); one alone drifts
-   slower, and further. */
 .room {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  transition: transform 0s var(--fade);
-}
-
-.slide[data-active] .room {
-  transform: scale(1.06);
-  transition: transform var(--drift) linear;
-}
-
-.intro:not([data-rotating]) .slide[data-active] .room {
-  transform: scale(1.08);
-  transition: transform 30s linear;
 }
 
 /* Over a bright foot (data-foot="rust"), the words in the rust, bare. */
@@ -115,7 +97,7 @@
   margin: 0;
 }
 
-/* the caption rises in with each photo, as its curtain is half drawn */
+/* the caption rises in with each photo, as it fades up */
 .captionText {
   display: inline-block;
   animation: rise var(--dur-title) var(--ease-title) calc(var(--fade) * 0.4) both;
@@ -159,14 +141,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide,
-  .slide[data-active] {
+  .slide {
     transition: none;
-  }
-
-  .slide[data-active] .room,
-  .intro:not([data-rotating]) .slide[data-active] .room {
-    transform: none;
   }
 
   .captionText {

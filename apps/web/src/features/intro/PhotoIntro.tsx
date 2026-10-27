@@ -8,24 +8,23 @@ import styles from "./PhotoIntro.module.css";
 
 /**
  * The walk's opening, laid over it: a photo of a real room (or several in
- * turn) filling the screen, each drifting slowly closer while it is in
- * view; and along its foot the title on one line from edge to edge, with
- * one line of small words over it: the room's count and caption at its
- * start, the slogan at its end. As the page scrolls (PlanWalk sets --title and --photo) the words go,
- * then the photo fades straight to the plan of one room beneath; from there
- * PlanWalk's side panel tells the rest.
+ * turn) filling the screen, and along its foot the title on one line from
+ * edge to edge, with one line of small words over it: the room's count and
+ * caption at its start, the slogan at its end. As the page scrolls
+ * (PlanWalk sets --title and --photo) the words go, then the photo fades
+ * straight to the plan of one room beneath; from there PlanWalk's side
+ * panel tells the rest.
  */
 
 /** Where the ceiling meets the window wall, in the photos' own pixels (2000 x 1334): they are shown from just below it. */
 const CEILING = 260;
 
 /**
- * With more than one photo, each holds for ROTATE_MS (the live site's
- * carousel pace), drifting closer all the while it shows; then the next is
- * drawn across it from the right, like a curtain, over FADE_MS.
+ * With more than one photo, each holds for ROTATE_MS, then fades into the
+ * next over FADE_MS (the live site's carousel pace).
  */
 const ROTATE_MS = 5000;
-const FADE_MS = 1400;
+const FADE_MS = 1600;
 
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
@@ -59,10 +58,9 @@ export function PhotoIntro({ photos = [A_FRAME] }: { photos?: IntroPhoto[] }) {
       data-intro
       data-dark-under-bar
       data-wordmark-left
-      data-rotating={photos.length > 1 || undefined}
       data-bar={photos[photo]!.ink.bar}
       data-foot={photos[photo]!.ink.foot}
-      style={{ "--fade": `${FADE_MS}ms`, "--drift": `${ROTATE_MS + FADE_MS}ms` } as CSSProperties}
+      style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}
     >
       <div
         className={styles.frame}
