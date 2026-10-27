@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { WASH_CSS } from "@/features/stage/wash";
+import { Backdrop } from "@/features/stage/Backdrop";
 import styles from "./LandingLoader.module.css";
 import type { LandingLoaderPhase, LandingLoaderSceneHandle } from "./three/landing-scene-types";
 import { LOADER_TIMING } from "./three/loader-timing";
 
 /**
  * The live site's opening screen (furnishes_prod, LandingLoader), brought
- * over as it is: on the orange wash, an isometric modular sofa drops in
+ * over as it is: on the site's background, an isometric modular sofa drops in
  * block by block while a line traces round it and the count runs to 100;
  * then the pieces hop and are swallowed into the middle, and the cover
  * fades away to the landing. "furnishes." stays where the bar's wordmark is.
@@ -175,8 +175,10 @@ export function LandingLoader({ ready = true, allowReveal = false, onDone }: Lan
       aria-busy={phase === "run"}
       style={{ "--exit": `${LOADER_TIMING.exitMs}ms`, "--reveal": `${LOADER_TIMING.revealMs}ms` } as React.CSSProperties}
     >
-      {/* Single stage-matched wash: under the canvas during run; sole cover after hold. */}
-      <div className={styles.introCover} style={{ backgroundImage: WASH_CSS }} aria-hidden="true" />
+      {/* The site's background, matching the stage: under the canvas during run; sole cover after hold. */}
+      <div className={styles.introCover} aria-hidden="true">
+        <Backdrop still />
+      </div>
 
       <div ref={mountRef} className={styles.introCanvas} aria-hidden="true" />
 
