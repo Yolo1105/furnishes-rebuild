@@ -5,7 +5,7 @@
   color: var(--hero-ink, var(--color-rust-deep));
   font-family: var(--font-title);
   font-size: var(--text-hero);
-  font-weight: 100;
+  font-weight: 200;
   line-height: 0.86;
   white-space: nowrap;
   text-transform: uppercase;
@@ -22,7 +22,7 @@
   animation-delay: calc(var(--stagger) * 1.5);
 }
 
-/* the o's in the orange, whatever ink the rest is in */
+/* the marked letters in the orange, whatever ink the rest is in */
 .accent {
   color: var(--color-orange);
 }

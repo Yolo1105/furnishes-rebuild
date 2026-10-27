@@ -13,10 +13,10 @@ const archivo = Archivo({
   axes: ["wdth"],
 });
 
-// The landing title's face: Jost at its Thin, finer than Archivo goes.
+// The landing title's face: Jost ExtraLight, finer than Archivo goes.
 const jost = Jost({
   subsets: ["latin"],
-  weight: "100",
+  weight: "200",
   variable: "--font-jost",
   display: "swap",
 });
