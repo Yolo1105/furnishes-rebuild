@@ -103,32 +103,37 @@
   opacity: 1;
 }
 
-/* Between photos the title steps out, moves to the next photo's plain
-   area, and comes back in. */
-.textSwap {
-  transition: opacity var(--swap) ease-in-out;
+/* Each photo's own title fades with it. */
+.copy {
+  transition: opacity var(--fade) ease-in-out;
 }
 
-.intro[data-swapping] .textSwap {
+.copy:not([data-active]) {
   opacity: 0;
 }
 
-/* Where each photo has room for the title (data-spot), and whether it is a
-   dark photo that needs light ink (data-tone); phones held upright keep the
-   title at the foot on its wash, so this is for every other screen. */
+/* Where each photo has room for its title (data-spot), and whether it is a
+   dark photo that needs light ink (data-tone; the arrow follows the photo in
+   view); phones held upright keep the title at the foot on its wash, so this
+   is for every other screen. */
 @media not ((max-width: 600px) and (orientation: portrait)) {
-  .intro[data-spot="right"] .hero {
+  .hero[data-spot="right"] {
     --hero-left: auto;
     --hero-right: var(--gutter);
     text-align: right;
   }
 
-  .intro[data-spot="bottom"] .hero {
+  .hero[data-spot="right"] .tags {
+    justify-content: flex-end;
+  }
+
+  .hero[data-spot="bottom"] {
     --hero-top: auto;
     --hero-bottom: calc(var(--space-5) * 3 + var(--icon));
   }
 
-  .intro[data-tone="light"] {
+  .hero[data-tone="light"],
+  .intro[data-tone="light"] .cue {
     --hero-ink: var(--color-on-orange);
     --hero-ink-strong: var(--color-on-orange);
   }
@@ -171,10 +176,6 @@
   font-size: var(--text-nav);
   letter-spacing: var(--track);
   text-transform: uppercase;
-}
-
-.intro[data-spot="right"] .tags {
-  justify-content: flex-end;
 }
 
 .tags li {

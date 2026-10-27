@@ -32,11 +32,31 @@
   --bar-on-fg: var(--color-cream);
 }
 
-/* Over a dark photo in the opening (PhotoIntro's data-tone="light"), the
-   bar keeps its cream, whatever the background. */
-:global(html:has([data-light-under-bar][data-tone="light"])) .header {
-  --bar-fg: var(--color-on-orange);
-  --bar-on-fg: var(--color-orange-top);
+/* Over the opening's photos, each side of the bar takes the ink that reads
+   on what is under it: PhotoIntro marks a dark left (data-bar-start) or a
+   dark right (data-bar-end), and that side keeps its cream. Phones held
+   upright crop the photo differently, so they have their own marks. */
+@media not ((max-width: 600px) and (orientation: portrait)) {
+  :global(html:has([data-light-under-bar][data-bar-start="light"])) :is(.start, .wordmark),
+  :global(html:has([data-light-under-bar][data-bar-end="light"])) .end {
+    --bar-fg: var(--color-on-orange);
+    --bar-on-fg: var(--color-orange-top);
+  }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  :global(html:has([data-light-under-bar][data-phone-bar-start="light"])) :is(.start, .wordmark),
+  :global(html:has([data-light-under-bar][data-phone-bar-end="light"])) .end {
+    --bar-fg: var(--color-on-orange);
+    --bar-on-fg: var(--color-orange-top);
+  }
+}
+
+.start,
+.wordmark,
+.end {
+  color: var(--bar-fg);
+  transition: color var(--dur-panel) var(--ease-panel);
 }
 
 /* The wordmark keeps its cream: it sits over the room, not the panel
