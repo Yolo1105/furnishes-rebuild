@@ -1,5 +1,5 @@
 /* The opening, over the walk: the photo filling the screen as it is, and
-   along its foot a band of paper with the title cut out of it. PlanWalk sets its fades as the scroll goes
+   along its foot a band of paper with the title on it. PlanWalk sets its fades as the scroll goes
    (--title: the words; --photo: the photo, which fades straight to the plan
    beneath), marks it data-scrolled once the scroll is under way and
    data-done once the photo has gone.
@@ -51,13 +51,12 @@
   height: 100%;
 }
 
-/* The words, on larger screens, as a band of the page's paper along the
-   foot: one quiet line in the rust, the room at its start and the slogan at
-   its end, and under it the title cut out of the band (PhotoIntro's svg
-   mask) from edge to edge, so the photos show through its letters, whatever
-   their light. The title's text (an h1, HeroTitle) is kept for readers but
-   drawn only on phones. The words stay as the photos change; the caption
-   switches to the next photo's halfway through its fade. */
+/* The words, on larger screens, on a band of the page's paper along the
+   foot: one quiet line, the room at its start and the slogan at its end, and
+   under it the title on one line from edge to edge, in Jost Light (a step
+   heavier than elsewhere, at home on the paper); all in the rust, whatever
+   the photo. They stay as the photos change; the caption switches to the
+   next photo's halfway through its fade. */
 .words {
   position: absolute;
   right: 0;
@@ -65,27 +64,20 @@
   left: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  isolation: isolate;
-  overflow: hidden; /* the cut-out's paper fills it, and stops at its edges */
-  padding: var(--space-4) var(--gutter) var(--space-5);
+  gap: var(--space-5);
+  padding: var(--space-6) var(--gutter) calc(var(--space-7) + var(--space-2));
+  background: var(--color-paper);
   color: var(--color-rust-deep);
   opacity: var(--title, 1);
-}
-
-/* Under the paper, a shade over the photo: it shows only through the
-   letters, so a pale floor still reads through them. */
-.words::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: color-mix(in srgb, var(--color-night) 34%, transparent);
+  --hero-ink: var(--color-rust-deep);
+  --title-weight: 300;
+  --title-line: inline-block;
+  --title-gap: 0.3em;
+  /* the title fills the width between the bar's edges */
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 9.99);
 }
 
 .info {
-  position: relative; /* over the cut-out's paper */
-  z-index: 1;
   display: flex;
   justify-content: space-between;
   gap: var(--space-6);
@@ -108,46 +100,22 @@
   color: var(--color-orange);
 }
 
-/* the title's words, for readers only on these screens */
-.headline {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
-
-.cut {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-  fill: var(--color-paper);
-}
-
-/* a step heavier than the title elsewhere: its strokes are windows onto the photo */
-.cut text {
-  font-family: var(--font-title);
-  font-size: 100px;
-  font-weight: 300;
-}
-
 /* Phones held upright: the words at the bottom left instead, the room, an
    orange dot and the slogan as one line wrapping as it needs, then the title
    on two lines, "Revolution" filling the width. Inked for the photo's foot
    (data-title, data-small). */
 @media (max-width: 600px) and (orientation: portrait) {
-  .intro {
-    --text-hero: calc((100vw - 2 * var(--gutter)) / 6.2);
-  }
-
   .words {
     right: auto;
     bottom: var(--space-6);
     left: var(--gutter);
     max-width: calc(100% - 2 * var(--gutter));
+    gap: var(--space-4);
     padding: 0;
-    overflow: visible;
+    background: none;
+    --text-hero: calc((100vw - 2 * var(--gutter)) / 6.2);
+    --hero-ink: var(--ink);
+    --title-weight: 200;
     --title-line: block;
     --title-gap: 0;
   }
@@ -156,19 +124,6 @@
   .info {
     color: var(--ink);
     text-shadow: var(--shade);
-  }
-
-  .headline {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    clip-path: none;
-  }
-
-  .cut,
-  .words::before {
-    display: none;
   }
 
   .words[data-title="rust"] .headline,

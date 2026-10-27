@@ -1,12 +1,13 @@
 /* The title's type; a page places it, sizes it (--text-hero), may ink it
-   (--hero-ink), and may set its two words on one line (--title-line:
+   (--hero-ink) or set it a step heavier (--title-weight: 300), and may set its
+   two words on one line (--title-line:
    inline-block, with --title-gap between them; on two lines unless). */
 .title {
   margin: 0 0 0 -0.05em; /* the caps sit inside their box: line the ink up with what is beside it */
   color: var(--hero-ink, var(--color-rust-deep));
   font-family: var(--font-title);
   font-size: var(--text-hero);
-  font-weight: 200;
+  font-weight: var(--title-weight, 200);
   line-height: 0.92;
   white-space: nowrap;
   text-transform: uppercase;
