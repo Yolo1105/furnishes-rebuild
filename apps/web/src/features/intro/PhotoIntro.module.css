@@ -16,12 +16,8 @@
   --hero-ink-strong: var(--ink);
   /* only a wide, soft one: a tight shadow thickens the hairline */
   --shade: 0 0 32px color-mix(in srgb, var(--color-night) 35%, transparent);
-  /* the title on one line, set smaller so its hairline stays fine, and
-     tracked out so it still fills the width between the bar's edges: the
-     width is 18 em of it, its letters (and the gap between the words) take
-     14.3 em, and the 17 gaps between its 18 letters share the rest */
-  --text-hero: calc((100vw - 2 * var(--gutter)) / 18);
-  --title-track: calc((18em - 14.3em) / 17);
+  /* the title on one line fills the width between the bar's edges */
+  --text-hero: calc((100vw - 2 * var(--gutter)) / 14.2);
 }
 
 .intro[data-done] {
@@ -80,11 +76,6 @@
   text-shadow: var(--shade);
 }
 
-/* the last letter's tracking hangs past the right edge, so the ink ends on it */
-.headline h1 {
-  margin-right: calc(-1 * var(--title-track));
-  letter-spacing: var(--title-track);
-}
 
 .info {
   color: var(--ink);
@@ -131,7 +122,6 @@
 @media (max-width: 600px) and (orientation: portrait) {
   .intro {
     --text-hero: calc((100vw - 2 * var(--gutter)) / 8.1); /* "Revolution", the longer line, fills it */
-    --title-track: -0.01em; /* stacked, it is not tracked out */
   }
 
   .foot {
