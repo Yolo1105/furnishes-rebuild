@@ -1,5 +1,6 @@
 /* The plan's canvas over the page's background: the left or right half of
-   its parent (data-side); on phones held upright, all of it. */
+   its parent (data-side; on the right from --plan-from, if the page sets
+   it); on phones held upright, all of it. */
 .holder {
   position: absolute;
   inset: 0 50% 0 0;
@@ -7,7 +8,7 @@
 }
 
 .holder[data-side="right"] {
-  inset: 0 0 0 50%;
+  inset: 0 0 0 var(--plan-from, 50%);
 }
 
 @media (max-width: 600px) and (orientation: portrait) {

@@ -6,6 +6,7 @@
 }
 
 .view {
+  --plan-from: 44%; /* where the plan's side starts (FlatPlan, side right) */
   position: sticky;
   top: 0;
   height: 100vh;
@@ -13,12 +14,12 @@
   overflow: hidden;
 }
 
-/* The left half: the headline at the top, the room in the middle, the tabs
-   at the foot. */
+/* The left (as much as the plan leaves, --plan-from): the headline at the
+   top, the room in the middle, level with the plan, the tabs at the foot. */
 .words {
   position: absolute;
   z-index: var(--z-content);
-  inset: var(--nav-h) 50% 0 0;
+  inset: var(--nav-h) calc(100% - var(--plan-from)) 0 0;
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--space-6);
@@ -44,14 +45,14 @@
 .room {
   display: flex;
   align-items: flex-end;
-  align-self: end;
-  gap: var(--space-7);
+  align-self: center;
+  gap: var(--space-6);
 }
 
 .numeral {
   margin: 0 0 -0.12em;
   font-family: var(--font-title);
-  font-size: clamp(110px, 13vw, 220px);
+  font-size: clamp(96px, 10vw, 170px);
   font-weight: 200;
   line-height: 0.8;
   font-variant-numeric: tabular-nums;
