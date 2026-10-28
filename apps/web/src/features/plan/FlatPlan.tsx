@@ -10,7 +10,7 @@ import { addSheet, buildFlatScene } from "./scene";
 /** The flat's bounds on the ground, m: [x0, z0, x1, z1]. */
 const FLAT = [BOUNDS_M.x0, BOUNDS_M.y0, BOUNDS_M.x1, BOUNDS_M.y1] as const;
 
-/** Room left round the plan, px: at the sides and foot, and under the bar. */
+/** Room left round the plan, px: at the sides and foot, and below the bar. */
 const BREATHE = 40;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -18,9 +18,9 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
 /**
  * The whole flat as the walk draws it at its plan stage, held still: every
  * wall, door, window and room name, and the furniture and fittings drawn as
- * a plan draws them; fitted, centred, into the screen below the bar. It
- * fills its (positioned) parent, with the page's background showing round
- * it. Without WebGL it says so instead.
+ * a plan draws them, with no grid round it; fitted, centred, into the
+ * screen below the bar. It fills its (positioned) parent, with the page's
+ * background showing round it. Without WebGL it says so instead.
  */
 export function FlatPlan() {
   const holderRef = useRef<HTMLDivElement>(null);
@@ -81,7 +81,7 @@ export function FlatPlan() {
       const [ax, bx] = [((a.x + 1) / 2) * w, ((b.x + 1) / 2) * w];
       const [ay, by] = [((1 - a.y) / 2) * h, ((1 - b.y) / 2) * h];
       const flat = { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
-      const top = parseFloat(css("--nav-h")) + BREATHE / 2;
+      const top = parseFloat(css("--nav-h")) + BREATHE;
       const space = { cx: w / 2, cy: (top + h - BREATHE) / 2, w: w - 2 * BREATHE, h: h - BREATHE - top };
       const z = Math.min(space.w / flat.w, space.h / flat.h);
       camera.setViewOffset(w, h, flat.cx - space.cx / z, flat.cy - space.cy / z, w / z, h / z);
@@ -99,7 +99,7 @@ export function FlatPlan() {
     const font = css("--font-space-mono") || "monospace";
     document.fonts.load(`700 40px ${font}`).finally(() => {
       if (!alive) return;
-      const sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox);
+      const sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, false); // no ground grid
       sheet.fade(1);
       sheet.furnishTo(FLAT[2] + 1); // every piece, right across the flat
       draw();

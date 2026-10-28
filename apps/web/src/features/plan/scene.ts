@@ -498,7 +498,8 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
  * metre grid on the ground. All of it lies on the floor or the ground. The
  * notes that only make sense on a flat drawing fade as the walls rise; room
  * names, tiles, window glass and the ground grid stay.
- * `lineMats` collects the line materials so the caller can size them.
+ * `lineMats` collects the line materials so the caller can size them;
+ * `grid` false leaves out the ground's metre grid.
  */
 export function addSheet(
   scene: THREE.Scene,
@@ -507,6 +508,7 @@ export function addSheet(
   disposables: { dispose(): void }[],
   lineMats: LineMaterial[],
   box: THREE.Plane[] = [],
+  grid = true,
 ) {
   const PX = 220; // canvas pixels a metre
   const FLOOR = 0.003; // notes lie this far over the floor, m
@@ -711,11 +713,13 @@ export function addSheet(
     const ring = RINGS.findIndex((r) => away((x0 + x1) / 2, (z0 + z1) / 2) < r.out);
     if (ring >= 0) rings[ring]!.push(x0, GROUND, z0, x1, GROUND, z1);
   };
-  for (let x = gx0; x <= gx1; x++) for (let z = gz0; z < gz1; z++) put(x, z, x, z + 1);
-  for (let z = gz0; z <= gz1; z++) for (let x = gx0; x < gx1; x++) put(x, z, x + 1, z);
-  grounded = true;
-  rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
-  grounded = false;
+  if (grid) {
+    for (let x = gx0; x <= gx1; x++) for (let z = gz0; z < gz1; z++) put(x, z, x, z + 1);
+    for (let z = gz0; z <= gz1; z++) for (let x = gx0; x < gx1; x++) put(x, z, x + 1, z);
+    grounded = true;
+    rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
+    grounded = false;
+  }
 
   return {
     /** How much of the flat-drawing notes shows, 0 to 1. */
