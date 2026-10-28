@@ -98,32 +98,42 @@
   padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-5);
 }
 
-/* The scale at the page's far left, on the bar's margin: fine ticks down its length, a
-   longer tick and number for each room, the room in view dark, and a marker
-   that glides from mark to mark as the walk goes (--along, set as it scrolls). */
+/* The scale at the page's far left, on the bar's margin, fading out above
+   and below: fine ticks, and a number and longer tick for each room, --gap
+   apart. It slides as the walk goes (--along, set as it scrolls) so the room
+   in view's mark sits at --point-y, level with its big number, where the
+   pointer meets it. */
 .ruler {
+  --gap: clamp(90px, 15vh, 150px);
   position: absolute;
   z-index: var(--z-content);
-  top: var(--frame-top);
-  bottom: var(--frame-foot);
+  top: var(--nav-h);
+  bottom: 0;
   left: var(--gutter);
   width: var(--ruler-w);
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, black 22%, black 78%, transparent);
 }
 
-/* a fine tick, --t rooms down the scale */
-.tick {
+/* where a mark or tick --at rooms down the scale lands */
+.tick,
+.mark {
   position: absolute;
-  top: calc(var(--t) / (var(--rooms) - 1) * (100% - 1px));
-  left: 0;
+  right: 0;
+  top: calc(var(--point-y, 50%) - var(--nav-h) + (var(--at) - var(--along, 0)) * var(--gap));
+}
+
+/* a fine tick */
+.tick {
+  --at: var(--t);
   width: var(--space-2);
   height: 1px;
   background: var(--color-line-strong);
 }
 
+/* a room's number, then its longer tick, at the scale's right edge */
 .mark {
-  position: absolute;
-  top: calc(var(--i) / (var(--rooms) - 1) * (100% - 1px));
-  left: 0;
+  --at: var(--i);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -135,8 +145,7 @@
   transition: color var(--dur) ease;
 }
 
-/* the room's tick, longer than the fine ones */
-.mark::before {
+.mark::after {
   content: "";
   width: var(--space-4);
   height: 1px;
@@ -147,11 +156,13 @@
   color: var(--color-ink);
 }
 
-.marker {
+/* The pointer: from the scale's edge to the big number, level with it. */
+.pointer {
   position: absolute;
-  top: calc(var(--along, 0) / (var(--rooms) - 1) * (100% - 1px));
-  left: calc(-1 * var(--space-3));
-  width: var(--space-3);
+  z-index: var(--z-content);
+  top: var(--point-y, 50%);
+  left: calc(var(--gutter) + var(--ruler-w));
+  width: calc(var(--space-5) - var(--space-1));
   height: 1px;
   background: var(--color-ink);
 }
@@ -168,7 +179,8 @@
   }
 
   .headline,
-  .ruler {
+  .ruler,
+  .pointer {
     display: none;
   }
 

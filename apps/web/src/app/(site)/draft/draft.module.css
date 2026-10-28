@@ -5,27 +5,42 @@
   min-height: 100dvh;
 }
 
-/* On the bar's margins: the headline under the bar, the photo under that. */
-.content {
+/* The photo over the whole screen, the bar on top of it. */
+.hero {
   position: relative;
   z-index: var(--z-content);
-  display: grid;
-  gap: var(--space-6);
-  padding: calc(var(--nav-h) + var(--space-2)) var(--gutter) var(--gutter);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
+.photo {
+  object-fit: cover;
+}
+
+/* Shades at the photo's top and foot, so the bar and the headline read over it. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgb(0 0 0 / 0.5), transparent 22%),
+    linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 45%);
+  pointer-events: none;
+}
+
+/* Over the photo, at its foot on the bar's left margin. */
 .headline {
+  position: absolute;
+  z-index: 1;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: var(--gutter);
   margin: 0;
   font-family: var(--font-title);
   font-size: calc(var(--text-hero) * 0.65); /* well under the landing title */
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--color-ink);
-}
-
-.photo {
-  display: block;
-  width: 100%;
-  height: auto;
+  color: var(--color-cream);
 }
