@@ -18,12 +18,13 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
 /**
  * The whole flat as the walk draws it at its plan stage, held still: every
  * wall, door, window and room name, and the furniture and fittings drawn as
- * a plan draws them, with no grid round it; fitted, centred, into the left
- * half of its (positioned) parent below the bar (all of it on phones held
+ * a plan draws them, with no grid round it and its floors unfilled; fitted, centred, into one half
+ * of its (positioned) parent below the bar (all of it on phones held
  * upright), the page's background showing round it. Without WebGL it says
  * so instead.
  */
-export function FlatPlan() {
+/** `side`: which half of its parent the plan takes. */
+export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
   const holderRef = useRef<HTMLDivElement>(null);
   const fallbackRef = useRef<HTMLParagraphElement>(null);
 
@@ -49,7 +50,7 @@ export function FlatPlan() {
     renderer.setClearColor(0x000000, 0);
 
     const palette = { paper: css("--color-paper"), ink: css("--color-ink") };
-    const { scene, cut, lineMats, disposables, rise, reveal, roomBox } = buildFlatScene(palette);
+    const { scene, cut, lineMats, disposables, rise, reveal, roomBox } = buildFlatScene(palette, { floors: false });
     // the whole flat, as a flat drawing
     reveal(FLAT, 1);
     rise(0);
@@ -121,7 +122,7 @@ export function FlatPlan() {
 
   return (
     <>
-      <div ref={holderRef} className={styles.holder} role="img" aria-label="The plan of a 5-room HDB flat, furnished" />
+      <div ref={holderRef} className={styles.holder} data-side={side} role="img" aria-label="The plan of a 5-room HDB flat, furnished" />
       <p ref={fallbackRef} className={styles.fallback} hidden>
         This view needs WebGL, which this browser has turned off.
       </p>

@@ -4,6 +4,7 @@ import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
 import {
   AC_LEDGE,
+  type Box,
   BAYS,
   BOUNDS_M,
   CEILING,
@@ -64,7 +65,12 @@ const SHADE = { up: 1, x: 0.93, z: 0.87, down: 0.8 };
 /** Where the materials sweep out from: the bookcase, m on the floor (x, z). */
 const SWEEP_FROM = new THREE.Vector2(9.72, 2.0);
 
-export function buildFlatScene(palette: Palette) {
+/**
+ * `floors` false leaves the floors unfilled, so the page shows through
+ * them: the shell is drawn without its floor's top, nor the slab's
+ * underside that would show, as the cut shows it, through the gap.
+ */
+export function buildFlatScene(palette: Palette, { floors = true }: { floors?: boolean } = {}) {
   const scene = new THREE.Scene();
   const paper = new THREE.Color(palette.paper);
   const ink = new THREE.Color(palette.ink);
@@ -172,17 +178,52 @@ export function buildFlatScene(palette: Palette) {
     return new LineSegments2(lg, mat);
   };
 
-  /** A solid object: shaded paper faces, its inside, ink edges. */
+  /**
+   * The triangles of a (non-indexed) geometry but those `drop` picks, by
+   * their normal's y, their height and their middle on the ground (x, z).
+   */
+  const keep = (g: THREE.BufferGeometry, drop: (ny: number, y: number, x: number, z: number) => boolean) => {
+    const [n, p] = [g.getAttribute("normal"), g.getAttribute("position")];
+    const mid = (i: number, get: (v: number) => number) => (get(i) + get(i + 1) + get(i + 2)) / 3;
+    const kept = new THREE.BufferGeometry();
+    for (const name of Object.keys(g.attributes)) {
+      const a = g.getAttribute(name);
+      const out: number[] = [];
+      for (let i = 0; i < n.count; i += 3) {
+        if (drop(n.getY(i), p.getY(i), mid(i, (v) => p.getX(v)), mid(i, (v) => p.getZ(v)))) continue;
+        for (let v = i; v < i + 3; v++) for (let k = 0; k < a.itemSize; k++) out.push(a.array[v * a.itemSize + k]!);
+      }
+      kept.setAttribute(name, new THREE.Float32BufferAttribute(out, a.itemSize));
+    }
+    disposables.push(kept);
+    return kept;
+  };
+
+  /**
+   * A solid object: shaded paper faces, its inside, ink edges. `open`, the
+   * boxes (m, on the ground) where its floor is left unfilled: the faces
+   * without the floor's top (up, at 0), the inside without the slab's
+   * underside inside them; under the walls the underside stays, the poché
+   * the cut shows.
+   */
   const solid = (
     g: THREE.BufferGeometry,
     width: number,
     inside: THREE.Material,
-    { inkFrom, finish = null, into = scene }: { inkFrom?: number; finish?: Finish; into?: THREE.Object3D } = {},
+    {
+      inkFrom,
+      finish = null,
+      into = scene,
+      open = null,
+    }: { inkFrom?: number; finish?: Finish; into?: THREE.Object3D; open?: readonly Box[] | null } = {},
   ) => {
     shade(g, inkFrom, finish);
     disposables.push(g);
+    const under = (x: number, z: number) => open!.some(([x0, z0, x1, z1]) => x > x0 && x < x1 && z > z0 && z < z1);
+    const faces = open ? keep(g, (ny, y) => ny > 0.5 && Math.abs(y) < 0.01) : g;
+    const back = open ? keep(g, (ny, _y, x, z) => ny < -0.5 && under(x, z)) : g;
     const group = new THREE.Group();
-    group.add(new THREE.Mesh(g, faceMat), new THREE.Mesh(g, inside), lines(g, width));
+    group.add(new THREE.Mesh(faces, faceMat), new THREE.Mesh(back, inside), lines(g, width));
     into.add(group);
     return group;
   };
@@ -243,6 +284,17 @@ export function buildFlatScene(palette: Palette) {
     inkFrom: H - 0.001,
     // the floor is oak and the walls plaster; the slab's edges stay paper
     finish: (ny, y) => (ny > 0.5 && Math.abs(y) < 0.01 ? FINISH.floor : Math.abs(ny) < 0.5 && y > -0.01 ? FINISH.wall : null),
+    // unfilled: every room's clear floor, the A/C ledge's, and every doorway's through its wall
+    open: floors
+      ? null
+      : [
+          ...clear.map(([x0, y0, x1, y1]): Box => [x0 * M, y0 * M, x1 * M, y1 * M]),
+          [AC_LEDGE.x0 * M, AC_LEDGE.y0 * M, AC_LEDGE.x1 * M, AC_LEDGE.y1 * M],
+          ...[...DOORS, FRONT_DOOR].map((op): Box => {
+            const [a0, a1, c0, c1] = [(op.at - op.width / 2) * M, (op.at + op.width / 2) * M, op.across * M - 0.25, op.across * M + 0.25];
+            return op.run === "ew" ? [a0, c0, a1, c1] : [c0, a0, c1, a1];
+          }),
+        ],
   });
 
   // ---- furniture and fittings ---------------------------------------------

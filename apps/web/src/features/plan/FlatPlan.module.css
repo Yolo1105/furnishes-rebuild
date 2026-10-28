@@ -1,14 +1,19 @@
-/* The plan's canvas over the page's background: the left half of its
-   parent; on phones held upright, all of it. */
+/* The plan's canvas over the page's background: the left or right half of
+   its parent (data-side); on phones held upright, all of it. */
 .holder {
   position: absolute;
   inset: 0 50% 0 0;
   z-index: var(--z-content);
 }
 
+.holder[data-side="right"] {
+  inset: 0 0 0 50%;
+}
+
 @media (max-width: 600px) and (orientation: portrait) {
-  .holder {
-    right: 0;
+  .holder,
+  .holder[data-side="right"] {
+    inset: 0;
   }
 }
 
