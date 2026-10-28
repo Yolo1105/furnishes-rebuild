@@ -10,16 +10,16 @@
   position: relative;
   z-index: var(--z-content);
   display: grid;
-  gap: calc(var(--space-7) * 1.5);
-  padding: calc(var(--nav-h) + var(--space-7) * 1.5) var(--gutter) var(--gutter);
+  gap: var(--space-6);
+  padding: calc(var(--nav-h) + var(--space-2)) var(--gutter) var(--gutter);
 }
 
 .headline {
   margin: 0;
   font-family: var(--font-title);
-  font-size: var(--text-hero);
+  font-size: calc(var(--text-hero) * 0.8); /* a step under the landing title */
   font-weight: 300;
-  line-height: 1.05;
+  line-height: 1;
   letter-spacing: -0.02em;
   color: var(--color-ink);
 }

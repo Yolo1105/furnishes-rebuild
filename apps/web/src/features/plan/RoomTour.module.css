@@ -10,6 +10,7 @@
    the plan centred in its side of it, up to the right margin (FlatPlan reads
    its holder's padding). */
 .view {
+  --ruler-w: 56px; /* the scale's width, at the plan's left */
   --plan-from: 30%; /* where the plan's side starts (FlatPlan, side right): it takes 70% */
   --frame-top: calc(var(--nav-h) + var(--space-6));
   --frame-foot: var(--space-7);
@@ -35,10 +36,9 @@
 }
 
 .headline {
-  max-width: 16ch;
   margin: 0;
   font-family: var(--font-mono); /* the bar's face */
-  font-size: clamp(26px, 2.5vw, 42px);
+  font-size: clamp(20px, 2.1vw, 36px); /* "Start at the door," on one line in the column */
   font-weight: 400;
   line-height: 1.12;
   letter-spacing: -0.03em;
@@ -66,7 +66,7 @@
 }
 
 .about {
-  max-width: 30ch;
+  max-width: 24em; /* in the line's em: the name may run past it */
   animation: rise var(--dur-slow) var(--ease-title) both;
 }
 
@@ -94,7 +94,65 @@
 }
 
 .view :global([data-side="right"]) {
-  padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-5);
+  padding: var(--frame-top) var(--gutter) var(--frame-foot) calc(var(--ruler-w) + var(--space-6));
+}
+
+/* The scale at the left of the plan's side: fine ticks down its length, a
+   longer tick and number for each room, the room in view dark, and a marker
+   that glides from mark to mark as the walk goes (--along, set as it scrolls). */
+.ruler {
+  position: absolute;
+  z-index: var(--z-content);
+  top: var(--frame-top);
+  bottom: var(--frame-foot);
+  left: calc(var(--plan-from) + var(--space-5));
+  width: var(--ruler-w);
+}
+
+/* a fine tick, --t rooms down the scale */
+.tick {
+  position: absolute;
+  top: calc(var(--t) / (var(--rooms) - 1) * (100% - 1px));
+  left: 0;
+  width: var(--space-2);
+  height: 1px;
+  background: var(--color-line-strong);
+}
+
+.mark {
+  position: absolute;
+  top: calc(var(--i) / (var(--rooms) - 1) * (100% - 1px));
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-ink-soft);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1;
+  translate: 0 -50%;
+  transition: color var(--dur) ease;
+}
+
+/* the room's tick, longer than the fine ones */
+.mark::before {
+  content: "";
+  width: var(--space-4);
+  height: 1px;
+  background: currentColor;
+}
+
+.mark[data-on] {
+  color: var(--color-ink);
+}
+
+.marker {
+  position: absolute;
+  top: calc(var(--along, 0) / (var(--rooms) - 1) * (100% - 1px));
+  left: calc(-1 * var(--space-3));
+  width: var(--space-3);
+  height: 1px;
+  background: var(--color-ink);
 }
 
 /* Phones held upright: the plan on the top half (FlatPlan), the words under
@@ -108,8 +166,13 @@
     padding: var(--space-4) var(--gutter) var(--space-5);
   }
 
-  .headline {
+  .headline,
+  .ruler {
     display: none;
+  }
+
+  .view :global([data-side="right"]) {
+    padding: calc(var(--nav-h) + var(--space-4)) var(--gutter) var(--space-4);
   }
 
   .room {
