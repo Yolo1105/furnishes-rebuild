@@ -202,8 +202,8 @@ export function buildFlatScene(palette: Palette, { floors = true }: { floors?: b
   /**
    * A solid object: shaded paper faces, its inside, ink edges. `open`, the
    * boxes (m, on the ground) where its floor is left unfilled: the faces
-   * without the floor's top (up, at 0), the inside without the slab's
-   * underside inside them; under the walls the underside stays, the poché
+   * without the floor's top (up, at 0) or any ledge's top inside them, the
+   * inside without the slab's underside inside them; under the walls the underside stays, the poché
    * the cut shows.
    */
   const solid = (
@@ -220,7 +220,10 @@ export function buildFlatScene(palette: Palette, { floors = true }: { floors?: b
     shade(g, inkFrom, finish);
     disposables.push(g);
     const under = (x: number, z: number) => open!.some(([x0, z0, x1, z1]) => x > x0 && x < x1 && z > z0 && z < z1);
-    const faces = open ? keep(g, (ny, y) => ny > 0.5 && Math.abs(y) < 0.01) : g;
+    // a floor's top, or a ledge's in a bay, but never a wall's (ink, at the full height)
+    const faces = open
+      ? keep(g, (ny, y, x, z) => ny > 0.5 && y < CEILING * M - 0.01 && (Math.abs(y) < 0.01 || under(x, z)))
+      : g;
     const back = open ? keep(g, (ny, _y, x, z) => ny < -0.5 && under(x, z)) : g;
     const group = new THREE.Group();
     group.add(new THREE.Mesh(faces, faceMat), new THREE.Mesh(back, inside), lines(g, width));
@@ -284,12 +287,13 @@ export function buildFlatScene(palette: Palette, { floors = true }: { floors?: b
     inkFrom: H - 0.001,
     // the floor is oak and the walls plaster; the slab's edges stay paper
     finish: (ny, y) => (ny > 0.5 && Math.abs(y) < 0.01 ? FINISH.floor : Math.abs(ny) < 0.5 && y > -0.01 ? FINISH.wall : null),
-    // unfilled: every room's clear floor, the A/C ledge's, and every doorway's through its wall
+    // unfilled: every room's clear floor, the A/C ledge's, the bays' ledges, and every doorway's through its wall
     open: floors
       ? null
       : [
           ...clear.map(([x0, y0, x1, y1]): Box => [x0 * M, y0 * M, x1 * M, y1 * M]),
           [AC_LEDGE.x0 * M, AC_LEDGE.y0 * M, AC_LEDGE.x1 * M, AC_LEDGE.y1 * M],
+          ...BAYS.map((b): Box => [b.x0 * M, -OUTER_WALL * M - b.depth * M, b.x1 * M, 0]),
           ...[...DOORS, FRONT_DOOR].map((op): Box => {
             const [a0, a1, c0, c1] = [(op.at - op.width / 2) * M, (op.at + op.width / 2) * M, op.across * M - 0.25, op.across * M + 0.25];
             return op.run === "ew" ? [a0, c0, a1, c1] : [c0, a0, c1, a1];
