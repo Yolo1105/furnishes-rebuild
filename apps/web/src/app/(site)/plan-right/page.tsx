@@ -1,13 +1,6 @@
-import { FlatPlan } from "@/features/plan/FlatPlan";
-import { Backdrop } from "@/features/stage/Backdrop";
-import styles from "../plan/plan.module.css";
+import { RoomTour } from "@/features/plan/RoomTour";
 
-/** As /plan, the plan in the right half instead: the bar, the site's background and the 2D floor plan. */
+/** A walk round the flat room by room: the words on the left, the plan on the right picking out each room in turn. */
 export default function PlanRightPage() {
-  return (
-    <main className={styles.page}>
-      <Backdrop />
-      <FlatPlan side="right" />
-    </main>
-  );
+  return <RoomTour />;
 }

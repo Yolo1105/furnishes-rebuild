@@ -2,13 +2,36 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { BOUNDS_M } from "./flat";
+import { AC_LEDGE, BAYS, BOUNDS_M, OUTER_WALL, ROOMS, sidesOf } from "./flat";
 import styles from "./FlatPlan.module.css";
 import { makeRig, STOPS } from "./rig";
 import { addSheet, buildFlatScene } from "./scene";
 
 /** The flat's bounds on the ground, m: [x0, z0, x1, z1]. */
 const FLAT = [BOUNDS_M.x0, BOUNDS_M.y0, BOUNDS_M.x1, BOUNDS_M.y1] as const;
+
+/**
+ * How far a room's box reaches past its floor, m, when it is picked out
+ * alone: to the far face of a wall it shares (so it has the whole wall), or
+ * just past an outside wall; further where what stands out from that wall is
+ * the room's too (a bay window, the A/C ledge).
+ */
+const SHARED = 0.21; // the face is at 0.2; just past it, so the clip never lies on it and flickers
+const OUTSIDE = 0.12;
+const outTo = (r: (typeof ROOMS)[number], side: number) => {
+  if (side === 1 && AC_LEDGE.y0 >= r.y && AC_LEDGE.y1 <= r.y + r.d) return (AC_LEDGE.x1 - (r.x + r.w)) / 1000 + 0.05;
+  const bay = BAYS.find((b) => b.x0 >= r.x && b.x1 <= r.x + r.w);
+  if (side === 2 && r.y === 0 && bay) return (bay.depth + OUTER_WALL) / 1000 + 0.05;
+  return OUTSIDE;
+};
+
+/** Each room's box on the ground, m [x0, z0, x1, z1], by its key: what is drawn as that room. */
+const BOXES = new Map(
+  ROOMS.map((r) => {
+    const [w, e, n, s] = sidesOf(r).map((side, i) => (side.inner.length ? SHARED : outTo(r, i)));
+    return [r.key, [r.x / 1000 - w!, r.y / 1000 - n!, (r.x + r.w) / 1000 + e!, (r.y + r.d) / 1000 + s!] as const];
+  }),
+);
 
 /** Room left round the plan, px: at its sides and foot, and below the bar. */
 const BREATHE = 40;
@@ -20,13 +43,16 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
  * wall, door, window and room name, and the furniture and fittings drawn as
  * a plan draws them, every line in full ink, with no grid round it, no tile
  * joints and its floors unfilled; fitted, centred, into one half of its
- * (positioned) parent below the bar (all of it on phones held upright), the
- * page's background showing round it. Without WebGL it says so instead.
+ * (positioned) parent below the bar (`side`; all of it on phones held
+ * upright), the page's background showing round it. With a `highlight` (a
+ * room's key, flat.ts), that room stands out in full and the rest of the
+ * flat sits faded behind it. Without WebGL it says so instead.
  */
-/** `side`: which half of its parent the plan takes. */
-export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
+export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | "right"; highlight?: string | null }) {
   const holderRef = useRef<HTMLDivElement>(null);
   const fallbackRef = useRef<HTMLParagraphElement>(null);
+  const highlightRef = useRef(highlight);
+  const redrawRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const holder = holderRef.current;
@@ -35,13 +61,18 @@ export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
     // cleanup) can't be drawn on again, as when React runs this twice
     const canvas = document.createElement("canvas");
     canvas.className = styles.canvas!;
-    holder.append(canvas);
+    // under it, the whole flat, faded, while one room stands out on the canvas
+    const under = document.createElement("canvas");
+    under.className = `${styles.canvas} ${styles.under}`;
+    holder.append(under, canvas);
+    const underCtx = under.getContext("2d");
 
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     } catch {
       canvas.remove();
+      under.remove();
       fallbackRef.current?.removeAttribute("hidden");
       return;
     }
@@ -51,9 +82,7 @@ export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
 
     const palette = { paper: css("--color-paper"), ink: css("--color-ink") };
     const { scene, cut, lineMats, disposables, rise, reveal, roomBox } = buildFlatScene(palette, { floors: false });
-    // the whole flat, as a flat drawing
-    reveal(FLAT, 1);
-    rise(0);
+    rise(0); // a flat drawing
     const camera = new THREE.PerspectiveCamera(2, 1, 1, 500);
     camera.rotation.order = "YXZ";
     const corner = new THREE.Vector3();
@@ -87,8 +116,20 @@ export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
       const space = { cx: w / 2, cy: (top + h - BREATHE) / 2, w: w - 2 * BREATHE, h: h - BREATHE - top };
       const z = Math.min(space.w / flat.w, space.h / flat.h);
       camera.setViewOffset(w, h, flat.cx - space.cx / z, flat.cy - space.cy / z, w / z, h / z);
+      // the whole flat; then, with a room picked out, that copied under and the room alone over it
+      reveal(FLAT, 1);
       renderer.render(scene, camera);
+      const room = highlightRef.current && BOXES.get(highlightRef.current);
+      holder.toggleAttribute("data-picked", Boolean(room));
+      if (room && underCtx) {
+        [under.width, under.height] = [canvas.width, canvas.height];
+        underCtx.drawImage(canvas, 0, 0);
+        renderer.clear();
+        reveal(room, 0);
+        renderer.render(scene, camera);
+      }
     };
+    redrawRef.current = draw;
 
     const sized = new ResizeObserver(draw);
     sized.observe(canvas);
@@ -117,8 +158,15 @@ export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
       renderer.dispose();
       renderer.forceContextLoss();
       canvas.remove();
+      under.remove();
     };
   }, []);
+
+  // another room picked out: draw again
+  useEffect(() => {
+    highlightRef.current = highlight;
+    redrawRef.current();
+  }, [highlight]);
 
   return (
     <>

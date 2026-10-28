@@ -1,0 +1,189 @@
+/* A track of scroll, a stretch (--hold) for each room, and the view that
+   stays on screen through it: words on the left, the plan on the right. */
+.track {
+  position: relative;
+  height: calc(100vh + var(--rooms) * var(--hold));
+}
+
+.view {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* The left half: the headline at the top, the room in the middle, the tabs
+   at the foot. */
+.words {
+  position: absolute;
+  z-index: var(--z-content);
+  inset: var(--nav-h) 50% 0 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-7) var(--space-7) var(--gutter);
+  color: var(--color-ink);
+}
+
+.headline {
+  max-width: 14ch;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(32px, 3.6vw, 56px);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.soft {
+  color: var(--color-ink-soft);
+}
+
+/* The room: its number, large and light, beside its name and line. */
+.room {
+  display: flex;
+  align-items: flex-end;
+  align-self: end;
+  gap: var(--space-7);
+}
+
+.numeral {
+  margin: 0 0 -0.12em;
+  font-family: var(--font-title);
+  font-size: clamp(110px, 13vw, 220px);
+  font-weight: 200;
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+
+.about {
+  max-width: 34ch;
+  padding-bottom: var(--space-2);
+  animation: rise var(--dur-slow) var(--ease-title) both;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-display);
+  font-weight: 400;
+}
+
+.line {
+  margin: var(--space-3) 0 0;
+  color: var(--color-ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--text-lede);
+  line-height: 1.55;
+}
+
+.see {
+  display: inline-block;
+  margin-top: var(--space-5);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid currentColor;
+  font-family: var(--font-sans);
+  font-size: var(--text-lede);
+  text-decoration: none;
+}
+
+.cue {
+  margin: var(--space-5) 0 0;
+  color: var(--color-ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+}
+
+/* Every room along the foot, under a line that fills as the walk goes. */
+.tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--rooms, 10), 1fr);
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
+}
+
+.progress {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-ink);
+  transform: scaleX(var(--at));
+  transform-origin: left;
+  transition: transform var(--dur) ease;
+}
+
+.tab {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.tab[data-on] {
+  color: var(--color-ink);
+}
+
+.tabNo {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
+}
+
+/* Phones held upright: the plan on the top half (FlatPlan), the words under
+   it; the tabs scroll sideways. */
+@media (max-width: 600px) and (orientation: portrait) {
+  .words {
+    inset: 50% 0 0;
+    grid-template-rows: auto auto; /* the room, then the tabs: no headline */
+    align-content: start;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--gutter) var(--space-5);
+  }
+
+  .headline {
+    display: none;
+  }
+
+  .room {
+    align-self: start;
+    gap: var(--space-5);
+  }
+
+  .numeral {
+    font-size: 96px;
+  }
+
+  .tabs {
+    grid-template-columns: repeat(var(--rooms, 10), max-content);
+    gap: var(--space-5);
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about {
+    animation: none;
+  }
+
+  .progress {
+    transition: none;
+  }
+}

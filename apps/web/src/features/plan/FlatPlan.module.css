@@ -11,9 +11,13 @@
 }
 
 @media (max-width: 600px) and (orientation: portrait) {
-  .holder,
-  .holder[data-side="right"] {
+  .holder {
     inset: 0;
+  }
+
+  /* on the right, as the room tour sets it: the top half, words under it */
+  .holder[data-side="right"] {
+    inset: 0 0 50%;
   }
 }
 
@@ -24,6 +28,16 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* the whole flat, faded, under the room picked out (data-picked) */
+.under {
+  display: none;
+  opacity: 0.22;
+}
+
+.holder[data-picked] .under {
+  display: block;
 }
 
 .fallback {
