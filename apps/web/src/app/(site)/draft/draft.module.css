@@ -24,7 +24,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgb(0 0 0 / 0.5), transparent 22%),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-rust-deep) 48%, transparent), transparent 19%),
     linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 45%);
   pointer-events: none;
 }

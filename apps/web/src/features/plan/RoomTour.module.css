@@ -10,7 +10,8 @@
    the plan centred in its side of it, up to the right margin (FlatPlan reads
    its holder's padding). */
 .view {
-  --ruler-w: 44px; /* the scale's width, at the far left */
+  --ruler-w: var(--space-4); /* the scale's width, at the far left */
+  --ruler-x: calc(var(--gutter) - var(--ruler-w) - var(--space-4)); /* its left edge: in the margin, just left of the words */
   --plan-from: 30%; /* where the plan's side starts (FlatPlan, side right): it takes 70% */
   --frame-top: calc(var(--nav-h) + var(--space-6));
   --frame-foot: var(--space-7);
@@ -32,7 +33,7 @@
   align-content: center; /* one block, level with the plan */
   gap: calc(var(--space-7) * 2);
   /* clear of the scale at the far left */
-  padding: var(--space-6) var(--space-5) var(--frame-foot) calc(var(--gutter) + var(--ruler-w) + var(--space-5));
+  padding: var(--space-6) var(--space-5) var(--frame-foot) var(--gutter); /* on the bar's margin, the scale left of it */
   color: var(--color-ink);
 }
 
@@ -98,8 +99,8 @@
   padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-5);
 }
 
-/* The scale at the page's far left, on the bar's margin, fading out above
-   and below: fine ticks, and a number and longer tick for each room, --gap
+/* The scale at the page's far left, in the margin, fading out
+   above and below: fine ticks, and a longer tick for each room, --gap
    apart. It slides as the walk goes (--along, set as it scrolls) so the room
    in view's mark sits at --point-y, level with its big number, where the
    pointer meets it. */
@@ -109,7 +110,7 @@
   z-index: var(--z-content);
   top: var(--nav-h);
   bottom: 0;
-  left: var(--gutter);
+  left: var(--ruler-x);
   width: var(--ruler-w);
   overflow: hidden;
   mask-image: linear-gradient(transparent, black 22%, black 78%, transparent);
@@ -131,29 +132,17 @@
   background: var(--color-line-strong);
 }
 
-/* a room's number, then its longer tick, at the scale's right edge */
+/* a room's tick, the full width of the scale */
 .mark {
   --at: var(--i);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-ink-soft);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  line-height: 1;
-  translate: 0 -50%;
-  transition: color var(--dur) ease;
-}
-
-.mark::after {
-  content: "";
-  width: var(--space-4);
+  width: var(--ruler-w);
   height: 1px;
-  background: currentColor;
+  background: var(--color-ink-soft);
+  transition: background-color var(--dur) ease;
 }
 
 .mark[data-on] {
-  color: var(--color-ink);
+  background: var(--color-ink);
 }
 
 /* The pointer: from the scale's edge to the big number, level with it. */
@@ -161,8 +150,8 @@
   position: absolute;
   z-index: var(--z-content);
   top: var(--point-y, 50%);
-  left: calc(var(--gutter) + var(--ruler-w));
-  width: calc(var(--space-5) - var(--space-1));
+  left: calc(var(--ruler-x) + var(--ruler-w));
+  width: calc(var(--space-4) - var(--space-1));
   height: 1px;
   background: var(--color-ink);
 }

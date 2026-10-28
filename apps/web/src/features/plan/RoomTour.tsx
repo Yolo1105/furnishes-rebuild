@@ -13,6 +13,9 @@ const HOLD = 0.7;
 /** The scale's fine ticks between one room's mark and the next's. */
 const TICKS = 5;
 
+/** Marks the scale runs on for, unnumbered, before the first room and after the last. */
+const RUN_ON = 3;
+
 /** The share of a room's stretch, at its end, over which the scale glides on to the next room's mark. */
 const GLIDE = 0.25;
 
@@ -79,7 +82,11 @@ export function RoomTour() {
         <div className={styles.words}>
           <h1 className={styles.headline}>
             Start at the door,
-            <span className={styles.soft}>and walk through every room.</span>
+            <span className={styles.soft}>
+              and walk through
+              <br />
+              every room.
+            </span>
           </h1>
 
           <div className={styles.room} aria-live="polite">
@@ -96,13 +103,16 @@ export function RoomTour() {
         </div>
         {/* a scale down the far left, sliding so the room in view's mark meets the pointer at its number */}
         <div className={styles.ruler} aria-hidden="true">
-          {Array.from({ length: (TOUR.length - 1) * TICKS + 1 }, (_, t) => (
-            <span key={t} className={styles.tick} style={{ "--t": t / TICKS } as CSSProperties} />
+          {Array.from({ length: (TOUR.length - 1 + 2 * RUN_ON) * TICKS + 1 }, (_, t) => (
+            <span key={t} className={styles.tick} style={{ "--t": t / TICKS - RUN_ON } as CSSProperties} />
           ))}
+          {/* the scale running on past the rooms, so it never ends short of the pointer */}
+          {Array.from({ length: 2 * RUN_ON }, (_, k) => {
+            const i = k < RUN_ON ? k - RUN_ON : TOUR.length + k - RUN_ON;
+            return <span key={`run-${i}`} className={styles.mark} style={{ "--i": i } as CSSProperties} />;
+          })}
           {TOUR.map((r, i) => (
-            <span key={r.key} className={styles.mark} data-on={i === at || undefined} style={{ "--i": i } as CSSProperties}>
-              {pad(i + 1)}
-            </span>
+            <span key={r.key} className={styles.mark} data-on={i === at || undefined} style={{ "--i": i } as CSSProperties} />
           ))}
         </div>
         <span className={styles.pointer} aria-hidden="true" />
