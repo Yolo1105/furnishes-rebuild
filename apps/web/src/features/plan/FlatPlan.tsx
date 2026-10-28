@@ -18,10 +18,10 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
 /**
  * The whole flat as the walk draws it at its plan stage, held still: every
  * wall, door, window and room name, and the furniture and fittings drawn as
- * a plan draws them, with no grid round it and its floors unfilled; fitted, centred, into one half
- * of its (positioned) parent below the bar (all of it on phones held
- * upright), the page's background showing round it. Without WebGL it says
- * so instead.
+ * a plan draws them, every line in full ink, with no grid round it and its
+ * floors unfilled; fitted, centred, into one half of its (positioned) parent
+ * below the bar (all of it on phones held upright), the page's background
+ * showing round it. Without WebGL it says so instead.
  */
 /** `side`: which half of its parent the plan takes. */
 export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
@@ -101,7 +101,7 @@ export function FlatPlan({ side = "left" }: { side?: "left" | "right" }) {
     const font = css("--font-space-mono") || "monospace";
     document.fonts.load(`700 40px ${font}`).finally(() => {
       if (!alive) return;
-      const sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, false); // no ground grid
+      const sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, false, true); // no ground grid; every line in full ink
       sheet.fade(1);
       sheet.furnishTo(FLAT[2] + 1); // every piece, right across the flat
       draw();

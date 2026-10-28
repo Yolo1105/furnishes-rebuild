@@ -556,7 +556,8 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
  * notes that only make sense on a flat drawing fade as the walls rise; room
  * names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them;
- * `grid` false leaves out the ground's metre grid.
+ * `grid` false leaves out the ground's metre grid; `solid` draws every line
+ * in the full ink, none of the lighter tiers.
  */
 export function addSheet(
   scene: THREE.Scene,
@@ -566,6 +567,7 @@ export function addSheet(
   lineMats: LineMaterial[],
   box: THREE.Plane[] = [],
   grid = true,
+  solid = false,
 ) {
   const PX = 220; // canvas pixels a metre
   const FLOOR = 0.003; // notes lie this far over the floor, m
@@ -573,10 +575,11 @@ export function addSheet(
   const ink = new THREE.Color(palette.ink);
   // The drawing's tiers of line, heaviest first: the walls (drawn by the
   // model), fittings in ink, furniture lighter, and the faintest marks.
-  const furnitureInk = new THREE.Color(palette.paper).lerp(ink, 0.55);
-  const lightInk = new THREE.Color(palette.paper).lerp(ink, 0.32);
+  const tier = (k: number) => (solid ? ink.clone() : new THREE.Color(palette.paper).lerp(ink, k));
+  const furnitureInk = tier(0.55);
+  const lightInk = tier(0.32);
   /** The tile joints' colour: ink barely on paper. */
-  const faint = new THREE.Color(palette.paper).lerp(ink, 0.14);
+  const faint = tier(0.14);
 
   const keep = (o: THREE.Object3D, mat: { opacity: number }, fade: boolean) => {
     scene.add(o);
