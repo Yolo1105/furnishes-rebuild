@@ -18,14 +18,15 @@
   object-fit: cover;
 }
 
-/* Shades at the photo's top and foot, so the bar and the headline read over it. */
+/* A light rust tint over the whole photo, so the bar reads on it, and a
+   shade rising from its foot, so the headline reads over the floor. */
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, color-mix(in srgb, var(--color-rust-deep) 48%, transparent), transparent 19%),
-    linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 45%);
+    linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 45%),
+    color-mix(in srgb, var(--color-rust-deep) 18%, transparent);
   pointer-events: none;
 }
 

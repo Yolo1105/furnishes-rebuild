@@ -11,7 +11,8 @@
    its holder's padding). */
 .view {
   --ruler-w: var(--space-4); /* the scale's width, at the far left */
-  --ruler-x: calc(var(--gutter) - var(--ruler-w) - var(--space-4)); /* its left edge: in the margin, just left of the words */
+  --ruler-x: var(--gutter); /* its left edge: on the bar's margin, in line with its first link */
+  --ruler-gap: var(--space-7); /* from the scale to the words */
   --plan-from: 30%; /* where the plan's side starts (FlatPlan, side right): it takes 70% */
   --frame-top: calc(var(--nav-h) + var(--space-6));
   --frame-foot: var(--space-7);
@@ -31,9 +32,9 @@
   display: grid;
   grid-template-rows: auto auto;
   align-content: center; /* one block, level with the plan */
-  gap: calc(var(--space-7) * 2);
+  gap: clamp(var(--space-7) * 2.5, 12vh, var(--space-7) * 4); /* the headline well apart from the room */
   /* clear of the scale at the far left */
-  padding: var(--space-6) var(--space-5) var(--frame-foot) var(--gutter); /* on the bar's margin, the scale left of it */
+  padding: var(--space-6) var(--space-5) var(--frame-foot) calc(var(--ruler-x) + var(--ruler-w) + var(--ruler-gap)); /* clear of the scale */
   color: var(--color-ink);
 }
 
@@ -99,7 +100,7 @@
   padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-5);
 }
 
-/* The scale at the page's far left, in the margin, fading out
+/* The scale at the page's far left, on the bar's margin, fading out
    above and below: fine ticks, and a longer tick for each room, --gap
    apart. It slides as the walk goes (--along, set as it scrolls) so the room
    in view's mark sits at --point-y, level with its big number, where the
@@ -151,7 +152,7 @@
   z-index: var(--z-content);
   top: var(--point-y, 50%);
   left: calc(var(--ruler-x) + var(--ruler-w));
-  width: calc(var(--space-4) - var(--space-1));
+  width: calc(var(--ruler-gap) - var(--space-2)); /* across the gap, stopping short of the number */
   height: 1px;
   background: var(--color-ink);
 }
