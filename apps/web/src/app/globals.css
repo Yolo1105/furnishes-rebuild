@@ -55,7 +55,7 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-7: 32px;
-  --gutter: clamp(14px, 2vw, 28px); /* page edge to content */
+  --gutter: clamp(20px, 4vw, 64px); /* page edge to content: the bar and everything under it */
   --nav-gap: clamp(18px, 2.4vw, 36px);
 
   /* Sizes */
