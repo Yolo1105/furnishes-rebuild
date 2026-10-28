@@ -9,6 +9,8 @@ import { TOUR } from "./tour";
 /** Screens of scroll each room holds for. */
 const HOLD = 0.7;
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 /**
  * A walk round the flat, room by room, as the page scrolls: on the left the
  * room's number, name and a line on it, with tabs for every room along the
@@ -63,7 +65,7 @@ export function RoomTour() {
 
           <div className={styles.room} aria-live="polite">
             <p className={styles.numeral} aria-hidden="true">
-              {at + 1}
+              {pad(at + 1)}
             </p>
             {/* keyed, so each room's words come in afresh */}
             <div key={room.key} className={styles.about}>
@@ -83,7 +85,7 @@ export function RoomTour() {
                 aria-current={i === at ? "step" : undefined}
                 onClick={() => go(i)}
               >
-                <span className={styles.tabNo}>{i + 1}</span>
+                <span className={styles.tabNo}>{pad(i + 1)}</span>
                 {r.short}
               </button>
             ))}
