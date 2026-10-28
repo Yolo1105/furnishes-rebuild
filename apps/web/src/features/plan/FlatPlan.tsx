@@ -52,7 +52,9 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
  * parent (`side`; all of it on phones held upright), inside the frame its
  * holder's padding sets (FlatPlan.module.css, or the page's), the page's background showing round it. With a `highlight` (a
  * room's key, flat.ts), that room stands out in full and the rest of the
- * flat sits faded behind it. Without WebGL it says so instead.
+ * flat sits faded behind it. It sets --plan-top and --plan-foot on its
+ * parent, where the drawing begins and ends, for the page to line up with.
+ * Without WebGL it says so instead.
  */
 export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | "right"; highlight?: string | null }) {
   const holderRef = useRef<HTMLDivElement>(null);
@@ -124,6 +126,9 @@ export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | 
       const room = { w: w - pl! - pr!, h: h - pt! - pb! };
       const z = Math.min(room.w / flat.w, room.h / flat.h);
       const space = { cx: pl! + room.w / 2, cy: pt! + room.h / 2 };
+      // where the drawing's top and foot land, px from the holder's top, for the page to line up with
+      holder.parentElement?.style.setProperty("--plan-top", `${space.cy - (flat.h * z) / 2}px`);
+      holder.parentElement?.style.setProperty("--plan-foot", `${h - space.cy - (flat.h * z) / 2}px`);
       camera.setViewOffset(w, h, flat.cx - space.cx / z, flat.cy - space.cy / z, w / z, h / z);
       // the whole flat; then, with a room picked out, that copied under and the room alone over it
       reveal(FLAT, 1);

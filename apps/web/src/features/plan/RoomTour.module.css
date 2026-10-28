@@ -20,17 +20,21 @@
   overflow: hidden;
 }
 
-/* The left (as much as the plan leaves, --plan-from): the headline, the room
-   and the tabs close under one another, as one block centred beside the plan. */
+/* The left (as much as the plan leaves, --plan-from), exactly as tall as
+   the drawing (FlatPlan sets --plan-top and --plan-foot): the headline's top
+   level with the plan's, then open space, then the room and the tabs, their
+   foot level with the plan's. */
 .words {
   position: absolute;
   z-index: var(--z-content);
-  inset: var(--nav-h) calc(100% - var(--plan-from)) 0 0;
+  top: var(--plan-top, var(--frame-top));
+  right: calc(100% - var(--plan-from));
+  bottom: var(--plan-foot, var(--frame-foot));
+  left: 0;
   display: grid;
-  grid-template-rows: auto auto auto;
-  align-content: center; /* one block, level with the plan */
-  gap: calc(var(--space-7) + var(--space-3));
-  padding: var(--space-6) var(--space-5) var(--frame-foot) var(--gutter);
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-7);
+  padding: 0 var(--space-5) 0 var(--gutter);
   color: var(--color-ink);
 }
 
@@ -38,7 +42,7 @@
   max-width: 14ch;
   margin: 0;
   font-family: var(--font-sans);
-  font-size: clamp(32px, 3.2vw, 54px);
+  font-size: clamp(30px, 3vw, 50px);
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -48,30 +52,34 @@
   color: var(--color-ink-soft);
 }
 
-/* the number over the name and line, one narrow block */
+/* The room: its number, large and light, beside its name and line, their
+   feet on one line, at the foot of the open space. */
 .room {
-  display: grid;
-  gap: var(--space-3);
+  display: flex;
+  align-items: flex-end;
+  align-self: end;
+  gap: var(--space-6);
 }
 
 .numeral {
   margin: 0 0 -0.12em;
   font-family: var(--font-title);
-  font-size: clamp(100px, 9.5vw, 170px);
+  font-size: clamp(110px, 11vw, 190px);
   font-weight: 200;
   line-height: 0.8;
   font-variant-numeric: tabular-nums;
 }
 
 .about {
-  max-width: 30ch;
+  max-width: 26ch;
+  padding-bottom: 0.4em; /* level with the number's foot, not its descent */
   animation: rise var(--dur-slow) var(--ease-title) both;
 }
 
 .name {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: clamp(28px, 2.5vw, 42px);
+  font-size: clamp(22px, 1.9vw, 32px);
   font-weight: 400;
 }
 
@@ -83,22 +91,7 @@
   line-height: 1.5;
 }
 
-.see {
-  display: inline-block;
-  margin-top: var(--space-4);
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid currentColor;
-  font-family: var(--font-sans);
-  font-size: clamp(15px, 1.1vw, 18px);
-  text-decoration: none;
-}
 
-.cue {
-  margin: var(--space-3) 0 0;
-  color: var(--color-ink-soft);
-  font-family: var(--font-sans);
-  font-size: clamp(14px, 1vw, 16px);
-}
 
 /* Every room along the foot, under a line that fills as the walk goes. */
 .tabs {
@@ -160,7 +153,9 @@
    it; the tabs scroll sideways. */
 @media (max-width: 600px) and (orientation: portrait) {
   .words {
-    inset: 50% 0 0;
+    top: 50%;
+    right: 0;
+    bottom: 0;
     grid-template-rows: auto auto; /* the room, then the tabs: no headline */
     align-content: start;
     gap: var(--space-4);

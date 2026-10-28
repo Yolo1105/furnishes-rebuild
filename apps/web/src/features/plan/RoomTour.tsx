@@ -1,17 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { Backdrop } from "@/features/stage/Backdrop";
-import { routes } from "@/lib/routes";
 import { FlatPlan } from "./FlatPlan";
 import styles from "./RoomTour.module.css";
 import { TOUR } from "./tour";
 
 /** Screens of scroll each room holds for. */
 const HOLD = 0.7;
-
-const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
  * A walk round the flat, room by room, as the page scrolls: on the left the
@@ -67,18 +63,12 @@ export function RoomTour() {
 
           <div className={styles.room} aria-live="polite">
             <p className={styles.numeral} aria-hidden="true">
-              {pad(at + 1)}
+              {at + 1}
             </p>
             {/* keyed, so each room's words come in afresh */}
             <div key={room.key} className={styles.about}>
               <h2 className={styles.name}>{room.name}</h2>
               <p className={styles.line}>{room.line}</p>
-              <Link href={routes.studio} className={styles.see}>
-                See this room <span aria-hidden="true">→</span>
-              </Link>
-              <p className={styles.cue}>
-                Scroll to walk through <span aria-hidden="true">↓</span>
-              </p>
             </div>
           </div>
 
@@ -93,7 +83,7 @@ export function RoomTour() {
                 aria-current={i === at ? "step" : undefined}
                 onClick={() => go(i)}
               >
-                <span className={styles.tabNo}>{pad(i + 1)}</span>
+                <span className={styles.tabNo}>{i + 1}</span>
                 {r.short}
               </button>
             ))}
