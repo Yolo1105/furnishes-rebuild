@@ -5,8 +5,14 @@
   height: calc(100vh + var(--rooms) * var(--hold));
 }
 
+/* One frame round everything, on the bar's margins: the words and the plan
+   both start under the bar at the headline's top, the plan's top level with
+   it and its right edge on the right margin, nothing past the tabs' foot
+   (FlatPlan reads its holder's padding). */
 .view {
   --plan-from: 44%; /* where the plan's side starts (FlatPlan, side right) */
+  --frame-top: calc(var(--nav-h) + var(--space-6));
+  --frame-foot: var(--space-7);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -23,7 +29,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--space-6);
-  padding: var(--space-6) var(--space-7) var(--space-7) var(--gutter);
+  padding: var(--space-6) var(--space-7) var(--frame-foot) var(--gutter);
   color: var(--color-ink);
 }
 
@@ -59,7 +65,7 @@
 }
 
 .about {
-  max-width: 34ch;
+  max-width: 30ch;
   padding-bottom: var(--space-2);
   animation: rise var(--dur-slow) var(--ease-title) both;
 }
@@ -67,7 +73,7 @@
 .name {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: var(--text-display);
+  font-size: clamp(26px, 2.4vw, 40px);
   font-weight: 400;
 }
 
@@ -75,7 +81,7 @@
   margin: var(--space-3) 0 0;
   color: var(--color-ink-soft);
   font-family: var(--font-sans);
-  font-size: var(--text-lede);
+  font-size: clamp(16px, 1.3vw, 20px);
   line-height: 1.55;
 }
 
@@ -85,7 +91,7 @@
   padding-bottom: var(--space-1);
   border-bottom: 1px solid currentColor;
   font-family: var(--font-sans);
-  font-size: var(--text-lede);
+  font-size: clamp(16px, 1.3vw, 20px);
   text-decoration: none;
 }
 
@@ -93,7 +99,7 @@
   margin: var(--space-5) 0 0;
   color: var(--color-ink-soft);
   font-family: var(--font-sans);
-  font-size: var(--text-md);
+  font-size: clamp(14px, 1vw, 16px);
 }
 
 /* Every room along the foot, under a line that fills as the walk goes. */
@@ -127,7 +133,7 @@
   background: none;
   color: var(--color-ink-soft);
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: clamp(13px, 1vw, 16px);
   text-align: left;
   cursor: pointer;
 }
@@ -138,7 +144,7 @@
 
 .tabNo {
   font-family: var(--font-mono);
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
 }
 
 @keyframes rise {
@@ -146,6 +152,11 @@
     opacity: 0;
     transform: translateY(var(--space-3));
   }
+}
+
+.view :global([data-side="right"]) {
+  --plan-align: end;
+  padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-7);
 }
 
 /* Phones held upright: the plan on the top half (FlatPlan), the words under

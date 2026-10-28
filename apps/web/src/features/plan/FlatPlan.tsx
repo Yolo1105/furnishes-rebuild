@@ -10,6 +10,14 @@ import { addSheet, buildFlatScene } from "./scene";
 /** The flat's bounds on the ground, m: [x0, z0, x1, z1]. */
 const FLAT = [BOUNDS_M.x0, BOUNDS_M.y0, BOUNDS_M.x1, BOUNDS_M.y1] as const;
 
+/** All that is drawn, m: the flat and what stands out of it (the bays to the north, the A/C ledge to the east). */
+const DRAWN = [
+  FLAT[0],
+  Math.min(FLAT[1], -Math.max(...BAYS.map((b) => b.depth + OUTER_WALL)) / 1000),
+  Math.max(FLAT[2], AC_LEDGE.x1 / 1000),
+  FLAT[3],
+] as const;
+
 /**
  * How far a room's box reaches past its floor, m, when it is picked out
  * alone: to the far face of a wall it shares (so it has the whole wall), or
@@ -33,8 +41,6 @@ const BOXES = new Map(
   }),
 );
 
-/** Room left round the plan, px: at its sides and foot, and below the bar. */
-const BREATHE = 40;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -42,9 +48,9 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
  * The whole flat as the walk draws it at its plan stage, held still: every
  * wall, door, window and room name, and the furniture and fittings drawn as
  * a plan draws them, every line in full ink, with no grid round it, no tile
- * joints and its floors unfilled; fitted, centred, into one half of its
- * (positioned) parent below the bar (`side`; all of it on phones held
- * upright), the page's background showing round it. With a `highlight` (a
+ * joints and its floors unfilled; fitted into one half of its (positioned)
+ * parent (`side`; all of it on phones held upright), inside the frame its
+ * holder's padding sets (FlatPlan.module.css, or the page's), the page's background showing round it. With a `highlight` (a
  * room's key, flat.ts), that room stands out in full and the rest of the
  * flat sits faded behind it. Without WebGL it says so instead.
  */
@@ -105,27 +111,35 @@ export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | 
       camera.updateProjectionMatrix();
       camera.updateMatrixWorld();
       cut.constant = o.cut;
-      // where the flat falls on the view, then zoom and shift it into the space below the bar
-      const [x0, z0, x1, z1] = FLAT;
+      // where the flat falls on the view, then zoom and shift it into its frame
+      const [x0, z0, x1, z1] = DRAWN;
       const a = corner.set(x0, 0, z0).project(camera).clone();
       const b = corner.set(x1, 0, z1).project(camera);
       const [ax, bx] = [((a.x + 1) / 2) * w, ((b.x + 1) / 2) * w];
       const [ay, by] = [((1 - a.y) / 2) * h, ((1 - b.y) / 2) * h];
       const flat = { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
-      const top = parseFloat(css("--nav-h")) + BREATHE;
-      const space = { cx: w / 2, cy: (top + h - BREATHE) / 2, w: w - 2 * BREATHE, h: h - BREATHE - top };
-      const z = Math.min(space.w / flat.w, space.h / flat.h);
+      // the frame the plan fits in: the holder's padding (the page's margins
+      // round it); it sits in the middle of it, or against its top right
+      // corner (--plan-align: end)
+      const pad = getComputedStyle(holder);
+      const [pt, pr, pb, pl] = [pad.paddingTop, pad.paddingRight, pad.paddingBottom, pad.paddingLeft].map(parseFloat);
+      const room = { w: w - pl! - pr!, h: h - pt! - pb! };
+      const z = Math.min(room.w / flat.w, room.h / flat.h);
+      const toEnd = pad.getPropertyValue("--plan-align").trim() === "end";
+      const space = toEnd
+        ? { cx: w - pr! - (flat.w * z) / 2, cy: pt! + (flat.h * z) / 2 }
+        : { cx: pl! + room.w / 2, cy: pt! + room.h / 2 };
       camera.setViewOffset(w, h, flat.cx - space.cx / z, flat.cy - space.cy / z, w / z, h / z);
       // the whole flat; then, with a room picked out, that copied under and the room alone over it
       reveal(FLAT, 1);
       renderer.render(scene, camera);
-      const room = highlightRef.current && BOXES.get(highlightRef.current);
-      holder.toggleAttribute("data-picked", Boolean(room));
-      if (room && underCtx) {
+      const picked = highlightRef.current && BOXES.get(highlightRef.current);
+      holder.toggleAttribute("data-picked", Boolean(picked));
+      if (picked && underCtx) {
         [under.width, under.height] = [canvas.width, canvas.height];
         underCtx.drawImage(canvas, 0, 0);
         renderer.clear();
-        reveal(room, 0);
+        reveal(picked, 0);
         renderer.render(scene, camera);
       }
     };
