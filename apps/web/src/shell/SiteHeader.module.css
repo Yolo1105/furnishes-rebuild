@@ -71,6 +71,17 @@
   margin-left: auto;
 }
 
+/* A page can ask for the bar's words a step larger, and the side margins a
+   little narrower, for the bar and the page under it alike (data-bar-large). */
+:global(html:has([data-bar-large])) {
+  --gutter: clamp(16px, 3vw, 48px);
+}
+
+:global(html:has([data-bar-large])) .header {
+  --text-nav: clamp(13px, 1.12vw, 15px);
+  --text-wordmark: clamp(16px, 1.3vw, 18px);
+}
+
 .start,
 .end {
   display: flex;

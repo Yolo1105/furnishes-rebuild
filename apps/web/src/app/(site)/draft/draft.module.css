@@ -1,7 +1,31 @@
-/* One screen: the background, ready for what goes over it. */
+/* The background behind the whole page, the content over it. */
 .page {
   position: relative;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* On the bar's margins: the headline under the bar, the photo under that. */
+.content {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  gap: calc(var(--space-7) * 1.5);
+  padding: calc(var(--nav-h) + var(--space-7) * 1.5) var(--gutter) var(--gutter);
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: var(--text-hero);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
 }

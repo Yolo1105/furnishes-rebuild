@@ -51,7 +51,7 @@ export function RoomTour() {
         <div className={styles.words}>
           <h1 className={styles.headline}>
             Start at the door,
-            <span className={styles.soft}> and walk through every room.</span>
+            <span className={styles.soft}>and walk through every room.</span>
           </h1>
 
           <div className={styles.room} aria-live="polite">
