@@ -1,6 +1,13 @@
-/* One screen: the background, and the plan over it. */
-.page {
+/* A track of scroll, and the view that stays on screen through it: the
+   background, and the flat over it coming together as the page scrolls. */
+.track {
   position: relative;
+  height: 300vh;
+}
+
+.page {
+  position: sticky;
+  top: 0;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
