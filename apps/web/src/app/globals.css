@@ -59,7 +59,7 @@
   --nav-gap: clamp(18px, 2.4vw, 36px);
 
   /* Sizes */
-  --nav-h: 72px;
+  --nav-h: 64px;
   --nav-pad-y: clamp(10px, 1.2vh, 14px);
   --tap: 44px; /* smallest comfortable touch target */
   --icon: 16px;
