@@ -287,14 +287,15 @@ export function buildFlatScene(palette: Palette, { floors = true }: { floors?: b
     inkFrom: H - 0.001,
     // the floor is oak and the walls plaster; the slab's edges stay paper
     finish: (ny, y) => (ny > 0.5 && Math.abs(y) < 0.01 ? FINISH.floor : Math.abs(ny) < 0.5 && y > -0.01 ? FINISH.wall : null),
-    // unfilled: every room's clear floor, the A/C ledge's, the bays' ledges, and every doorway's through its wall
+    // unfilled: every room's clear floor, the A/C ledge's, the bays' ledges,
+    // and every doorway's and window's through its wall (a window's sill too)
     open: floors
       ? null
       : [
           ...clear.map(([x0, y0, x1, y1]): Box => [x0 * M, y0 * M, x1 * M, y1 * M]),
           [AC_LEDGE.x0 * M, AC_LEDGE.y0 * M, AC_LEDGE.x1 * M, AC_LEDGE.y1 * M],
           ...BAYS.map((b): Box => [b.x0 * M, -OUTER_WALL * M - b.depth * M, b.x1 * M, 0]),
-          ...[...DOORS, FRONT_DOOR].map((op): Box => {
+          ...[...DOORS, FRONT_DOOR, ...WINDOWS].map((op): Box => {
             const [a0, a1, c0, c1] = [(op.at - op.width / 2) * M, (op.at + op.width / 2) * M, op.across * M - 0.25, op.across * M + 0.25];
             return op.run === "ew" ? [a0, c0, a1, c1] : [c0, a0, c1, a1];
           }),
