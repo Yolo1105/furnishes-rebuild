@@ -556,8 +556,9 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
  * notes that only make sense on a flat drawing fade as the walls rise; room
  * names, tiles, window glass and the ground grid stay.
  * `lineMats` collects the line materials so the caller can size them;
- * `grid` false leaves out the ground's metre grid; `solid` draws every line
- * in the full ink, none of the lighter tiers.
+ * Options: `grid` false leaves out the ground's metre grid, `tiles` false the
+ * wet rooms' tile joints; `solid` draws every line in the full ink, none of
+ * the lighter tiers.
  */
 export function addSheet(
   scene: THREE.Scene,
@@ -566,8 +567,7 @@ export function addSheet(
   disposables: { dispose(): void }[],
   lineMats: LineMaterial[],
   box: THREE.Plane[] = [],
-  grid = true,
-  solid = false,
+  { grid = true, tiles = true, solid = false }: { grid?: boolean; tiles?: boolean; solid?: boolean } = {},
 ) {
   const PX = 220; // canvas pixels a metre
   const FLOOR = 0.003; // notes lie this far over the floor, m
@@ -673,7 +673,7 @@ export function addSheet(
     for (let x = x0 + TILE; x < x1 - 0.01; x += TILE) joints.push(x, 0.001, z0, x, 0.001, z1);
     for (let z = z0 + TILE; z < z1 - 0.01; z += TILE) joints.push(x0, 0.001, z, x1, 0.001, z);
   }
-  segments(joints, 0.5, false, faint);
+  if (tiles) segments(joints, 0.5, false, faint);
 
   // ---- room names ----------------------------------------------------------
   const LABEL_Y = 0.04; // just over the shower trays and the rug, so a name may sit on them
