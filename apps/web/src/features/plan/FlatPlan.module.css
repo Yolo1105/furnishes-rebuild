@@ -1,5 +1,17 @@
-/* The plan's canvas, filling its parent over the page's background. */
-.holder,
+/* The plan's canvas over the page's background: the left half of its
+   parent; on phones held upright, all of it. */
+.holder {
+  position: absolute;
+  inset: 0 50% 0 0;
+  z-index: var(--z-content);
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .holder {
+    right: 0;
+  }
+}
+
 .canvas {
   position: absolute;
   inset: 0;

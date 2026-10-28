@@ -10,7 +10,7 @@ import { addSheet, buildFlatScene } from "./scene";
 /** The flat's bounds on the ground, m: [x0, z0, x1, z1]. */
 const FLAT = [BOUNDS_M.x0, BOUNDS_M.y0, BOUNDS_M.x1, BOUNDS_M.y1] as const;
 
-/** Room left round the plan, px: at the sides and foot, and below the bar. */
+/** Room left round the plan, px: at its sides and foot, and below the bar. */
 const BREATHE = 40;
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -18,9 +18,10 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
 /**
  * The whole flat as the walk draws it at its plan stage, held still: every
  * wall, door, window and room name, and the furniture and fittings drawn as
- * a plan draws them, with no grid round it; fitted, centred, into the
- * screen below the bar. It fills its (positioned) parent, with the page's
- * background showing round it. Without WebGL it says so instead.
+ * a plan draws them, with no grid round it; fitted, centred, into the left
+ * half of its (positioned) parent below the bar (all of it on phones held
+ * upright), the page's background showing round it. Without WebGL it says
+ * so instead.
  */
 export function FlatPlan() {
   const holderRef = useRef<HTMLDivElement>(null);
