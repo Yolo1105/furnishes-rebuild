@@ -8,8 +8,8 @@ export default function DraftPage() {
   return (
     <div className={styles.page} data-bar-large>
       <Backdrop />
-      {/* dark under the bar: the bar turns cream */}
-      <section className={styles.hero} data-dark-under-bar>
+      {/* the white wall under the bar: the bar turns deep rust */}
+      <section className={styles.hero} data-dark-under-bar data-bar="rust-deep">
         <Image
           src={showroom}
           alt="A gallery of handmade timber chairs, tables and cabinets on a polished wooden floor"

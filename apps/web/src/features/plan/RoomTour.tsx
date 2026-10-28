@@ -81,7 +81,11 @@ export function RoomTour() {
         <Backdrop />
         <div className={styles.words}>
           <h1 className={styles.headline}>
-            Start at the door,
+            <span className={styles.lead}>
+              Start at
+              <br />
+              the door,
+            </span>
             <span className={styles.soft}>
               and walk through
               <br />
