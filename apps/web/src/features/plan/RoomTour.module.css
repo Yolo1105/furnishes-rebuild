@@ -6,9 +6,9 @@
 }
 
 /* One frame round everything, on the bar's margins: the words and the plan
-   both start under the bar at the headline's top, the plan's top level with
-   it and its right edge on the right margin, nothing past the tabs' foot
-   (FlatPlan reads its holder's padding). */
+   both start under the bar at the headline's top and end at the tabs' foot,
+   the plan centred in its side of it, up to the right margin (FlatPlan reads
+   its holder's padding). */
 .view {
   --plan-from: 44%; /* where the plan's side starts (FlatPlan, side right) */
   --frame-top: calc(var(--nav-h) + var(--space-6));
@@ -155,7 +155,6 @@
 }
 
 .view :global([data-side="right"]) {
-  --plan-align: end;
   padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-7);
 }
 

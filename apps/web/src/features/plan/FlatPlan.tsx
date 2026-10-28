@@ -118,17 +118,12 @@ export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | 
       const [ax, bx] = [((a.x + 1) / 2) * w, ((b.x + 1) / 2) * w];
       const [ay, by] = [((1 - a.y) / 2) * h, ((1 - b.y) / 2) * h];
       const flat = { cx: (ax + bx) / 2, cy: (ay + by) / 2, w: Math.abs(bx - ax), h: Math.abs(by - ay) };
-      // the frame the plan fits in: the holder's padding (the page's margins
-      // round it); it sits in the middle of it, or against its top right
-      // corner (--plan-align: end)
+      // the frame the plan fits in, centred: the holder's padding (the page's margins round it)
       const pad = getComputedStyle(holder);
       const [pt, pr, pb, pl] = [pad.paddingTop, pad.paddingRight, pad.paddingBottom, pad.paddingLeft].map(parseFloat);
       const room = { w: w - pl! - pr!, h: h - pt! - pb! };
       const z = Math.min(room.w / flat.w, room.h / flat.h);
-      const toEnd = pad.getPropertyValue("--plan-align").trim() === "end";
-      const space = toEnd
-        ? { cx: w - pr! - (flat.w * z) / 2, cy: pt! + (flat.h * z) / 2 }
-        : { cx: pl! + room.w / 2, cy: pt! + room.h / 2 };
+      const space = { cx: pl! + room.w / 2, cy: pt! + room.h / 2 };
       camera.setViewOffset(w, h, flat.cx - space.cx / z, flat.cy - space.cy / z, w / z, h / z);
       // the whole flat; then, with a room picked out, that copied under and the room alone over it
       reveal(FLAT, 1);
