@@ -1,0 +1,7 @@
+/* One screen: the background, and the plan over it. */
+.page {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}

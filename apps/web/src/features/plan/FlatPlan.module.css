@@ -1,0 +1,24 @@
+/* The plan's canvas, filling its parent over the page's background. */
+.holder,
+.canvas {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-content);
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fallback {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin: 0;
+  padding: var(--space-6);
+}
+
+.fallback[hidden] {
+  display: none;
+}
