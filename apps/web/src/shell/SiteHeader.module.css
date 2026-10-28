@@ -164,6 +164,9 @@
   letter-spacing: 0.01em;
   text-transform: lowercase;
   text-decoration: none;
+  /* lowercase and larger, it reads low beside the links' caps though its box
+     is centred like theirs: lifted so its letters' middle meets theirs */
+  translate: 0 -0.15em;
 }
 
 .link:focus-visible,
