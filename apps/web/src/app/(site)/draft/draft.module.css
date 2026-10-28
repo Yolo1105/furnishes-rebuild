@@ -17,7 +17,7 @@
 .headline {
   margin: 0;
   font-family: var(--font-title);
-  font-size: calc(var(--text-hero) * 0.8); /* a step under the landing title */
+  font-size: calc(var(--text-hero) * 0.65); /* well under the landing title */
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.02em;

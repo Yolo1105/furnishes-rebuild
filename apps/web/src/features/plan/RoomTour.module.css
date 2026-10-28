@@ -10,7 +10,7 @@
    the plan centred in its side of it, up to the right margin (FlatPlan reads
    its holder's padding). */
 .view {
-  --ruler-w: 56px; /* the scale's width, at the plan's left */
+  --ruler-w: 44px; /* the scale's width, at the far left */
   --plan-from: 30%; /* where the plan's side starts (FlatPlan, side right): it takes 70% */
   --frame-top: calc(var(--nav-h) + var(--space-6));
   --frame-foot: var(--space-7);
@@ -31,14 +31,15 @@
   grid-template-rows: auto auto;
   align-content: center; /* one block, level with the plan */
   gap: calc(var(--space-7) * 2);
-  padding: var(--space-6) var(--space-5) var(--frame-foot) var(--gutter);
+  /* clear of the scale at the far left */
+  padding: var(--space-6) var(--space-5) var(--frame-foot) calc(var(--gutter) + var(--ruler-w) + var(--space-5));
   color: var(--color-ink);
 }
 
 .headline {
   margin: 0;
   font-family: var(--font-mono); /* the bar's face */
-  font-size: clamp(20px, 2.1vw, 36px); /* "Start at the door," on one line in the column */
+  font-size: clamp(18px, 1.85vw, 32px); /* "Start at the door," on one line in the column */
   font-weight: 400;
   line-height: 1.12;
   letter-spacing: -0.03em;
@@ -94,10 +95,10 @@
 }
 
 .view :global([data-side="right"]) {
-  padding: var(--frame-top) var(--gutter) var(--frame-foot) calc(var(--ruler-w) + var(--space-6));
+  padding: var(--frame-top) var(--gutter) var(--frame-foot) var(--space-5);
 }
 
-/* The scale at the left of the plan's side: fine ticks down its length, a
+/* The scale at the page's far left, on the bar's margin: fine ticks down its length, a
    longer tick and number for each room, the room in view dark, and a marker
    that glides from mark to mark as the walk goes (--along, set as it scrolls). */
 .ruler {
@@ -105,7 +106,7 @@
   z-index: var(--z-content);
   top: var(--frame-top);
   bottom: var(--frame-foot);
-  left: calc(var(--plan-from) + var(--space-5));
+  left: var(--gutter);
   width: var(--ruler-w);
 }
 

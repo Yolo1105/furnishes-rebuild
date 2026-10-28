@@ -646,6 +646,7 @@ export function addSheet(
     m.position.set(x, y, z);
     m.renderOrder = 2;
     keep(m, mat, fade);
+    return m;
   };
 
   /** Line segments, as flat pairs of [x, y, z] points. */
@@ -688,16 +689,20 @@ export function addSheet(
     bedroom3: [5.6, 1.6],
     shelter: [8.5, 5.95],
   };
+  /** Each room's name (and the A/C ledge's, with the living room's), by the room's key. */
+  const names = new Map<string, THREE.Object3D[]>();
   for (const r of ROOMS) {
     const [x, z] = at[r.key] ?? [(r.x + r.w / 2) / 1000, (r.y + r.d / 2) / 1000];
     const small = r.w < 2400 || r.d < 1500;
-    text([{ text: r.name.toUpperCase(), size: small ? 0.15 : 0.2, track: 0.08 }], x, z, { y: LABEL_Y });
+    names.set(r.key, [text([{ text: r.name.toUpperCase(), size: small ? 0.15 : 0.2, track: 0.08 }], x, z, { y: LABEL_Y })]);
   }
   // the air-conditioner ledge, named along its outer side
-  text([{ text: "A/C LEDGE", size: 0.11, track: 0.08 }], AC_LEDGE.x1 / 1000 + 0.18, (AC_LEDGE.y0 + AC_LEDGE.y1) / 2000, {
-    rot: -Math.PI / 2,
-    fade: true,
-  });
+  names.get("living")?.push(
+    text([{ text: "A/C LEDGE", size: 0.11, track: 0.08 }], AC_LEDGE.x1 / 1000 + 0.18, (AC_LEDGE.y0 + AC_LEDGE.y1) / 2000, {
+      rot: -Math.PI / 2,
+      fade: true,
+    }),
+  );
 
   // the flat's outer bounds, m
   const b = BOUNDS_M;
@@ -790,6 +795,10 @@ export function addSheet(
     /** How far across the plan the furniture and fittings are drawn: as far east as x, metres (none until then). */
     furnishTo(x: number) {
       drawnTo.constant = x;
+    },
+    /** Which rooms' names show: every room's (true), none (false), or one room's (its key). */
+    names(show: boolean | string) {
+      for (const [key, objects] of names) for (const o of objects) o.visible = show === true || show === key;
     },
   };
 }

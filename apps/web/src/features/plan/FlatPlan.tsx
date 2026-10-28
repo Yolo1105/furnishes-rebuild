@@ -94,6 +94,8 @@ export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | 
     const corner = new THREE.Vector3();
     const coarse = window.matchMedia("(pointer: coarse)");
 
+    let sheet: ReturnType<typeof addSheet> | null = null; // the plan's notes, once its font has loaded
+
     const draw = () => {
       const [w, h] = [canvas.clientWidth, canvas.clientHeight];
       if (!w || !h) return; // drawn again by the observer once it has a size
@@ -128,13 +130,18 @@ export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | 
       // the whole flat; then, with a room picked out, that copied under and the room alone over it
       reveal(FLAT, 1);
       renderer.render(scene, camera);
-      const picked = highlightRef.current && BOXES.get(highlightRef.current);
+      const key = highlightRef.current;
+      const picked = key && BOXES.get(key);
       holder.toggleAttribute("data-picked", Boolean(picked));
+      // the faded flat under a picked room is drawn without names: only the picked room's shows
+      sheet?.names(!picked);
+      if (picked) renderer.render(scene, camera);
       if (picked && underCtx) {
         [under.width, under.height] = [canvas.width, canvas.height];
         underCtx.drawImage(canvas, 0, 0);
         renderer.clear();
         reveal(picked, 0);
+        sheet?.names(key);
         renderer.render(scene, camera);
       }
     };
@@ -151,7 +158,7 @@ export function FlatPlan({ side = "left", highlight = null }: { side?: "left" | 
     const font = css("--font-space-mono") || "monospace";
     document.fonts.load(`700 40px ${font}`).finally(() => {
       if (!alive) return;
-      const sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, { grid: false, tiles: false, solid: true });
+      sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, { grid: false, tiles: false, solid: true });
       sheet.fade(1);
       sheet.furnishTo(FLAT[2] + 1); // every piece, right across the flat
       draw();

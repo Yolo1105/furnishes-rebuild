@@ -17,8 +17,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
 /**
  * A walk round the flat, room by room, as the page scrolls: on the left the
  * room's number, name and a line on it; on the right the plan, that room
- * picked out in full and the rest of the flat faded behind it, with a scale
- * down its left marking each room and where the walk has got to.
+ * picked out in full and the rest of the flat faded behind it; and down the
+ * far left a scale marking each room and where the walk has got to.
  */
 export function RoomTour() {
   const trackRef = useRef<HTMLElement>(null);
@@ -73,7 +73,7 @@ export function RoomTour() {
           </div>
 
         </div>
-        {/* a scale down the plan's left: a mark for each room, the marker on the one in view */}
+        {/* a scale down the far left: a mark for each room, the marker on the one in view */}
         <div ref={rulerRef} className={styles.ruler} aria-hidden="true">
           {Array.from({ length: (TOUR.length - 1) * TICKS + 1 }, (_, t) => (
             <span key={t} className={styles.tick} style={{ "--t": t / TICKS } as CSSProperties} />
