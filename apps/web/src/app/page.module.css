@@ -92,21 +92,21 @@
   text-decoration: none;
 }
 
-/* The page's one button: filled rust, a shade darker under the pointer. */
+/* The page's one button: filled orange, a shade darker under the pointer. */
 .button {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap);
   padding: 0 var(--space-6);
   border-radius: var(--radius-sm);
-  background: var(--color-rust);
+  background: var(--color-orange);
   color: var(--color-cream);
   font-weight: 500;
   transition: background-color var(--dur-fast) ease;
 }
 
 .button:hover {
-  background: color-mix(in srgb, var(--color-rust) 80%, var(--color-espresso));
+  background: color-mix(in srgb, var(--color-orange) 85%, var(--color-espresso));
 }
 
 .link {

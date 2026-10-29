@@ -2,9 +2,10 @@
 :root {
   --color-night: #1a120a;
   --color-paper: #fffaf3;
-  --color-cream: #fff6e9; /* text on a rust fill */
+  --color-cream: #fff6e9; /* text on an orange fill */
   --color-espresso: #2e2118; /* the warm dark of the washes */
-  --color-rust: #8c3812; /* the accent: the bar, the title, the main button */
+  --color-rust: #8c3812; /* the bar's ink, the title */
+  --color-orange: #e7551a; /* the classic Furnishes orange: the main button */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
 
