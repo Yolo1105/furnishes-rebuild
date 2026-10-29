@@ -20,12 +20,12 @@ export function SiteHeader() {
       </nav>
 
       <Link href={routes.home} className={styles.wordmark}>
-        furnishes<span className={styles.accent}>.</span>
+        furnishes<span className={styles.dot}>.</span>
       </Link>
 
       <nav className={styles.end} aria-label="Your space">
         <Link href={routes.studio} className={`${styles.link} ${styles.primary}`}>
-          Design <span className={styles.accent}>your</span> room
+          Design your room
         </Link>
         <Link href={routes.signIn} className={styles.link}>
           Sign in
