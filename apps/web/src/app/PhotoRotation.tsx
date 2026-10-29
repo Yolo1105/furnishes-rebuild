@@ -45,13 +45,14 @@ export function PhotoRotation({ photos }: { photos: typeof PHOTOS }) {
   }, [at, paused, count, show]);
 
   useEffect(() => {
+    if (count < 2) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") show(at - 1);
       else if (e.key === "ArrowRight") show(at + 1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [at, show]);
+  }, [at, count, show]);
 
   const near = (i: number) => seen.has(i) || i === (at + 1) % count || i === (at - 1 + count) % count;
 
@@ -73,20 +74,41 @@ export function PhotoRotation({ photos }: { photos: typeof PHOTOS }) {
           )}
         </div>
       ))}
+      {count > 1 && <Controls at={at} count={count} paused={paused} onPause={() => setPaused((p) => !p)} onStep={(by) => show(at + by)} />}
+    </div>
+  );
+}
+
+/** The number, the pause button and the arrows: only when there is more than one photo. */
+function Controls({
+  at,
+  count,
+  paused,
+  onPause,
+  onStep,
+}: {
+  at: number;
+  count: number;
+  paused: boolean;
+  onPause: () => void;
+  onStep: (by: number) => void;
+}) {
+  return (
+    <>
       <div className={styles.controls}>
         <span className={styles.chip} aria-label={`Photo ${at + 1} of ${count}`}>
           {at + 1}
         </span>
-        <button type="button" className={styles.chip} onClick={() => setPaused((p) => !p)} aria-pressed={paused}>
+        <button type="button" className={styles.chip} onClick={onPause} aria-pressed={paused}>
           {paused ? "Play" : "Pause"}
         </button>
       </div>
-      <button type="button" className={`${styles.chip} ${styles.step}`} data-side="left" onClick={() => show(at - 1)} aria-label="Previous photo">
+      <button type="button" className={`${styles.chip} ${styles.step}`} data-side="left" onClick={() => onStep(-1)} aria-label="Previous photo">
         ←
       </button>
-      <button type="button" className={`${styles.chip} ${styles.step}`} data-side="right" onClick={() => show(at + 1)} aria-label="Next photo">
+      <button type="button" className={`${styles.chip} ${styles.step}`} data-side="right" onClick={() => onStep(1)} aria-label="Next photo">
         →
       </button>
-    </div>
+    </>
   );
 }
