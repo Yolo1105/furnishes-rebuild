@@ -96,7 +96,7 @@
   translate: 0 -0.15em;
 }
 
-/* The wordmark's u and full stop, and the button's "your", in the classic
+/* The wordmark's full stop, and the button's "your", in the classic
    orange; the button's goes with the rest of its words once it fills. */
 .accent {
   color: var(--color-orange);

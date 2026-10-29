@@ -20,7 +20,7 @@ export function SiteHeader() {
       </nav>
 
       <Link href={routes.home} className={styles.wordmark}>
-        f<span className={styles.accent}>u</span>rnishes<span className={styles.accent}>.</span>
+        furnishes<span className={styles.accent}>.</span>
       </Link>
 
       <nav className={styles.end} aria-label="Your space">
