@@ -58,15 +58,22 @@ export function PhotoRotation({ photos }: { photos: typeof PHOTOS }) {
 
   return (
     <div className={styles.frame} style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}>
-      {photos.map(({ src, alt }, i) => (
-        <div key={src.src} className={styles.slide} data-active={i === at || undefined} aria-hidden={i !== at}>
+      {photos.map(({ src, alt, shiftLeft = 0 }, i) => (
+        <div
+          key={src.src}
+          className={styles.slide}
+          data-active={i === at || undefined}
+          aria-hidden={i !== at}
+          // widened past the left edge by shiftLeft, so the room sits further left
+          style={shiftLeft ? { left: `-${shiftLeft}%`, width: `${100 + shiftLeft}%` } : undefined}
+        >
           {near(i) && (
             <Image
               src={src}
               alt={alt}
               className={styles.photo}
               fill
-              sizes="100vw"
+              sizes={`${100 + shiftLeft}vw`}
               quality={PHOTO_QUALITY}
               priority={i === 0}
               placeholder="blur"
