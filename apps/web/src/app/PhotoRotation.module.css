@@ -1,0 +1,62 @@
+/* The photos fill exactly one screen (dvh follows phone browser bars),
+   stacked; the one in view (data-active) fades in over --fade as the last
+   fades out. Each is cropped as cover would rather than letterboxed. */
+.frame {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--fade) ease-in-out;
+}
+
+.slide[data-active] {
+  opacity: 1;
+}
+
+.photo {
+  object-fit: cover;
+}
+
+/* The photo's number and the pause button, at the top left, on dark chips
+   so they read on any photo. */
+.controls {
+  position: absolute;
+  z-index: 1;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: flex;
+  gap: var(--space-2);
+}
+
+.chip {
+  min-width: 2em;
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: color-mix(in srgb, var(--color-night) 70%, transparent);
+  color: var(--color-paper);
+  font: 600 var(--text-label) / 1 system-ui, sans-serif;
+  text-align: center;
+}
+
+button.chip {
+  cursor: pointer;
+}
+
+button.chip:focus-visible {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: none;
+  }
+}
