@@ -7,7 +7,7 @@
   --color-mist: #ddd8d1; /* the landing's text on the photo: a soft neutral white, solid, not cream */
   --color-rust: #8c3812; /* the bar's links, the wall title */
   --color-burgundy: #5e1f24; /* the wordmark */
-  --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop, links under the pointer */
+  --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
@@ -25,7 +25,6 @@
   --text-wordmark: clamp(18px, 1.5vw, 22px);
   --text-wordmark-sm: 18px;
   --text-label: 1.25rem;
-  --text-lede: clamp(15px, 1.25vw, 18px); /* the landing's short line */
   --text-display: 9.5vw; /* the landing's headline */
   --text-display-sm: 15.5vw; /* the same on upright phones */
   --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */

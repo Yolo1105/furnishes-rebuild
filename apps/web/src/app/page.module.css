@@ -38,69 +38,23 @@
   --wash-bottom: 70%;
 }
 
-/* The bottom of the screen, split: the headline at the left, and at the
-   right a short line and the way in, their last lines level with the
-   headline's foot. Rising in on arrival. */
-.hero {
+/* The headline at the bottom left: soft white Instrument Serif, tightly
+   set, rising in on arrival. */
+.title {
   position: absolute;
   z-index: 2;
   left: var(--gutter);
   right: var(--gutter);
   bottom: var(--gutter);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-6);
-  color: var(--color-mist);
-  animation: rise var(--dur-enter) ease-out both;
-}
-
-/* The headline: soft white Instrument Serif, tightly set. */
-.title {
   margin: 0;
+  color: var(--color-mist);
   font-family: var(--font-display);
   font-size: var(--text-display);
   font-weight: 400;
   letter-spacing: var(--track-display);
   line-height: 0.85;
   white-space: nowrap;
-}
-
-.aside {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  max-width: 30ch;
-  font-family: var(--font-sans);
-}
-
-.lede {
-  margin: 0;
-  font-size: var(--text-lede);
-  font-weight: 300;
-  line-height: 1.4;
-}
-
-/* The way in: set like the bar's links, underlined. */
-.cta {
-  align-self: flex-start;
-  font-size: var(--text-nav);
-  font-weight: 450;
-  letter-spacing: var(--track-wide);
-  line-height: 1;
-  text-transform: uppercase;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.5em;
-}
-
-.cta:hover {
-  color: var(--color-orange);
-}
-
-.cta:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: var(--space-1);
+  animation: rise var(--dur-enter) ease-out both;
 }
 
 @keyframes rise {
@@ -110,20 +64,15 @@
   }
 }
 
-/* Upright screens: the short line and the way in under the headline. */
+/* Upright screens: sized to their narrow width. */
 @media (orientation: portrait) {
-  .hero {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .title {
     font-size: var(--text-display-sm);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero {
+  .title {
     animation: none;
   }
 }
