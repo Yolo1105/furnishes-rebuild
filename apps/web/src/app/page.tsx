@@ -5,7 +5,7 @@ import { PHOTOS } from "./photos";
 export default function Home() {
   return (
     <main>
-      <h1 className="visually-hidden">Furnishes</h1>
+      <h1 className="visually-hidden">Furnishes: Interior Revolution</h1>
       <PhotoRotation photos={PHOTOS} />
     </main>
   );

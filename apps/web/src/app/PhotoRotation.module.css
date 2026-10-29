@@ -9,9 +9,20 @@
   isolation: isolate;
 }
 
+/* Each slide runs past the screen's left and top edges by --shift-left and
+   --shift-up (from photos.ts), so its room sits further left and up. It is a
+   size container, so its photo can cover it at the photo's own shape
+   (--ratio, width over height), centred: what object-fit: cover draws, but
+   as a box the words can be placed in. */
 .slide {
   position: absolute;
-  inset: 0;
+  --lift: var(--shift-up);
+  top: calc(-1 * var(--lift));
+  left: calc(-1 * var(--shift-left));
+  width: calc(100% + var(--shift-left));
+  height: calc(100% + var(--lift));
+  overflow: hidden;
+  container-type: size;
   opacity: 0;
   transition: opacity var(--fade) ease-in-out;
 }
@@ -20,8 +31,69 @@
   opacity: 1;
 }
 
-.photo {
-  object-fit: cover;
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100cqw, 100cqh * var(--ratio));
+  aspect-ratio: var(--ratio);
+  translate: -50% -50%;
+  container-type: inline-size;
+}
+
+/* "Interior" and "Revolution" on the photo's walls, either side of what
+   hangs between them: Jost ExtraLight caps in the rust, sized with the photo
+   (cqi: % of its width), each centred on its line at the photo's `middle`. */
+.title {
+  margin: 0;
+  color: var(--color-rust);
+  font-family: var(--font-title);
+  font-size: var(--title-size);
+  font-weight: 200;
+  letter-spacing: var(--track-title);
+  line-height: 1;
+  text-transform: uppercase;
+  --title-size: 2.8cqi;
+}
+
+.word {
+  position: absolute;
+  translate: 0 -50%;
+  white-space: nowrap;
+}
+
+/* For upright screens, where the walls fall outside the frame: the words on
+   two lines at the top left, under the bar. */
+.stacked {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--nav-h) + var(--space-4));
+  left: var(--gutter);
+  margin: 0;
+  color: var(--color-rust);
+  font-family: var(--font-title);
+  font-size: var(--text-title-sm);
+  font-weight: 200;
+  letter-spacing: var(--track-title);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+/* Upright screens: no lift, so the wall above the art stays clear for the
+   stacked words. */
+@media (orientation: portrait) {
+  .slide {
+    --lift: 0%;
+  }
+
+  .title {
+    display: none;
+  }
+
+  .stacked {
+    display: block;
+  }
 }
 
 /* The photo's number and the pause button, at the top left, on dark chips

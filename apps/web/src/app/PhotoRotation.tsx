@@ -58,34 +58,53 @@ export function PhotoRotation({ photos }: { photos: typeof PHOTOS }) {
 
   return (
     <div className={styles.frame} style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}>
-      {photos.map(({ src, alt, shiftLeft = 0, shiftUp = 0 }, i) => (
+      {photos.map(({ src, alt, shiftLeft = 0, shiftUp = 0, title }, i) => (
         <div
           key={src.src}
           className={styles.slide}
           data-active={i === at || undefined}
           aria-hidden={i !== at}
-          // run past the left and top edges by shiftLeft and shiftUp, so the room sits further left and up
-          style={{
-            left: `-${shiftLeft}%`,
-            width: `${100 + shiftLeft}%`,
-            top: `-${shiftUp}%`,
-            height: `${100 + shiftUp}%`,
-          }}
+          // how far it runs past the left and top edges, so the room sits further left and up
+          style={{ "--shift-left": `${shiftLeft}%`, "--shift-up": `${shiftUp}%` } as CSSProperties}
         >
-          {near(i) && (
-            <Image
-              src={src}
-              alt={alt}
-              className={styles.photo}
-              fill
-              sizes={`${100 + shiftLeft}vw`}
-              quality={PHOTO_QUALITY}
-              priority={i === 0}
-              placeholder="blur"
-            />
-          )}
+          {/* the photo at its own shape, just covering the box, so the words keep their place on it */}
+          <div className={styles.canvas} style={{ "--ratio": src.width / src.height } as CSSProperties}>
+            {near(i) && (
+              <Image
+                src={src}
+                alt={alt}
+                fill
+                sizes={`${100 + shiftLeft}vw`}
+                quality={PHOTO_QUALITY}
+                priority={i === 0}
+                placeholder="blur"
+              />
+            )}
+            {title && (
+              // the page's h1 carries the words for screen readers
+              <p className={styles.title} aria-hidden="true">
+                <span
+                  className={styles.word}
+                  style={{ right: `${100 - title.interiorEnd}%`, top: `${title.middle}%` }}
+                >
+                  Interior
+                </span>
+                <span className={styles.word} style={{ left: `${title.revolutionStart}%`, top: `${title.middle}%` }}>
+                  Revolution
+                </span>
+              </p>
+            )}
+          </div>
         </div>
       ))}
+      {/* upright phones see only the photo's middle, not its walls: the words stack under the bar instead */}
+      {photos[at]?.title && (
+        <p className={styles.stacked} aria-hidden="true">
+          Interior
+          <br />
+          Revolution
+        </p>
+      )}
       {count > 1 && <Controls at={at} count={count} paused={paused} onPause={() => setPaused((p) => !p)} onStep={(by) => show(at + by)} />}
     </div>
   );
