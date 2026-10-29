@@ -56,7 +56,6 @@
 .small {
   font-family: var(--font-sans);
   font-size: var(--text-plan-sub);
-  letter-spacing: var(--track-narrow);
 }
 
 /* What the studio does, in a line under the flat's details, across both
@@ -81,17 +80,16 @@
   place-items: center;
 }
 
-/* "Scroll to explore" at the foot, in the landing headline's serif, in
-   italic, over an arrow bobbing down and back. */
+/* "Scroll to explore" at the foot, set as the line on what we do is, over
+   an arrow bobbing down and back. */
 .more {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-plan-lede);
-  font-style: italic;
+  font-family: var(--font-sans);
+  font-size: var(--text-plan-sub);
 }
 
 .more svg {
