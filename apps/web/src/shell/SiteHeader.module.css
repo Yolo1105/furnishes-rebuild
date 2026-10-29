@@ -79,8 +79,8 @@
   translate: 0 -0.15em;
 }
 
-/* The wordmark's full stop, in the classic orange. */
-.dot {
+/* The wordmark's i and full stop, in the classic orange. */
+.accent {
   color: var(--color-orange);
 }
 
