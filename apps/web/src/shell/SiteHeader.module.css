@@ -61,6 +61,11 @@
   translate: 0 -0.15em;
 }
 
+/* The wordmark's full stop, in the classic orange. */
+.dot {
+  color: var(--color-orange);
+}
+
 .link:focus-visible,
 .wordmark:focus-visible {
   outline: 1px solid var(--bar-fg);

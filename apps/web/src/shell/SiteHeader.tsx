@@ -20,7 +20,7 @@ export function SiteHeader() {
       </nav>
 
       <Link href={routes.home} className={styles.wordmark}>
-        furnishes.
+        furnishes<span className={styles.dot}>.</span>
       </Link>
 
       <nav className={styles.end} aria-label="Your space">
