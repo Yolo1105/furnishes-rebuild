@@ -4,7 +4,8 @@
   --color-paper: #fffaf3;
   --color-cream: #fff6e9; /* text on an orange fill */
   --color-espresso: #2e2118; /* the warm dark of the washes */
-  --color-rust: #8c3812; /* the bar's ink, the title */
+  --color-rust: #8c3812; /* the bar's links, the title */
+  --color-burgundy: #5e1f24; /* the wordmark */
   --color-orange: #e7551a; /* the classic Furnishes orange: the main button */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
