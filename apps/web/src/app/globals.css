@@ -2,11 +2,11 @@
 :root {
   --color-night: #1a120a;
   --color-paper: #fffaf3;
-  --color-cream: #fff6e9; /* text on an orange fill */
+  --color-cream: #fff6e9; /* text on an orange or rust fill */
   --color-espresso: #2e2118; /* the warm dark of the washes */
   --color-rust: #8c3812; /* the bar's links, the title */
   --color-burgundy: #5e1f24; /* the wordmark */
-  --color-orange: #e7551a; /* the classic Furnishes orange: the main button, the wordmark's n and full stop */
+  --color-orange: #e7551a; /* the classic Furnishes orange: the main button, the wordmark's u, n and full stop */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
 
