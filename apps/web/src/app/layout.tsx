@@ -3,10 +3,10 @@ import { Jost } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
 import "./globals.css";
 
-// The site's one face: Light for the title, Regular for the bar, Medium for the wordmark.
+// The site's one face: Light for the title, Regular for body text, Medium for the bar, SemiBold for the wordmark.
 const jost = Jost({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-jost",
   display: "swap",
 });
