@@ -1,12 +1,12 @@
 /* The landing is one screen: the photos, a soft shade in the corners, a
-   wash rising from the bottom, and the title on the wash. */
+   wash rising from the bottom, and the headline on the wash. */
 .main {
   position: relative;
   isolation: isolate;
 }
 
 /* The shade: espresso easing in toward the corners, to frame the room. Over
-   the photos, under the title. */
+   the photos, under the headline. */
 .main::before {
   content: "";
   position: absolute;
@@ -22,7 +22,7 @@
 }
 
 /* The wash: espresso at the bottom, easing out by 45% of the way up, so the
-   white title reads on any photo without a hard edge. Not in the way of
+   light text reads on any photo without a hard edge. Not in the way of
    clicks. */
 .main::after {
   content: "";
@@ -38,28 +38,69 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" on one line at the bottom left: soft white
-   Instrument Serif, tightly set, rising in on arrival. */
-.title {
+/* The bottom of the screen, split: the headline at the left, and at the
+   right a short line and the way in, their last lines level with the
+   headline's foot. Rising in on arrival. */
+.hero {
   position: absolute;
   z-index: 2;
   left: var(--gutter);
   right: var(--gutter);
-  bottom: var(--space-4);
-  margin: 0;
+  bottom: var(--gutter);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
   color: var(--color-mist);
+  animation: rise var(--dur-enter) ease-out both;
+}
+
+/* The headline: soft white Instrument Serif, tightly set. */
+.title {
+  margin: 0;
   font-family: var(--font-display);
   font-size: var(--text-display);
   font-weight: 400;
   letter-spacing: var(--track-display);
-  line-height: 0.9;
+  line-height: 0.85;
   white-space: nowrap;
-  animation: rise var(--dur-enter) ease-out both;
 }
 
-/* The first o of "Revolution", in the classic orange. */
-.accent {
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 30ch;
+  font-family: var(--font-sans);
+}
+
+.lede {
+  margin: 0;
+  font-size: var(--text-lede);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+/* The way in: set like the bar's links, underlined. */
+.cta {
+  align-self: flex-start;
+  font-size: var(--text-nav);
+  font-weight: 450;
+  letter-spacing: var(--track-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.5em;
+}
+
+.cta:hover {
   color: var(--color-orange);
+}
+
+.cta:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: var(--space-1);
 }
 
 @keyframes rise {
@@ -69,15 +110,20 @@
   }
 }
 
-/* Upright screens: sized to their narrow width, still on one line. */
+/* Upright screens: the short line and the way in under the headline. */
 @media (orientation: portrait) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .title {
     font-size: var(--text-display-sm);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .title {
+  .hero {
     animation: none;
   }
 }
