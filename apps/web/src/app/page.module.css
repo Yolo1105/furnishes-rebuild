@@ -38,7 +38,7 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" at the bottom left, a word to a line: soft white
+/* "Interior Revolution" on one line at the bottom left: soft white
    Instrument Serif, tightly set, rising in on arrival. */
 .title {
   position: absolute;
@@ -57,10 +57,6 @@
   animation: rise var(--dur-enter) ease-out both;
 }
 
-.line {
-  display: block;
-}
-
 @keyframes rise {
   from {
     opacity: 0;
@@ -68,7 +64,7 @@
   }
 }
 
-/* Upright screens: larger, for their narrow width. */
+/* Upright screens: sized to their narrow width, still on one line. */
 @media (orientation: portrait) {
   .title {
     font-size: var(--text-display-sm);
