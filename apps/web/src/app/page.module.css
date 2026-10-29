@@ -38,7 +38,7 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" centred at the bottom: warm cream and tightly set,
+/* "Interior Revolution" at the bottom left: warm off-white and tightly set,
    rising in on arrival. */
 .title {
   position: absolute;
@@ -53,7 +53,6 @@
   font-weight: 400;
   letter-spacing: var(--track-display);
   line-height: 0.9;
-  text-align: center;
   white-space: nowrap;
   animation: rise var(--dur-enter) ease-out both;
 }
