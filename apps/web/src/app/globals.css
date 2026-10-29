@@ -3,8 +3,8 @@
   --color-night: #1a120a;
   --color-paper: #fffaf3;
   --color-cream: #fff6e9; /* text on a rust fill */
-  --color-espresso: #2e2118; /* the warm dark under the bar's words */
-  --color-rust: #8c3812; /* the accent: the title, the main button */
+  --color-espresso: #2e2118; /* the warm dark of the washes */
+  --color-rust: #8c3812; /* the accent: the bar, the title, the main button */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
 
@@ -39,7 +39,6 @@
   --dur-fast: 0.2s;
   --dur-enter: 1.2s; /* words and buttons fading in on arrival */
   --stagger: 150ms; /* between one arriving and the next */
-  --dur-drift: 24s; /* the photo's slow zoom, one way */
 
   --z-header: 60;
 }

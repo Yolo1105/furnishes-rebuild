@@ -61,11 +61,10 @@
   line-height: 1.3;
 }
 
-/* The sentence, then the buttons, rise in after the title's two words. */
+/* The sentence, then the buttons, rise in. */
 .lede,
 .actions {
   animation: rise var(--dur-enter) ease-out both;
-  animation-delay: calc(var(--stagger) * 2);
 }
 
 @keyframes rise {
@@ -80,7 +79,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-4) var(--space-6);
-  animation-delay: calc(var(--stagger) * 3);
+  animation-delay: var(--stagger);
 }
 
 /* The button and the link set like the bar's links. */

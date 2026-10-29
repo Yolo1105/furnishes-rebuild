@@ -39,18 +39,6 @@
   aspect-ratio: var(--ratio);
   translate: -50% -50%;
   container-type: inline-size;
-  animation: drift var(--dur-drift) ease-in-out infinite alternate;
-}
-
-/* A slow zoom in and back out, so the room feels alive; the words on its
-   walls move with it. */
-@keyframes drift {
-  from {
-    scale: 1;
-  }
-  to {
-    scale: 1.05;
-  }
 }
 
 /* "Interior" and "Revolution" on the photo's walls, either side of what
@@ -178,7 +166,6 @@ button.chip:focus-visible {
     transition: none;
   }
 
-  .canvas,
   .word,
   .stacked {
     animation: none;

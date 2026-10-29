@@ -28,8 +28,6 @@ export const PHOTOS: {
     src: whiteLivingRoom,
     shiftLeft: 6,
     shiftUp: 15,
-    // either side of the five pieces hung over the sofa, level with the big frame's top third
-    title: { interiorEnd: 33, revolutionStart: 70, middle: 32 },
     alt: "A bright living room with a cream sofa under abstract art, orange cushions, a round wooden coffee table and tall windows onto city towers",
   },
 ];
