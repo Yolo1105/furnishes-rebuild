@@ -1,6 +1,6 @@
-/* The bar: fixed over the top of the page with no background of its own, so
-   the photo shows through; set in the rust, which reads on a bright photo.
-   Links left, wordmark centred, links and the one button right. */
+/* The bar: fixed over the top of the page, the photo showing through a dark
+   wash that fades out below it, and set in white on the wash. Links left,
+   wordmark centred, links and the one button right. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -12,12 +12,29 @@
   min-height: var(--nav-h);
   padding: var(--nav-pad-y) var(--gutter);
   /* the bar's ink, and the colour drawn on a filled ink shape */
-  --bar-fg: var(--color-rust);
-  --bar-on-fg: var(--color-cream);
+  --bar-fg: var(--color-paper);
+  --bar-on-fg: var(--color-night);
   color: var(--bar-fg);
   font-family: var(--font-mono);
   font-size: var(--text-nav);
   line-height: 1;
+}
+
+/* The wash: black at the top, gone by twice the bar's height, so the white
+   words read on any photo without a hard edge. Behind the words, and not in
+   the way of clicks on the page under it. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: calc(var(--nav-h) * 2);
+  background: linear-gradient(
+    color-mix(in srgb, var(--color-night) var(--wash-top), transparent),
+    transparent
+  );
+  pointer-events: none;
+  --wash-top: 60%;
 }
 
 .start,
