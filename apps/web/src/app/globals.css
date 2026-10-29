@@ -10,6 +10,7 @@
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
+  --font-display: var(--font-inter-tight), "Inter Tight", system-ui, sans-serif;
 
   --space-1: 4px;
   --space-2: 8px;
