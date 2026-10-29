@@ -3,7 +3,7 @@ import { planSymbols } from "./symbols";
 import styles from "./FloorPlan.module.css";
 
 /** Room on the sheet past the drawing, mm: room for the A/C ledge's label to the east. */
-const MARGIN = 450;
+const MARGIN = 250;
 
 const box = ([x0, y0, x1, y1]: Box, fill: string) => (
   <rect key={`${x0} ${y0} ${x1} ${y1}`} x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={fill} />

@@ -4,7 +4,7 @@ import styles from "./SiteHeader.module.css";
 
 /**
  * The bar, over the top of the page. Left: ours to look at (our pieces, our
- * rooms). Centre: the wordmark. Right: yours (designing your room, your
+ * rooms, who we are). Centre: the wordmark. Right: yours (designing your room, your
  * account), with "Design your room" boxed as the bar's one button.
  */
 export function SiteHeader() {
@@ -16,6 +16,9 @@ export function SiteHeader() {
         </Link>
         <Link href={routes.inspiration} className={styles.link}>
           Inspiration
+        </Link>
+        <Link href={routes.about} className={styles.link}>
+          About
         </Link>
       </nav>
 

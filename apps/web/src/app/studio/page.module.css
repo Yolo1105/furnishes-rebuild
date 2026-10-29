@@ -17,7 +17,7 @@
   display: grid;
   place-items: center;
   min-height: 0;
-  padding: calc(var(--nav-h) + var(--gutter)) var(--gutter) var(--gutter);
+  padding: calc(var(--nav-h) + var(--gutter)) calc(var(--gutter) / 2) var(--gutter);
   color: var(--color-espresso);
 }
 
