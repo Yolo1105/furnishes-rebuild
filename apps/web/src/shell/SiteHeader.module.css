@@ -96,9 +96,14 @@
   translate: 0 -0.15em;
 }
 
-/* The wordmark's u, n and full stop, in the classic orange. */
+/* The wordmark's u and full stop, and the button's "your", in the classic
+   orange; the button's goes with the rest of its words once it fills. */
 .accent {
   color: var(--color-orange);
+}
+
+.primary:hover .accent {
+  color: inherit;
 }
 
 .link:focus-visible,

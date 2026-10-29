@@ -6,7 +6,7 @@
   --color-espresso: #2e2118; /* the warm dark of the washes */
   --color-rust: #8c3812; /* the bar's links, the title */
   --color-burgundy: #5e1f24; /* the wordmark */
-  --color-orange: #e7551a; /* the classic Furnishes orange: the main button, the wordmark's u, n and full stop */
+  --color-orange: #e7551a; /* the classic Furnishes orange: the main button, the wordmark's u and full stop, the bar's "your" */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
 
