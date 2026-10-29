@@ -58,6 +58,16 @@
   letter-spacing: var(--track-narrow);
 }
 
+/* What the studio does, in a line under the flat's details: the serif of
+   the landing's headline, across both columns. */
+.head .lede {
+  grid-column: 1 / -1;
+  margin-top: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-plan-lede);
+  line-height: 1.2;
+}
+
 .end {
   justify-self: end;
   text-align: end;

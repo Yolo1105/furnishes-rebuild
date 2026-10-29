@@ -38,6 +38,7 @@ export function StudioView() {
           </p>
           <p className={styles.small}>{FLAT.rooms}</p>
           <p className={`${styles.small} ${styles.end}`}>Sleeps {FLAT.sleeps}</p>
+          <p className={styles.lede}>Describe your dream room in your own words, and we&rsquo;ll design it for you.</p>
         </header>
         <div className={styles.drawing}>
           <FloorPlan linked={LINKED} active={ROOM_PHOTOS[at]?.room} onRoom={showRoom} />
