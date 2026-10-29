@@ -1,0 +1,34 @@
+/* Two parts, a screen tall, 60:40: the photos left, the plan right on the
+   peach. Upright screens stack them, the photos above. */
+.split {
+  /* its own layer, so the peach (fixed, behind) paints over the page's night */
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  height: 100svh;
+}
+
+.photo {
+  min-height: 0;
+}
+
+/* The plan, clear of the bar above and centred in what is left. */
+.plan {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: calc(var(--nav-h) + var(--gutter)) var(--gutter) var(--gutter);
+  color: var(--color-espresso);
+}
+
+@media (orientation: portrait) {
+  .split {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60svh auto;
+    height: auto;
+  }
+
+  .plan {
+    padding-top: var(--gutter);
+  }
+}

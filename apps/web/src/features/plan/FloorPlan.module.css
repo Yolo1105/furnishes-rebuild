@@ -1,0 +1,45 @@
+/* The plan scales to its box; every line keeps its own width on screen
+   however large the plan is drawn. */
+.plan {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lines path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Heaviest to lightest: door leaves and glass, fittings, furniture, the
+   faint marks. */
+.lines .heavy {
+  stroke-width: 1.4px;
+}
+
+.lines .fittings {
+  stroke-width: 1px;
+}
+
+.lines .furniture {
+  stroke-width: 0.8px;
+  opacity: 0.85;
+}
+
+.lines .light {
+  stroke-width: 0.6px;
+  opacity: 0.55;
+}
+
+.names text {
+  fill: currentColor;
+  font-family: var(--font-sans);
+  font-weight: 450;
+  letter-spacing: var(--track-title);
+  text-anchor: middle;
+  dominant-baseline: central;
+  text-transform: uppercase;
+}
