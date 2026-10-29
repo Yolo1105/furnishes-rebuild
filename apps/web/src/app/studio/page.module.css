@@ -1,10 +1,10 @@
-/* Two parts, a screen tall, 65:35: the photos left, the plan right on the
+/* Two parts, a screen tall, 60:40: the photos left, the plan right on the
    peach. Upright screens stack them, the photos above. */
 .split {
   /* its own layer, so the peach (fixed, behind) paints over the page's night */
   isolation: isolate;
   display: grid;
-  grid-template-columns: 13fr 7fr;
+  grid-template-columns: 3fr 2fr;
   height: 100svh;
 }
 
