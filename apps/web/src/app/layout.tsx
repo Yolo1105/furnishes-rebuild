@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight, Jost } from "next/font/google";
+import { Instrument_Serif, Jost } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
 import "./globals.css";
 
@@ -11,11 +11,11 @@ const jost = Jost({
   display: "swap",
 });
 
-// The landing title's face: a tight grotesque, for display sizes only.
-const interTight = Inter_Tight({
+// The landing title's face: a narrow serif, for display sizes only (it comes in one weight).
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  weight: "variable",
-  variable: "--font-inter-tight",
+  weight: "400",
+  variable: "--font-instrument-serif",
   display: "swap",
 });
 
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jost.variable} ${interTight.variable}`}>
+    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable}`}>
       <body>
         <SiteHeader />
         {children}

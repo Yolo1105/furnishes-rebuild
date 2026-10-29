@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 
 /**
  * The landing: the room photos, one screen at a time, turning on their own,
- * with "Interior Revolution" set huge across the bottom.
+ * with "Interior Revolution" set large at the bottom left, a word to a line.
  */
 export default function Home() {
   return (
@@ -12,7 +12,8 @@ export default function Home() {
       <PhotoRotation photos={PHOTOS} />
       <h1 className={styles.title}>
         <span className="visually-hidden">Furnishes: </span>
-        Interior Revolution
+        <span className={styles.line}>Interior</span>{" "}
+        <span className={styles.line}>Revolution</span>
       </h1>
     </main>
   );

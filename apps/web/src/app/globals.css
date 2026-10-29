@@ -10,7 +10,7 @@
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
-  --font-display: var(--font-inter-tight), "Inter Tight", system-ui, sans-serif;
+  --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -25,8 +25,8 @@
   --text-wordmark: clamp(18px, 1.5vw, 22px);
   --text-wordmark-sm: 18px;
   --text-label: 1.25rem;
-  --text-display: 9.5vw; /* "Interior Revolution" across the landing's bottom */
-  --text-display-sm: 16.5vw; /* the same on upright phones, on two lines */
+  --text-display: 9.5vw; /* "Interior Revolution" at the landing's bottom left */
+  --text-display-sm: 22vw; /* the same on upright phones */
   --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */
   --track-title: 0.08em;
   --track-display: -0.03em;
