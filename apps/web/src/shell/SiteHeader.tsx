@@ -5,7 +5,7 @@ import styles from "./SiteHeader.module.css";
 /**
  * The bar, over the top of the page. Left: ours to look at (our pieces, our
  * rooms). Centre: the wordmark. Right: yours (designing your room, your
- * account), with "Design your room" as the bar's one button.
+ * account). All plain links: the page under it has the button.
  */
 export function SiteHeader() {
   return (
@@ -24,7 +24,7 @@ export function SiteHeader() {
       </Link>
 
       <nav className={styles.end} aria-label="Your space">
-        <Link href={routes.studio} className={`${styles.link} ${styles.primary}`}>
+        <Link href={routes.studio} className={styles.link}>
           Design your room
         </Link>
         <Link href={routes.signIn} className={styles.link}>

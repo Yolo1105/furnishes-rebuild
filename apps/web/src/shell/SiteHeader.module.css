@@ -1,6 +1,6 @@
 /* The bar: fixed over the top of the page, the photo showing through a warm
    dark wash that fades out below it, and set in white on the wash. Links left,
-   wordmark centred, links and the one button right. */
+   wordmark centred, links right. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -11,9 +11,8 @@
   gap: var(--space-6);
   min-height: var(--nav-h);
   padding: var(--nav-pad-y) var(--gutter);
-  /* the bar's ink, and the colour drawn on a filled ink shape */
+  /* the bar's ink */
   --bar-fg: var(--color-paper);
-  --bar-on-fg: var(--color-night);
   color: var(--bar-fg);
   font-family: var(--font-sans);
   font-size: var(--text-nav);
@@ -67,22 +66,6 @@
   text-decoration: underline;
 }
 
-/* The bar's one button: outlined, filled on hover. */
-.primary {
-  padding: 0.55em 0.85em;
-  border: 1px solid var(--bar-fg);
-  border-radius: var(--radius-sm);
-  transition:
-    background-color var(--dur-fast) ease,
-    color var(--dur-fast) ease;
-}
-
-.primary:hover {
-  text-decoration: none;
-  background: var(--bar-fg);
-  color: var(--bar-on-fg);
-}
-
 .wordmark {
   justify-self: center;
   font-weight: 500;
@@ -109,7 +92,7 @@
   }
 }
 
-/* Small phones: the wordmark on the left, the main button on the right. */
+/* Small phones: the wordmark on the left, the first link on the right. */
 @media (max-width: 480px) {
   .header {
     grid-template-columns: auto 1fr;
