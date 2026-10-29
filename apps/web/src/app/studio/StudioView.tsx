@@ -38,7 +38,7 @@ export function StudioView() {
           </p>
           <p className={styles.small}>{FLAT.rooms}</p>
           <p className={`${styles.small} ${styles.end}`}>Sleeps {FLAT.sleeps}</p>
-          <p className={styles.lede}>Just chat with our AI about your dream room, and watch it design the space for you. From 2D floor plan to 3D visualizer.</p>
+          <p className={styles.lede}>Just describe your dream room in a chat, and design it yourself from start to finish, from 2D floor plan to 3D visualizer.</p>
         </header>
         <div className={styles.drawing}>
           <FloorPlan linked={LINKED} active={ROOM_PHOTOS[at]?.room} onRoom={showRoom} />
