@@ -1,12 +1,12 @@
 /* The bar: fixed over the top of the page, the photo showing through; links
-   in rust, the wordmark in burgundy. Links left, wordmark centred, links
-   right, "Design your room" boxed. */
+   in rust, the wordmark in burgundy. The wordmark and the browsing links
+   left, the links for you right, "Design your room" boxed. */
 .header {
   position: fixed;
   inset: 0 0 auto;
   z-index: var(--z-header);
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-6);
   min-height: var(--nav-h);
@@ -30,6 +30,7 @@
 
 .start {
   justify-self: start;
+  margin-left: var(--nav-gap);
 }
 
 .end {
@@ -66,7 +67,6 @@
 }
 
 .wordmark {
-  justify-self: center;
   color: var(--color-burgundy);
   font-weight: 550;
   font-size: var(--text-wordmark);
@@ -110,7 +110,6 @@
   }
 
   .wordmark {
-    justify-self: start;
     font-size: var(--text-wordmark-sm);
   }
 
