@@ -11,10 +11,11 @@ const jost = Jost({
   display: "swap",
 });
 
-// The landing title's face: a narrow serif, for display sizes only (it comes in one weight).
+// The landing title's face: a narrow serif, for display sizes only (one weight; upright and italic).
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
+  style: ["normal", "italic"],
   variable: "--font-instrument-serif",
   display: "swap",
 });
