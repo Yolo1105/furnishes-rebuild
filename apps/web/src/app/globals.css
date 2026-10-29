@@ -2,9 +2,11 @@
 :root {
   --color-night: #1a120a;
   --color-paper: #fffaf3;
-  --color-cream: #fff6e9; /* text on an orange or rust fill */
+  --color-cream: #fff6e9; /* text on a filled button */
   --color-espresso: #2e2118; /* the warm dark of the washes */
-  --color-rust: #8c3812; /* the bar's links, the title */
+  --color-sand: #efe2cc; /* the landing's big title: a warm cream, softer than white */
+  --color-mocha: #6f4e37; /* the bar's links: a softer brown beside the wordmark */
+  --color-rust: #8c3812; /* the wall title */
   --color-burgundy: #5e1f24; /* the wordmark */
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
 
@@ -23,8 +25,8 @@
   --text-wordmark: clamp(18px, 1.5vw, 22px);
   --text-wordmark-sm: 18px;
   --text-label: 1.25rem;
-  --text-display: 12vw; /* "Interior Revolution" across the landing's bottom */
-  --text-display-sm: 20vw; /* the same on upright phones, on two lines */
+  --text-display: 10.5vw; /* "Interior Revolution" across the landing's bottom */
+  --text-display-sm: 18vw; /* the same on upright phones, on two lines */
   --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */
   --track-title: 0.08em;
   --track-display: -0.03em;

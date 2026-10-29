@@ -38,8 +38,8 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" across the bottom, from the left gutter, nearly the width:
-   white and tightly set, rising in on arrival. */
+/* "Interior Revolution" centred at the bottom: warm cream and tightly set,
+   rising in on arrival. */
 .title {
   position: absolute;
   z-index: 2;
@@ -47,12 +47,13 @@
   right: var(--gutter);
   bottom: var(--space-4);
   margin: 0;
-  color: var(--color-paper);
+  color: var(--color-sand);
   font-family: var(--font-sans);
   font-size: var(--text-display);
   font-weight: 400;
   letter-spacing: var(--track-display);
   line-height: 0.9;
+  text-align: center;
   white-space: nowrap;
   animation: rise var(--dur-enter) ease-out both;
 }
