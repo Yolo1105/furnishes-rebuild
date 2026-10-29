@@ -1,13 +1,9 @@
 import type { StaticImageData } from "next/image";
 import archedWindowLounge from "@/assets/arched-window-lounge.jpg";
-import brickNook from "@/assets/brick-nook.jpg";
 import cabinLivingRoom from "@/assets/cabin-living-room.jpg";
-import darkEntryway from "@/assets/dark-entryway.jpg";
 import galleryWallSofa from "@/assets/gallery-wall-sofa.jpg";
 import greenLivingRoom from "@/assets/green-living-room.jpg";
-import oliveWallSofa from "@/assets/olive-wall-sofa.jpg";
 import readingCorner from "@/assets/reading-corner.jpg";
-import sageSideboard from "@/assets/sage-sideboard.jpg";
 import sunlitBedroom from "@/assets/sunlit-bedroom.jpg";
 import { PHOTOS } from "../photos";
 
@@ -26,24 +22,8 @@ export const ROOM_PHOTOS: { src: StaticImageData; alt: string }[] = [
     alt: "A reading corner with a tan leather swivel chair, a leather pouf, hanging plants and three wall shelves of books, prints and vases",
   },
   {
-    src: sageSideboard,
-    alt: "A sage green wall with a round mirror over a rattan sideboard, large plants, a sling chair and a patterned rug",
-  },
-  {
-    src: oliveWallSofa,
-    alt: "A living room with an olive wall, a cognac leather sofa under a large black and white painting, brass lamps and orange curtains",
-  },
-  {
-    src: darkEntryway,
-    alt: "An entryway with a charcoal wall, a round mirror on a brass shelf, a wooden storage bench with cushions, rain boots and a yellow umbrella",
-  },
-  {
     src: cabinLivingRoom,
     alt: "A small living room with a leather loveseat between windows, two cowhide stools, a dining table with orange chairs and dark cabinets",
-  },
-  {
-    src: brickNook,
-    alt: "A brick-walled window nook with a white armchair, a log side table with a lamp and a rubber plant, between dark kitchen cabinets",
   },
   {
     src: archedWindowLounge,
