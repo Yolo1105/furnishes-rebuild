@@ -1,0 +1,26 @@
+/* Design tokens: every colour and size the site uses is named here once. */
+:root {
+  --color-night: #1a120a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--color-night);
+}
+
+/* For text that only screen readers should hear. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
