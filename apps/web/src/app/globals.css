@@ -37,6 +37,9 @@
   --tap: 44px;
 
   --dur-fast: 0.2s;
+  --dur-enter: 1.2s; /* words and buttons fading in on arrival */
+  --stagger: 150ms; /* between one arriving and the next */
+  --dur-drift: 24s; /* the photo's slow zoom, one way */
 
   --z-header: 60;
 }

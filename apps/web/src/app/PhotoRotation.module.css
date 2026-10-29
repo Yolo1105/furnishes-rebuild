@@ -39,6 +39,18 @@
   aspect-ratio: var(--ratio);
   translate: -50% -50%;
   container-type: inline-size;
+  animation: drift var(--dur-drift) ease-in-out infinite alternate;
+}
+
+/* A slow zoom in and back out, so the room feels alive; the words on its
+   walls move with it. */
+@keyframes drift {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 1.05;
+  }
 }
 
 /* "Interior" and "Revolution" on the photo's walls, either side of what
@@ -54,6 +66,22 @@
   line-height: 1;
   text-transform: uppercase;
   --title-size: 2.8cqi;
+}
+
+/* Each word fades in on arrival, one after the other. */
+.word,
+.stacked {
+  animation: appear var(--dur-enter) ease-out both;
+}
+
+.word + .word {
+  animation-delay: var(--stagger);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
 }
 
 .word {
@@ -148,5 +176,11 @@ button.chip:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .slide {
     transition: none;
+  }
+
+  .canvas,
+  .word,
+  .stacked {
+    animation: none;
   }
 }
