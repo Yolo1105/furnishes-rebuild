@@ -1,12 +1,12 @@
 /* The landing is one screen: the photos, a soft shade in the corners, a
-   wash rising from the bottom, and the intro on the wash. */
+   wash rising from the bottom, and the title on the wash. */
 .main {
   position: relative;
   isolation: isolate;
 }
 
 /* The shade: espresso easing in toward the corners, to frame the room. Over
-   the photos, under the intro. */
+   the photos, under the title. */
 .main::before {
   content: "";
   position: absolute;
@@ -21,112 +21,59 @@
   --vignette: 35%;
 }
 
-/* The wash: espresso at the bottom, easing out by 55% of the way up, so the
-   white intro reads on any photo without a hard edge. Not in the way of
+/* The wash: espresso at the bottom, easing out by 45% of the way up, so the
+   white title reads on any photo without a hard edge. Not in the way of
    clicks. */
 .main::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
-  height: 55%;
+  height: 45%;
   background: linear-gradient(
     transparent,
     color-mix(in srgb, var(--color-espresso) calc(var(--wash-bottom) / 2), transparent) 55%,
     color-mix(in srgb, var(--color-espresso) var(--wash-bottom), transparent)
   );
   pointer-events: none;
-  --wash-bottom: 85%;
+  --wash-bottom: 70%;
 }
 
-.intro {
+/* "Interior Revolution" across the bottom, edge to edge inside the gutters:
+   white, heavy and tightly set, rising in on arrival. */
+.title {
   position: absolute;
   z-index: 2;
   left: var(--gutter);
-  bottom: var(--gutter);
   right: var(--gutter);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-6);
+  bottom: var(--space-4);
+  margin: 0;
   color: var(--color-paper);
   font-family: var(--font-sans);
-}
-
-.lede {
-  max-width: 34ch;
-  text-wrap: balance;
-  margin: 0;
-  font-size: var(--text-lede);
-  font-weight: 300;
-  line-height: 1.3;
-}
-
-/* The sentence, then the buttons, rise in. */
-.lede,
-.actions {
+  font-size: var(--text-display);
+  font-weight: 500;
+  letter-spacing: var(--track-display);
+  line-height: 0.9;
+  white-space: nowrap;
   animation: rise var(--dur-enter) ease-out both;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    translate: 0 var(--space-4);
+    translate: 0 var(--space-6);
   }
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4) var(--space-6);
-  animation-delay: var(--stagger);
-}
-
-/* The button and the link set like the bar's links. */
-.button,
-.link {
-  font-size: var(--text-nav);
-  letter-spacing: var(--track-wide);
-  line-height: 1;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-/* The page's one button: filled orange, a shade darker under the pointer. */
-.button {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  padding: 0 var(--space-6);
-  border-radius: var(--radius-sm);
-  background: var(--color-orange);
-  color: var(--color-cream);
-  font-weight: 500;
-  transition: background-color var(--dur-fast) ease;
-}
-
-.button:hover {
-  background: color-mix(in srgb, var(--color-orange) 85%, var(--color-espresso));
-}
-
-.link {
-  text-underline-offset: 0.45em;
-  text-decoration-thickness: 1px;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-.button:focus-visible,
-.link:focus-visible {
-  outline: 1px solid var(--color-paper);
-  outline-offset: var(--space-1);
+/* Upright screens: too narrow for one line, so two, larger. */
+@media (orientation: portrait) {
+  .title {
+    font-size: var(--text-display-sm);
+    white-space: normal;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lede,
-  .actions {
+  .title {
     animation: none;
   }
 }

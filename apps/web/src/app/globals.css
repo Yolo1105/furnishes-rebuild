@@ -6,7 +6,7 @@
   --color-espresso: #2e2118; /* the warm dark of the washes */
   --color-rust: #8c3812; /* the bar's links, the title */
   --color-burgundy: #5e1f24; /* the wordmark */
-  --color-orange: #e7551a; /* the classic Furnishes orange: the main button, the wordmark's full stop */
+  --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
 
@@ -23,14 +23,16 @@
   --text-wordmark: clamp(18px, 1.5vw, 22px);
   --text-wordmark-sm: 18px;
   --text-label: 1.25rem;
-  --text-lede: clamp(18px, 1.7vw, 26px); /* the landing's one sentence */
+  --text-display: 12.6vw; /* "Interior Revolution" across the landing's bottom */
+  --text-display-sm: 21vw; /* the same on upright phones, on two lines */
   --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */
   --track-title: 0.08em;
+  --track-display: -0.03em;
   --track-wide: 0.18em;
   --track-narrow: 0.06em;
 
   /* page edge to content: the bar and everything under it */
-  --gutter: clamp(20px, 4vw, 64px);
+  --gutter: clamp(16px, 2.5vw, 48px);
   --nav-h: 64px;
   --nav-pad-y: clamp(10px, 1.2vh, 14px);
   --nav-gap: clamp(18px, 2.4vw, 36px);
