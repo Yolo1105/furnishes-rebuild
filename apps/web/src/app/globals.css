@@ -1,6 +1,15 @@
 /* Design tokens: every colour and size the site uses is named here once. */
 :root {
   --color-night: #1a120a;
+  --color-paper: #fffaf3;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+
+  --radius-1: 4px;
+
+  --text-label: 1.25rem;
 }
 
 *,

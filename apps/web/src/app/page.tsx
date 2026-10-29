@@ -1,21 +1,32 @@
 import Image from "next/image";
-import greenLivingRoom from "@/assets/green-living-room.jpg";
+import { PHOTOS } from "./photos";
 import styles from "./page.module.css";
 
-/** The landing: one photo of a lived-in room, filling the screen. */
+/** Sharper than Next's default of 75; must be listed in next.config's `images.qualities`. */
+const PHOTO_QUALITY = 90;
+
+/** The landing: room photos, one screen each, numbered from 1. */
 export default function Home() {
   return (
     <main className={styles.landing}>
       <h1 className="visually-hidden">Furnishes</h1>
-      <Image
-        src={greenLivingRoom}
-        alt="A living room with a sage green wall of framed prints, an orange sectional sofa, a glass coffee table, a patterned armchair and a small desk"
-        className={styles.photo}
-        fill
-        sizes="100vw"
-        priority
-        placeholder="blur"
-      />
+      {PHOTOS.map(({ src, alt }, i) => (
+        <section key={src.src} className={styles.slide} aria-label={`Photo ${i + 1}`}>
+          <Image
+            src={src}
+            alt={alt}
+            className={styles.photo}
+            fill
+            sizes="100vw"
+            quality={PHOTO_QUALITY}
+            priority={i === 0}
+            placeholder="blur"
+          />
+          <span className={styles.number} aria-hidden="true">
+            {i + 1}
+          </span>
+        </section>
+      ))}
     </main>
   );
 }

@@ -1,12 +1,34 @@
-/* The photo fills exactly one screen (dvh follows phone browser bars), cropped
-   as cover would rather than letterboxed. */
+/* Each photo fills exactly one screen (dvh follows phone browser bars),
+   cropped as cover would rather than letterboxed; the page settles on one
+   photo at a time as it scrolls. */
 .landing {
-  position: relative;
   height: 100vh;
   height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
+
+.slide {
+  position: relative;
+  height: 100%;
   overflow: hidden;
+  scroll-snap-align: start;
 }
 
 .photo {
   object-fit: cover;
+}
+
+/* The photo's number, at the top left on a dark chip so it reads on any photo. */
+.number {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  min-width: 2em;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-1);
+  background: color-mix(in srgb, var(--color-night) 70%, transparent);
+  color: var(--color-paper);
+  font: 600 var(--text-label) / 1 system-ui, sans-serif;
+  text-align: center;
 }
