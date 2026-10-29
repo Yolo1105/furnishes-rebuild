@@ -1,8 +1,9 @@
-/* Three even columns: a small label over each, then the icon and the
-   figure, large, with its unit lighter. */
+/* Three figures spread evenly, the first at the left edge and the last at
+   the right, as the heading above is: a small label over each, then the
+   icon and the figure, large, with its unit lighter. */
 .facts {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: space-between;
   gap: var(--space-4);
   margin: 0;
   padding-inline: calc(var(--gutter) / 2);
