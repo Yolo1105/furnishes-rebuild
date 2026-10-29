@@ -38,7 +38,7 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" at the bottom left: soft white Inter Tight, tightly set,
+/* "Interior Revolution" centred at the bottom: soft white Inter Tight, tightly set,
    rising in on arrival. */
 .title {
   position: absolute;
@@ -53,6 +53,7 @@
   font-weight: 400;
   letter-spacing: var(--track-display);
   line-height: 0.9;
+  text-align: center;
   white-space: nowrap;
   animation: rise var(--dur-enter) ease-out both;
 }
