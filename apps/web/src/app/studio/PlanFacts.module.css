@@ -1,0 +1,48 @@
+/* Three even columns: a small label over each, then the icon and the
+   figure, large, with its unit lighter. */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin: 0;
+  padding-inline: calc(var(--gutter) / 2);
+  font-family: var(--font-sans);
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-narrow);
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0;
+  font-size: var(--text-plan-fact);
+  font-weight: 600;
+  letter-spacing: var(--track-display);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.unit {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.icon {
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

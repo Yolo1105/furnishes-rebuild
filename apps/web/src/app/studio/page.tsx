@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FloorPlan } from "@/features/plan/FloorPlan";
 import { FLAT, FLOOR_AREA } from "@/features/plan/flat";
 import { PeachBackdrop } from "@/shell/PeachBackdrop";
+import { PlanFacts } from "./PlanFacts";
 import { RoomPhotos } from "./RoomPhotos";
 import { ROOM_PHOTOS } from "./rooms";
 import styles from "./page.module.css";
@@ -10,7 +11,8 @@ export const metadata: Metadata = { title: "Design your room" };
 
 /**
  * The studio: the room photos on the left, changed by hand, and the flat's
- * floor plan on the right, over the peach, headed by its name and size.
+ * floor plan on the right, over the peach, headed by its name and size,
+ * with a few of its figures under it.
  */
 export default function Studio() {
   return (
@@ -34,6 +36,7 @@ export default function Studio() {
         <div className={styles.drawing}>
           <FloorPlan />
         </div>
+        <PlanFacts />
       </section>
     </main>
   );
