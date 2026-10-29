@@ -21,24 +21,6 @@
   line-height: 1;
 }
 
-/* The wash: faint paper at the top, gone just below the bar, so the dark
-   words read on any photo without a hard edge. Behind the words, and not in
-   the way of clicks on the page under it. */
-.header::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: -1;
-  height: calc(var(--nav-h) * 1.8);
-  background: linear-gradient(
-    color-mix(in srgb, var(--color-paper) var(--wash-top), transparent),
-    color-mix(in srgb, var(--color-paper) calc(var(--wash-top) / 2), transparent) 50%,
-    transparent
-  );
-  pointer-events: none;
-  --wash-top: 70%;
-}
-
 .start,
 .end {
   display: flex;

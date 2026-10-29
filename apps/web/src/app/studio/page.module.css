@@ -12,13 +12,62 @@
   min-height: 0;
 }
 
-/* The plan, clear of the bar above and centred in what is left. */
+/* The plan, clear of the bar above: its heading, then the drawing centred
+   in what is left. */
 .plan {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter);
   min-height: 0;
   padding: calc(var(--nav-h) + var(--gutter)) calc(var(--gutter) / 2) var(--gutter);
   color: var(--color-espresso);
+}
+
+/* The heading: the name and the size large, a line of detail under each. */
+.head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  row-gap: var(--space-2);
+  column-gap: var(--space-4);
+  padding-inline: calc(var(--gutter) / 2);
+}
+
+.head p,
+.head h2 {
+  margin: 0;
+}
+
+.big {
+  font-family: var(--font-sans);
+  font-size: var(--text-plan-head);
+  font-weight: 600;
+  letter-spacing: var(--track-display);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.big sup {
+  font-size: 0.45em;
+  vertical-align: 0.9em;
+}
+
+.small {
+  font-family: var(--font-sans);
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-narrow);
+}
+
+.end {
+  justify-self: end;
+  text-align: end;
+}
+
+.drawing {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
 }
 
 @media (orientation: portrait) {
