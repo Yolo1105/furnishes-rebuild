@@ -23,8 +23,8 @@
   --text-wordmark: clamp(18px, 1.5vw, 22px);
   --text-wordmark-sm: 18px;
   --text-label: 1.25rem;
-  --text-display: 12.6vw; /* "Interior Revolution" across the landing's bottom */
-  --text-display-sm: 21vw; /* the same on upright phones, on two lines */
+  --text-display: 12vw; /* "Interior Revolution" across the landing's bottom */
+  --text-display-sm: 20vw; /* the same on upright phones, on two lines */
   --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */
   --track-title: 0.08em;
   --track-display: -0.03em;

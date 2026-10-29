@@ -38,8 +38,8 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" across the bottom, edge to edge inside the gutters:
-   white, heavy and tightly set, rising in on arrival. */
+/* "Interior Revolution" across the bottom, from the left gutter, nearly the width:
+   white and tightly set, rising in on arrival. */
 .title {
   position: absolute;
   z-index: 2;
@@ -50,7 +50,7 @@
   color: var(--color-paper);
   font-family: var(--font-sans);
   font-size: var(--text-display);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: var(--track-display);
   line-height: 0.9;
   white-space: nowrap;
