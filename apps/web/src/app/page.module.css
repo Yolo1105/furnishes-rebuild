@@ -38,7 +38,7 @@
   --wash-bottom: 70%;
 }
 
-/* "Interior Revolution" at the bottom left: warm off-white and tightly set,
+/* "Interior Revolution" at the bottom left: soft white and tightly set,
    rising in on arrival. */
 .title {
   position: absolute;
@@ -47,7 +47,7 @@
   right: var(--gutter);
   bottom: var(--space-4);
   margin: 0;
-  color: var(--color-sand);
+  color: var(--color-veil);
   font-family: var(--font-sans);
   font-size: var(--text-display);
   font-weight: 400;
