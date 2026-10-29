@@ -27,7 +27,7 @@ export const PHOTOS: {
   {
     src: whiteLivingRoom,
     shiftLeft: 6,
-    shiftUp: 12,
+    shiftUp: 13.5,
     alt: "A bright living room with a cream sofa under abstract art, orange cushions, a round wooden coffee table and tall windows onto city towers",
   },
 ];
