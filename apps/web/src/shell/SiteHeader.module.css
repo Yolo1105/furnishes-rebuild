@@ -1,0 +1,113 @@
+/* The bar: fixed over the top of the page with no background of its own, so
+   the photo shows through; set in the rust, which reads on a bright photo.
+   Links left, wordmark centred, links and the one button right. */
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-header);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: var(--nav-h);
+  padding: var(--nav-pad-y) var(--gutter);
+  /* the bar's ink, and the colour drawn on a filled ink shape */
+  --bar-fg: var(--color-rust);
+  --bar-on-fg: var(--color-cream);
+  color: var(--bar-fg);
+  font-family: var(--font-mono);
+  font-size: var(--text-nav);
+  line-height: 1;
+}
+
+.start,
+.end {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-gap);
+}
+
+.start {
+  justify-self: start;
+}
+
+.end {
+  justify-self: end;
+}
+
+.link {
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  text-underline-offset: 0.45em;
+  text-decoration-thickness: 1px;
+  white-space: nowrap;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* The bar's one button: outlined, filled on hover. */
+.primary {
+  padding: 0.55em 0.85em;
+  border: 1px solid var(--bar-fg);
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.primary:hover {
+  text-decoration: none;
+  background: var(--bar-fg);
+  color: var(--bar-on-fg);
+}
+
+.wordmark {
+  justify-self: center;
+  font-weight: 700;
+  font-size: var(--text-wordmark);
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  text-decoration: none;
+  /* lowercase and larger, it reads low beside the links' caps though its box
+     is centred like theirs: lifted so its letters' middle meets theirs */
+  translate: 0 -0.15em;
+}
+
+.link:focus-visible,
+.wordmark:focus-visible {
+  outline: 1px solid var(--bar-fg);
+  outline-offset: var(--space-1);
+}
+
+/* Tablets and large phones: the first link on each side only. */
+@media (max-width: 760px) {
+  .start .link:nth-child(n + 2),
+  .end .link:nth-child(n + 2) {
+    display: none;
+  }
+}
+
+/* Small phones: the wordmark on the left, the main button on the right. */
+@media (max-width: 480px) {
+  .header {
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  .start {
+    display: none;
+  }
+
+  .wordmark {
+    justify-self: start;
+    font-size: var(--text-wordmark-sm);
+  }
+
+  .link {
+    letter-spacing: var(--track-narrow);
+  }
+}

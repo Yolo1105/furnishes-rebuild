@@ -39,7 +39,7 @@
   min-width: 2em;
   padding: var(--space-1) var(--space-2);
   border: 0;
-  border-radius: var(--radius-1);
+  border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--color-night) 70%, transparent);
   color: var(--color-paper);
   font: 600 var(--text-label) / 1 system-ui, sans-serif;

@@ -13,7 +13,7 @@ export const PHOTOS: { src: StaticImageData; alt: string; shiftLeft?: number; sh
   {
     src: whiteLivingRoom,
     shiftLeft: 6,
-    shiftUp: 12,
+    shiftUp: 11,
     alt: "A bright living room with a cream sofa under abstract art, orange cushions, a round wooden coffee table and tall windows onto city towers",
   },
 ];

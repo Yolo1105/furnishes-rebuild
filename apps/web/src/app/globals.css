@@ -2,17 +2,39 @@
 :root {
   --color-night: #1a120a;
   --color-paper: #fffaf3;
+  --color-cream: #fff6e9; /* text on a rust fill */
+  --color-rust: #9a4017; /* the bar's ink on bright photos */
+
+  --font-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
 
   --space-1: 4px;
   --space-2: 8px;
   --space-4: 16px;
+  --space-6: 24px;
 
-  --radius-1: 4px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
 
+  --text-xs: 11px;
+  --text-nav: clamp(12px, 1.05vw, 14px);
+  --text-wordmark: clamp(15px, 1.2vw, 17px);
+  --text-wordmark-sm: 15px;
   --text-label: 1.25rem;
+  --track-wide: 0.14em;
+  --track-narrow: 0.06em;
+
+  /* page edge to content: the bar and everything under it */
+  --gutter: clamp(20px, 4vw, 64px);
+  --nav-h: 64px;
+  --nav-pad-y: clamp(10px, 1.2vh, 14px);
+  --nav-gap: clamp(18px, 2.4vw, 36px);
 
   /* the smallest target a finger can hit reliably */
   --tap: 44px;
+
+  --dur-fast: 0.2s;
+
+  --z-header: 60;
 }
 
 *,
@@ -25,6 +47,10 @@ html,
 body {
   margin: 0;
   background: var(--color-night);
+}
+
+a {
+  color: inherit;
 }
 
 /* For text that only screen readers should hear. */
