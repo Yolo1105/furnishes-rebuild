@@ -89,10 +89,10 @@
   outline-offset: var(--space-1);
 }
 
-/* Tablets and large phones: the first link on each side only. */
+/* Tablets and large phones: the first browsing link and the main button only. */
 @media (max-width: 760px) {
   .start .link:nth-child(n + 2),
-  .end .link:nth-child(n + 2) {
+  .end .link:not(.primary) {
     display: none;
   }
 }

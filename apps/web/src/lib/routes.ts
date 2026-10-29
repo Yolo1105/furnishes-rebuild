@@ -7,6 +7,7 @@ export const routes = {
   collection: "/collection",
   inspiration: "/inspiration",
   about: "/about",
+  contact: "/contact",
   studio: "/studio",
   signIn: "/sign-in",
 } as const;
