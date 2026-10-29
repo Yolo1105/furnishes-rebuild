@@ -50,6 +50,24 @@ button.chip {
   cursor: pointer;
 }
 
+/* The back and forward arrows, halfway down each side; at least 44 px to tap. */
+.step {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  width: var(--tap);
+  height: var(--tap);
+  translate: 0 -50%;
+}
+
+.step[data-side="left"] {
+  left: var(--space-4);
+}
+
+.step[data-side="right"] {
+  right: var(--space-4);
+}
+
 button.chip:focus-visible {
   outline: 2px solid var(--color-paper);
   outline-offset: 2px;

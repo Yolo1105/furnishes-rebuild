@@ -10,6 +10,9 @@
   --radius-1: 4px;
 
   --text-label: 1.25rem;
+
+  /* the smallest target a finger can hit reliably */
+  --tap: 44px;
 }
 
 *,

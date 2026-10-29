@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import type { PHOTOS } from "./photos";
 import styles from "./PhotoRotation.module.css";
@@ -16,33 +16,50 @@ const REDUCED = "(prefers-reduced-motion: reduce)";
 
 /**
  * The room photos filling the screen, one at a time, each fading into the
- * next and numbered from 1. Turning stops under reduced motion, and the
+ * next and numbered from 1. The arrows (or the arrow keys) step back and
+ * forward, and restart the hold. Turning stops under reduced motion, and the
  * pause button stops it on request (motion longer than 5 s needs a way to
- * stop it). A photo is only fetched once it is in view or next.
+ * stop it). A photo is only fetched once it has been shown or is next to the
+ * one in view.
  */
 export function PhotoRotation({ photos }: { photos: typeof PHOTOS }) {
+  const count = photos.length;
   const [at, setAt] = useState(0);
   const [paused, setPaused] = useState(false);
-  // the furthest photo reached so far; it and the one after are mounted
-  const [reached, setReached] = useState(0);
+  const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]));
+
+  const show = useCallback(
+    (to: number) => {
+      const i = (to + count) % count;
+      setAt(i);
+      setSeen((s) => (s.has(i) ? s : new Set(s).add(i)));
+    },
+    [count],
+  );
+
+  // a fresh hold for each photo, so one picked by hand gets its full time
+  useEffect(() => {
+    if (paused || count < 2 || window.matchMedia(REDUCED).matches) return;
+    const turn = window.setTimeout(() => show(at + 1), HOLD_MS);
+    return () => window.clearTimeout(turn);
+  }, [at, paused, count, show]);
 
   useEffect(() => {
-    if (paused || photos.length < 2 || window.matchMedia(REDUCED).matches) return;
-    const turn = window.setInterval(() => {
-      setAt((i) => {
-        const next = (i + 1) % photos.length;
-        setReached((r) => Math.max(r, next));
-        return next;
-      });
-    }, HOLD_MS);
-    return () => window.clearInterval(turn);
-  }, [paused, photos.length]);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") show(at - 1);
+      else if (e.key === "ArrowRight") show(at + 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [at, show]);
+
+  const near = (i: number) => seen.has(i) || i === (at + 1) % count || i === (at - 1 + count) % count;
 
   return (
     <div className={styles.frame} style={{ "--fade": `${FADE_MS}ms` } as CSSProperties}>
       {photos.map(({ src, alt }, i) => (
         <div key={src.src} className={styles.slide} data-active={i === at || undefined} aria-hidden={i !== at}>
-          {i <= reached + 1 && (
+          {near(i) && (
             <Image
               src={src}
               alt={alt}
@@ -57,13 +74,19 @@ export function PhotoRotation({ photos }: { photos: typeof PHOTOS }) {
         </div>
       ))}
       <div className={styles.controls}>
-        <span className={styles.chip} aria-label={`Photo ${at + 1} of ${photos.length}`}>
+        <span className={styles.chip} aria-label={`Photo ${at + 1} of ${count}`}>
           {at + 1}
         </span>
         <button type="button" className={styles.chip} onClick={() => setPaused((p) => !p)} aria-pressed={paused}>
           {paused ? "Play" : "Pause"}
         </button>
       </div>
+      <button type="button" className={`${styles.chip} ${styles.step}`} data-side="left" onClick={() => show(at - 1)} aria-label="Previous photo">
+        ←
+      </button>
+      <button type="button" className={`${styles.chip} ${styles.step}`} data-side="right" onClick={() => show(at + 1)} aria-label="Next photo">
+        →
+      </button>
     </div>
   );
 }
