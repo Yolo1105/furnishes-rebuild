@@ -9,6 +9,14 @@
   --color-burgundy: #5e1f24; /* the wordmark */
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
 
+  /* the peach backdrop: a cream-to-peach diagonal, with light blobs drifting over it */
+  --color-peach-paper: #fff4e3;
+  --color-peach-mid: #ffd1ad;
+  --color-peach-deep: #f8b78a;
+  --color-peach-glow-1: rgb(255 232 200 / 85%);
+  --color-peach-glow-2: rgb(255 198 156 / 70%);
+  --color-peach-glow-3: rgb(255 248 235 / 90%);
+
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
 

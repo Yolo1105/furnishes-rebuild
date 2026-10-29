@@ -71,15 +71,96 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .title {
-    animation: none;
+
+/* The second screen: the peach backdrop, cream at the top left deepening
+   to peach at the bottom right, with three soft lights drifting over it on
+   loops of different lengths, so the whole never quite repeats. */
+.peach {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--color-peach-paper),
+    var(--color-peach-mid) 55%,
+    var(--color-peach-deep)
+  );
+}
+
+.glow {
+  position: absolute;
+  width: 90vmax;
+  height: 90vmax;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.glow:nth-child(1) {
+  top: -20%;
+  left: -25%;
+  background: radial-gradient(circle, var(--color-peach-glow-1), transparent 60%);
+  animation-name: drift-1;
+  animation-duration: 29s;
+}
+
+.glow:nth-child(2) {
+  top: -10%;
+  right: -30%;
+  background: radial-gradient(circle, var(--color-peach-glow-2), transparent 60%);
+  animation-name: drift-2;
+  animation-duration: 41s;
+}
+
+.glow:nth-child(3) {
+  bottom: -25%;
+  left: 10%;
+  background: radial-gradient(circle, var(--color-peach-glow-3), transparent 60%);
+  animation-name: drift-3;
+  animation-duration: 53s;
+}
+
+@keyframes drift-1 {
+  22% {
+    translate: 35vmax 18vmax;
+  }
+  47% {
+    translate: 20vmax 40vmax;
+  }
+  71% {
+    translate: -12vmax 28vmax;
   }
 }
 
-/* The second screen: nothing yet but the page's colour. */
-.plain {
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: var(--color-paper);
+@keyframes drift-2 {
+  19% {
+    translate: -28vmax 22vmax;
+  }
+  43% {
+    translate: -45vmax -8vmax;
+  }
+  68% {
+    translate: -14vmax 35vmax;
+  }
+}
+
+@keyframes drift-3 {
+  27% {
+    translate: 28vmax -32vmax;
+  }
+  54% {
+    translate: 45vmax 8vmax;
+  }
+  79% {
+    translate: 8vmax -22vmax;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title,
+  .glow {
+    animation: none;
+  }
 }
