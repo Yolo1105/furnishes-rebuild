@@ -1,5 +1,5 @@
 /* The bar: fixed over the top of the page, the photo showing through; links
-   in mocha, the wordmark in burgundy. Links left, wordmark centred, links
+   in brown, the wordmark in burgundy. Links left, wordmark centred, links
    right, "Design your room" boxed. */
 .header {
   position: fixed;
@@ -12,7 +12,7 @@
   min-height: var(--nav-h);
   padding: var(--nav-pad-y) var(--gutter);
   /* the links' ink, and the colour drawn on a filled ink shape */
-  --bar-fg: var(--color-mocha);
+  --bar-fg: var(--color-brown);
   --bar-on-fg: var(--color-cream);
   color: var(--bar-fg);
   font-family: var(--font-sans);
