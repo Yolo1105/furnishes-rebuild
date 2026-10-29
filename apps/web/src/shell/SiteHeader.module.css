@@ -1,7 +1,6 @@
 /* The bar: fixed over the top of the page with no background of its own, so
-   the photo shows through; set in the dark ink, which reads on a bright photo
-   and leaves the rust to the title. Links left, wordmark centred, links and
-   the one button right. */
+   the photo shows through; set in the rust, which reads on a bright photo.
+   Links left, wordmark centred, links and the one button right. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -13,7 +12,7 @@
   min-height: var(--nav-h);
   padding: var(--nav-pad-y) var(--gutter);
   /* the bar's ink, and the colour drawn on a filled ink shape */
-  --bar-fg: var(--color-ink);
+  --bar-fg: var(--color-rust);
   --bar-on-fg: var(--color-cream);
   color: var(--bar-fg);
   font-family: var(--font-mono);
