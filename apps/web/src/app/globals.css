@@ -3,7 +3,8 @@
   --color-night: #1a120a;
   --color-paper: #fffaf3;
   --color-cream: #fff6e9; /* text on a rust fill */
-  --color-rust: #9a4017; /* the bar's ink on bright photos */
+  --color-rust: #9a4017; /* the title: the page's one accent */
+  --color-ink: #2e2118; /* the bar's words on bright photos: warm near-black, quieter than the title */
 
   --font-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
   --font-title: var(--font-jost), "Jost", system-ui, sans-serif;
