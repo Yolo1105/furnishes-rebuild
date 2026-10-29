@@ -36,8 +36,21 @@ const LEDGE: Box[] = [
  * the doors and windows; columns; the bay windows and A/C ledge outside;
  * the furniture and fittings in fine line; and the rooms' names. Its colour
  * is the text colour it sits in.
+ *
+ * Rooms in `linked` answer the pointer and the keyboard: hovering, focusing
+ * or tapping one calls `onRoom` with its key, and `active` is shaded.
  */
-export function FloorPlan({ className }: { className?: string }) {
+export function FloorPlan({
+  className,
+  linked,
+  active,
+  onRoom,
+}: {
+  className?: string;
+  linked?: ReadonlySet<string>;
+  active?: string;
+  onRoom?: (key: string) => void;
+}) {
   const walls = wallBoxes();
   const symbols = planSymbols();
   const top = -WALL;
@@ -46,7 +59,7 @@ export function FloorPlan({ className }: { className?: string }) {
     <svg
       className={[styles.plan, className].filter(Boolean).join(" ")}
       viewBox={`${x0 - MARGIN} ${y0 - MARGIN} ${x1 - x0 + 2 * MARGIN} ${y1 - y0 + 2 * MARGIN}`}
-      role="img"
+      role={onRoom ? "group" : "img"}
       aria-label="Floor plan of a five-room flat: living and dining, kitchen, three bedrooms, two bathrooms, a hall, a shelter and a yard"
     >
       <defs>
@@ -60,7 +73,28 @@ export function FloorPlan({ className }: { className?: string }) {
         </mask>
       </defs>
 
-      <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill="currentColor" mask="url(#plan-walls)" />
+      {onRoom && (
+        <g className={styles.rooms}>
+          {ROOMS.filter((r) => linked?.has(r.key)).map((r) => (
+            <rect
+              key={r.key}
+              x={r.x}
+              y={r.y}
+              width={r.w}
+              height={r.d}
+              data-active={r.key === active || undefined}
+              role="button"
+              tabIndex={0}
+              aria-label={`Show ${r.name.toLowerCase()}`}
+              onPointerEnter={() => onRoom(r.key)}
+              onFocus={() => onRoom(r.key)}
+              onClick={() => onRoom(r.key)}
+            />
+          ))}
+        </g>
+      )}
+
+      <rect className={styles.walls} x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill="currentColor" mask="url(#plan-walls)" />
 
       <g className={styles.lines}>
         <path className={styles.heavy} d={WINDOWS.map(glass).join("")} />

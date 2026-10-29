@@ -1,5 +1,6 @@
 /* The plan scales to its box; every line keeps its own width on screen
-   however large the plan is drawn. */
+   however large the plan is drawn. Only the rooms' hover areas take the
+   pointer; the drawing over them lets it through. */
 .plan {
   display: block;
   width: 100%;
@@ -42,4 +43,29 @@
   text-anchor: middle;
   dominant-baseline: central;
   text-transform: uppercase;
+}
+
+.walls,
+.lines,
+.names {
+  pointer-events: none;
+}
+
+/* A room that brings up a photo: shaded faintly on hover or focus, more
+   when its photo is the one in view. */
+.rooms rect {
+  fill: currentColor;
+  fill-opacity: 0;
+  cursor: pointer;
+  outline: none;
+  transition: fill-opacity var(--dur-fast) ease;
+}
+
+.rooms rect:hover,
+.rooms rect:focus-visible {
+  fill-opacity: 0.06;
+}
+
+.rooms rect[data-active] {
+  fill-opacity: 0.1;
 }
