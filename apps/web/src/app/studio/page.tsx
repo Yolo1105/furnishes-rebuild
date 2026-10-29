@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Design your room" };
 /**
  * The studio: the room photos on the left, changed by hand, and the flat's
  * floor plan on the right, over the peach, headed by its name and size,
- * with a few of its figures under it.
+ * with a few of its figures under it and an arrow bobbing at the foot.
  */
 export default function Studio() {
   return (
@@ -37,6 +37,12 @@ export default function Studio() {
           <FloorPlan />
         </div>
         <PlanFacts />
+        {/* a nudge that there is more below */}
+        <span className={styles.more} aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
       </section>
     </main>
   );

@@ -55,6 +55,7 @@
 
   --dur-fast: 0.2s;
   --dur-fade: 0.6s; /* one photo fading into the next */
+  --dur-bob: 1.6s; /* one bob of the arrow at the foot of the studio's plan */
   --dur-enter: 1.2s; /* words and buttons fading in on arrival */
   --stagger: 150ms; /* between one arriving and the next */
 
