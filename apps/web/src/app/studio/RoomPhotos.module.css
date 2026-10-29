@@ -10,6 +10,8 @@
 .slide {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  container-type: size;
   opacity: 0;
   transition: opacity var(--dur-fade) ease-in-out;
 }
@@ -18,8 +20,18 @@
   opacity: 1;
 }
 
-.slide img {
-  object-fit: cover;
+/* The photo at its own shape (--ratio, width over height), covering the
+   slide (--zoom times closer than just covering), slid so its room's middle
+   (--focus-x, --focus-y: 0 to 1 of its width and height) sits at the
+   slide's middle, but never so far an edge shows. */
+.canvas {
+  --w: calc(max(100cqw, 100cqh * var(--ratio)) * var(--zoom));
+  --h: calc(var(--w) / var(--ratio));
+  position: absolute;
+  left: clamp(100cqw - var(--w), 50cqw - var(--focus-x) * var(--w), 0px);
+  top: clamp(100cqh - var(--h), 50cqh - var(--focus-y) * var(--h), 0px);
+  width: var(--w);
+  height: var(--h);
 }
 
 /* Back, the count, forward: at the bottom left, on a dark chip each. */

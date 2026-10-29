@@ -191,12 +191,6 @@ export const AC_LEDGE = { x0: 15400, y0: 300, x1: 16000, y1: 1300, wall: 100 } a
 /** All that is drawn: the flat, the bays to the north and the A/C ledge to the east. */
 export const DRAWN: Box = [-WALL, -WALL - Math.max(...BAYS.map((b) => b.depth)), AC_LEDGE.x1, 9000 + WALL];
 
-/** A room's floor area, m², to one decimal place: the room's floor, walls not counted. */
-export const roomArea = (key: string) => {
-  const r = ROOMS.find((o) => o.key === key);
-  return r ? Math.round((r.w * r.d) / 1e5) / 10 : 0;
-};
-
 /** The flat's floor area, m²: every room's floor, walls not counted. */
 export const FLOOR_AREA = Math.round(ROOMS.reduce((sum, r) => sum + r.w * r.d, 0) / 1e6);
 

@@ -38,7 +38,7 @@
   --text-display-sm: 15.5vw; /* the same on upright phones */
   --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */
   --text-plan-head: clamp(28px, 3.4vw, 56px); /* the flat's name and size over its plan */
-  --text-plan-fact: clamp(20px, 2vw, 32px); /* the figures under it */
+  --text-plan-sub: clamp(14px, 1.25vw, 18px); /* the lines under it */
   --track-title: 0.08em;
   --track-display: -0.03em;
   --track-wide: 0.18em;

@@ -54,7 +54,7 @@
 
 .small {
   font-family: var(--font-sans);
-  font-size: var(--text-nav);
+  font-size: var(--text-plan-sub);
   letter-spacing: var(--track-narrow);
 }
 
@@ -70,17 +70,24 @@
   place-items: center;
 }
 
-/* The arrow at the foot, bobbing down and back. */
+/* "Scroll to explore" at the foot, small caps over an arrow bobbing down
+   and back. */
 .more {
-  align-self: center;
-  width: var(--tap);
-  height: var(--tap);
-  animation: bob var(--dur-bob) ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-nav);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
 }
 
 .more svg {
-  width: 100%;
-  height: 100%;
+  width: var(--tap);
+  height: var(--tap);
+  animation: bob var(--dur-bob) ease-in-out infinite;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;
@@ -95,7 +102,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .more {
+  .more svg {
     animation: none;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import Image from "next/image";
 import type { ROOM_PHOTOS } from "./rooms";
 import styles from "./RoomPhotos.module.css";
@@ -8,7 +8,9 @@ import styles from "./RoomPhotos.module.css";
 /**
  * The room photos, one at a time, changed only by hand: the arrows step back
  * and forward, wrapping round, and the count shows where you are. The photo
- * in view and its neighbours are fetched; the rest wait until reached.
+ * in view and its neighbours are fetched; the rest wait until reached. Each
+ * is cropped to fill its box, `zoom` times closer, with the room's middle
+ * (`focus`) kept central.
  */
 export function RoomPhotos({ photos }: { photos: typeof ROOM_PHOTOS }) {
   const count = photos.length;
@@ -18,11 +20,24 @@ export function RoomPhotos({ photos }: { photos: typeof ROOM_PHOTOS }) {
 
   return (
     <div className={styles.frame}>
-      {photos.map(({ src, alt }, i) => (
+      {photos.map(({ src, alt, focus = [50, 50], zoom = 1 }, i) => (
         <div key={src.src} className={styles.slide} data-active={i === at || undefined} aria-hidden={i !== at}>
-          {near(i) && (
-            <Image src={src} alt={alt} fill sizes="(orientation: portrait) 100vw, 60vw" priority={i === 0} placeholder="blur" />
-          )}
+          <div
+            className={styles.canvas}
+            style={
+              {
+                "--ratio": src.width / src.height,
+                "--focus-x": focus[0] / 100,
+                "--focus-y": focus[1] / 100,
+                "--zoom": zoom,
+              } as CSSProperties
+            }
+          >
+            {near(i) && (
+              // the photo runs past its half: about the screen's width, more on phones
+              <Image src={src} alt={alt} fill sizes="(orientation: portrait) 240vw, 100vw" priority={i === 0} placeholder="blur" />
+            )}
+          </div>
         </div>
       ))}
       {count > 1 && (
