@@ -12,7 +12,7 @@ export default function Home() {
       <PhotoRotation photos={PHOTOS} />
       <h1 className={styles.title}>
         <span className="visually-hidden">Furnishes: </span>
-        Interior Revolution
+        Interior Rev<span className={styles.accent}>o</span>lution
       </h1>
     </main>
   );

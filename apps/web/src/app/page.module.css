@@ -57,6 +57,11 @@
   animation: rise var(--dur-enter) ease-out both;
 }
 
+/* The first o of "Revolution", in the classic orange. */
+.accent {
+  color: var(--color-orange);
+}
+
 @keyframes rise {
   from {
     opacity: 0;
