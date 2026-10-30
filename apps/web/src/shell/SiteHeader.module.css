@@ -17,7 +17,7 @@
   color: var(--bar-fg);
   font-family: var(--font-sans);
   font-size: var(--text-nav);
-  font-weight: 400;
+  font-weight: 450;
   line-height: 1;
 }
 
@@ -38,6 +38,8 @@
 }
 
 .link {
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
   text-decoration: none;
   text-underline-offset: 0.45em;
   text-decoration-thickness: 1px;
@@ -66,9 +68,8 @@
 
 .wordmark {
   color: var(--color-burgundy);
-  font-weight: 550;
+  font-weight: 400;
   font-size: var(--text-wordmark);
-  letter-spacing: 0.01em;
   text-transform: lowercase;
   text-decoration: none;
   /* lowercase and larger, it reads low beside the links' caps though its box
@@ -109,5 +110,9 @@
 
   .wordmark {
     font-size: var(--text-wordmark-sm);
+  }
+
+  .link {
+    letter-spacing: var(--track-narrow);
   }
 }

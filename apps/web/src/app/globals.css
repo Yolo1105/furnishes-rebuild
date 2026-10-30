@@ -30,7 +30,7 @@
   --radius-md: 4px;
 
   --text-xs: 11px;
-  --text-nav: clamp(13px, 1.15vw, 16px);
+  --text-nav: clamp(12px, 1.05vw, 14px);
   --text-wordmark: clamp(18px, 1.5vw, 22px);
   --text-wordmark-sm: 18px;
   --text-label: 1.25rem;
