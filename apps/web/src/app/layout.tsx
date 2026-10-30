@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Jost } from "next/font/google";
+import { Instrument_Serif, Jost, Outfit } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
 import "./globals.css";
 
@@ -19,6 +19,14 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
+// The bar's links: a clean geometric sans, at the one weight they use.
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: "500",
+  variable: "--font-outfit",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: { default: "Furnishes", template: "%s · Furnishes" },
   description: "Modular furniture you can see in your own home before you buy it.",
@@ -26,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable}`}>
       <body>
         <SiteHeader />
         {children}

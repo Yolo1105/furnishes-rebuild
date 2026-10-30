@@ -20,6 +20,7 @@
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
+  --font-nav: var(--font-outfit), "Outfit", system-ui, sans-serif; /* the bar's links */
 
   --space-1: 4px;
   --space-2: 8px;

@@ -38,6 +38,8 @@
 }
 
 .link {
+  font-family: var(--font-nav);
+  font-weight: 500;
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
   text-decoration: none;
