@@ -34,45 +34,19 @@
   height: var(--h);
 }
 
-/* Back, the count, forward: at the bottom left, on a dark chip each. */
-.controls {
+/* The label at the bottom left, set like the bar's links, in light on the photo. */
+.label {
   position: absolute;
   z-index: 1;
   left: var(--gutter);
   bottom: var(--gutter);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  margin: 0;
   color: var(--color-paper);
-  font-family: var(--font-sans);
+  font-family: var(--font-nav);
+  font-weight: 500;
   font-size: var(--text-nav);
   letter-spacing: var(--track-wide);
-}
-
-.chip {
-  width: var(--tap);
-  height: var(--tap);
-  border: 0;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--color-night) 55%, transparent);
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  transition: background-color var(--dur-fast) ease;
-}
-
-.chip:hover {
-  background: color-mix(in srgb, var(--color-night) 80%, transparent);
-}
-
-.chip:focus-visible {
-  outline: 2px solid var(--color-paper);
-  outline-offset: 2px;
-}
-
-.count {
-  min-width: 4.5em;
-  text-align: center;
+  text-transform: uppercase;
   text-shadow: 0 1px 6px color-mix(in srgb, var(--color-night) 60%, transparent);
 }
 

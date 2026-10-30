@@ -17,10 +17,9 @@ const AUTOPLAY_MS = 5000;
  * The studio's two halves, kept in step: the room photos on the left, and on
  * the right the flat's plan, headed by its name and size, with "Scroll to
  * explore" at the foot. Each photo stands for one room: the photos turn on
- * their own, hovering a room on the plan brings up its photo, the arrows step
- * through them, and the room in view is shaded on the plan. The turning waits
- * while the pointer is over the photo or the plan, and is off for anyone who
- * asks for less motion.
+ * their own, hovering a room on the plan brings up its photo, and the room in
+ * view is shaded on the plan. The turning waits while the pointer is over the
+ * photo or the plan, and is off for anyone who asks for less motion.
  */
 export function StudioView() {
   const count = ROOM_PHOTOS.length;
@@ -39,7 +38,7 @@ export function StudioView() {
   return (
     <>
       <div className={styles.photo} {...hold}>
-        <RoomPhotos photos={ROOM_PHOTOS} at={at} onStep={(by) => setAt((i) => (i + by + count) % count)} />
+        <RoomPhotos photos={ROOM_PHOTOS} at={at} />
       </div>
       <section className={styles.plan} aria-labelledby="flat-name">
         <header className={styles.head}>

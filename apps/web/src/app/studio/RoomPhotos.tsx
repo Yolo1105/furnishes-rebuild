@@ -6,23 +6,13 @@ import type { ROOM_PHOTOS } from "./rooms";
 import styles from "./RoomPhotos.module.css";
 
 /**
- * The room photos, one at a time: `at` is the one in view, and the arrows ask
- * for the one before or after (`onStep`); the count shows where you are. All
- * are fetched, so any can come up at once (hovering a room on the plan brings
- * its photo up). Each is cropped to fill its box, `zoom` times closer, with
- * the room's middle (`focus`) kept central.
+ * The room photos, one at a time: `at` is the one in view, labelled
+ * "Interior design" at the bottom left. All are fetched, so any can come up
+ * at once (hovering a room on the plan brings its photo up). Each is cropped
+ * to fill its box, `zoom` times closer, with the room's middle (`focus`) kept
+ * central.
  */
-export function RoomPhotos({
-  photos,
-  at,
-  onStep,
-}: {
-  photos: typeof ROOM_PHOTOS;
-  at: number;
-  onStep: (by: number) => void;
-}) {
-  const count = photos.length;
-
+export function RoomPhotos({ photos, at }: { photos: typeof ROOM_PHOTOS; at: number }) {
   return (
     <div className={styles.frame}>
       {photos.map(({ src, alt, focus = [50, 50], zoom = 1 }, i) => (
@@ -43,19 +33,7 @@ export function RoomPhotos({
           </div>
         </div>
       ))}
-      {count > 1 && (
-        <div className={styles.controls}>
-          <button type="button" className={styles.chip} onClick={() => onStep(-1)} aria-label="Previous photo">
-            ←
-          </button>
-          <span className={styles.count} aria-live="polite">
-            {at + 1} / {count}
-          </span>
-          <button type="button" className={styles.chip} onClick={() => onStep(1)} aria-label="Next photo">
-            →
-          </button>
-        </div>
-      )}
+      <p className={styles.label}>Interior design</p>
     </div>
   );
 }
