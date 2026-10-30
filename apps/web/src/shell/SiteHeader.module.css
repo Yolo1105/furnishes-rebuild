@@ -55,7 +55,7 @@
 /* The bar's one button: outlined, filled on hover. */
 .primary {
   padding: 0.55em 0.85em;
-  border: 1px solid var(--bar-fg);
+  border: 1.5px solid var(--bar-fg);
   border-radius: var(--radius-sm);
   transition:
     background-color var(--dur-fast) ease,
