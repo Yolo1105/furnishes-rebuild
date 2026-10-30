@@ -91,7 +91,7 @@
   margin: 0;
   font-family: var(--font-nav);
   font-weight: 500;
-  font-size: var(--text-plan-lede);
+  font-size: var(--text-plan-sub);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
 }
