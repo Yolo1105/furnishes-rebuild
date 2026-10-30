@@ -41,7 +41,7 @@
 .big {
   font-family: var(--font-sans);
   font-size: var(--text-plan-head);
-  font-weight: 450;
+  font-weight: 400;
   letter-spacing: var(--track-display);
   line-height: 0.9;
   text-transform: uppercase;
