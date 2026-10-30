@@ -74,6 +74,17 @@ html,
 body {
   margin: 0;
   background: var(--color-night);
+  /* the page stops dead at its top and bottom: no bounce past either end */
+  overscroll-behavior: none;
+}
+
+/* The page still scrolls, but shows no scrollbars, across or down. */
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 a {
