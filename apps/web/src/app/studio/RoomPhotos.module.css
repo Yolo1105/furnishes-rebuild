@@ -36,10 +36,11 @@
 
 /* The label at the bottom left, in one face stretched wide, in capitals:
    "Interior" smaller and darker over "Revolution". Each line rises in, the
-   second just after the first. */
+   second just after the first. A pale wash comes up from that corner of the
+   photo so the browns stand on light, whatever the room. */
 .label {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   left: var(--gutter);
   bottom: var(--gutter);
   display: flex;
@@ -48,11 +49,25 @@
   font-family: var(--font-photo);
   font-size: var(--text-photo-title);
   font-variation-settings:
-    "wght" 500,
-    "wdth" 118;
+    "wght" 400,
+    "wdth" 125;
   line-height: 0.92;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.frame::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 45% at 0% 100%,
+    color-mix(in srgb, var(--color-paper) 92%, transparent),
+    color-mix(in srgb, var(--color-paper) 60%, transparent) 45%,
+    transparent
+  );
+  pointer-events: none;
 }
 
 .lead,
