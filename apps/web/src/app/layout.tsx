@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Instrument_Serif, Jost, Outfit } from "next/font/google";
+import { Archivo, Instrument_Serif, Jost, Outfit } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
 import "./globals.css";
 
@@ -27,12 +27,12 @@ const outfit = Outfit({
   display: "swap",
 });
 
-// The words over the studio photos: a soft, light serif (variable, with its optical size).
-const fraunces = Fraunces({
+// The words over the studio photos: a grotesque, set stretched wide (variable, with its width).
+const archivo = Archivo({
   subsets: ["latin"],
   weight: "variable",
-  axes: ["opsz"],
-  variable: "--font-fraunces",
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable} ${archivo.variable}`}>
       <body>
         <SiteHeader />
         {children}
