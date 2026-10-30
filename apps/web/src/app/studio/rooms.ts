@@ -15,14 +15,14 @@ import { PHOTOS } from "../photos";
  * photo from its top left (the room's middle: its art wall, its chair and
  * shelves), as far as the photo allows; [50, 50] if not given. `zoom`: how
  * much closer than just covering the half, so the photo can move up as well
- * as across (1 if not given). `room`: the room on the floor plan it shows (a
- * key of ROOMS in features/plan/flat), so hovering that room brings it up;
- * none if it matches no room in the flat.
+ * as across (1 if not given). `room`: the room on the floor plan it stands
+ * for (a key of ROOMS in features/plan/flat), so hovering that room brings it
+ * up; one photo per room, no two the same.
  */
 export const ROOM_PHOTOS: {
   src: StaticImageData;
   alt: string;
-  room?: string;
+  room: string;
   focus?: [number, number];
   zoom?: number;
 }[] = [
@@ -35,19 +35,19 @@ export const ROOM_PHOTOS: {
   },
   {
     src: afternoonLivingRoom,
-    room: "living",
+    room: "master", // its window seat and sofa, as the bedroom's sitting corner
     focus: [45, 50],
     alt: "A cabin living room in afternoon sun, with a grey sofa under a large painting, a white coffee table, a patterned rug and a window seat",
   },
   {
     src: staircaseReadingCorner,
-    // the flat has no stairs: in the turn, but on no room
+    room: "bedroom2", // a reading nook for the second bedroom
     focus: [55, 50],
     alt: "A reading corner under a wooden staircase, with two rattan armchairs, a floor lamp, two stools and shelves against a terracotta wall",
   },
   {
     src: brightLivingRoom,
-    room: "living",
+    room: "hall", // the bicycle and bookcase by the way in
     alt: "A bright living room with a tan leather sofa, wooden block tables, a bookcase, a bicycle and a long green painting",
   },
   {
