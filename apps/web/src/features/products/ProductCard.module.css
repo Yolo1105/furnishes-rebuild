@@ -1,0 +1,110 @@
+/* A product's card, in the studio's words and umber, framed like a sheet. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: clamp(14px, 1.2vw, 20px);
+  border: 1px solid var(--color-umber);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.card) :where(h3, p) {
+  margin: 0;
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 1.6;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  background: var(--color-peach-paper);
+}
+
+.photo {
+  object-fit: cover;
+  transition: scale var(--dur-fade) var(--ease-rise);
+}
+
+.card:hover .photo {
+  scale: 1.025;
+}
+
+.record,
+.meta {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* its number left, its status right; a launch piece's status marked in orange */
+.record {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.status[data-status="launch"] {
+  color: var(--color-orange);
+}
+
+.name {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+  line-height: 1.15;
+}
+
+.link {
+  text-decoration: none;
+  transition: color var(--dur-fast) ease;
+}
+
+/* the whole card takes the click */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card:hover .link {
+  color: var(--color-orange);
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.card:has(.link:focus-visible) {
+  outline: 1px solid var(--color-orange);
+  outline-offset: 3px;
+}
+
+.line {
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+/* its size left, its price right, over a fine rule, at the foot */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-umber-rule);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo,
+  .link {
+    transition: none;
+  }
+}

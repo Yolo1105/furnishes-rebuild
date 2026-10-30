@@ -1,0 +1,1139 @@
+/* The collection's stone, under the page and the footer alike (the footer
+   has no ground of its own, so it shows this one). */
+.ground {
+  background: var(--color-stone);
+}
+
+/* The collection: in ink, in the studio's grotesque. */
+.page {
+  padding-top: var(--nav-h);
+  overflow-x: clip;
+  color: var(--color-ink);
+  font-family: var(--font-studio);
+}
+
+:where(.page) :where(h2, h3, p, ul, ol, dl, dd, figure) {
+  margin: 0;
+}
+
+:where(.page) :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ——— the running words ——— */
+.marquee {
+  overflow: hidden;
+  font-size: var(--text-marquee);
+  font-weight: 340;
+  letter-spacing: var(--track-display);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.marqueeTop {
+  padding-block: clamp(32px, 6vh, 72px) clamp(24px, 4vh, 48px);
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: run var(--dur-marquee) linear infinite;
+}
+
+.marqueeRun > span {
+  display: inline-block;
+}
+
+.dot {
+  display: inline-block;
+  margin-inline: 0.3em;
+  font-size: 0.5em;
+  vertical-align: 0.4em;
+}
+
+@keyframes run {
+  to {
+    translate: -50% 0;
+  }
+}
+
+/* ——— the intro: a small photo, a line, a link ——— */
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  gap: var(--gutter);
+  align-items: end;
+  padding: 0 var(--gutter);
+}
+
+.introPhoto {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1.85;
+  overflow: hidden;
+}
+
+.introPhoto img {
+  object-fit: cover;
+}
+
+.introLine {
+  max-width: 22em;
+  font-size: var(--text-plan-more);
+  line-height: 1.4;
+}
+
+.more {
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid currentcolor;
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-narrow);
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ——— the headline, the call, the marked render ——— */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--space-6) var(--gutter);
+  padding: clamp(80px, 14vh, 160px) var(--gutter) 0;
+}
+
+.heroTitle,
+.sectionTitle {
+  font-size: var(--text-section-head);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+  line-height: 1.05;
+}
+
+.heroSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+
+.heroLede {
+  color: var(--color-ink-soft);
+  font-size: var(--text-plan-more);
+  line-height: 1.55;
+}
+
+.pillOutline,
+.pillLight {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  padding: 0 var(--space-6);
+  border: 1px solid var(--color-ink-rule);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-plan-more);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.pillOutline:hover {
+  background: var(--color-ink);
+  color: var(--color-stone);
+}
+
+.pillLight {
+  border-color: currentcolor;
+}
+
+.pillLight:hover {
+  background: var(--color-paper);
+  color: var(--color-sage);
+}
+
+.pillOutline:focus-visible,
+.pillLight:focus-visible,
+.more:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: 3px;
+}
+
+.heroRender {
+  grid-column: 1 / -1;
+  aspect-ratio: 2.5;
+  margin-top: clamp(32px, 5vh, 56px);
+  box-shadow: 0 40px 60px -40px var(--color-shade);
+}
+
+/* the figures, on a frosted panel at the render's top right */
+.figures {
+  position: absolute;
+  top: clamp(12px, 2vw, 28px);
+  right: clamp(12px, 2vw, 28px);
+  display: flex;
+  gap: clamp(16px, 2.4vw, 40px);
+  padding: clamp(12px, 1.4vw, 22px) clamp(16px, 2vw, 32px);
+  border-radius: var(--radius-lg);
+  background: var(--color-frost);
+  backdrop-filter: blur(12px);
+  color: var(--color-paper);
+}
+
+.figures div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.figures dd {
+  font-size: var(--text-stat);
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.figures dt {
+  font-size: var(--text-xs);
+}
+
+/* ——— the band, its render running out of it ——— */
+.band {
+  margin-top: clamp(96px, 16vh, 180px);
+  padding: clamp(48px, 8vh, 96px) var(--gutter) 0;
+  background: linear-gradient(var(--color-sage) 62%, transparent 62%);
+  color: var(--color-paper);
+}
+
+.bandText {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: var(--gutter);
+  padding-inline: var(--pad-section);
+}
+
+.bandTitle {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-plan-head);
+  font-weight: 340;
+  letter-spacing: var(--track-narrow);
+  line-height: 1.15;
+}
+
+.bandNoteTitle {
+  font-size: var(--text-tour-name);
+}
+
+.bandNote {
+  margin-top: var(--space-4);
+  font-size: var(--text-ruler);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+.bandFigure {
+  position: relative;
+  aspect-ratio: 2.85;
+  margin: clamp(40px, 6vh, 64px) var(--pad-section) 0;
+  overflow: hidden;
+}
+
+.bandFigure img {
+  object-fit: cover;
+}
+
+.bandCaption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(40px, 6vw, 96px) clamp(16px, 2vw, 32px) clamp(16px, 2vw, 28px);
+  background: linear-gradient(transparent, var(--color-shade));
+  font-size: var(--text-ruler);
+  font-weight: 600;
+}
+
+.bandCaptionTitle {
+  font-size: var(--text-photo-title);
+  font-weight: 300;
+  letter-spacing: var(--track-narrow);
+  line-height: 1.05;
+}
+
+/* ——— the word, the ring, a sentence ——— */
+.ringRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.4fr);
+  gap: var(--gutter);
+  align-items: center;
+  padding: clamp(56px, 10vh, 120px) calc(var(--gutter) + var(--pad-section));
+}
+
+.ringWord {
+  font-size: var(--text-section-head);
+  font-weight: 500;
+  letter-spacing: var(--track-narrow);
+}
+
+.ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(140px, 13vw, 200px);
+  aspect-ratio: 1;
+}
+
+.ringText {
+  position: absolute;
+  inset: 0;
+  fill: currentcolor;
+  font-size: var(--text-ring);
+  letter-spacing: var(--track-wide);
+  animation: turn var(--dur-ring) linear infinite;
+}
+
+.ringBadge {
+  display: grid;
+  place-items: center;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-sage);
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-size: var(--text-tour-name);
+  font-style: italic;
+}
+
+@keyframes turn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+.ringBody {
+  color: var(--color-ink-soft);
+  font-size: var(--text-plan-more);
+  line-height: 1.55;
+}
+
+/* ——— a section with its title and a pill on one line ——— */
+.section {
+  padding: clamp(80px, 13vh, 150px) var(--gutter) 0;
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+
+/* the picks: tall photo cards, tags at the top, name and size at the foot */
+.picks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.pick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 0.82;
+  padding: var(--space-4);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  color: var(--color-paper);
+  isolation: isolate;
+}
+
+.pick > img {
+  z-index: -2;
+  object-fit: cover;
+  transition: scale var(--dur-fade) var(--ease-rise);
+}
+
+.pick:hover > img {
+  scale: 1.04;
+}
+
+.pick::after {
+  content: "";
+  position: absolute;
+  inset: 40% 0 0;
+  z-index: -1;
+  background: linear-gradient(transparent, var(--color-shade));
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tags li {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--color-shade);
+  backdrop-filter: blur(8px);
+  font-size: var(--text-ruler);
+}
+
+.pickFoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.pickName {
+  font-size: var(--text-tour-name);
+  font-weight: 500;
+}
+
+.pickSmall {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-narrow);
+}
+
+.pickSize {
+  font-size: var(--text-stat);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.pickCall {
+  flex: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--color-frost);
+  backdrop-filter: blur(8px);
+  font-size: var(--text-plan-more);
+  text-decoration: none;
+}
+
+.pickCall::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.pick:has(.pickCall:focus-visible) {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.pickCall:focus-visible {
+  outline: none;
+}
+
+/* ——— pieces in their rooms: wide banners, a dark pill at the top right ——— */
+.banners {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.banner {
+  aspect-ratio: 3.25;
+}
+
+.bannerPill {
+  position: absolute;
+  top: clamp(12px, 1.6vw, 20px);
+  right: clamp(12px, 1.6vw, 20px);
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: var(--text-tour-name);
+  text-decoration: none;
+}
+
+.bannerPill:hover {
+  background: var(--color-espresso);
+}
+
+.bannerPill:focus-visible {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 2px;
+}
+
+/* a section's lede under its title, or its note beside it */
+.sectionLede,
+.sectionAside {
+  max-width: 34em;
+  color: var(--color-ink-soft);
+  font-size: var(--text-plan-more);
+  line-height: 1.5;
+}
+
+.sectionLede {
+  margin-top: var(--space-4);
+}
+
+.sectionAside {
+  max-width: 24em;
+  text-align: right;
+}
+
+/* the situation it answers, in the visitor's words, over the name */
+.pickSituation {
+  max-width: 18em;
+  margin-bottom: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-tour-name);
+  font-style: italic;
+  line-height: 1.25;
+}
+
+/* what in the render is not included, small at the banner's foot */
+.bannerNote {
+  position: absolute;
+  bottom: clamp(10px, 1.4vw, 18px);
+  left: clamp(12px, 1.6vw, 20px);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-shade);
+  color: var(--color-paper);
+  font-size: var(--text-xs);
+}
+
+/* ——— other uses: a row of four across, running on past the edge ——— */
+.uses {
+  display: grid;
+  grid-auto-columns: calc((100% - 3 * var(--space-6)) / 4);
+  grid-auto-flow: column;
+  gap: var(--space-6);
+  overflow-x: auto;
+  padding-bottom: var(--space-4);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.use {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  scroll-snap-align: start;
+}
+
+.useImage {
+  position: relative;
+  aspect-ratio: 0.72;
+  margin-bottom: var(--space-2);
+  background: var(--color-paper);
+}
+
+.useImage img {
+  object-fit: contain;
+  padding: 8%;
+}
+
+.useName {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+}
+
+.useParents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+  font-size: var(--text-ruler);
+}
+
+.useParents [data-state="testing"] {
+  color: var(--color-clay);
+}
+
+.useLine {
+  color: var(--color-ink-soft);
+  font-size: var(--text-ruler);
+  line-height: 1.55;
+}
+
+.useNote {
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+/* ——— arrangements: a numbered index, ruled ——— */
+.arrangements {
+  border-top: 1px solid var(--color-ink-rule);
+}
+
+.arrangement {
+  display: grid;
+  grid-template-columns: 3.5em 72px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: center;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--color-ink-rule);
+  font-size: var(--text-ruler);
+}
+
+.arrNo {
+  font-variant-numeric: tabular-nums;
+}
+
+.arrImage {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--color-paper);
+}
+
+.arrImage img {
+  object-fit: contain;
+  padding: 6%;
+}
+
+.arrText {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.arrText strong {
+  font-size: var(--text-plan-more);
+  font-weight: 400;
+}
+
+.arrText span,
+.arrNote {
+  color: var(--color-ink-soft);
+  line-height: 1.5;
+}
+
+.splitSmall {
+  max-width: 30em;
+  font-size: var(--text-ruler);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* ——— the photo half and the panel ——— */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin-top: clamp(96px, 16vh, 180px);
+}
+
+.splitPhoto {
+  position: relative;
+  min-height: clamp(320px, 38vw, 620px);
+}
+
+.splitPhoto img {
+  object-fit: cover;
+}
+
+.splitPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding: clamp(40px, 6vw, 112px);
+  background: var(--color-sage);
+  color: var(--color-paper);
+}
+
+.splitTitle {
+  font-size: var(--text-plan-head);
+  font-weight: 500;
+}
+
+.splitBody {
+  max-width: 30em;
+  font-size: var(--text-plan-more);
+  line-height: 1.6;
+}
+
+/* ——— how ordering works: caps title and lede, a tall photo, numbered rows ——— */
+.steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: clamp(32px, 5vh, 64px) var(--gutter);
+  padding: clamp(96px, 16vh, 180px) var(--gutter) 0;
+}
+
+.stepsTitle {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-plan-head);
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.stepsLede {
+  font-size: var(--text-plan-head);
+  font-weight: 340;
+  line-height: 1.3;
+  text-indent: 3em;
+}
+
+.stepsPhoto {
+  position: relative;
+  align-self: end;
+  aspect-ratio: 0.8;
+  max-width: 300px;
+  background: var(--color-paper);
+}
+
+.stepsPhoto img {
+  object-fit: contain;
+  padding: 10%;
+}
+
+.stepsList {
+  display: grid;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-4);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--color-ink-rule);
+}
+
+.stepNo {
+  font-size: var(--text-xs);
+}
+
+.stepTitle {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+}
+
+.stepPoints {
+  display: grid;
+}
+
+.stepPoints > div {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.stepPoints > div:first-child {
+  padding-top: 0;
+}
+
+.stepPoints > div:last-child {
+  border-bottom: 0;
+}
+
+.stepPoints dt {
+  font-size: var(--text-plan-more);
+}
+
+.stepPoints dd {
+  margin-top: var(--space-2);
+  color: var(--color-ink-soft);
+  font-size: var(--text-ruler);
+  line-height: 1.55;
+}
+
+/* ——— the questions: a photo left, the list right ——— */
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+  padding: clamp(96px, 16vh, 180px) calc(var(--gutter) + var(--pad-section) / 2) 0;
+}
+
+.faqPhoto {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.faqPhoto img {
+  object-fit: cover;
+}
+
+.faqList {
+  margin-top: var(--space-6);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-6);
+  font-size: var(--text-tour-name);
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqQuestion:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: 2px;
+}
+
+.faqChevron {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-right: 1.5px solid currentcolor;
+  border-bottom: 1.5px solid currentcolor;
+  rotate: 45deg;
+  translate: 0 -3px;
+  transition: rotate var(--dur-fast) var(--ease-rise);
+}
+
+.faqItem[open] .faqChevron {
+  rotate: 225deg;
+  translate: 0 3px;
+}
+
+.faqAnswer {
+  max-width: 36em;
+  padding-bottom: var(--space-6);
+  color: var(--color-ink-soft);
+  font-size: var(--text-plan-more);
+  line-height: 1.55;
+}
+
+/* ——— the closing photo, running words over it, a row of words under them ——— */
+.closing {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(480px, 82vh, 860px);
+  margin-top: clamp(96px, 16vh, 180px);
+  padding-bottom: clamp(40px, 8vh, 96px);
+  color: var(--color-paper);
+  isolation: isolate;
+}
+
+.closingPhoto {
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.62);
+}
+
+.marqueeEnd {
+  padding-bottom: clamp(24px, 4vh, 48px);
+  border-bottom: 1px solid var(--color-white-rule);
+}
+
+.closingRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  gap: var(--gutter);
+  align-items: start;
+  padding: clamp(24px, 4vh, 40px) var(--gutter) 0;
+}
+
+.closingTitle {
+  font-size: var(--text-plan-head);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.closingTitle em {
+  font-weight: 300;
+}
+
+.closingBody {
+  max-width: 22em;
+  font-size: var(--text-ruler);
+  line-height: 1.6;
+}
+
+/* ——— narrower screens: one column ——— */
+@media (max-width: 900px) {
+  .hero,
+  .bandText,
+  .steps,
+  .faq,
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro,
+  .closingRow {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .ringRow {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    padding-inline: var(--gutter);
+  }
+
+  .bandText,
+  .bandFigure {
+    padding-inline: 0;
+    margin-inline: 0;
+  }
+
+  .picks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uses {
+    grid-auto-columns: 70%;
+  }
+
+  .sectionAside {
+    text-align: left;
+  }
+
+  .arrangement {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .arrNo {
+    display: none;
+  }
+
+  .arrMembers,
+  .arrNote {
+    grid-column: 2;
+  }
+
+  .heroRender {
+    aspect-ratio: 1.3;
+  }
+
+  .banner {
+    aspect-ratio: 1.6;
+  }
+
+  .bandFigure {
+    aspect-ratio: 1.4;
+  }
+
+  .figures {
+    inset: auto 12px 12px;
+    justify-content: space-between;
+  }
+
+  .step {
+    grid-template-columns: 2em minmax(0, 1fr);
+  }
+
+  .stepPoints {
+    grid-column: 2;
+  }
+}
+
+/* ——— before you choose: each piece's open points, ruled columns ——— */
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6) clamp(24px, 3vw, 48px);
+}
+
+.notesPiece {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-ink);
+}
+
+.notesName {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+}
+
+.notesName span,
+.n {
+  color: var(--color-ink-soft);
+  font-size: var(--text-ruler);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-narrow);
+}
+
+.notesList {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding-left: 1.1em;
+  color: var(--color-ink-soft);
+  line-height: 1.5;
+}
+
+.notesMore {
+  margin-top: clamp(32px, 5vh, 56px);
+  border-top: 1px solid var(--color-ink-rule);
+  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.notesMore[open] {
+  padding-bottom: var(--space-6);
+}
+
+.notesMore[open] .faqChevron {
+  rotate: 225deg;
+  translate: 0 3px;
+}
+
+/* ——— add-on kits: two tiers side by side, each kit a soft card ——— */
+.kitTiers {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: start;
+}
+
+.kitTierHead {
+  display: grid;
+  gap: var(--space-1);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-ink);
+}
+
+.kitTierHead h3 {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+}
+
+.kitTierHead p {
+  color: var(--color-ink-soft);
+}
+
+.kits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: clamp(14px, 1.2vw, 20px);
+  border-radius: var(--radius-lg);
+  background: var(--color-stone-tile);
+}
+
+/* its number, then the pieces it fits */
+.kitFor {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--color-ink-soft);
+  font-size: var(--text-ruler);
+  text-transform: uppercase;
+  letter-spacing: var(--track-narrow);
+}
+
+.kitName {
+  font-size: var(--text-plan-more);
+  font-weight: 500;
+}
+
+.kitLine {
+  color: var(--color-ink-soft);
+  line-height: 1.5;
+}
+
+.kitParts {
+  display: grid;
+  gap: var(--space-1);
+  margin: auto 0 0;
+  padding: var(--space-2) 0 0;
+  list-style: none;
+  border-top: 1px solid var(--color-ink-rule);
+  font-size: var(--text-ruler);
+}
+
+/* a part it adds in orange with a plus; one it takes off quiet with a minus */
+.kitParts li::before {
+  display: inline-block;
+  width: 1.2em;
+}
+
+.kitParts [data-change="adds"]::before {
+  content: "+";
+  color: var(--color-orange);
+}
+
+.kitParts [data-change="removes"] {
+  color: var(--color-ink-soft);
+}
+
+.kitParts [data-change="removes"]::before {
+  content: "−";
+}
+
+/* the parts' materials, ruled on the sage panel */
+.partsTitle {
+  font-size: var(--text-plan-more);
+  font-weight: 500;
+}
+
+.parts {
+  display: grid;
+  width: 100%;
+  max-width: 34em;
+  margin: 0;
+  font-size: var(--text-ruler);
+  line-height: 1.5;
+}
+
+.parts div {
+  display: grid;
+  grid-template-columns: 11em minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-top: 1px solid currentcolor;
+}
+
+.parts dd {
+  margin: 0;
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .notes,
+  .kitTiers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .parts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack,
+  .ringText {
+    animation: none;
+  }
+
+  .pick > img,
+  .faqChevron,
+  .pillOutline,
+  .pillLight {
+    transition: none;
+  }
+}

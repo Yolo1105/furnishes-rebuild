@@ -50,21 +50,14 @@
 }
 
 .link {
-  font-family: var(--font-nav);
+  font-family: var(--font-studio);
   font-weight: 500;
-  letter-spacing: var(--track-wide);
+  letter-spacing: var(--track-narrow);
   text-transform: uppercase;
   text-decoration: none;
   text-underline-offset: 0.45em;
   text-decoration-thickness: 1px;
   white-space: nowrap;
-}
-
-/* On the studio and inspiration, the links take the studio's face, spaced
-   only a little (the wordmark keeps its own). */
-:global(body:has([data-page="studio"], [data-page="inspiration"])) .link {
-  font-family: var(--font-studio);
-  letter-spacing: var(--track-narrow);
 }
 
 .link:hover {

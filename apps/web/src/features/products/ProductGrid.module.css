@@ -1,0 +1,26 @@
+/* The columns here and SIZES in ProductGrid.tsx change at the same widths. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 40px);
+  margin: clamp(24px, 3vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* each card as tall as the tallest in its row */
+.cell {
+  display: grid;
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -10,11 +10,10 @@
   --color-rust: #8c3812; /* the bar's links, the wall title */
   --color-burgundy: #5e1f24; /* the wordmark */
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
-  --color-wheat: #f9e9c2; /* the footer's words */
-  --color-wheat-pale: #fbf0dc; /* the footer's call and its name, a shade paler */
   --color-umber: #6b2c12; /* "Interior" over a light studio photo; the studio's plan, its heading and words */
   --color-umber-rule: rgb(107 44 18 / 22%); /* the fine rules between a schedule's rows */
   --color-clay: #9a4017; /* "Revolution" under it; the flat's kind, its labels, "Scroll to explore" */
+  --color-white-rule: rgb(255 255 255 / 45%); /* fine rules on a dark or orange ground */
 
   /* the peach backdrop: a cream-to-peach diagonal, with light blobs drifting over it */
   --color-peach-paper: #fff4e3;
@@ -26,7 +25,6 @@
 
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
-  --font-nav: var(--font-outfit), "Outfit", system-ui, sans-serif; /* the bar's links */
   --font-studio: var(--font-archivo), "Archivo", system-ui, sans-serif; /* all of the studio's words, as on the old landing */
   --font-studio-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace; /* the studio's small capitals */
 
@@ -49,21 +47,22 @@
   --text-plan-head: clamp(22px, 3.05vw, 54px); /* the heading over the plan */
   --text-section-head: clamp(36px, 4.6vw, 84px); /* the headlines of the sections after the cases */
   --text-plan-lede: clamp(16px, 1.5vw, 22px); /* the line on what the studio does */
-  --text-footer-call: clamp(1.6rem, 4.6vw, 4rem); /* the footer's "Let's get in touch" */
-  --text-footer-name: clamp(21px, 1.65vw, 26px); /* "furnishes." in the footer */
+  --text-footer-call: clamp(1.6rem, 4.6vw, 4rem); /* the address to write to, in the footer */
+  --text-footer-head: clamp(1.6rem, 3.3vw, 3.4rem); /* the footer's two-line call, each line kept whole */
   --text-footer-body: clamp(17px, 1.4vw, 21px); /* the footer's paragraphs */
-  --text-footer-label: clamp(14px, 1.1vw, 17px); /* its [ bracketed ] labels */
-  --text-footer-small: clamp(12px, 1vw, 15px); /* the studio's line under its blurb */
-  --text-footer-legal: clamp(15px, 1.2vw, 17px); /* the legal links and the copyright */
+  --text-footer-label: clamp(14px, 1.1vw, 17px); /* the small capitals over each part of it */
+  --text-footer-legal: clamp(15px, 1.2vw, 17px); /* the copyright */
   --text-plan-more: clamp(15px, 1.35vw, 20px); /* "How it works?" under the plan */
   --text-ruler: clamp(11px, 0.95vw, 14px); /* the room numbers on the tour's scale */
   --text-tour-head: clamp(15px, 1.6vw, 28px); /* the tour's headline, beside the plan */
   --text-tour-number: clamp(56px, 6.5vw, 120px); /* the tour's big room number */
   --text-tour-name: clamp(17px, 1.7vw, 28px); /* the tour's room name */
+  --text-manifesto: clamp(26px, 3.1vw, 56px); /* "Who we are", the paragraph with photos in its lines */
+  --text-figure: clamp(44px, 4.8vw, 88px); /* the figures under it, rolling to their values */
+  --dur-roll: 1.8s; /* a figure's digits rolling to their values */
   --text-photo-title: clamp(40px, 6.4vw, 104px); /* "Revolution" over the studio photos, as the old landing's hero */
   --track-title: 0.08em;
   --track-display: -0.03em;
-  --track-wide: 0.18em;
   --track-narrow: 0.06em;
   --track-heading: -0.015em; /* the studio's headings, as the old landing's */
   --track-menu: 0.16em; /* the studio's mono labels, as the old landing's Menu */
@@ -122,6 +121,18 @@ a {
   color: inherit;
 }
 
+/* No box round what is clicked or tapped: the focus ring only for the
+   keyboard (each part's own :focus-visible), none where focus is moved in
+   code, and no grey flash on a tap. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus:not(:focus-visible),
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
 /* For text that only screen readers should hear. */
 /* Rising into view as it scrolls on, where scroll-driven animation is
    supported (elsewhere, and for anyone who asks for less motion, simply
@@ -150,4 +161,29 @@ a {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* The collection's tokens: its stone ground, ink and sage band, its rounded
+   frames and pills, and its display sizes (app/collection). */
+:root {
+  --color-stone: #efede8; /* the collection's ground */
+  --color-stone-tile: #dfd6cb; /* a piece's tile on it: the studio renders' own stone */
+  --color-ink: #24211c; /* its words */
+  --color-ink-soft: rgb(36 33 28 / 62%); /* its quieter words */
+  --color-ink-rule: rgb(36 33 28 / 16%); /* its fine rules */
+  --color-sage: #6b7a6f; /* the band and the panel */
+  --color-frost: rgb(255 255 255 / 24%); /* a label or panel over a render */
+  --color-frost-line: rgb(255 255 255 / 85%); /* a label's line and dot */
+  --color-shade: rgb(20 16 12 / 45%); /* the wash under words on a photo */
+
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --text-marquee: clamp(64px, 10.5vw, 200px); /* the words running across */
+  --text-stat: clamp(26px, 2.8vw, 48px); /* a figure on the frosted panel */
+  --text-room-tile: clamp(24px, 2.6vw, 44px); /* a room's name on its tile */
+  --text-ring: 11px; /* the turning ring of words */
+
+  --dur-marquee: 48s; /* the words running across once */
+  --dur-ring: 24s; /* one turn of the ring */
 }

@@ -1,0 +1,197 @@
+/* The lead times, on the warm dark at the foot of About, in linen. */
+.band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: var(--gutter);
+  align-items: start;
+  padding: clamp(72px, 14vh, 160px) var(--gutter);
+  background: var(--color-espresso);
+  color: var(--color-linen);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.band) :where(h2, p, dl, dd, figure) {
+  margin: 0;
+}
+
+/* the small capitals: the index, labels, the scale and its notes */
+.mono {
+  display: flex;
+  gap: var(--space-6);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: var(--space-6);
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+.lede {
+  margin-top: clamp(24px, 5vh, 56px);
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+}
+
+/* the email over its line, the orange button under it */
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(24px, 4vh, 40px);
+  max-width: 36rem;
+  margin-top: clamp(32px, 6vh, 64px);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-2) 0;
+  border: 0;
+  border-bottom: 1px solid currentcolor;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  outline: none;
+}
+
+.input::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
+
+.input:focus-visible {
+  border-bottom-color: var(--color-orange);
+  box-shadow: 0 1px 0 var(--color-orange);
+}
+
+.button {
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) clamp(20px, 1.8vw, 32px);
+  border: 0;
+  background: var(--color-orange);
+  color: var(--color-night);
+  font: inherit;
+  font-size: var(--text-plan-more);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-rise);
+}
+
+.button:hover {
+  background: var(--color-apricot);
+}
+
+.button:focus-visible {
+  outline: 1px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
+
+/* the chart: a name column, then the weeks; each row ruled below */
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.caption {
+  justify-content: space-between;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: end;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-white-rule);
+}
+
+.list .row {
+  align-items: center;
+  min-height: clamp(80px, 11vh, 110px);
+  padding: var(--space-4) 0;
+}
+
+/* the weeks, each number at its share of the scale */
+.scale {
+  position: relative;
+  min-height: 1.4em;
+  margin-right: 1em;
+}
+
+.week {
+  position: absolute;
+  left: calc(var(--at) * 100%);
+  bottom: 0;
+  translate: -50% 0;
+}
+
+.name {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+  line-height: 1.2;
+}
+
+.range {
+  color: var(--color-orange);
+}
+
+.bars {
+  display: flex;
+  margin-top: var(--space-2);
+}
+
+.bar {
+  flex: none;
+  width: calc(var(--at) * 100%);
+}
+
+.key {
+  opacity: 0.7;
+}
+
+/* the call over the chart on narrower screens */
+@media (max-width: 900px) {
+  .band {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(56px, 10vh, 96px);
+  }
+
+  .row {
+    grid-template-columns: 7em minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .row,
+  .list .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .row > .mono:first-child {
+    display: none;
+  }
+}

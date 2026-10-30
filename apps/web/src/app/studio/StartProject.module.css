@@ -1,16 +1,17 @@
-/* The band before the footer: a photo across the screen, the question and the call at its foot. */
+/* The band before the footer: a photo across the screen under a dark wash,
+   a sheet ruled over it in cream, in the studio's words. */
 .band {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-6);
-  align-items: flex-end;
-  justify-content: space-between;
-  min-height: clamp(420px, 90vh, 900px);
-  padding: clamp(40px, 8vh, 96px) var(--gutter);
+  padding: clamp(24px, 4vh, 48px) var(--gutter);
   overflow: hidden;
   color: var(--color-cream);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
   isolation: isolate;
+}
+
+:where(.band) :where(h2, p) {
+  margin: 0;
 }
 
 .photo {
@@ -18,41 +19,143 @@
   object-fit: cover;
 }
 
-/* a dark wash rising from the foot, so the words hold over any part of the photo */
+/* a dark wash over all of it, deepest on the left where the words are */
 .band::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(to top, rgb(26 18 10 / 55%), rgb(26 18 10 / 0%) 55%);
+  background: linear-gradient(to right, rgb(26 18 10 / 82%), rgb(26 18 10 / 55%));
+}
+
+/* the frame: the next step, then the title block down the right */
+.sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 22%);
+  min-height: clamp(480px, 82vh, 860px);
+  border: 1px solid var(--color-cream);
+}
+
+/* the small capitals: the index, the block's labels and its note */
+.index,
+.label,
+.small {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.small {
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+/* the index at the top, the rest held at the foot */
+.main {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 4vw, 56px);
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
 }
 
 .title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(48px, 7vw, 132px);
-  font-weight: 400;
-  letter-spacing: var(--track-display);
-  line-height: 0.95;
+  max-width: 12ch;
+  margin-top: auto;
+  padding-top: clamp(48px, 10vh, 120px);
+  font-size: clamp(44px, 6.4vw, 120px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
 }
 
-/* the dark pill */
+.lede {
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+.calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: clamp(24px, 4vh, 40px);
+}
+
+/* the calls: square, the first filled in Furnishes orange, the second ruled */
 .button {
   display: inline-flex;
   gap: var(--space-4);
   align-items: center;
-  padding: var(--space-4) clamp(24px, 2vw, 36px);
-  border-radius: 999px;
-  background: var(--color-night);
+  padding: var(--space-4) clamp(20px, 1.8vw, 32px);
+  border: 1px solid var(--color-cream);
   color: var(--color-cream);
-  font-family: var(--font-nav);
   font-size: var(--text-plan-more);
+  font-weight: 400;
   text-decoration: none;
-  transition: background var(--dur-fast) var(--ease-rise);
+  transition:
+    background var(--dur-fast) var(--ease-rise),
+    color var(--dur-fast) var(--ease-rise);
 }
 
 .button:hover {
-  background: var(--color-espresso);
+  background: var(--color-cream);
+  color: var(--color-night);
+}
+
+.primary {
+  border-color: var(--color-orange);
+  background: var(--color-orange);
+  color: var(--color-night);
+}
+
+.primary:hover {
+  border-color: var(--color-cream);
+}
+
+/* the title block: ruled cells down the right edge of the frame */
+.block {
+  border-left: 1px solid var(--color-cream);
+}
+
+.cell {
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-cream);
+}
+
+.sheetNo {
+  margin: var(--space-2) 0;
+  font-size: clamp(48px, 4.6vw, 88px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.value {
+  margin-top: var(--space-2);
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+}
+
+/* the title block under the next step on narrower screens */
+@media (max-width: 900px) {
+  .sheet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .block {
+    border-top: 1px solid var(--color-cream);
+    border-left: 0;
+  }
+
+  .cell:last-child {
+    border-bottom: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

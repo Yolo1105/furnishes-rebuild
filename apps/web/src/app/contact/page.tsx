@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { EMAIL, HOURS } from "@/lib/contact";
 import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
-import { Questions } from "../studio/Questions";
+import { AfterYouSend } from "./AfterYouSend";
+import { Inquiry } from "./Inquiry";
+import { LeadTimes } from "./LeadTimes";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Contact" };
@@ -10,8 +12,9 @@ export const metadata: Metadata = { title: "Contact" };
 /**
  * Contact, over the peach in the studio's words: the index and headline on
  * the left, on the right a ruled list of how to reach us (the address to
- * write to, the hours, how soon we answer), then the studio's questions and
- * the footer.
+ * write to, the hours, how soon we answer); the inquiry, a step at a time,
+ * and what happens after it is sent; then the lead times by email and the
+ * footer.
  */
 export default function Contact() {
   return (
@@ -54,7 +57,9 @@ export default function Contact() {
             </div>
           </dl>
         </section>
-        <Questions />
+        <Inquiry />
+        <AfterYouSend />
+        <LeadTimes />
       </main>
       <SiteFooter />
     </>

@@ -1,0 +1,143 @@
+/* A piece's days from order to door: in the studio's words and umber, the
+   rule and the days' numbers in clay. */
+.making {
+  padding: clamp(72px, 14vh, 160px) var(--gutter);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+  view-timeline-name: --making;
+}
+
+:where(.making) :where(h2, h3, p, ol) {
+  margin: 0;
+}
+
+/* the index and headline on the left, the line on the right, level with the headline */
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 30ch);
+  gap: var(--space-6) var(--gutter);
+  align-items: end;
+}
+
+.index {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--space-6);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+.lead,
+.soft {
+  display: block;
+}
+
+.soft {
+  opacity: 0.5;
+}
+
+.line {
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+/* the rule the days run along, drawn across as the band scrolls through */
+.rule {
+  height: 1px;
+  margin-top: clamp(48px, 9vh, 96px);
+  background: var(--color-clay);
+  transform-origin: left;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  gap: var(--gutter);
+  margin-top: var(--space-6);
+  padding: 0;
+  list-style: none;
+}
+
+.dayNo {
+  color: var(--color-clay);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.dayTitle {
+  margin-top: var(--space-4);
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.2;
+}
+
+.body {
+  margin-top: var(--space-2);
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+/* the drawing on: the rule over the middle of the band's pass, each day
+   lighting up in its share of it, the rest waiting faint */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rule {
+      animation: draw linear both;
+      animation-timeline: --making;
+      animation-range: cover 25% cover 60%;
+    }
+
+    .day {
+      animation: light linear both;
+      animation-timeline: --making;
+      animation-range: cover calc(25% + 35% * var(--i) / var(--count)) cover calc(25% + 35% * (var(--i) + 1) / var(--count));
+    }
+  }
+}
+
+@keyframes draw {
+  from {
+    scale: 0 1;
+  }
+}
+
+@keyframes light {
+  from {
+    opacity: 0.25;
+    translate: 0 8px;
+  }
+}
+
+/* the days in two columns on narrower screens, one on phones */
+@media (max-width: 1000px) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .days {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: clamp(32px, 6vh, 48px);
+  }
+}
+
+@media (max-width: 600px) {
+  .days {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

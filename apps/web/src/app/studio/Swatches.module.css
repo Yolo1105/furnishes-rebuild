@@ -1,0 +1,167 @@
+/* The swatches, after the makers: in the studio's words and umber, each
+   sample drawn till it is photographed. */
+.swatches {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --wood: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.12' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: var(--gutter);
+  align-items: center;
+  padding: clamp(72px, 14vh, 160px) var(--gutter);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.swatches) :where(h2, p, ul) {
+  margin: 0;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: var(--space-6);
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+.lead,
+.soft {
+  display: block;
+}
+
+.soft {
+  opacity: 0.5;
+}
+
+.line {
+  max-width: 38ch;
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+.calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  margin-top: clamp(24px, 4vh, 40px);
+}
+
+/* the filled call, in umber */
+.button {
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) clamp(20px, 1.8vw, 28px);
+  border-radius: 6px;
+  background: var(--color-umber);
+  color: var(--color-cream);
+  font-size: var(--text-plan-more);
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-rise);
+}
+
+.button:hover {
+  background: var(--color-espresso);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 1.4vw, 24px) clamp(12px, 1.1vw, 20px);
+  padding: 0;
+  list-style: none;
+}
+
+.sample {
+  position: relative;
+  aspect-ratio: 1 / 0.93;
+  overflow: hidden;
+  border-radius: 4px;
+  background-blend-mode: multiply, normal;
+}
+
+.photo {
+  object-fit: cover;
+}
+
+.name {
+  margin-top: var(--space-2);
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+}
+
+/* the drawn stand-ins: a texture of noise multiplied over each one's colour */
+.oiledOak {
+  background: var(--wood) 0 0 / 100% 100%, #b9875a;
+  background-blend-mode: multiply;
+}
+
+.smokedOak {
+  background: var(--wood) 0 0 / 100% 100%, #6e5a44;
+  background-blend-mode: multiply;
+}
+
+/* cane: open octagons in a honey frame */
+.cane {
+  background:
+    radial-gradient(circle at 50% 50%, #f4ead8 34%, transparent 36%) 0 0 / 18px 18px,
+    repeating-linear-gradient(45deg, #b8752e 0 2px, #cf9248 2px 4px),
+    #c4813a;
+}
+
+.linen {
+  background:
+    repeating-linear-gradient(0deg, rgb(120 105 85 / 10%) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgb(120 105 85 / 10%) 0 1px, transparent 1px 3px),
+    var(--grain) 0 0 / 240px,
+    #ddd5c5;
+  background-blend-mode: normal, normal, multiply, normal;
+}
+
+.boucle {
+  background: var(--grain) 0 0 / 90px, #d6ccbd;
+  background-blend-mode: multiply;
+}
+
+/* wool: a coarse knit of short slanted strokes in pepper */
+.wool {
+  background:
+    repeating-linear-gradient(60deg, rgb(40 36 34 / 35%) 0 3px, transparent 3px 7px),
+    repeating-linear-gradient(-60deg, rgb(230 225 220 / 18%) 0 2px, transparent 2px 7px),
+    var(--grain) 0 0 / 120px,
+    #77706b;
+  background-blend-mode: normal, normal, multiply, normal;
+}
+
+/* the samples under the words on narrower screens */
+@media (max-width: 900px) {
+  .swatches {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

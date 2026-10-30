@@ -5,10 +5,12 @@
 export const routes = {
   home: "/",
   collection: "/collection",
+  products: "/products",
   inspiration: "/inspiration",
   about: "/about",
   contact: "/contact",
   studio: "/studio",
+  quiz: "/quiz",
   signIn: "/sign-in",
   terms: "/terms",
   privacy: "/privacy-policy",

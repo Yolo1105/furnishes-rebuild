@@ -1,0 +1,309 @@
+/* A piece, over the peach (its own layer, so the peach paints over the page's
+   night), in the studio's words and umber. */
+.page {
+  isolation: isolate;
+  padding: calc(var(--nav-h) + clamp(24px, 4vh, 48px)) var(--gutter) clamp(72px, 14vh, 160px);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.page) :where(h1, h2, p, ol, ul, dl, dd) {
+  margin: 0;
+}
+
+/* the small capitals: the breadcrumb, the index line, the quick line, the status, the facts' terms, a tile's number, the note */
+.crumbs,
+.index,
+.quick,
+.facts dt,
+.status,
+.tileMeta,
+.label,
+.note {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  font-weight: 400;
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.crumbs li + li::before {
+  content: "/";
+  margin-right: var(--space-2);
+  opacity: 0.5;
+}
+
+.crumbs a {
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+.crumbs a:hover {
+  opacity: 1;
+}
+
+.head {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: clamp(32px, 6vh, 72px);
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.title {
+  max-width: 14ch;
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+.use {
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+}
+
+/* the renders left (held while the facts scroll by), what to do next right */
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+.media {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--space-4));
+  display: grid;
+  gap: var(--space-2);
+}
+
+.note {
+  opacity: 0.7;
+  text-transform: none;
+  letter-spacing: var(--track-narrow);
+}
+
+.decide {
+  display: grid;
+  gap: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-umber);
+}
+
+.heading {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+  line-height: 1.15;
+}
+
+.body {
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+.quick {
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+}
+
+/* the page's one filled button, in umber */
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-sm);
+  background: var(--color-umber);
+  color: var(--color-cream);
+  font-size: var(--text-plan-more);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) ease;
+}
+
+.button:hover {
+  background: var(--color-rust);
+}
+
+.button:focus-visible {
+  outline: 1px solid var(--color-orange);
+  outline-offset: 3px;
+}
+
+/* the facts: a term over its value, fine rules between */
+.facts {
+  display: grid;
+}
+
+.facts > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) 3fr;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-umber-rule);
+}
+
+.facts dd {
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+/* the sections under it: the label left, the content right, over a rule */
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-6) clamp(28px, 4vw, 72px);
+  margin-top: clamp(56px, 9vh, 112px);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-umber);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 48rem;
+}
+
+/* the situations it answers, in the visitor's words, large */
+.moments {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.4;
+}
+
+/* a launch piece's status marked in orange */
+.status[data-status="launch"] {
+  color: var(--color-orange);
+}
+
+/* its other uses and arrangements: small sheets, their render on paper */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: clamp(16px, 2vw, 28px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.tileImage {
+  position: relative;
+  aspect-ratio: 1;
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--color-umber-rule);
+  background: var(--color-peach-paper);
+}
+
+.tileImage img {
+  object-fit: contain;
+  padding: var(--space-4);
+}
+
+.tileMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.tileName {
+  margin: 0;
+  font-size: var(--text-plan-more);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.tileLine,
+.tileNote {
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+  line-height: 1.45;
+}
+
+.tileNote {
+  opacity: 0.75;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  padding-left: 1.1em;
+}
+
+.drawings {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border: 1px solid var(--color-umber-rule);
+  background: var(--color-peach-paper);
+}
+
+.family {
+  margin-top: clamp(72px, 12vh, 144px);
+}
+
+.familyHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-umber);
+}
+
+@media (max-width: 900px) {
+  .top,
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .media {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

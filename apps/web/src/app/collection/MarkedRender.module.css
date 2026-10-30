@@ -1,0 +1,108 @@
+/* The frame: rounded, cropping the render to its own shape (the page sets
+   its aspect ratio; it must be wider than the render's 5:4). */
+.frame {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-stone-tile);
+}
+
+/* the render's own box, as wide as the frame, its middle on the frame's */
+.render {
+  position: absolute;
+  inset: 50% 0 auto;
+  aspect-ratio: 5 / 4;
+  translate: 0 -50%;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.spots {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a point: its dot here; the line rises from it and turns to the label */
+.spot {
+  --rise: clamp(22px, 3vw, 44px);
+  --reach: clamp(16px, 2vw, 32px);
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.spot::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-frost-line);
+  box-shadow: 0 0 0 4px var(--color-frost);
+  translate: -50% -50%;
+}
+
+/* the line: up from the dot, a soft corner, across to the label */
+.spot::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: var(--reach);
+  height: var(--rise);
+  border-top: 1px solid var(--color-frost-line);
+}
+
+.spot[data-side="right"]::after {
+  left: 0;
+  border-left: 1px solid var(--color-frost-line);
+  border-top-left-radius: 10px;
+}
+
+.spot[data-side="left"]::after {
+  right: 0;
+  border-right: 1px solid var(--color-frost-line);
+  border-top-right-radius: 10px;
+}
+
+/* the label: a frosted pill at the line's end */
+.label {
+  position: absolute;
+  bottom: var(--rise);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--color-frost);
+  backdrop-filter: blur(10px);
+  color: var(--color-paper);
+  font-size: var(--text-ruler);
+  text-decoration: none;
+  white-space: nowrap;
+  translate: 0 50%;
+  transition: background-color var(--dur-fast) ease;
+}
+
+.spot[data-side="right"] .label {
+  left: var(--reach);
+}
+
+.spot[data-side="left"] .label {
+  right: var(--reach);
+}
+
+a.label:hover {
+  background: var(--color-shade);
+}
+
+a.label:focus-visible {
+  outline: 1px solid var(--color-paper);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label {
+    transition: none;
+  }
+}

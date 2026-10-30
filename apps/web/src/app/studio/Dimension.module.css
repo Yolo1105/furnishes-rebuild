@@ -1,0 +1,34 @@
+/* The line runs either side of the label (with none, straight across), a
+   tick standing at each end, drawn as the box's own background. */
+.dimension {
+  --tick: 14px;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  height: var(--tick);
+  color: var(--color-orange);
+  background:
+    linear-gradient(currentcolor, currentcolor) left center / 1px var(--tick) no-repeat,
+    linear-gradient(currentcolor, currentcolor) right center / 1px var(--tick) no-repeat;
+}
+
+.dimension::before,
+.dimension::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentcolor;
+}
+
+.dimension[data-dashed]::before,
+.dimension[data-dashed]::after {
+  background: repeating-linear-gradient(90deg, currentcolor 0 6px, transparent 6px 12px);
+}
+
+.label {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+  white-space: nowrap;
+}

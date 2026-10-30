@@ -121,8 +121,8 @@ export function makeRig(aspect: number, sheetFrame?: number) {
   const inCorner: View = { x: 14.9, y: 2.2, z: 5.0, yaw: 42, pitch: -22 };
   const overWalls: View = { x: 14.4, y: 4.6, z: 7.4, yaw: 30, pitch: -45 };
   const away: View = { x: 13.8, y: 8.0, z: 10.5, yaw: 24, pitch: -52 };
-  // the ordered piece, through the kitchen's doorway, clear of the dining chairs
-  const atOrder: View = { x: 10.95, y: 1.7, z: 7.3, yaw: 34, pitch: -24 };
+  // the ordered piece, from over the living room, looking down past the dining chairs
+  const atOrder: View = { x: 11.7, y: 3.3, z: 3.9, yaw: 122, pitch: -48 };
   const { walked, built, finished, laid, picked, ordered, sent, home } = STOPS;
   const views: [number, View][] = [
     [walked, walkedIn],

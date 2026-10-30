@@ -1,0 +1,475 @@
+/* The inquiry, after the ways to reach us: in the studio's words and umber. */
+.inquiry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+  gap: var(--gutter);
+  align-items: stretch;
+  padding: clamp(40px, 8vh, 96px) var(--gutter);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.inquiry) :where(h2, p, ol, dl, dd, fieldset) {
+  margin: 0;
+  padding: 0;
+}
+
+:where(.inquiry) :where(fieldset) {
+  min-width: 0;
+  border: 0;
+}
+
+:where(.inquiry) :where(button, input, textarea) {
+  font: inherit;
+  color: inherit;
+}
+
+/* the small capitals: the index, the labels and each card's code */
+.index,
+.label,
+.code {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+}
+
+/* the steps down the left, ruled; the one in view marked in orange */
+.side {
+  display: flex;
+  flex-direction: column;
+}
+
+.steps {
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--color-umber-rule);
+  list-style: none;
+}
+
+.step {
+  border-bottom: 1px solid var(--color-umber-rule);
+}
+
+.stepButton {
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  width: 100%;
+  padding: var(--space-6) 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  text-align: start;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-rise);
+}
+
+.stepButton:not(:disabled):hover {
+  background: var(--color-peach-glow-1);
+}
+
+.stepButton:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: -1px;
+}
+
+/* steps not reached yet are faint and can't be chosen */
+.stepButton:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.step[aria-current] .stepButton {
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--color-orange);
+  opacity: 1;
+}
+
+/* the sheet's number at the foot of the left */
+.sheet {
+  margin-top: auto;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-umber);
+}
+
+.sheetNumber {
+  font-size: var(--text-section-head);
+  font-weight: 600;
+  letter-spacing: var(--track-heading);
+  line-height: 1.1;
+}
+
+/* the step's question, in a ruled frame */
+.frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: clamp(24px, 3vw, 56px);
+  border: 1px solid var(--color-umber);
+}
+
+.title {
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+  outline: none;
+}
+
+.lede {
+  margin-top: calc(-1 * var(--space-2));
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+}
+
+/* the choices as cards: three across, or four for the start */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  min-height: clamp(140px, 13vw, 200px);
+  padding: var(--space-6);
+  border: 1px solid var(--color-umber-rule);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-rise),
+    border-color var(--dur-fast) var(--ease-rise);
+}
+
+.card > .code:first-child {
+  margin-bottom: auto;
+}
+
+.card:hover {
+  border-color: var(--color-umber);
+}
+
+.card:has(:checked) {
+  border-color: var(--color-umber);
+  background: var(--color-peach-glow-1);
+}
+
+.card:has(:focus-visible) {
+  outline: 1px solid currentcolor;
+  outline-offset: 2px;
+}
+
+.cardName {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+  line-height: 1.2;
+}
+
+/* the box (or circle) in a card's corner */
+.check {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-6);
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1px solid currentcolor;
+  background: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.check:checked {
+  background: currentcolor;
+  box-shadow: inset 0 0 0 3px var(--color-peach-paper);
+}
+
+.round {
+  border-radius: 50%;
+}
+
+/* the rooms beside the size */
+.pair,
+.pairs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) clamp(24px, 3vw, 56px);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ask {
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+}
+
+/* the room counts as one row of joined boxes */
+.segments {
+  display: flex;
+  width: fit-content;
+  border: 1px solid var(--color-umber-rule);
+}
+
+.segment {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-plan-lede);
+  cursor: pointer;
+}
+
+.segment + .segment {
+  border-left: 1px solid var(--color-umber-rule);
+}
+
+.segment:has(:checked) {
+  background: var(--color-umber);
+  color: var(--color-cream);
+}
+
+.segment:has(:focus-visible) {
+  outline: 1px solid var(--color-umber);
+  outline-offset: 2px;
+}
+
+/* a text field: the words over an umber line */
+.underline {
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  border-bottom: 1px solid var(--color-umber);
+  white-space: nowrap;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2) 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  outline: none;
+}
+
+.input::placeholder,
+.notes::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
+
+.input:focus-visible {
+  border-bottom-color: var(--color-orange);
+  box-shadow: 0 1px 0 var(--color-orange);
+}
+
+.notes {
+  min-height: 8em;
+  padding: var(--space-4);
+  border: 1px solid var(--color-umber-rule);
+  background: none;
+  font-size: var(--text-plan-lede);
+  resize: vertical;
+}
+
+.notes:focus-visible {
+  outline: 1px solid var(--color-umber);
+}
+
+/* the review: each answer over a rule, with an edit at its end */
+.review {
+  border-top: 1px solid var(--color-umber);
+}
+
+.reviewRow {
+  display: grid;
+  grid-template-columns: 8em minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-umber-rule);
+}
+
+.reviewValue {
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  overflow-wrap: anywhere;
+}
+
+.reviewValue[data-empty] {
+  opacity: 0.5;
+}
+
+.edit,
+.back {
+  padding: var(--space-2) 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-plan-more);
+  cursor: pointer;
+  text-decoration: underline transparent;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--dur-fast) var(--ease-rise);
+}
+
+.edit:hover,
+.back:hover {
+  text-decoration-color: currentcolor;
+}
+
+.error {
+  color: var(--color-orange);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+}
+
+.error:empty {
+  display: none;
+}
+
+.sent {
+  font-size: var(--text-plan-lede);
+}
+
+/* the foot: a way to write instead, then back and on */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-umber-rule);
+}
+
+.write {
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+}
+
+.write a {
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.moves {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.next {
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) clamp(20px, 1.8vw, 32px);
+  border: 0;
+  background: var(--color-night);
+  color: var(--color-cream);
+  font-size: var(--text-plan-more);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-rise);
+}
+
+.next:hover {
+  background: var(--color-espresso);
+}
+
+.next:focus-visible {
+  outline: 1px solid var(--color-night);
+  outline-offset: 2px;
+}
+
+/* the steps over the frame, and the cards two or one across, on narrower screens */
+@media (max-width: 900px) {
+  .inquiry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--color-umber-rule);
+  }
+
+  .step {
+    flex: none;
+    border-bottom: 0;
+  }
+
+  .stepButton {
+    padding: var(--space-4);
+  }
+
+  .sheet {
+    display: none;
+  }
+
+  .cards,
+  .four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pair,
+  .pairs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reviewRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .reviewRow > dt {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .cards,
+  .four {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepButton,
+  .card,
+  .edit,
+  .back,
+  .next {
+    transition: none;
+  }
+}

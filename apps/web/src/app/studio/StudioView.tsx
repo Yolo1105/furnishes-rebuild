@@ -98,6 +98,7 @@ export function StudioView() {
   const [finish, setFinish] = useState(0);
   const [placed, setPlaced] = useState(false);
   const [leg, setLeg] = useState(0);
+  const [built, setBuilt] = useState(false);
   // whether the arrival has played (intro.ts): the photos wait for it to turn
   const [arrived, setArrived] = useState(false);
 
@@ -157,11 +158,13 @@ export function StudioView() {
       const s = from + (to - from) * t;
       walkTo.current?.(s);
       // the order's card: the checkout step places it a little past halfway,
-      // the delivery step goes through its stages in turn
+      // the delivery step goes through its stages in turn, and the last has
+      // it put together once its boards are all in
       const o = i - FIRST_ORDER_STEP;
       setFinish(finishAt(s));
       setPlaced(o > 2 || (o === 2 && t > 0.55));
       setLeg(o > 3 ? 3 : o === 3 ? Math.min(3, Math.floor(t * 4)) : 0);
+      setBuilt(o === 4 && t > 0.75);
     };
     const schedule = () => {
       cancelAnimationFrame(pending);
@@ -251,7 +254,7 @@ export function StudioView() {
         <div ref={walkBox} className={styles.walk}>
           {walkOn && <WalkView goRef={walkTo} fitRef={walkFit} />}
           {stop >= FIRST_ORDER_STEP && (
-            <OrderCard step={stop - FIRST_ORDER_STEP} finish={finish} placed={placed} stage={leg} />
+            <OrderCard step={stop - FIRST_ORDER_STEP} finish={finish} placed={placed} stage={leg} built={built} />
           )}
         </div>
         <div className={styles.ruler}>

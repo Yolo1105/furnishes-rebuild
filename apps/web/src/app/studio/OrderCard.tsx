@@ -18,7 +18,7 @@ const Tick = () => (
  * The order's card over the 3D room, through the tour's last steps (`step`
  * 0 to 4 from FIRST_ORDER_STEP): the piece drawn in, its finishes (`finish`,
  * the one on it), the cart and checkout (`placed` once ordered), its way
- * home (`stage`, of STAGES), and home. An example order, and says so: no
+ * home (`stage`, of STAGES), and home (`built` once put together). An example order, and says so: no
  * stock or price stands behind it.
  */
 export function OrderCard({
@@ -26,11 +26,13 @@ export function OrderCard({
   finish,
   placed,
   stage,
+  built,
 }: {
   step: number;
   finish: number;
   placed: boolean;
   stage: number;
+  built: boolean;
 }) {
   const on = ORDER.finishes[finish]!;
   return (
@@ -108,7 +110,13 @@ export function OrderCard({
         {step === 4 && (
           <>
             <p className={styles.state}>
-              <Tick /> Delivered and put together
+              {built ? (
+                <>
+                  <Tick /> Delivered and put together
+                </>
+              ) : (
+                "At your door, being put together"
+              )}
             </p>
             <h3 className={styles.name}>{ORDER.name}</h3>
             <p className={styles.line}>

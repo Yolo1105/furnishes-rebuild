@@ -9,91 +9,123 @@ const SOCIAL: readonly { label: string; href: string | null }[] = [
   { label: "Behance", href: null },
 ];
 
-const LEGAL = [
-  { label: "Terms & Conditions", href: routes.terms },
-  { label: "Privacy Policy", href: routes.privacy },
-  { label: "Refund Policy", href: routes.refunds },
-] as const;
+/** The link columns, each under its label. */
+const COLUMNS: readonly { label: string; links: readonly { label: string; href: string }[] }[] = [
+  {
+    label: "Navigation",
+    links: [
+      { label: "Studio", href: routes.studio },
+      { label: "Collection", href: routes.collection },
+      { label: "Inspiration", href: routes.inspiration },
+      { label: "About", href: routes.about },
+      { label: "Contact", href: routes.contact },
+    ],
+  },
+  {
+    label: "Account",
+    links: [
+      { label: "Design your room", href: routes.studio },
+      { label: "Sign in", href: routes.signIn },
+    ],
+  },
+  {
+    label: "Legal",
+    links: [
+      { label: "Terms & Conditions", href: routes.terms },
+      { label: "Privacy Policy", href: routes.privacy },
+      { label: "Refund Policy", href: routes.refunds },
+    ],
+  },
+];
 
 /**
- * The footer, as the old landing's: on the warm espresso dark, a large call to
- * get in touch (its halves part on hover for an arrow between them), then
- * four columns (who we are, our hours, how to reach us, the studio), then the
- * legal links and the year.
+ * The footer, over the page's own ground, in three bands ruled apart: the
+ * call (a label over a large two-line headline, its second line italic)
+ * beside how to reach us (the address to write to, large, then the hours and
+ * the studio); then who we are and where else to find us beside the link
+ * columns; then the copyright, centred.
  */
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
-      <Link className={styles.call} href={routes.contact}>
-        <span className={styles.callA}>Interested? Let&apos;s get in</span>
-        <span className={styles.callMid} aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M7 17L17 7" />
-            <path d="M17 7v6M17 7h-6" />
-          </svg>
-        </span>
-        <span className={styles.callB}>touch today!</span>
-      </Link>
-
-      <div className={styles.grid}>
+      <div className={styles.top}>
         <div>
-          <p className={styles.name}>furnishes.</p>
-          <p className={styles.body}>
-            A design studio for high-quality, modern interiors. A seamless process that shapes each space around how you
-            live, work, and rest.
+          <p className={styles.label}>Open for collaboration</p>
+          <p className={styles.call}>
+            <span>Design a room</span>
+            <em>that feels like yours.</em>
           </p>
         </div>
         <div>
-          <p className={styles.label}>[ Hours ]</p>
-          <p className={styles.body}>
-            {HOURS.map((row) => (
-              <span key={row}>
-                {row}
-                <br />
-              </span>
-            ))}
-          </p>
-        </div>
-        <div>
-          <p className={styles.label}>[ Contact ]</p>
-          <p className={styles.body}>
-            <a className={styles.link} href={`mailto:${EMAIL}`}>
-              {EMAIL}
-            </a>
-          </p>
-          <ul className={styles.social}>
-            {SOCIAL.map(({ label, href }) => (
-              <li key={label}>
-                {href ? (
-                  <a className={styles.link} href={href}>
-                    {label}
-                  </a>
-                ) : (
-                  <span className={styles.off} aria-disabled="true">
-                    {label}
+          <p className={styles.label}>Get in touch</p>
+          <a className={styles.email} href={`mailto:${EMAIL}`}>
+            {EMAIL}
+          </a>
+          <div className={styles.details}>
+            <div>
+              <p className={styles.label}>Hours</p>
+              <p className={styles.body}>
+                {HOURS.map((row) => (
+                  <span key={row} className={styles.row}>
+                    {row}
                   </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className={styles.label}>[ Studio ]</p>
-          <p className={styles.body}>Visual development & support across the full 3D pipeline.</p>
-          <p className={styles.small}>By appointment · demo location</p>
+                ))}
+              </p>
+            </div>
+            <div>
+              <p className={styles.label}>Studio</p>
+              <p className={styles.body}>
+                <span className={styles.row}>Singapore</span>
+                <span className={styles.row}>By appointment</span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className={styles.legal}>
-        <div className={styles.legalLinks}>
-          {LEGAL.map(({ label, href }) => (
-            <Link key={label} className={styles.link} href={href}>
-              {label}
-            </Link>
-          ))}
+      <div className={styles.middle}>
+        <div className={styles.about}>
+          <p className={styles.body}>
+            A design studio for high-quality, modern interiors, shaped around how you live, work and rest.
+          </p>
+          <div>
+            <p className={styles.visit}>Visit us on:</p>
+            <ul className={styles.social}>
+              {SOCIAL.map(({ label, href }) => (
+                <li key={label}>
+                  {href ? (
+                    <a className={styles.link} href={href}>
+                      {label}
+                    </a>
+                  ) : (
+                    <span className={styles.off} aria-disabled="true">
+                      {label}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <p className={styles.copy}>© {new Date().getFullYear()} Furnishes.</p>
+        <nav className={styles.columns} aria-label="Footer">
+          {COLUMNS.map((col) => (
+            <div key={col.label}>
+              <p className={styles.label}>{col.label}</p>
+              <ul className={styles.links}>
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <Link className={styles.link} href={l.href}>
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
       </div>
+
+      <p className={styles.copy}>Copyright © {new Date().getFullYear()} Furnishes Pte Ltd. All rights reserved.</p>
     </footer>
   );
 }

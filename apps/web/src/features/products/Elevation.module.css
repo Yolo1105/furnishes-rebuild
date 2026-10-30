@@ -1,0 +1,55 @@
+/* An elevation: the outline in umber, its sizes in clay, as the inspiration sheets' dimensions. */
+.elevation {
+  margin: 0;
+  min-width: 0;
+}
+
+.elevation svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.floor,
+.outline,
+.dim {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.floor {
+  stroke: var(--color-umber-rule);
+  stroke-width: 1px;
+}
+
+.outline {
+  fill: var(--color-peach-paper);
+  stroke: var(--color-umber);
+  stroke-width: 1.5px;
+}
+
+.dim {
+  stroke: var(--color-clay);
+  stroke-width: 1px;
+}
+
+.elevation text {
+  fill: var(--color-clay);
+  font-family: var(--font-studio-mono);
+  text-anchor: middle;
+  dominant-baseline: central;
+  /* each length on a chip of paper, the line broken behind it */
+  paint-order: stroke;
+  stroke: var(--color-peach-paper);
+  stroke-width: 60px;
+  stroke-linejoin: round;
+}
+
+.caption {
+  margin-top: var(--space-2);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}

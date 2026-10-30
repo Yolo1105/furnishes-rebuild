@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Archivo, Instrument_Serif, Jost, Outfit, Space_Mono } from "next/font/google";
+import { Archivo, Instrument_Serif, Jost, Space_Mono } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
+import { INTRO_SCRIPT } from "./studio/intro";
 import "./globals.css";
 
 // The site's face, as a variable font so any weight between its named ones can be used.
@@ -19,18 +20,12 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-// The bar's links: a clean geometric sans, at the one weight they use.
-const outfit = Outfit({
-  subsets: ["latin"],
-  weight: "500",
-  variable: "--font-outfit",
-  display: "swap",
-});
-
-// The studio's words: the old landing's grotesque (variable, with its width, for the wide title).
+// The studio's words: the old landing's grotesque (variable, with its width, for the wide title),
+// and its italic for the collection's half-slanted headings.
 const archivo = Archivo({
   subsets: ["latin"],
   weight: "variable",
+  style: ["normal", "italic"],
   axes: ["wdth"],
   variable: "--font-archivo",
   display: "swap",
@@ -50,9 +45,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // the studio marks its arrival on the root before React takes over (studio/intro.ts)
   return (
-    <html lang="en" suppressHydrationWarning className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable} ${archivo.variable} ${spaceMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${jost.variable} ${instrumentSerif.variable} ${archivo.variable} ${spaceMono.variable}`}>
+      <head>
+        {/* before anything is painted, the studio marks whether its arrival plays (studio/intro.ts);
+            here, not in the studio's page, so it is only ever server HTML and React never builds it */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
+      </head>
       <body>
         <SiteHeader />
         {children}

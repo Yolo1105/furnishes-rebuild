@@ -208,7 +208,7 @@
   flex-direction: column;
   gap: calc((1 - var(--shift)) * var(--gutter));
   min-height: 0;
-  padding: calc(var(--nav-h) + var(--space-4)) calc(var(--gutter) / 2) var(--gutter);
+  padding: calc(var(--nav-h) + var(--space-4) + var(--space-6)) calc(var(--gutter) / 2) var(--gutter);
   color: var(--color-umber);
 }
 

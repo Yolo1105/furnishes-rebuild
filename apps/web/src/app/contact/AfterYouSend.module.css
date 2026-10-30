@@ -1,0 +1,83 @@
+/* After you send: in the studio's words and umber. */
+.after {
+  padding: clamp(72px, 14vh, 160px) var(--gutter);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.after) :where(h2, h3, p, ol) {
+  margin: 0;
+  padding: 0;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: var(--space-6);
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+/* four across; each step's dimension runs from its own start to the next's */
+.steps {
+  --gap: clamp(24px, 3vw, 48px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+  margin-top: clamp(48px, 10vh, 112px);
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.span {
+  display: block;
+  width: calc(100% + var(--gap));
+  min-height: 14px;
+  margin-bottom: clamp(32px, 6vh, 72px);
+}
+
+.name {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+}
+
+.line {
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.45;
+  opacity: 0.75;
+}
+
+/* two across, then one, each step's time over it */
+@media (max-width: 900px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .span {
+    width: 100%;
+    margin-bottom: var(--space-4);
+  }
+}
+
+@media (max-width: 520px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
