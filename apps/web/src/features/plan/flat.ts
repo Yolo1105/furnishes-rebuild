@@ -198,5 +198,4 @@ export const FLOOR_AREA = Math.round(ROOMS.reduce((sum, r) => sum + r.w * r.d, 0
 export const FLAT = {
   name: "5-room HDB",
   rooms: "3 bedrooms · 2 bathrooms",
-  household: "for 2 adults and 2 children", // the master's double bed and the two singles
 } as const;
