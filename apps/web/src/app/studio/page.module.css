@@ -23,7 +23,7 @@
   color: var(--color-brown);
 }
 
-/* The heading: the name and the size large, a line of detail under each. */
+/* The heading: the name and the size large, a line of detail under them. */
 .head {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -54,6 +54,7 @@
 }
 
 .small {
+  grid-column: 1 / -1;
   font-family: var(--font-sans);
   font-size: var(--text-plan-sub);
 }
