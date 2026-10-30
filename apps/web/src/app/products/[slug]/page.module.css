@@ -4,8 +4,6 @@
   isolation: isolate;
   padding: calc(var(--nav-h) + clamp(24px, 4vh, 48px)) var(--gutter) clamp(72px, 14vh, 160px);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.page) :where(h1, h2, p, ol, ul, dl, dd) {
@@ -13,19 +11,33 @@
 }
 
 /* the small capitals: the breadcrumb, the index line, the quick line, the status, the facts' terms, a tile's number, the note */
-.crumbs,
-.index,
-.quick,
-.facts dt,
-.status,
-.tileMeta,
-.label,
-.note {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  font-weight: 400;
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+.crumbs {
+  composes: caps from global;
+}
+
+.index {
+  composes: caps from global;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.quick {
+  composes: caps from global;
+}
+
+.status {
+  composes: caps from global;
+}
+
+.tileMeta {
+  composes: caps from global;
+}
+
+.label {
+  composes: caps from global;
 }
 
 .crumbs ol {
@@ -57,22 +69,13 @@
   margin-top: clamp(32px, 6vh, 72px);
 }
 
-.index {
-  display: flex;
-  gap: var(--space-6);
-}
 
 .title {
   max-width: 14ch;
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 .use {
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
+  font-size: var(--text-body);
 }
 
 /* the renders left (held while the facts scroll by), what to do next right */
@@ -92,29 +95,25 @@
 }
 
 .note {
-  opacity: 0.7;
-  text-transform: none;
-  letter-spacing: var(--track-narrow);
+  font-size: var(--text-small);
+  color: var(--color-soft);
 }
 
 .decide {
   display: grid;
   gap: var(--space-6);
   padding-top: var(--space-4);
-  border-top: 1px solid var(--color-umber);
+  border-top: var(--frame);
 }
 
 .heading {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.15;
+  line-height: var(--leading-title);
 }
 
 .body {
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.5;
+  font-size: var(--text-small);
 }
 
 .quick {
@@ -128,27 +127,8 @@
   gap: var(--space-4) var(--space-6);
 }
 
-/* the page's one filled button, in umber */
 .button {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  padding: 0 var(--space-6);
-  border-radius: var(--radius-sm);
-  background: var(--color-umber);
-  color: var(--color-cream);
-  font-size: var(--text-plan-more);
-  text-decoration: none;
-  transition: background-color var(--dur-fast) ease;
-}
-
-.button:hover {
-  background: var(--color-rust);
-}
-
-.button:focus-visible {
-  outline: 1px solid var(--color-orange);
-  outline-offset: 3px;
+  composes: button from global;
 }
 
 /* the facts: a term over its value, fine rules between */
@@ -161,13 +141,14 @@
   grid-template-columns: minmax(7rem, 1fr) 3fr;
   gap: var(--space-4);
   padding: var(--space-4) 0;
-  border-bottom: 1px solid var(--color-umber-rule);
+}
+
+.facts > div + div {
+  border-top: var(--rule);
 }
 
 .facts dd {
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.5;
+  font-size: var(--text-small);
 }
 
 /* the sections under it: the label left, the content right, over a rule */
@@ -177,7 +158,6 @@
   gap: var(--space-6) clamp(28px, 4vw, 72px);
   margin-top: clamp(56px, 9vh, 112px);
   padding-top: var(--space-6);
-  border-top: 1px solid var(--color-umber);
 }
 
 .content {
@@ -192,9 +172,7 @@
   gap: var(--space-2);
   padding: 0;
   list-style: none;
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.4;
+  font-size: var(--text-body);
 }
 
 /* a launch piece's status marked in orange */
@@ -222,13 +200,12 @@
   position: relative;
   aspect-ratio: 1;
   margin-bottom: var(--space-2);
-  border: 1px solid var(--color-umber-rule);
+  border: var(--rule);
   background: var(--color-peach-paper);
 }
 
 .tileImage img {
-  object-fit: contain;
-  padding: var(--space-4);
+  object-fit: cover;
 }
 
 .tileMeta {
@@ -239,20 +216,16 @@
 
 .tileName {
   margin: 0;
-  font-size: var(--text-plan-more);
-  font-weight: 500;
-  line-height: 1.3;
+  line-height: var(--leading-title);
 }
 
 .tileLine,
 .tileNote {
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.45;
+  font-size: var(--text-small);
 }
 
 .tileNote {
-  opacity: 0.75;
+  color: var(--color-soft);
 }
 
 .list {
@@ -266,7 +239,7 @@
   align-items: flex-end;
   justify-content: space-between;
   padding: var(--space-4);
-  border: 1px solid var(--color-umber-rule);
+  border: var(--rule);
   background: var(--color-peach-paper);
 }
 
@@ -281,7 +254,7 @@
   justify-content: space-between;
   gap: var(--space-4);
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-umber);
+  border-bottom: var(--frame);
 }
 
 @media (max-width: 900px) {
@@ -302,8 +275,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .button {
-    transition: none;
-  }
-}

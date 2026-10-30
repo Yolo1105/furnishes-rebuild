@@ -10,9 +10,8 @@
   --sheet-pad: clamp(20px, 1.8vw, 32px);
   position: relative;
   height: calc(100svh + var(--run));
+  margin-bottom: clamp(72px, 14vh, 160px);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.projects) :where(h1, h2, p, ol, dl, dd) {
@@ -31,20 +30,26 @@
 }
 
 /* the small capitals: the index line, the counter, the end's count, the tabs, the title block */
-.index,
-.counter,
-.tab,
-.block {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+.index {
+  composes: label from global;
 }
 
-.index {
-  display: flex;
-  gap: var(--space-6);
+.count {
+  composes: caps from global;
 }
+
+.counter {
+  composes: caps from global;
+}
+
+.tab {
+  composes: caps from global;
+}
+
+.block {
+  composes: caps from global;
+}
+
 
 /* which sheet is in view, at the top right */
 .counter {
@@ -82,16 +87,10 @@
 }
 
 .title {
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 .lede {
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.5;
+  font-size: var(--text-body);
 }
 
 .sheets {
@@ -109,7 +108,7 @@
   flex-direction: column;
   width: min(46vw, calc((100svh - var(--nav-h) - 300px) * 1.6 + 2 * var(--sheet-pad)));
   padding: var(--sheet-pad);
-  border: 1px solid var(--color-umber);
+  border: var(--frame);
 }
 
 /* the room as drawn or as built, one fading over the other */
@@ -180,14 +179,15 @@
 }
 
 .tab {
+  composes: caps from global;
+}
+
+.tab {
   min-height: var(--tap);
   padding: 0 var(--space-4);
   border: 0;
   background: none;
   color: inherit;
-  font: inherit;
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
   opacity: 0.6;
   cursor: pointer;
   transition: opacity var(--dur-fast) ease;
@@ -196,10 +196,6 @@
 .tab:hover,
 .tab[aria-pressed="true"] {
   opacity: 1;
-}
-
-.tab[aria-pressed="true"] {
-  font-weight: 700;
 }
 
 .tab[aria-pressed="true"]::before {
@@ -212,11 +208,6 @@
   vertical-align: -0.15em;
 }
 
-.tab:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: -4px;
-}
-
 /* the name and words left, the title block right, over a rule */
 .caption {
   display: grid;
@@ -224,22 +215,19 @@
   gap: var(--space-6);
   margin-top: var(--space-6);
   padding-top: var(--space-6);
-  border-top: 1px solid var(--color-umber);
+  border-top: var(--frame);
 }
 
 .name {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.15;
+  line-height: var(--leading-title);
 }
 
 .body {
   margin-top: var(--space-2);
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.5;
-  opacity: 0.85;
+  font-size: var(--text-small);
+  color: var(--color-soft);
 }
 
 .block {
@@ -250,7 +238,6 @@
 }
 
 .sheetNo {
-  font-weight: 700;
 }
 
 /* the end: the count and a call, low down, as the intro's */

@@ -24,13 +24,12 @@ export default function Contact() {
         <section className={styles.contact} aria-labelledby="contact-title">
           <header>
             <p className={styles.index}>
-              <span>A-900</span>
               <span>Contact</span>
             </p>
             <h1 id="contact-title" className={styles.title}>
               Tell us about your room
             </h1>
-            <p className={styles.lede}>A site, a room or a second opinion: write to us and we will set up a time to talk.</p>
+            <p className={styles.lede}>A site, a room or a second opinion. Write to us and we will set up a time to talk.</p>
           </header>
           <dl className={styles.list}>
             <div className={styles.row}>

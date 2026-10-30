@@ -7,12 +7,13 @@ import { MakingDays } from "./MakingDays";
 import { Projects } from "./Projects";
 import { Team } from "./Team";
 import { WhoWeAre } from "./WhoWeAre";
+import { Heritage } from "./Heritage";
 import { Workshop } from "./Workshop";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "About" };
 
-/** About, over the peach in the studio's words: who we are, the workshop, a piece's days from order to door, the projects and the team, then the studio's questions, its last call and the footer. */
+/** About, over the peach in the studio's words: who we are, the workshop and its heritage, a piece's days from order to door, the projects and the team, then the studio's questions, its last call and the footer. */
 export default function About() {
   return (
     <>
@@ -20,6 +21,7 @@ export default function About() {
         <PeachBackdrop />
         <WhoWeAre />
         <Workshop />
+        <Heritage />
         <MakingDays />
         <Projects />
         <Team />

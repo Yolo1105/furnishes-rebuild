@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { AC_LEDGE, BAYS, type Box, COLUMNS, DOORS, DRAWN, NAME_AT, ROOMS, WALL, WINDOWS, type Opening, wallBoxes } from "./flat";
+import { AC_LEDGE, BAYS, type Box, COLUMNS, DOORS, DRAWN, NAME_AT, ROOMS, SEAM, WALL, WINDOWS, type Opening, wallBoxes } from "./flat";
 import { planSymbols } from "./symbols";
 import styles from "./FloorPlan.module.css";
 
@@ -7,14 +7,48 @@ import styles from "./FloorPlan.module.css";
 const MARGIN = 40;
 const MARGIN_EAST = 250;
 
+/** How far a floor reaches past its room, mm: past halfway to the next room, so the floors overlap, no seam showing in the doorways. */
+const UNDER_WALL = 200;
+
+/** How far a bay's glass stands in from its cheeks, and each of its two lines from its middle, mm. */
+const BAY_GLASS = 50;
+const GLASS_APART = 25;
+
 const box = ([x0, y0, x1, y1]: Box, fill: string) => (
   <rect key={`${x0} ${y0} ${x1} ${y1}`} x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={fill} />
 );
 
-/** The box an opening cuts through its wall, a hair past both faces. */
+/** The drafting grid behind the plan, mm: its squares, and how far it runs past the drawing, fading out over that. */
+const GRID_STEP = 500;
+const GRID_REACH = 1500;
+/** How far from each corner of the reach the grid is dimmed further, so the corners go first. */
+const GRID_CORNER = 4000;
+
+/** The grid's lines, on its squares, over the drawing and its reach. */
+function gridLines([x0, y0, x1, y1]: Box) {
+  const lines: string[] = [];
+  for (let x = Math.ceil(x0 / GRID_STEP) * GRID_STEP; x <= x1; x += GRID_STEP) lines.push(`M${x} ${y0}V${y1}`);
+  for (let y = Math.ceil(y0 / GRID_STEP) * GRID_STEP; y <= y1; y += GRID_STEP) lines.push(`M${x0} ${y}H${x1}`);
+  return lines.join("");
+}
+
+/** A fade from nothing to solid and back along one axis, solid over all but the reach at each end. */
+function gridFade(id: string, along: "x" | "y", length: number) {
+  const edge = (GRID_REACH / length) * 100;
+  return (
+    <linearGradient id={id} x1="0" y1="0" x2={along === "x" ? 1 : 0} y2={along === "y" ? 1 : 0}>
+      <stop offset="0%" stopColor="white" stopOpacity={0} />
+      <stop offset={`${edge}%`} stopColor="white" />
+      <stop offset={`${100 - edge}%`} stopColor="white" />
+      <stop offset="100%" stopColor="white" stopOpacity={0} />
+    </linearGradient>
+  );
+}
+
+/** The box an opening cuts through its wall, a little past both faces. */
 function cut(o: Opening): Box {
   const [a0, a1] = [o.at - o.width / 2, o.at + o.width / 2];
-  const [c0, c1] = [o.across - WALL / 2 - 1, o.across + WALL / 2 + 1];
+  const [c0, c1] = [o.across - WALL / 2 - SEAM, o.across + WALL / 2 + SEAM];
   return o.run === "ew" ? [a0, c0, a1, c1] : [c0, a0, c1, a1];
 }
 
@@ -85,6 +119,9 @@ const LEDGE: Box[] = [
  * Rooms in `linked` answer the pointer and the keyboard: hovering, focusing
  * or tapping one calls `onRoom` with its key, and `active` is shaded.
  *
+ * `grid` lays a drafting grid behind it, kept out of the flat itself and
+ * fading out in a rectangle round it, past the edge of the sheet.
+ *
  * `frame` crops the sheet to a box of the plan (the whole flat if not
  * given), and `children` are drawn over it in the plan's millimetres.
  */
@@ -94,6 +131,7 @@ export function FloorPlan({
   active,
   onRoom,
   frame,
+  grid = false,
   label = "Floor plan of a five-room flat: living and dining, kitchen, three bedrooms, two bathrooms, a hall, a shelter and a yard",
   children,
 }: {
@@ -102,6 +140,7 @@ export function FloorPlan({
   active?: string;
   onRoom?: (key: string) => void;
   frame?: Box;
+  grid?: boolean;
   label?: string;
   children?: ReactNode;
 }) {
@@ -109,6 +148,7 @@ export function FloorPlan({
   const symbols = planSymbols();
   const top = -WALL;
   const [x0, y0, x1, y1] = DRAWN;
+  const reach: Box = [x0 - GRID_REACH, y0 - GRID_REACH, x1 + GRID_REACH, y1 + GRID_REACH];
   const [v0, w0, v1, w1] = frame ?? [x0 - MARGIN, y0 - MARGIN, x1 + MARGIN_EAST, y1 + MARGIN];
   return (
     <svg
@@ -116,13 +156,14 @@ export function FloorPlan({
       viewBox={`${v0} ${w0} ${v1 - v0} ${w1 - w0}`}
       role={onRoom ? "group" : "img"}
       aria-label={label}
+      overflow={grid ? "visible" : undefined}
     >
       <defs>
         <mask id="plan-walls" maskUnits="userSpaceOnUse" x={x0} y={y0} width={x1 - x0} height={y1 - y0}>
           {walls.fill.map((b) => box(b, "white"))}
           {walls.clear.map((b) => box(b, "black"))}
           {[...DOORS, ...WINDOWS].map((o) => box(cut(o), "black"))}
-          {BAYS.map((b) => box([b.x0, top - 1, b.x1, top + WALL + 1], "black"))}
+          {BAYS.map((b) => box([b.x0, top - SEAM, b.x1, top + WALL + SEAM], "black"))}
           {COLUMNS.map((b) => box(b, "white"))}
           {LEDGE.map((b) => box(b, "white"))}
         </mask>
@@ -132,7 +173,57 @@ export function FloorPlan({
           {[...DOORS, ...WINDOWS].map((o) => box(cut(o), "black"))}
           {BAYS.map((b) => box([b.x0, top - 1, b.x1, top + WALL + 1], "black"))}
         </mask>
+        {/* the flat's footprint: the floors stop at the outer face of its walls, and run on through its doorways */}
+        <clipPath id="plan-footprint">
+          {DOORS.map((o) => box(cut(o), "black"))}
+          {ROOMS.map((r) => box([r.x - WALL, r.y - WALL, r.x + r.w + WALL, r.y + r.d + WALL], "black"))}
+          {BAYS.map((b) => box([b.x0 - WALL, top - b.depth, b.x1 + WALL, top + WALL], "black"))}
+          {box([AC_LEDGE.x0, AC_LEDGE.y0, AC_LEDGE.x1, AC_LEDGE.y1], "black")}
+        </clipPath>
       </defs>
+
+      {grid && (
+        <>
+          <defs>
+            {gridFade("plan-grid-across", "x", reach[2] - reach[0])}
+            {gridFade("plan-grid-down", "y", reach[3] - reach[1])}
+            <radialGradient id="plan-grid-corner">
+              <stop offset="35%" stopColor="black" />
+              <stop offset="100%" stopColor="black" stopOpacity={0} />
+            </radialGradient>
+            <mask id="plan-grid-fade-across" maskUnits="userSpaceOnUse" x={reach[0]} y={reach[1]} width={reach[2] - reach[0]} height={reach[3] - reach[1]}>
+              {box(reach, "url(#plan-grid-across)")}
+            </mask>
+            <mask id="plan-grid-fade-down" maskUnits="userSpaceOnUse" x={reach[0]} y={reach[1]} width={reach[2] - reach[0]} height={reach[3] - reach[1]}>
+              {box(reach, "url(#plan-grid-down)")}
+            </mask>
+            {/* the flat's own footprint, cut out: its rooms out to their walls, the bays and the ledge */}
+            <mask id="plan-grid-outside" maskUnits="userSpaceOnUse" x={reach[0]} y={reach[1]} width={reach[2] - reach[0]} height={reach[3] - reach[1]}>
+              {box(reach, "white")}
+              {[reach[0], reach[2]].flatMap((cx) =>
+                [reach[1], reach[3]].map((cy) => <circle key={`${cx} ${cy}`} cx={cx} cy={cy} r={GRID_CORNER} fill="url(#plan-grid-corner)" />),
+              )}
+              {ROOMS.map((r) => box([r.x - WALL, r.y - WALL, r.x + r.w + WALL, r.y + r.d + WALL], "black"))}
+              {BAYS.map((b) => box([b.x0, top - b.depth, b.x1, top + WALL], "black"))}
+              {box([AC_LEDGE.x0, AC_LEDGE.y0, AC_LEDGE.x1, AC_LEDGE.y1], "black")}
+            </mask>
+          </defs>
+          <g className={styles.grid} mask="url(#plan-grid-fade-across)">
+            <g mask="url(#plan-grid-fade-down)">
+              <g mask="url(#plan-grid-outside)">
+                <path d={gridLines(reach)} />
+              </g>
+            </g>
+          </g>
+        </>
+      )}
+
+      <g className={styles.sheet}>
+      <g className={styles.floors} clipPath="url(#plan-footprint)">
+        {ROOMS.map((r) => box([r.x - UNDER_WALL, r.y - UNDER_WALL, r.x + r.w + UNDER_WALL, r.y + r.d + UNDER_WALL], "currentColor"))}
+        {BAYS.map((b) => box([b.x0 - WALL, top - b.depth, b.x1 + WALL, top + WALL], "currentColor"))}
+        {box([AC_LEDGE.x0, AC_LEDGE.y0, AC_LEDGE.x1, AC_LEDGE.y1], "currentColor")}
+      </g>
 
       {onRoom && (
         <g className={styles.rooms}>
@@ -158,27 +249,38 @@ export function FloorPlan({
       <rect className={styles.walls} x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill="currentColor" mask="url(#plan-walls)" />
 
       <g className={styles.lines}>
-        {/* each room's walls, traced on arrival and gone once they are filled */}
-        <g className={styles.outline} mask="url(#plan-openings)">
-          {pieces(
-            "outline",
-            ROOMS.map((r) => `M${r.x} ${r.y}H${r.x + r.w}V${r.y + r.d}H${r.x}Z`),
-          )}
+        {pieces("glass", WINDOWS.map(glass), styles.heavy)}
+        <g>
+          {/* each room's walls, traced on arrival and gone once they are filled */}
+          <g className={styles.outline} mask="url(#plan-openings)">
+            {pieces(
+              "outline",
+              ROOMS.map((r) => `M${r.x} ${r.y}H${r.x + r.w}V${r.y + r.d}H${r.x}Z`),
+            )}
+          </g>
+          {pieces("glass", BAYS.map((b) => `M${b.x0} ${top}V${top - b.depth}H${b.x1}V${top}`), styles.heavy)}
+          {pieces("light", BAYS.map((b) => `M${b.x0} ${top - b.depth + 50}H${b.x1}`), styles.light)}
+          {pieces("doors", symbols.doors, styles.heavy)}
+          {pieces("swings", symbols.swings, styles.light)}
+          {pieces("fittings", symbols.fittings, styles.fittings)}
+          {pieces("furniture", symbols.furniture, styles.furniture)}
+          {pieces("light", symbols.light, styles.light)}
         </g>
-        {pieces(
-          "glass",
-          [
-            ...WINDOWS.map(glass),
-            ...BAYS.map((b) => `M${b.x0} ${top}V${top - b.depth}H${b.x1}V${top}`),
-          ],
-          styles.heavy,
-        )}
-        {pieces("light", BAYS.map((b) => `M${b.x0} ${top - b.depth + 50}H${b.x1}`), styles.light)}
-        {pieces("doors", symbols.doors, styles.heavy)}
-        {pieces("swings", symbols.swings, styles.light)}
-        {pieces("fittings", symbols.fittings, styles.fittings)}
-        {pieces("furniture", symbols.furniture, styles.furniture)}
-        {pieces("light", symbols.light, styles.light)}
+        {/* the bays as the 3D plan has them, solid, as the room's shading goes */}
+        <g className={styles.bayWalls}>
+          {BAYS.flatMap((b) => [
+            box([b.x0 - WALL, top - b.depth, b.x0, top], "currentColor"),
+            box([b.x1, top - b.depth, b.x1 + WALL, top], "currentColor"),
+            box([b.x0, top - b.depth, b.x0 + BAY_GLASS, top - b.depth + WALL], "currentColor"),
+            box([b.x1 - BAY_GLASS, top - b.depth, b.x1, top - b.depth + WALL], "currentColor"),
+          ])}
+          <path
+            className={styles.heavy}
+            d={BAYS.flatMap((b) =>
+              [-GLASS_APART, GLASS_APART].map((off) => `M${b.x0 + BAY_GLASS} ${top - b.depth + BAY_GLASS + off}H${b.x1 - BAY_GLASS}`),
+            ).join("")}
+          />
+        </g>
       </g>
 
       <g className={styles.names}>
@@ -205,6 +307,8 @@ export function FloorPlan({
         >
           A/C ledge
         </text>
+      </g>
+
       </g>
 
       {children}

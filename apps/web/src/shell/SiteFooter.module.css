@@ -1,73 +1,65 @@
 /* The footer: umber, with no ground of its own so the page's shows through,
-   in three bands ruled apart, all in Archivo. */
+   in three bands. */
 .footer {
   /* its own layer, over a page's fixed backdrop */
   position: relative;
   isolation: isolate;
   color: var(--color-umber);
-  font-family: var(--font-studio);
 }
 
 :where(.footer) :where(p, ul) {
   margin: 0;
 }
 
-/* the bands: the halves 1fr : 1fr, each band ruled off from the next */
+/* the bands: the halves 1fr : 1fr */
 .top,
 .middle {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--gutter);
-  padding: clamp(48px, 8vh, 88px) var(--pad-section);
-  border-bottom: 1px solid var(--color-umber-rule);
+  gap: var(--gap);
+  padding: clamp(32px, 5vh, 56px) var(--gutter);
+}
+
+/* one band's space between the two, not both bands' */
+.middle {
+  padding-top: 0;
 }
 
 /* the small capitals over each part */
 .label {
-  font-size: var(--text-footer-label);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  composes: caps from global;
 }
 
-/* the call: two lines, large, in capitals, the second italic */
+/* the call: two lines, at a section title's size */
 .call {
   display: grid;
   margin-top: var(--space-6);
-  font-size: var(--text-footer-head);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
-  text-transform: uppercase;
-}
-
-.call em {
-  font-style: italic;
+  font-size: var(--text-h2);
+  letter-spacing: var(--track-heading);
+  line-height: var(--leading-heading);
 }
 
 .email {
   display: inline-block;
   margin-top: var(--space-6);
   color: inherit;
-  font-size: var(--text-footer-call);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
+  font-size: var(--text-h2);
+  letter-spacing: var(--track-heading);
+  line-height: var(--leading-heading);
   text-decoration: none;
   overflow-wrap: anywhere;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--dur-fast) ease;
+  transition: opacity var(--dur-fast) ease;
 }
 
 .email:hover {
-  border-bottom-color: currentcolor;
+  opacity: 0.7;
 }
 
 /* the hours and the studio, side by side under the address */
 .details {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gutter);
+  gap: var(--gap);
   margin-top: clamp(32px, 6vh, 56px);
 }
 
@@ -76,27 +68,23 @@
 }
 
 .body {
-  font-size: var(--text-footer-body);
-  font-weight: 340;
-  line-height: 1.45;
+  font-size: var(--text-body);
 }
 
 .row {
   display: block;
 }
 
-/* who we are at the top of its half, where else to find us at its foot */
+/* who we are, then where else to find us */
 .about {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: clamp(32px, 6vh, 56px);
+  gap: var(--space-6);
   max-width: 28em;
 }
 
 .visit {
-  font-size: var(--text-footer-body);
-  font-weight: 340;
+  font-size: var(--text-body);
 }
 
 .social {
@@ -105,14 +93,14 @@
   margin-top: var(--space-2);
   padding: 0;
   list-style: none;
-  font-size: var(--text-footer-body);
+  font-size: var(--text-body);
 }
 
 /* the link columns, three across the right half */
 .columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gutter);
+  gap: var(--gap);
 }
 
 .links {
@@ -121,19 +109,17 @@
   margin-top: var(--space-6);
   padding: 0;
   list-style: none;
-  font-size: var(--text-footer-body);
-  font-weight: 340;
+  font-size: var(--text-body);
 }
 
 .link {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--dur-fast) ease;
+  transition: opacity var(--dur-fast) ease;
 }
 
 .link:hover {
-  border-bottom-color: currentcolor;
+  opacity: 0.7;
 }
 
 /* an account not live yet: greyed, not a link */
@@ -142,9 +128,8 @@
 }
 
 .copy {
-  padding: var(--space-6) var(--pad-section);
-  font-size: var(--text-footer-legal);
-  font-weight: 340;
+  padding: var(--space-6) var(--gutter);
+  font-size: var(--text-small);
   text-align: center;
 }
 

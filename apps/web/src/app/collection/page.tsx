@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ARRANGEMENTS,
+  CLAIMS,
   KIT_TIER,
   type KitTier,
   KITS,
   OTHER_USE_STATE,
   OTHER_USES,
-  PART_MATERIALS,
   type Product,
   PRODUCTS,
   productById,
@@ -17,29 +16,30 @@ import {
   USES,
 } from "@/features/products/catalogue";
 import { routes } from "@/lib/routes";
+import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import {
-  ARRANGEMENTS_HEAD,
-  BAND,
   CLOSING,
+  CONSULT,
+  DISCOVER,
+  EXPLORE,
   FIGURES,
   HERO,
   HERO_RENDER,
   IN_ROOMS,
-  INTRO,
   KITS_HEAD,
   MARQUEE_END,
-  MARQUEE_TOP,
-  MATERIAL_PANEL,
   NOTES_HEAD,
   OTHER_USES_HEAD,
-  PICKS_HEAD,
   QUESTIONS,
   QUESTIONS_HEAD,
-  RING,
+  ROOM_TILES,
+  ROOMS_HEAD,
   STEPS,
   STEPS_HEAD,
+  STORY,
 } from "./collectionCopy";
+import { ConsultPhotos } from "./ConsultPhotos";
 import { Finder, readFinder } from "./Finder";
 import { MarkedRender } from "./MarkedRender";
 import styles from "./page.module.css";
@@ -49,12 +49,15 @@ export const metadata: Metadata = { title: "Collection" };
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** A piece's name, then what is still open on it. */
+/** A piece's photo and name, then what is still open on it. */
 function Notes({ product }: { product: Product }) {
   return (
     <div className={styles.notesPiece}>
+      <div className={styles.notesPhoto}>
+        <Image src={product.studio} alt="" fill sizes="(max-width: 900px) 100vw, 29vw" placeholder="blur" />
+      </div>
       <h3 className={styles.notesName}>
-        {product.name} <span>No. {product.record}</span>
+        {product.name} <span className={styles.n}>No. {product.record}</span>
       </h3>
       <ul className={styles.notesList}>
         {product.notes.map((n) => (
@@ -87,13 +90,12 @@ function Marquee({ words, className }: { words: readonly string[]; className?: s
 }
 
 /**
- * The collection, in the order of its three references: the running words
- * and an intro line; the headline and the call, then a render with its
- * parts marked and the catalogue's figures; the band; the word and its
- * ring; find your piece (search, filters, views, tiles or the index); the
- * launch pieces and what is open on each; pieces in their rooms; their
- * other uses; the add-on kits; the arrangements they make; the materials
- * and parts; how the catalogue works; what to know; and the closing photo
+ * The collection, in the order of its three references: the headline and
+ * the call, then a render with its parts marked and the catalogue's figures;
+ * the rooms; the consultation band; the first products; pieces in their rooms; the launch
+ * pieces in brief; what to know; find your piece (search, filters, views,
+ * tiles or the index); what is open on each piece; their
+ * other uses; the add-on kits; the photo and orange panel; how the catalogue works; and the closing photo
  * under its running words. Then the footer.
  */
 export default async function Collection({
@@ -106,32 +108,23 @@ export default async function Collection({
   const following = PRODUCTS.filter((p) => p.status !== "launch");
 
   return (
-    <div className={styles.ground}>
+    <>
       <main className={styles.page} data-page="collection">
-        <h1 className="visually-hidden">The collection</h1>
-        <Marquee words={MARQUEE_TOP} className={styles.marqueeTop} />
-
-        <div className={styles.intro}>
-          <div className={styles.introPhoto}>
-            <Image src={INTRO.photo} alt={INTRO.photoAlt} fill sizes="(max-width: 700px) 60vw, 26vw" placeholder="blur" />
-          </div>
-          <p className={styles.introLine}>{INTRO.line}</p>
-          <Link href={routes.about} className={styles.more}>
-            Learn more <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-
+        <PeachBackdrop />
         <section className={styles.hero} aria-labelledby="hero-title">
-          <h2 id="hero-title" className={styles.heroTitle}>
+          <p className={styles.index}>
+            <span>The collection</span>
+          </p>
+          <h1 id="hero-title" className={styles.heroTitle}>
             {HERO.title}
-          </h2>
+          </h1>
           <div className={styles.heroSide}>
             <p className={styles.heroLede}>{HERO.lede}</p>
             <a href="#find" className={styles.pillOutline}>
-              {HERO.call} <span aria-hidden="true">→</span>
+              {HERO.call}
             </a>
           </div>
-          <MarkedRender render={HERO_RENDER} sizes="(max-width: 700px) 100vw, 92vw" className={styles.heroRender}>
+          <MarkedRender render={HERO_RENDER} sizes="(max-width: 700px) 100vw, 92vw" className={styles.heroRender} soft>
             <dl className={styles.figures}>
               {FIGURES.map((f) => (
                 <div key={f.label}>
@@ -143,93 +136,174 @@ export default async function Collection({
           </MarkedRender>
         </section>
 
-        <section className={styles.band} aria-labelledby="band-title">
-          <div className={styles.bandText}>
-            <h2 id="band-title" className={styles.bandTitle}>
-              {BAND.title.map((l) => (
+        <section className={styles.section} aria-labelledby="rooms-by-title">
+          <p className={styles.index}>
+            <span>{ROOMS_HEAD.label}</span>
+          </p>
+          <div className={styles.sectionHead}>
+            <h2 id="rooms-by-title" className={styles.sectionTitle}>
+              {ROOMS_HEAD.title}
+            </h2>
+            <a href="#find" className={styles.pillOutline}>
+              {ROOMS_HEAD.call}
+            </a>
+          </div>
+          <ul className={styles.roomTiles}>
+            {ROOM_TILES.map((t) => (
+              <li key={t.use}>
+                <Link href={`${routes.collection}?use=${t.use}#find`} className={styles.roomTile}>
+                  <Image src={t.photo} alt="" fill sizes="(max-width: 700px) 50vw, 29vw" placeholder="blur" />
+                  <span>{USES[t.use]}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className={styles.consult} aria-labelledby="consult-title">
+          <div className={styles.consultBand}>
+            <p className={styles.index}>
+              <span>{CONSULT.label}</span>
+            </p>
+            <h2 id="consult-title" className={styles.consultTitle}>
+              {CONSULT.title.map((l) => (
                 <span key={l}>{l}</span>
               ))}
             </h2>
-            <div>
-              <p className={styles.bandNoteTitle}>{BAND.noteTitle}</p>
-              <p className={styles.bandNote}>{BAND.note}</p>
+            <div className={styles.consultSide}>
+              <h3 className={styles.consultName}>{CONSULT.side}</h3>
+              <p className={styles.consultBody}>{CONSULT.body}</p>
+              <Link href={routes.contact} className={styles.pillOutline}>
+                {CONSULT.call}
+              </Link>
             </div>
           </div>
-          <figure className={styles.bandFigure}>
-            <Image src={BAND.src} alt={BAND.alt} fill sizes="(max-width: 700px) 100vw, 84vw" placeholder="blur" />
-            <figcaption className={styles.bandCaption}>
-              <span>{BAND.kicker}</span>
-              <span className={styles.bandCaptionTitle}>{BAND.caption}</span>
-            </figcaption>
-          </figure>
-        </section>
-
-        <section className={styles.ringRow} aria-label="About the collection">
-          <p className={styles.ringWord}>{RING.word}</p>
-          <div className={styles.ring} aria-hidden="true">
-            <svg viewBox="0 0 200 200" className={styles.ringText}>
-              <defs>
-                <path id="ring-path" d="M100 100m-82 0a82 82 0 1 1 164 0a82 82 0 1 1-164 0" />
-              </defs>
-              <text>
-                <textPath href="#ring-path" textLength="510">
-                  {RING.ring.repeat(2)}
-                </textPath>
-              </text>
-            </svg>
-            <span className={styles.ringBadge}>{RING.badge}</span>
+          <div className={styles.consultPhotos}>
+            <ConsultPhotos photos={CONSULT.photos} small={CONSULT.small} line={CONSULT.line} />
           </div>
-          <p className={styles.ringBody}>{RING.body}</p>
         </section>
 
-        <Finder state={state} />
-
-        <section className={styles.section} aria-labelledby="picks-title">
+        <section className={styles.section} aria-labelledby="discover-title">
+          <p className={styles.index}>
+            <span>{DISCOVER.label}</span>
+          </p>
           <div className={styles.sectionHead}>
-            <div>
-              <h2 id="picks-title" className={styles.sectionTitle}>
-                {PICKS_HEAD.title}
-              </h2>
-              <p className={styles.sectionLede}>{PICKS_HEAD.lede}</p>
-            </div>
-            <Link href={`${routes.collection}?status=launch#find`} className={styles.pillOutline}>
-              See all pieces <span aria-hidden="true">→</span>
-            </Link>
+            <h2 id="discover-title" className={styles.sectionTitle}>
+              {DISCOVER.title}
+            </h2>
+            <p className={styles.sectionAside}>{DISCOVER.lede}</p>
           </div>
-          <ul className={styles.picks}>
-            {launch.map((p) => {
+          <ul className={styles.products}>
+            {PRODUCTS.slice(0, DISCOVER.count).map((p) => {
               const href = productHref(p.id);
+              const name = <h3 className={styles.productName}>{p.name}</h3>;
               return (
-                <li key={p.id} className={styles.pick}>
-                  <Image src={p.room} alt="" fill sizes="(max-width: 900px) 100vw, 31vw" placeholder="blur" />
-                  <ul className={styles.tags}>
-                    {p.uses.map((u) => (
-                      <li key={u}>{USES[u]}</li>
-                    ))}
-                    <li>No. {p.record}</li>
-                  </ul>
-                  <div>
-                    <p className={styles.pickSituation}>&ldquo;{p.situations[0]}&rdquo;</p>
-                    <div className={styles.pickFoot}>
-                      <div>
-                        <h3 className={styles.pickName}>{p.name}</h3>
-                        <p className={styles.pickSmall}>Size</p>
-                        <p className={styles.pickSize}>{sizeLabel(p.size)}</p>
-                      </div>
-                      {href && (
-                        <Link href={href} className={styles.pickCall}>
-                          See piece<span className="visually-hidden">: {p.name}</span>
-                        </Link>
-                      )}
-                    </div>
+                <li key={p.id} className={styles.product}>
+                  <div className={styles.productPhoto}>
+                    <Image src={p.room} alt="" fill sizes="(max-width: 900px) 50vw, 22vw" placeholder="blur" />
                   </div>
+                  {href ? (
+                    <Link href={href} className={styles.productLink}>
+                      {name}
+                    </Link>
+                  ) : (
+                    name
+                  )}
+                  <p className={styles.productPrice}>{p.price ?? CLAIMS.price.label}</p>
+                  <p className={styles.productLine}>{p.line}</p>
                 </li>
               );
             })}
           </ul>
         </section>
 
+        <section className={styles.section} aria-labelledby="rooms-title">
+          <p className={styles.index}>
+            <span>Rooms</span>
+          </p>
+          <div className={styles.sectionHead}>
+            <h2 id="rooms-title" className={styles.sectionTitle}>
+              In their rooms
+            </h2>
+            <Link href={routes.inspiration} className={styles.pillOutline}>
+              See all projects
+            </Link>
+          </div>
+          <div className={styles.banners}>
+            {IN_ROOMS.map((r) => {
+              const p = productById(r.id);
+              const href = productHref(r.id);
+              return (
+                <MarkedRender key={r.id} render={r} sizes="(max-width: 700px) 100vw, 92vw" className={styles.banner} soft>
+                  {p &&
+                    (href ? (
+                      <Link href={href} className={styles.bannerPill}>
+                        See the {p.name.toLowerCase()}
+                      </Link>
+                    ) : (
+                      <span className={styles.bannerPill}>{p.name}</span>
+                    ))}
+                </MarkedRender>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className={styles.explore} aria-labelledby="explore-title">
+          <div className={styles.exploreWords}>
+            <p className={styles.index}>
+              <span>{EXPLORE.label}</span>
+            </p>
+            <h2 id="explore-title" className={styles.sectionTitle}>
+              {EXPLORE.title}
+            </h2>
+            <p className={styles.exploreBody}>{EXPLORE.body}</p>
+            <Link href={`${routes.collection}?status=launch#find`} className={styles.exploreCall}>
+              {EXPLORE.call}
+            </Link>
+          </div>
+          <div className={styles.explorePhoto}>
+            {launch[0] && <Image src={launch[0].room} alt="" fill sizes="(max-width: 900px) 100vw, 40vw" placeholder="blur" />}
+          </div>
+        </section>
+
+        <section className={styles.faq} aria-labelledby="faq-title">
+          <div className={styles.faqPhoto}>
+            <Image
+              src={QUESTIONS_HEAD.photo}
+              alt={QUESTIONS_HEAD.photoAlt}
+              fill
+              sizes="(max-width: 700px) 100vw, 40vw"
+              placeholder="blur"
+            />
+          </div>
+          <div>
+            <p className={styles.index}>
+              <span>Questions</span>
+            </p>
+            <h2 id="faq-title" className={styles.sectionTitle}>
+              {QUESTIONS_HEAD.title}
+            </h2>
+            <div className={styles.faqList}>
+              {QUESTIONS.map((q, i) => (
+                <details key={q.question} className={styles.faqItem} open={i === 0}>
+                  <summary className={styles.faqQuestion}>
+                    {q.question}
+                    <span className={styles.faqChevron} aria-hidden="true" />
+                  </summary>
+                  <p className={styles.faqAnswer}>{q.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <Finder state={state} />
+
         <section className={styles.section} aria-labelledby="notes-title">
+          <p className={styles.index}>
+            <span>Notes</span>
+          </p>
           <div className={styles.sectionHead}>
             <h2 id="notes-title" className={styles.sectionTitle}>
               {NOTES_HEAD.title}
@@ -256,37 +330,10 @@ export default async function Collection({
           </details>
         </section>
 
-        <section className={styles.section} aria-labelledby="rooms-title">
-          <div className={styles.sectionHead}>
-            <h2 id="rooms-title" className={styles.sectionTitle}>
-              In their rooms
-            </h2>
-            <Link href={routes.inspiration} className={styles.pillOutline}>
-              See all projects <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-          <div className={styles.banners}>
-            {IN_ROOMS.map((r) => {
-              const p = productById(r.id);
-              const href = productHref(r.id);
-              return (
-                <MarkedRender key={r.id} render={r} sizes="(max-width: 700px) 100vw, 92vw" className={styles.banner}>
-                  {p &&
-                    (href ? (
-                      <Link href={href} className={styles.bannerPill}>
-                        {p.name}
-                      </Link>
-                    ) : (
-                      <span className={styles.bannerPill}>{p.name}</span>
-                    ))}
-                  {p && <figcaption className={styles.bannerNote}>{p.scene}</figcaption>}
-                </MarkedRender>
-              );
-            })}
-          </div>
-        </section>
-
         <section className={styles.section} aria-labelledby="uses-title">
+          <p className={styles.index}>
+            <span>Uses</span>
+          </p>
           <div className={styles.sectionHead}>
             <h2 id="uses-title" className={styles.sectionTitle}>
               {OTHER_USES_HEAD.title}
@@ -312,6 +359,9 @@ export default async function Collection({
         </section>
 
         <section className={styles.section} aria-labelledby="kits-title">
+          <p className={styles.index}>
+            <span>Kits</span>
+          </p>
           <div className={styles.sectionHead}>
             <h2 id="kits-title" className={styles.sectionTitle}>
               {KITS_HEAD.title}
@@ -354,79 +404,40 @@ export default async function Collection({
           </div>
         </section>
 
-        <section className={styles.section} aria-labelledby="around-title">
-          <div className={styles.sectionHead}>
-            <h2 id="around-title" className={styles.sectionTitle}>
-              {ARRANGEMENTS_HEAD.title}
-            </h2>
-            <p className={styles.sectionAside}>{ARRANGEMENTS_HEAD.lede}</p>
+        <section className={styles.story} aria-labelledby="story-title">
+          <div className={styles.storyPhoto}>
+            <Image src={STORY.photo} alt={STORY.photoAlt} fill sizes="(max-width: 900px) 100vw, 45vw" placeholder="blur" />
           </div>
-          <ol className={styles.arrangements}>
-            {ARRANGEMENTS.map((a) => (
-              <li key={a.id} className={styles.arrangement}>
-                <span className={styles.arrNo}>{a.record}</span>
-                <span className={styles.arrImage}>
-                  <Image src={a.image} alt="" fill sizes="96px" />
-                </span>
-                <span className={styles.arrText}>
-                  <strong>{a.name}</strong>
-                  <span>{a.line}</span>
-                </span>
-                <span className={styles.arrMembers}>
-                  {a.members
-                    .map((m) => `${m.count} × ${productName(m.product)}${m.note ? ` (${m.note})` : ""}`)
-                    .join(" + ")}
-                </span>
-                <span className={styles.arrNote}>{a.note}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className={styles.split} aria-labelledby="material-title">
-          <div className={styles.splitPhoto}>
-            <Image
-              src={MATERIAL_PANEL.photo}
-              alt={MATERIAL_PANEL.photoAlt}
-              fill
-              sizes="(max-width: 700px) 100vw, 50vw"
-              placeholder="blur"
-            />
-          </div>
-          <div className={styles.splitPanel}>
-            <h2 id="material-title" className={styles.splitTitle}>
-              {MATERIAL_PANEL.title}
+          <div className={styles.storyPanel}>
+            <p className={styles.index}>
+              <span>{STORY.label}</span>
+            </p>
+            <h2 id="story-title" className={styles.sectionTitle}>
+              {STORY.title}
             </h2>
-            <p className={styles.splitBody}>{MATERIAL_PANEL.body}</p>
-            <p className={styles.splitSmall}>{MATERIAL_PANEL.small}</p>
-            <h3 className={styles.partsTitle}>{KITS_HEAD.materials}</h3>
-            <dl className={styles.parts}>
-              {PART_MATERIALS.map((m) => (
-                <div key={m.material}>
-                  <dt>{m.material}</dt>
-                  <dd>{m.parts}</dd>
-                </div>
-              ))}
-            </dl>
-            <Link href={routes.about} className={styles.pillLight}>
-              {MATERIAL_PANEL.call}
+            <p className={styles.storyBody}>{STORY.body}</p>
+            <Link href={routes.about} className={styles.pillOutline}>
+              {STORY.call}
             </Link>
           </div>
         </section>
 
         <section className={styles.steps} aria-labelledby="steps-title">
+          <p className={styles.index}>
+            <span>Catalogue</span>
+          </p>
           <h2 id="steps-title" className={styles.stepsTitle}>
             {STEPS_HEAD.title.map((l) => (
               <span key={l}>{l}</span>
             ))}
           </h2>
           <p className={styles.stepsLede}>{STEPS_HEAD.body}</p>
-          <div className={styles.stepsPhoto}>
-            {launch[0] && <Image src={launch[0].studio} alt="" fill sizes="(max-width: 700px) 60vw, 20vw" placeholder="blur" />}
-          </div>
           <ol className={styles.stepsList}>
             {STEPS.map((s, i) => (
               <li key={s.title} className={styles.step}>
+                <div className={styles.stepPhoto}>
+                  <Image src={s.photo} alt="" fill sizes="(max-width: 900px) 100vw, 29vw" placeholder="blur" />
+                </div>
                 <span className={styles.stepNo}>{pad(i + 1)}</span>
                 <h3 className={styles.stepTitle}>{s.title}</h3>
                 <dl className={styles.stepPoints}>
@@ -442,49 +453,21 @@ export default async function Collection({
           </ol>
         </section>
 
-        <section className={styles.faq} aria-labelledby="faq-title">
-          <div className={styles.faqPhoto}>
-            <Image
-              src={QUESTIONS_HEAD.photo}
-              alt={QUESTIONS_HEAD.photoAlt}
-              fill
-              sizes="(max-width: 700px) 100vw, 40vw"
-              placeholder="blur"
-            />
-          </div>
-          <div>
-            <h2 id="faq-title" className={styles.sectionTitle}>
-              {QUESTIONS_HEAD.title}
-            </h2>
-            <div className={styles.faqList}>
-              {QUESTIONS.map((q, i) => (
-                <details key={q.question} className={styles.faqItem} open={i === 0}>
-                  <summary className={styles.faqQuestion}>
-                    {q.question}
-                    <span className={styles.faqChevron} aria-hidden="true" />
-                  </summary>
-                  <p className={styles.faqAnswer}>{q.answer}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section className={styles.closing} aria-labelledby="closing-title">
           <Image src={CLOSING.photo} alt={CLOSING.photoAlt} fill sizes="100vw" placeholder="blur" className={styles.closingPhoto} />
           <Marquee words={MARQUEE_END} className={styles.marqueeEnd} />
           <div className={styles.closingRow}>
             <h2 id="closing-title" className={styles.closingTitle}>
-              <em>{CLOSING.title[0]}</em> {CLOSING.title[1]}
+              {CLOSING.title.join(" ")}
             </h2>
             <p className={styles.closingBody}>{CLOSING.body}</p>
             <Link href={routes.studio} className={styles.more}>
-              {CLOSING.call} <span aria-hidden="true">↗</span>
+              {CLOSING.call}
             </Link>
           </div>
         </section>
       </main>
       <SiteFooter />
-    </div>
+    </>
   );
 }

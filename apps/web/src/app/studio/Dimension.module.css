@@ -26,9 +26,9 @@
 }
 
 .label {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+  composes: caps from global;
+}
+
+.label {
   white-space: nowrap;
 }

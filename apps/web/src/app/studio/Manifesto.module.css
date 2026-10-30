@@ -6,39 +6,23 @@
   position: relative;
   padding: clamp(96px, 18vh, 200px) var(--gutter) clamp(72px, 14vh, 160px);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.manifesto) :where(h2, p, dl, dd) {
   margin: 0;
 }
 
-/* "[ Who we are ]", in the small capitals, its brackets in orange */
+/* "[ Who we are ]", as every section's label */
 .label {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  font-weight: 400;
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
-}
-
-.bracket {
-  margin-inline: 0.6em;
-  color: var(--color-orange);
-}
-
-.bracket:first-child {
-  margin-left: 0;
+  composes: label from global;
 }
 
 .text {
   max-width: 34em;
   margin-top: clamp(32px, 6vh, 64px);
-  font-size: var(--text-manifesto);
-  font-weight: 340;
+  font-size: var(--text-title);
   letter-spacing: var(--track-heading);
-  line-height: 1.75;
+  line-height: var(--leading-loose);
 }
 
 /* each word and picture reads in from faint as its turn in the paragraph comes */
@@ -60,7 +44,6 @@
   margin: 0 0.25em 0 0;
   overflow: hidden;
   vertical-align: middle;
-  border-radius: var(--radius-md);
   translate: 0 -0.08em;
   scale: clamp(0.85, calc(0.85 + (var(--read) * (var(--n) + 6) - var(--i)) * 0.15), 1);
 }
@@ -69,11 +52,11 @@
   object-fit: cover;
 }
 
-/* the figures: four to a row, each under its own rule, the figure then its line */
+/* the figures: four to a row, the figure then its line */
 .figures {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--gutter);
+  gap: var(--gap);
   margin-top: clamp(80px, 16vh, 180px);
 }
 
@@ -81,27 +64,21 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--color-umber);
 }
 
 /* the figure first, its line (the term, read on from the unit) under it */
 .value {
   order: -1;
-  font-size: var(--text-figure);
-  font-weight: 340;
-  font-stretch: 100%;
-  letter-spacing: var(--track-heading);
-  line-height: 1;
+  font-size: var(--text-number);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-display);
   font-variant-numeric: tabular-nums;
 }
 
 .caption {
   max-width: 22em;
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.5;
-  opacity: 0.85;
+  font-size: var(--text-small);
+  color: var(--color-soft);
 }
 
 /* a figure: its digits each a window onto a strip of them, rolling to its own (--to) */
@@ -122,34 +99,28 @@
   display: flex;
   flex-direction: column;
   translate: 0 calc(var(--to) * -1em);
-  transition: translate calc(var(--dur-roll) + var(--k) * 0.15s) var(--ease-rise);
+  transition: translate calc(var(--dur-roll) + var(--k) * 0.12s) var(--ease-rise);
 }
 
 .strip span {
   height: 1em;
-  line-height: 1;
+  line-height: var(--leading-display);
 }
 
 .still {
-  line-height: 1;
+  line-height: var(--leading-display);
 }
 
 /* "mm" and the like, at the digits' size beside them, softer */
 .unit {
   margin-left: 0.25em;
-  line-height: 1;
-  opacity: 0.5;
+  line-height: var(--leading-display);
+  color: var(--color-soft);
 }
 
 @media (max-width: 900px) {
   .figures {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     row-gap: clamp(40px, 8vh, 72px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .strip {
-    transition: none;
   }
 }

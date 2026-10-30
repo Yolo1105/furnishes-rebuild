@@ -36,5 +36,5 @@ export const AFTER: readonly { title: string; line: string; until?: string }[] =
   },
   { title: "We answer", line: "Inside one business day, and we book the visit with you.", until: "Varies" },
   { title: "One 90-minute visit", line: "We measure the rooms and walk through them with you.", until: "3 days" },
-  { title: "Written summary", line: "Within three days: what to do first, in order, whether you hire us or not." },
+  { title: "Written summary", line: "Within three days. What to do first, in order, whether you hire us or not." },
 ];

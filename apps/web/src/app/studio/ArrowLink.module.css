@@ -1,28 +1,3 @@
 .link {
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: baseline;
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid currentcolor;
-  color: inherit;
-  font-family: var(--font-studio);
-  font-size: var(--text-plan-more);
-  font-weight: 400;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.arrow {
-  font-size: 0.8em;
-  transition: translate var(--dur-fast) var(--ease-rise);
-}
-
-.link:hover .arrow {
-  translate: 4px 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .arrow {
-    transition: none;
-  }
+  composes: button-outline from global;
 }

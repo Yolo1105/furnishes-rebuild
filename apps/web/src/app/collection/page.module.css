@@ -1,15 +1,9 @@
-/* The collection's stone, under the page and the footer alike (the footer
-   has no ground of its own, so it shows this one). */
-.ground {
-  background: var(--color-stone);
-}
-
-/* The collection: in ink, in the studio's grotesque. */
+/* The collection, over the peach (its own layer, so the peach paints over
+   the page's night). */
 .page {
+  isolation: isolate;
   padding-top: var(--nav-h);
   overflow-x: clip;
-  color: var(--color-ink);
-  font-family: var(--font-studio);
 }
 
 :where(.page) :where(h2, h3, p, ul, ol, dl, dd, figure) {
@@ -25,15 +19,10 @@
 .marquee {
   overflow: hidden;
   font-size: var(--text-marquee);
-  font-weight: 340;
   letter-spacing: var(--track-display);
-  line-height: 1;
+  line-height: var(--leading-display);
   text-transform: uppercase;
   white-space: nowrap;
-}
-
-.marqueeTop {
-  padding-block: clamp(32px, 6vh, 72px) clamp(24px, 4vh, 48px);
 }
 
 .marqueeTrack {
@@ -59,39 +48,13 @@
   }
 }
 
-/* ——— the intro: a small photo, a line, a link ——— */
-.intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
-  gap: var(--gutter);
-  align-items: end;
-  padding: 0 var(--gutter);
-}
-
-.introPhoto {
-  position: relative;
-  width: min(100%, 420px);
-  aspect-ratio: 1.85;
-  overflow: hidden;
-}
-
-.introPhoto img {
-  object-fit: cover;
-}
-
-.introLine {
-  max-width: 22em;
-  font-size: var(--text-plan-more);
-  line-height: 1.4;
+/* ——— the small link under the closing photo ——— */
+.more {
+  composes: caps from global;
 }
 
 .more {
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid currentcolor;
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-narrow);
   text-decoration: none;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -99,67 +62,28 @@
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: var(--space-6) var(--gutter);
-  padding: clamp(80px, 14vh, 160px) var(--gutter) 0;
+  gap: var(--space-2) var(--gap);
+  padding: clamp(40px, 7vh, 72px) var(--gutter) 0;
 }
 
 .heroTitle,
 .sectionTitle {
-  font-size: var(--text-section-head);
-  font-weight: 400;
-  letter-spacing: var(--track-heading);
-  line-height: 1.05;
 }
 
 .heroSide {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-6);
+  gap: var(--space-2);
 }
 
 .heroLede {
-  color: var(--color-ink-soft);
-  font-size: var(--text-plan-more);
-  line-height: 1.55;
+  color: var(--color-soft);
+  font-size: var(--text-small);
 }
 
-.pillOutline,
-.pillLight {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: var(--tap);
-  padding: 0 var(--space-6);
-  border: 1px solid var(--color-ink-rule);
-  border-radius: var(--radius-pill);
-  font-size: var(--text-plan-more);
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    background-color var(--dur-fast) ease,
-    color var(--dur-fast) ease;
-}
-
-.pillOutline:hover {
-  background: var(--color-ink);
-  color: var(--color-stone);
-}
-
-.pillLight {
-  border-color: currentcolor;
-}
-
-.pillLight:hover {
-  background: var(--color-paper);
-  color: var(--color-sage);
-}
-
-.pillOutline:focus-visible,
-.pillLight:focus-visible,
-.more:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: 3px;
+.pillOutline {
+  composes: button-outline from global;
 }
 
 .heroRender {
@@ -177,10 +101,10 @@
   display: flex;
   gap: clamp(16px, 2.4vw, 40px);
   padding: clamp(12px, 1.4vw, 22px) clamp(16px, 2vw, 32px);
-  border-radius: var(--radius-lg);
-  background: var(--color-frost);
+  background: var(--color-shade);
   backdrop-filter: blur(12px);
-  color: var(--color-paper);
+  border-radius: var(--radius-frame);
+  color: var(--color-cream);
 }
 
 .figures div {
@@ -189,139 +113,28 @@
 }
 
 .figures dd {
-  font-size: var(--text-stat);
-  font-weight: 300;
-  line-height: 1.1;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-display);
 }
 
 .figures dt {
-  font-size: var(--text-xs);
+  font-size: var(--text-caps);
 }
 
-/* ——— the band, its render running out of it ——— */
-.band {
-  margin-top: clamp(96px, 16vh, 180px);
-  padding: clamp(48px, 8vh, 96px) var(--gutter) 0;
-  background: linear-gradient(var(--color-sage) 62%, transparent 62%);
-  color: var(--color-paper);
-}
-
-.bandText {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  gap: var(--gutter);
-  padding-inline: var(--pad-section);
-}
-
-.bandTitle {
-  display: flex;
-  flex-direction: column;
-  font-size: var(--text-plan-head);
-  font-weight: 340;
-  letter-spacing: var(--track-narrow);
-  line-height: 1.15;
-}
-
-.bandNoteTitle {
-  font-size: var(--text-tour-name);
-}
-
-.bandNote {
-  margin-top: var(--space-4);
-  font-size: var(--text-ruler);
-  line-height: 1.6;
-  opacity: 0.85;
-}
-
-.bandFigure {
-  position: relative;
-  aspect-ratio: 2.85;
-  margin: clamp(40px, 6vh, 64px) var(--pad-section) 0;
-  overflow: hidden;
-}
-
-.bandFigure img {
-  object-fit: cover;
-}
-
-.bandCaption {
-  position: absolute;
-  inset: auto 0 0;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(40px, 6vw, 96px) clamp(16px, 2vw, 32px) clamp(16px, 2vw, 28px);
-  background: linear-gradient(transparent, var(--color-shade));
-  font-size: var(--text-ruler);
-  font-weight: 600;
-}
-
-.bandCaptionTitle {
-  font-size: var(--text-photo-title);
-  font-weight: 300;
-  letter-spacing: var(--track-narrow);
-  line-height: 1.05;
-}
-
-/* ——— the word, the ring, a sentence ——— */
-.ringRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.4fr);
-  gap: var(--gutter);
-  align-items: center;
-  padding: clamp(56px, 10vh, 120px) calc(var(--gutter) + var(--pad-section));
-}
-
-.ringWord {
-  font-size: var(--text-section-head);
-  font-weight: 500;
-  letter-spacing: var(--track-narrow);
-}
-
-.ring {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: clamp(140px, 13vw, 200px);
-  aspect-ratio: 1;
-}
-
-.ringText {
-  position: absolute;
-  inset: 0;
-  fill: currentcolor;
-  font-size: var(--text-ring);
-  letter-spacing: var(--track-wide);
-  animation: turn var(--dur-ring) linear infinite;
-}
-
-.ringBadge {
-  display: grid;
-  place-items: center;
-  width: 62%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-sage);
-  color: var(--color-paper);
-  font-family: var(--font-display);
-  font-size: var(--text-tour-name);
-  font-style: italic;
-}
-
-@keyframes turn {
-  to {
-    rotate: 1turn;
-  }
-}
-
-.ringBody {
-  color: var(--color-ink-soft);
-  font-size: var(--text-plan-more);
-  line-height: 1.55;
-}
-
-/* ——— a section with its title and a pill on one line ——— */
+/* ——— a section with its title and a call on one line ——— */
 .section {
   padding: clamp(80px, 13vh, 150px) var(--gutter) 0;
+}
+
+/* a section's label, over its head */
+.index {
+  composes: label from global;
+}
+
+.index {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-6);
 }
 
 .sectionHead {
@@ -333,108 +146,243 @@
   margin-bottom: clamp(24px, 4vh, 40px);
 }
 
-/* the picks: tall photo cards, tags at the top, name and size at the foot */
-.picks {
+/* ——— the rooms: six photos alike, the room's name at the foot over a soft wash ——— */
+.roomTiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
 }
 
-.pick {
+.roomTile {
   position: relative;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  aspect-ratio: 0.82;
-  padding: var(--space-4);
+  align-items: flex-end;
+  aspect-ratio: 1.6;
+  padding: clamp(14px, 1.5vw, 24px);
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  color: var(--color-paper);
+  border-radius: var(--radius-frame);
+  color: var(--color-cream);
+  font-size: var(--text-item);
+  letter-spacing: var(--track-heading);
+  line-height: var(--leading-title);
   isolation: isolate;
 }
 
-.pick > img {
+.roomTile img {
   z-index: -2;
   object-fit: cover;
   transition: scale var(--dur-fade) var(--ease-rise);
 }
 
-.pick:hover > img {
-  scale: 1.04;
-}
-
-.pick::after {
+.roomTile::after {
   content: "";
   position: absolute;
-  inset: 40% 0 0;
+  inset: 50% 0 0;
   z-index: -1;
   background: linear-gradient(transparent, var(--color-shade));
 }
 
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
+.roomTile:hover img {
+  scale: 1.04;
 }
 
-.tags li {
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  background: var(--color-shade);
-  backdrop-filter: blur(8px);
-  font-size: var(--text-ruler);
+.roomTile:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: 3px;
 }
 
-.pickFoot {
+/* ——— the consultation: an orange band, the photos half out of its foot ——— */
+.consult {
+  --consult-overlap: clamp(96px, 15vw, 300px);
+  margin-top: clamp(80px, 13vh, 150px);
+}
+
+.consultBand {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--space-4) var(--gap);
+  align-items: end;
+  padding: clamp(48px, 6vw, 112px) var(--gutter) calc(clamp(40px, 5vw, 88px) + var(--consult-overlap));
+  background: var(--color-orange);
+  color: var(--color-cream);
+}
+
+/* orange brackets would vanish on the orange */
+.consultBand .index > span::before,
+.consultBand .index > span::after,
+.storyPanel .index > span::before,
+.storyPanel .index > span::after {
+  color: inherit;
+}
+
+.consultTitle {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
+  font-size: var(--text-h1);
+  font-weight: var(--weight-light);
+}
+
+.consultSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-4);
 }
 
-.pickName {
-  font-size: var(--text-tour-name);
-  font-weight: 500;
+.consultName {
+  font-size: var(--text-item);
 }
 
-.pickSmall {
-  margin-top: var(--space-1);
-  font-size: var(--text-xs);
-  letter-spacing: var(--track-narrow);
+.consultBody {
+  max-width: 30em;
+  font-size: var(--text-small);
 }
 
-.pickSize {
-  font-size: var(--text-stat);
-  font-weight: 500;
-  line-height: 1.1;
+.consultPhotos {
+  margin: calc(-1 * var(--consult-overlap)) var(--gutter) 0;
 }
 
-.pickCall {
-  flex: none;
-  padding: 10px 20px;
-  border-radius: var(--radius-pill);
-  background: var(--color-frost);
-  backdrop-filter: blur(8px);
-  font-size: var(--text-plan-more);
-  text-decoration: none;
+/* ——— the launch pieces in brief: words left, a room right ——— */
+.explore {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+  padding: clamp(80px, 13vh, 150px) var(--gutter) 0;
 }
 
-.pickCall::after {
+.exploreWords {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.exploreWords .index {
+  margin-bottom: var(--space-2);
+}
+
+.exploreWords .sectionTitle {
+  text-wrap: balance;
+}
+
+.exploreBody {
+  max-width: 30em;
+  color: var(--color-soft);
+  font-size: var(--text-small);
+}
+
+.exploreCall {
+  composes: button from global;
+}
+
+.explorePhoto {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-frame);
+}
+
+.explorePhoto img {
+  object-fit: cover;
+}
+
+/* ——— the first products: four across, photo, name, price, what it is ——— */
+.products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6) var(--gap);
+}
+
+.product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.productPhoto {
+  position: relative;
+  aspect-ratio: 0.72;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+}
+
+.productPhoto img {
+  object-fit: cover;
+  transition: scale var(--dur-fade) var(--ease-rise);
+}
+
+.product:hover .productPhoto img {
+  scale: 1.04;
+}
+
+/* the name's link covers the whole card */
+.productLink::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
-.pick:has(.pickCall:focus-visible) {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 3px;
-}
-
-.pickCall:focus-visible {
+.productLink:focus-visible {
   outline: none;
 }
 
-/* ——— pieces in their rooms: wide banners, a dark pill at the top right ——— */
+.product:has(.productLink:focus-visible) {
+  outline: 1px solid currentcolor;
+  outline-offset: 3px;
+}
+
+.productName {
+  font-size: var(--text-item);
+}
+
+.productPrice {
+  font-size: var(--text-small);
+}
+
+.productLine {
+  color: var(--color-soft);
+  font-size: var(--text-small);
+}
+
+/* ——— a photo left, an orange panel right ——— */
+.story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin: clamp(80px, 13vh, 150px) var(--gutter) 0;
+}
+
+.storyPhoto {
+  position: relative;
+  min-height: clamp(320px, 36vw, 620px);
+}
+
+.storyPhoto img {
+  object-fit: cover;
+}
+
+.storyPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding: clamp(32px, 5vw, 96px);
+  background: var(--color-orange);
+  color: var(--color-cream);
+}
+
+.storyPanel .index {
+  margin-bottom: 0;
+}
+
+.storyBody {
+  max-width: 30em;
+  font-size: var(--text-small);
+}
+
+/* ——— pieces in their rooms: wide banners, the piece's name at the top right ——— */
 .banners {
   display: grid;
   gap: var(--space-4);
@@ -445,33 +393,22 @@
 }
 
 .bannerPill {
+  composes: button from global;
+}
+
+.bannerPill {
   position: absolute;
+  border-radius: var(--radius-pill);
   top: clamp(12px, 1.6vw, 20px);
   right: clamp(12px, 1.6vw, 20px);
-  padding: 12px 22px;
-  border-radius: var(--radius-pill);
-  background: var(--color-ink);
-  color: var(--color-paper);
-  font-size: var(--text-tour-name);
-  text-decoration: none;
-}
-
-.bannerPill:hover {
-  background: var(--color-espresso);
-}
-
-.bannerPill:focus-visible {
-  outline: 2px solid var(--color-paper);
-  outline-offset: 2px;
 }
 
 /* a section's lede under its title, or its note beside it */
 .sectionLede,
 .sectionAside {
   max-width: 34em;
-  color: var(--color-ink-soft);
-  font-size: var(--text-plan-more);
-  line-height: 1.5;
+  color: var(--color-soft);
+  font-size: var(--text-small);
 }
 
 .sectionLede {
@@ -481,28 +418,6 @@
 .sectionAside {
   max-width: 24em;
   text-align: right;
-}
-
-/* the situation it answers, in the visitor's words, over the name */
-.pickSituation {
-  max-width: 18em;
-  margin-bottom: var(--space-4);
-  font-family: var(--font-display);
-  font-size: var(--text-tour-name);
-  font-style: italic;
-  line-height: 1.25;
-}
-
-/* what in the render is not included, small at the banner's foot */
-.bannerNote {
-  position: absolute;
-  bottom: clamp(10px, 1.4vw, 18px);
-  left: clamp(12px, 1.6vw, 20px);
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--color-shade);
-  color: var(--color-paper);
-  font-size: var(--text-xs);
 }
 
 /* ——— other uses: a row of four across, running on past the edge ——— */
@@ -528,17 +443,15 @@
   position: relative;
   aspect-ratio: 0.72;
   margin-bottom: var(--space-2);
-  background: var(--color-paper);
+  background: var(--color-peach-paper);
 }
 
 .useImage img {
-  object-fit: contain;
-  padding: 8%;
+  object-fit: cover;
 }
 
 .useName {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
 }
 
 .useParents {
@@ -546,7 +459,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-1) var(--space-4);
-  font-size: var(--text-ruler);
+  font-size: var(--text-small);
 }
 
 .useParents [data-state="testing"] {
@@ -554,163 +467,64 @@
 }
 
 .useLine {
-  color: var(--color-ink-soft);
-  font-size: var(--text-ruler);
-  line-height: 1.55;
+  color: var(--color-soft);
+  font-size: var(--text-small);
 }
 
 .useNote {
-  font-size: var(--text-xs);
-  line-height: 1.5;
+  font-size: var(--text-small);
 }
 
-/* ——— arrangements: a numbered index, ruled ——— */
-.arrangements {
-  border-top: 1px solid var(--color-ink-rule);
-}
-
-.arrangement {
-  display: grid;
-  grid-template-columns: 3.5em 72px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-4);
-  align-items: center;
-  padding-block: var(--space-4);
-  border-bottom: 1px solid var(--color-ink-rule);
-  font-size: var(--text-ruler);
-}
-
-.arrNo {
-  font-variant-numeric: tabular-nums;
-}
-
-.arrImage {
-  position: relative;
-  aspect-ratio: 1;
-  background: var(--color-paper);
-}
-
-.arrImage img {
-  object-fit: contain;
-  padding: 6%;
-}
-
-.arrText {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.arrText strong {
-  font-size: var(--text-plan-more);
-  font-weight: 400;
-}
-
-.arrText span,
-.arrNote {
-  color: var(--color-ink-soft);
-  line-height: 1.5;
-}
-
-.splitSmall {
-  max-width: 30em;
-  font-size: var(--text-ruler);
-  line-height: 1.6;
-  opacity: 0.85;
-}
-
-/* ——— the photo half and the panel ——— */
-.split {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  margin-top: clamp(96px, 16vh, 180px);
-}
-
-.splitPhoto {
-  position: relative;
-  min-height: clamp(320px, 38vw, 620px);
-}
-
-.splitPhoto img {
-  object-fit: cover;
-}
-
-.splitPanel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: var(--space-6);
-  padding: clamp(40px, 6vw, 112px);
-  background: var(--color-sage);
-  color: var(--color-paper);
-}
-
-.splitTitle {
-  font-size: var(--text-plan-head);
-  font-weight: 500;
-}
-
-.splitBody {
-  max-width: 30em;
-  font-size: var(--text-plan-more);
-  line-height: 1.6;
-}
-
-/* ——— how ordering works: caps title and lede, a tall photo, numbered rows ——— */
+/* ——— how the catalogue works: the title and its words on one row, three equal columns under them ——— */
 .steps {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: clamp(32px, 5vh, 64px) var(--gutter);
-  padding: clamp(96px, 16vh, 180px) var(--gutter) 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(32px, 5vh, 56px) var(--gap);
+  padding: clamp(80px, 13vh, 150px) var(--gutter) 0;
 }
 
 .stepsTitle {
   display: flex;
   flex-direction: column;
-  font-size: var(--text-plan-head);
-  font-weight: 400;
-  line-height: 1.1;
-  text-transform: uppercase;
 }
 
 .stepsLede {
-  font-size: var(--text-plan-head);
-  font-weight: 340;
-  line-height: 1.3;
-  text-indent: 3em;
-}
-
-.stepsPhoto {
-  position: relative;
   align-self: end;
-  aspect-ratio: 0.8;
-  max-width: 300px;
-  background: var(--color-paper);
-}
-
-.stepsPhoto img {
-  object-fit: contain;
-  padding: 10%;
+  color: var(--color-soft);
 }
 
 .stepsList {
+  grid-column: 1 / -1;
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6) var(--gap);
 }
 
 .step {
-  display: grid;
-  grid-template-columns: 3em minmax(0, 1fr) minmax(0, 1.4fr);
-  gap: var(--space-4);
-  padding-block: var(--space-6);
-  border-top: 1px solid var(--color-ink-rule);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stepPhoto {
+  position: relative;
+  aspect-ratio: 1.5;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-frame);
+}
+
+.stepPhoto img {
+  object-fit: cover;
 }
 
 .stepNo {
-  font-size: var(--text-xs);
+  font-size: var(--text-caps);
 }
 
 .stepTitle {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-item);
 }
 
 .stepPoints {
@@ -719,26 +533,24 @@
 
 .stepPoints > div {
   padding-block: var(--space-4);
-  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.stepPoints > div + div {
+  border-top: var(--rule);
 }
 
 .stepPoints > div:first-child {
   padding-top: 0;
 }
 
-.stepPoints > div:last-child {
-  border-bottom: 0;
-}
-
 .stepPoints dt {
-  font-size: var(--text-plan-more);
+  font-size: var(--text-small);
 }
 
 .stepPoints dd {
   margin-top: var(--space-2);
-  color: var(--color-ink-soft);
-  font-size: var(--text-ruler);
-  line-height: 1.55;
+  color: var(--color-soft);
+  font-size: var(--text-small);
 }
 
 /* ——— the questions: a photo left, the list right ——— */
@@ -746,15 +558,17 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: clamp(32px, 5vw, 80px);
-  align-items: center;
-  padding: clamp(96px, 16vh, 180px) calc(var(--gutter) + var(--pad-section) / 2) 0;
+  align-items: start;
+  padding: clamp(80px, 13vh, 150px) var(--gutter) 0;
 }
 
+/* the list runs longer than the photo, so the photo stays beside it */
 .faqPhoto {
-  position: relative;
+  position: sticky;
+  top: calc(var(--nav-h) + var(--space-4));
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-frame);
 }
 
 .faqPhoto img {
@@ -766,7 +580,10 @@
 }
 
 .faqItem {
-  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.faqItem + .faqItem {
+  border-top: var(--rule);
 }
 
 .faqQuestion {
@@ -774,19 +591,14 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--space-4);
-  padding-block: var(--space-6);
-  font-size: var(--text-tour-name);
+  padding-block: var(--space-4);
+  font-size: var(--text-item);
   cursor: pointer;
   list-style: none;
 }
 
 .faqQuestion::-webkit-details-marker {
   display: none;
-}
-
-.faqQuestion:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: 2px;
 }
 
 .faqChevron {
@@ -808,9 +620,8 @@
 .faqAnswer {
   max-width: 36em;
   padding-bottom: var(--space-6);
-  color: var(--color-ink-soft);
-  font-size: var(--text-plan-more);
-  line-height: 1.55;
+  color: var(--color-soft);
+  font-size: var(--text-small);
 }
 
 /* ——— the closing photo, running words over it, a row of words under them ——— */
@@ -822,7 +633,7 @@
   min-height: clamp(480px, 82vh, 860px);
   margin-top: clamp(96px, 16vh, 180px);
   padding-bottom: clamp(40px, 8vh, 96px);
-  color: var(--color-paper);
+  color: var(--color-cream);
   isolation: isolate;
 }
 
@@ -834,63 +645,47 @@
 
 .marqueeEnd {
   padding-bottom: clamp(24px, 4vh, 48px);
-  border-bottom: 1px solid var(--color-white-rule);
 }
 
 .closingRow {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
-  gap: var(--gutter);
+  gap: var(--gap);
   align-items: start;
   padding: clamp(24px, 4vh, 40px) var(--gutter) 0;
 }
 
 .closingTitle {
-  font-size: var(--text-plan-head);
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.closingTitle em {
-  font-weight: 300;
 }
 
 .closingBody {
   max-width: 22em;
-  font-size: var(--text-ruler);
-  line-height: 1.6;
+  font-size: var(--text-small);
 }
 
 /* ——— narrower screens: one column ——— */
 @media (max-width: 900px) {
   .hero,
-  .bandText,
+  .consultBand,
+  .explore,
   .steps,
   .faq,
-  .split {
+  .story {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .intro,
+  .roomTiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .closingRow {
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
 
-  .ringRow {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: start;
-    padding-inline: var(--gutter);
-  }
 
-  .bandText,
-  .bandFigure {
-    padding-inline: 0;
-    margin-inline: 0;
-  }
-
-  .picks {
-    grid-template-columns: minmax(0, 1fr);
+  .products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .uses {
@@ -901,29 +696,12 @@
     text-align: left;
   }
 
-  .arrangement {
-    grid-template-columns: 56px minmax(0, 1fr);
-  }
-
-  .arrNo {
-    display: none;
-  }
-
-  .arrMembers,
-  .arrNote {
-    grid-column: 2;
-  }
-
   .heroRender {
-    aspect-ratio: 1.3;
+    aspect-ratio: 16 / 9;
   }
 
   .banner {
-    aspect-ratio: 1.6;
-  }
-
-  .bandFigure {
-    aspect-ratio: 1.4;
+    aspect-ratio: 16 / 9;
   }
 
   .figures {
@@ -931,56 +709,56 @@
     justify-content: space-between;
   }
 
-  .step {
-    grid-template-columns: 2em minmax(0, 1fr);
-  }
-
-  .stepPoints {
-    grid-column: 2;
+  .stepsList {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* ——— before you choose: each piece's open points, ruled columns ——— */
+/* ——— before you choose: each piece's photo and open points, in columns ——— */
 .notes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-6) clamp(24px, 3vw, 48px);
 }
 
-.notesPiece {
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-ink);
+.notesPhoto {
+  position: relative;
+  aspect-ratio: 1.5;
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+  border-radius: var(--radius-frame);
+}
+
+.notesPhoto img {
+  object-fit: cover;
 }
 
 .notesName {
   display: flex;
   justify-content: space-between;
   gap: var(--space-4);
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
 }
 
-.notesName span,
 .n {
-  color: var(--color-ink-soft);
-  font-size: var(--text-ruler);
+  composes: caps from global;
+}
+
+.n {
+  color: var(--color-soft);
   font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-narrow);
 }
 
 .notesList {
   display: grid;
   gap: var(--space-2);
   margin: var(--space-4) 0 0;
-  padding-left: 1.1em;
-  color: var(--color-ink-soft);
-  line-height: 1.5;
+  color: var(--color-soft);
 }
 
 .notesMore {
   margin-top: clamp(32px, 5vh, 56px);
-  border-top: 1px solid var(--color-ink-rule);
-  border-bottom: 1px solid var(--color-ink-rule);
+  border-top: var(--rule);
 }
 
 .notesMore[open] {
@@ -1005,16 +783,15 @@
   gap: var(--space-1);
   padding-bottom: var(--space-4);
   margin-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-ink);
+  border-bottom: var(--frame);
 }
 
 .kitTierHead h3 {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
 }
 
 .kitTierHead p {
-  color: var(--color-ink-soft);
+  color: var(--color-soft);
 }
 
 .kits {
@@ -1031,28 +808,26 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: clamp(14px, 1.2vw, 20px);
-  border-radius: var(--radius-lg);
-  background: var(--color-stone-tile);
+  background: var(--color-peach-paper);
 }
 
 /* its number, then the pieces it fits */
 .kitFor {
+  composes: caps from global;
+}
+
+.kitFor {
   display: grid;
   gap: var(--space-1);
-  color: var(--color-ink-soft);
-  font-size: var(--text-ruler);
-  text-transform: uppercase;
-  letter-spacing: var(--track-narrow);
+  color: var(--color-soft);
 }
 
 .kitName {
-  font-size: var(--text-plan-more);
-  font-weight: 500;
+  font-size: var(--text-small);
 }
 
 .kitLine {
-  color: var(--color-ink-soft);
-  line-height: 1.5;
+  color: var(--color-soft);
 }
 
 .kitParts {
@@ -1061,8 +836,8 @@
   margin: auto 0 0;
   padding: var(--space-2) 0 0;
   list-style: none;
-  border-top: 1px solid var(--color-ink-rule);
-  font-size: var(--text-ruler);
+  border-top: var(--rule);
+  font-size: var(--text-caps);
 }
 
 /* a part it adds in orange with a plus; one it takes off quiet with a minus */
@@ -1077,50 +852,27 @@
 }
 
 .kitParts [data-change="removes"] {
-  color: var(--color-ink-soft);
+  color: var(--color-soft);
 }
 
 .kitParts [data-change="removes"]::before {
   content: "−";
 }
 
-/* the parts' materials, ruled on the sage panel */
-.partsTitle {
-  font-size: var(--text-plan-more);
-  font-weight: 500;
-}
+@media (max-width: 700px) {
+  .heroRender {
+    aspect-ratio: 1;
+  }
 
-.parts {
-  display: grid;
-  width: 100%;
-  max-width: 34em;
-  margin: 0;
-  font-size: var(--text-ruler);
-  line-height: 1.5;
-}
-
-.parts div {
-  display: grid;
-  grid-template-columns: 11em minmax(0, 1fr);
-  gap: var(--space-4);
-  padding-block: var(--space-2);
-  border-top: 1px solid currentcolor;
-}
-
-.parts dd {
-  margin: 0;
-  opacity: 0.85;
+  .banner {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 @media (max-width: 900px) {
   .notes,
   .kitTiers {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .parts div {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1);
   }
 }
 
@@ -1130,10 +882,10 @@
     animation: none;
   }
 
-  .pick > img,
+  .productPhoto img,
+  .roomTile img,
   .faqChevron,
-  .pillOutline,
-  .pillLight {
+  .pillOutline {
     transition: none;
   }
 }

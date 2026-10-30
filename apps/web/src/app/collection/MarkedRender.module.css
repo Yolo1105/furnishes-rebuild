@@ -1,18 +1,16 @@
 /* The frame: rounded, cropping the render to its own shape (the page sets
-   its aspect ratio; it must be wider than the render's 5:4). */
+   its aspect ratio; it must be wider than the picture). */
 .frame {
   position: relative;
   margin: 0;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--color-stone-tile);
+  background: var(--color-peach-paper);
 }
 
 /* the render's own box, as wide as the frame, its middle on the frame's */
 .render {
   position: absolute;
   inset: 50% 0 auto;
-  aspect-ratio: 5 / 4;
   translate: 0 -50%;
 }
 
@@ -70,14 +68,16 @@
 
 /* the label: a frosted pill at the line's end */
 .label {
+  composes: caps from global;
+}
+
+.label {
   position: absolute;
   bottom: var(--rise);
   padding: 6px 14px;
-  border-radius: var(--radius-pill);
   background: var(--color-frost);
   backdrop-filter: blur(10px);
-  color: var(--color-paper);
-  font-size: var(--text-ruler);
+  color: var(--color-cream);
   text-decoration: none;
   white-space: nowrap;
   translate: 0 50%;
@@ -96,9 +96,30 @@ a.label:hover {
   background: var(--color-shade);
 }
 
-a.label:focus-visible {
-  outline: 1px solid var(--color-paper);
-  outline-offset: 2px;
+/* the banner: a rounded frame, its labels soft pills in sentence case */
+.frame[data-soft] {
+  border-radius: var(--radius-frame);
+}
+
+.frame[data-soft] .label {
+  border-radius: var(--radius-pill);
+  background: var(--color-shade);
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* a phone has no room for the marks: the picture fills the frame, without them */
+@media (max-width: 700px) {
+  .render {
+    inset: 0;
+    aspect-ratio: auto !important;
+    translate: none;
+  }
+
+  .spots {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

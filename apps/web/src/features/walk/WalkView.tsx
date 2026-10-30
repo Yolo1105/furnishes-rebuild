@@ -12,6 +12,8 @@ import styles from "./WalkView.module.css";
 const EASE = 0.12;
 /** Over how much of the walk the plan's drawing notes fade, once the walls start to rise. */
 const NOTES_FADE = 0.06;
+/** The share of the walls' rise before the picture starts to move over. */
+const SHIFT_FROM = 0.3;
 /**
  * How far right, as a share of the canvas's width, the picture moves once the
  * walls start to rise: the rig's views look a little right of what they show,
@@ -80,7 +82,13 @@ export function WalkView({
     let target = STOPS.sheet;
     let eased = target;
     let shown = -1;
+    let shownFit = "";
     let raf = 0;
+
+    const fitKey = () => {
+      const fit = fitRef?.current;
+      return fit ? `${fit.x} ${fit.y} ${fit.pxPerM}` : "";
+    };
 
     const draw = (s: number) => {
       // nothing to draw into yet: a size of 0 would make the camera's aspect NaN
@@ -99,8 +107,8 @@ export function WalkView({
       camera.near = o.near;
       camera.far = o.far;
       // the flat's middle where the drawing has it on the sheet, moving to
-      // SHIFT right of the middle as the walls rise
-      const k = smooth(stage(s, STOPS.sheet, STOPS.lifted));
+      // SHIFT right of the middle once the walls are rising
+      const k = smooth(stage(s, STOPS.sheet + SHIFT_FROM * (STOPS.lifted - STOPS.sheet), STOPS.lifted));
       const [fx, fy] = fit ? [fit.x - w / 2, fit.y - h / 2] : [0, 0];
       camera.setViewOffset(w, h, -(fx * (1 - k) + SHIFT * w * k), -fy * (1 - k), w, h);
       camera.updateProjectionMatrix();
@@ -125,6 +133,7 @@ export function WalkView({
       rise(1 - notes);
       renderer.render(scene, camera);
       shown = s;
+      shownFit = fitKey();
     };
 
     const resize = () => {
@@ -143,7 +152,7 @@ export function WalkView({
       raf = 0;
       eased = still.matches ? target : eased + (target - eased) * EASE;
       if (Math.abs(target - eased) < 1e-4) eased = target;
-      if (eased !== shown) draw(eased);
+      if (eased !== shown || fitKey() !== shownFit) draw(eased);
       if (eased !== target) raf = requestAnimationFrame(tick);
     };
     const go = (s: number) => {

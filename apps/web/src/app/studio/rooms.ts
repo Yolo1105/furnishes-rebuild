@@ -25,6 +25,7 @@ import { PHOTOS } from "../photos";
  * for (a key of ROOMS in features/plan/flat), so hovering that room brings it
  * up; one photo per room, no two the same. `label: "light"`: keep the
  * label over the photo in its browns, however dark it measures behind it.
+ * `ink`: the room's name over the photo in this colour, whatever is measured.
  */
 export const ROOM_PHOTOS: {
   src: StaticImageData;
@@ -33,17 +34,20 @@ export const ROOM_PHOTOS: {
   focus?: [number, number];
   zoom?: number;
   label?: "light";
+  ink?: "cream" | "umber";
 }[] = [
-  ...PHOTOS.map(({ src, alt }) => ({ src, alt, room: "living", focus: [52, 58] as [number, number], zoom: 1.08 })),
+  ...PHOTOS.map(({ src, alt }) => ({ src, alt, room: "living", focus: [52, 58] as [number, number], zoom: 1.08, ink: "cream" as const })),
   {
     src: readingCorner,
     room: "bedroom3", // the small bedroom with the desk, as a study
+    ink: "umber",
     focus: [70, 50],
     alt: "A reading corner with a tan leather swivel chair, a leather pouf, hanging plants and three wall shelves of books, prints and vases",
   },
   {
     src: afternoonLivingRoom,
     room: "master", // its window seat and sofa, as the bedroom's sitting corner
+    ink: "cream",
     focus: [45, 50],
     alt: "A cabin living room in afternoon sun, with a grey sofa under a large painting, a white coffee table, a patterned rug and a window seat",
   },
@@ -87,6 +91,7 @@ export const ROOM_PHOTOS: {
   {
     src: sageSideboard,
     room: "bathroom", // its round mirror between two wall lights, as over a basin
+    ink: "umber",
     focus: [50, 45],
     alt: "A sage green wall with a round mirror between two wall lights over a rattan sideboard, large potted plants and a patterned rug",
   },

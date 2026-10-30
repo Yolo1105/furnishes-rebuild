@@ -5,10 +5,8 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: clamp(14px, 1.2vw, 20px);
-  border: 1px solid var(--color-umber);
+  border: var(--frame);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.card) :where(h3, p) {
@@ -32,12 +30,16 @@
   scale: 1.025;
 }
 
+.record {
+  composes: caps from global;
+}
+
+.meta {
+  composes: caps from global;
+}
+
 .record,
 .meta {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
   font-variant-numeric: tabular-nums;
 }
 
@@ -53,10 +55,9 @@
 }
 
 .name {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.15;
+  line-height: var(--leading-title);
 }
 
 .link {
@@ -75,20 +76,9 @@
   color: var(--color-orange);
 }
 
-.link:focus-visible {
-  outline: none;
-}
-
-.card:has(.link:focus-visible) {
-  outline: 1px solid var(--color-orange);
-  outline-offset: 3px;
-}
-
 .line {
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.45;
-  opacity: 0.85;
+  font-size: var(--text-small);
+  color: var(--color-soft);
 }
 
 /* its size left, its price right, over a fine rule, at the foot */
@@ -99,7 +89,7 @@
   gap: var(--space-2) var(--space-4);
   margin-top: auto;
   padding-top: var(--space-4);
-  border-top: 1px solid var(--color-umber-rule);
+  border-top: var(--rule);
 }
 
 @media (prefers-reduced-motion: reduce) {

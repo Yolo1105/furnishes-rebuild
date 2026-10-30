@@ -12,7 +12,6 @@ export function Projects() {
     <section className={styles.section} aria-labelledby="projects-title">
       <header className={styles.sectionHead}>
         <p className={styles.index}>
-          <span>A-300</span>
           <span>Projects</span>
         </p>
         <h2 id="projects-title" className={styles.heading}>

@@ -14,7 +14,6 @@ export function MakingDays() {
     <section className={styles.making} aria-labelledby="making-title">
       <header className={styles.head}>
         <p className={styles.index}>
-          <span>A-250</span>
           <span>Made to order</span>
         </p>
         <h2 id="making-title" className={styles.title}>
@@ -23,7 +22,6 @@ export function MakingDays() {
         </h2>
         <p className={styles.line}>{MAKING_LINE}</p>
       </header>
-      <div className={styles.rule} aria-hidden="true" />
       <ol className={styles.days} style={{ "--count": MAKING_DAYS.length } as CSSProperties}>
         {MAKING_DAYS.map((d, i) => (
           <li key={d.day} className={styles.day} style={{ "--i": i } as CSSProperties}>

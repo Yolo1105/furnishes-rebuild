@@ -1,12 +1,15 @@
 /* The peach backdrop: cream at the top left deepening to peach at the
    bottom right, with three soft lights drifting over it on loops of
    different lengths, so the whole never quite repeats, and a still grain
-   over all of it. It fills the screen, behind everything. */
+   over all of it. It fills the screen, behind everything. Each light is
+   its own layer and nothing is blurred or blended per frame, so scrolling
+   stays smooth. */
 .peach {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
+  contain: strict;
   background: linear-gradient(
     135deg,
     var(--color-peach-paper),
@@ -20,7 +23,7 @@
   width: 90vmax;
   height: 90vmax;
   border-radius: 50%;
-  filter: blur(80px);
+  will-change: translate;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
@@ -28,7 +31,7 @@
 .glow:nth-child(1) {
   top: -20%;
   left: -25%;
-  background: radial-gradient(circle, var(--color-peach-glow-1), transparent 60%);
+  background: radial-gradient(circle, var(--color-peach-glow-1), transparent 70%);
   animation-name: drift-1;
   animation-duration: 29s;
 }
@@ -36,7 +39,7 @@
 .glow:nth-child(2) {
   top: -10%;
   right: -30%;
-  background: radial-gradient(circle, var(--color-peach-glow-2), transparent 60%);
+  background: radial-gradient(circle, var(--color-peach-glow-2), transparent 70%);
   animation-name: drift-2;
   animation-duration: 41s;
 }
@@ -44,9 +47,18 @@
 .glow:nth-child(3) {
   bottom: -25%;
   left: 10%;
-  background: radial-gradient(circle, var(--color-peach-glow-3), transparent 60%);
+  background: radial-gradient(circle, var(--color-peach-glow-3), transparent 70%);
   animation-name: drift-3;
   animation-duration: 53s;
+}
+
+/* Under the bar, a glow easing the page's cream down from its orange: part of
+   the backdrop, so it never tints the words or photos over it. */
+.underBar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--nav-h) * 3.5);
+  background: var(--wash-glow);
 }
 
 /* The grain, as on the old landing: grey noise darkening it faintly, warm
@@ -60,8 +72,7 @@
 }
 
 .grain {
-  opacity: 0.1;
-  mix-blend-mode: multiply;
+  opacity: 0.06;
 }
 
 .flecks {

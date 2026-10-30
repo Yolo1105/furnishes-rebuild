@@ -4,8 +4,6 @@
   position: relative;
   padding: clamp(72px, 14vh, 160px) var(--gutter);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 /* no margins of their own (kept weak, so each part's spacing below wins) */
@@ -13,38 +11,37 @@
   margin: 0;
 }
 
-/* the small capitals: the index line, the kinds, the dimensions, the feet */
-.index,
-.kind,
-.span,
-.foot {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
-}
-
-/* the index line over the sheets: its number, its title, how many */
+/* the small capitals: the index line, the kinds, what each runs between, the feet */
 .index {
-  display: flex;
-  gap: var(--space-6);
-  align-items: baseline;
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-umber);
+  composes: label from global;
 }
 
-.indexTitle {
-  font: inherit;
+.kind {
+  composes: caps from global;
 }
+
+.span {
+  composes: caps from global;
+}
+
+.foot {
+  composes: caps from global;
+}
+
+/* the index line over the title: its number, its name, how many */
 
 .count {
   margin-left: auto;
 }
 
+.heading {
+  margin-top: var(--space-6);
+}
+
 .sheets {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--gutter);
+  gap: var(--gap);
   margin-top: clamp(32px, 6vh, 64px);
   padding: 0;
   list-style: none;
@@ -52,115 +49,50 @@
 
 /* a sheet, its parts in a column, the foot kept to the bottom */
 .sheet {
-  position: relative;
+  --pad: clamp(20px, 1.8vw, 32px);
   display: flex;
   flex-direction: column;
-  min-height: clamp(460px, 68vh, 640px);
-  padding: clamp(20px, 1.8vw, 32px);
+  padding: var(--pad);
   overflow: hidden;
-  border: 1px solid var(--color-umber);
-  isolation: isolate;
-  transition: color var(--dur-fade) var(--ease-rise);
+  border: var(--frame);
 }
 
-/* its room's photo behind it, under a warm wash, while it is pointed at */
+/* its room's photo across the top, out to its edges */
+.picture {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin: calc(var(--pad) * -1) calc(var(--pad) * -1) var(--pad);
+  overflow: hidden;
+}
+
+/* settling closer while the sheet is pointed at */
 .photo {
-  z-index: -2;
   object-fit: cover;
-  opacity: 0;
-  scale: 1.06;
-  transition:
-    opacity var(--dur-fade) var(--ease-rise),
-    scale var(--dur-rise) var(--ease-rise);
-}
-
-.sheet::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(to bottom, rgb(46 33 24 / 55%), rgb(46 33 24 / 80%));
-  opacity: 0;
-  transition: opacity var(--dur-fade) var(--ease-rise);
-}
-
-.sheet:hover {
-  color: var(--color-cream);
-}
-
-.sheet:hover .photo,
-.sheet:hover::before {
-  opacity: 1;
+  transition: scale var(--dur-rise) var(--ease-rise);
 }
 
 .sheet:hover .photo {
-  scale: 1;
+  scale: 1.04;
 }
 
-/* what it runs between: a line in clay with a slash at each end, the words on it */
+/* what it runs between, under the kind, quieter */
 .span {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin-top: clamp(56px, 12vh, 128px);
-  color: var(--color-clay);
-}
-
-.span::before {
-  content: "";
-  position: absolute;
-  inset: 50% 0 auto;
-  border-top: 1px solid currentcolor;
-}
-
-/* the slashes at its ends */
-.span::after {
-  content: "";
-  position: absolute;
-  inset: calc(50% - 6px) 0 auto;
-  height: 12px;
-  border-inline: 1px solid currentcolor;
-  transform: skewX(-30deg);
-}
-
-.spanLabel {
-  position: relative;
-  padding: 2px var(--space-2);
-  background: var(--color-peach-paper);
-  transition:
-    background var(--dur-fade) var(--ease-rise),
-    color var(--dur-fade) var(--ease-rise);
-}
-
-/* the words on the line sit on a cream chip over the photo */
-.sheet:hover .spanLabel {
-  background: var(--color-cream);
-}
-
-/* the number, light, as the tour's */
-.number {
-  margin-top: var(--space-6);
-  font-size: var(--text-tour-number);
-  font-weight: 200;
-  line-height: 0.8;
-  font-variant-numeric: tabular-nums;
+  margin-top: var(--space-2);
+  color: var(--color-soft);
 }
 
 .title {
   margin-top: var(--space-6);
-  font-size: var(--text-tour-name);
-  font-weight: 340;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.15;
+  line-height: var(--leading-title);
 }
 
 .body {
   margin-top: var(--space-2);
   margin-bottom: var(--space-6);
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.5;
-  opacity: 0.85;
+  font-size: var(--text-body);
+  color: var(--color-soft);
 }
 
 /* its sheet number and call, over a rule, at the bottom */
@@ -195,20 +127,13 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .sheet {
-    min-height: 0;
-  }
-
   .foot {
     margin-top: var(--space-6);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sheet,
-  .photo,
-  .sheet::before,
-  .spanLabel {
+  .photo {
     transition: none;
   }
 }

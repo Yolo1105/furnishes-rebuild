@@ -16,7 +16,6 @@ export function Team() {
       <header className={styles.teamHead}>
         <div>
           <p className={styles.index}>
-            <span>A-400</span>
             <span>Team</span>
           </p>
           <h2 id="team-title" className={styles.heading}>
@@ -32,24 +31,24 @@ export function Team() {
               {m.name[0]}
             </div>
             <div className={styles.cardText}>
-              <p className={styles.cardCode}>T-{pad(i + 1)}</p>
+              <p className={styles.cardCode}>{pad(i + 1)}</p>
               <h3 className={styles.name}>{m.name}</h3>
               <p className={styles.role}>{m.role}</p>
               <dl className={styles.facts}>
                 <div className={styles.fact}>
-                  <dt>Focus</dt>
+                  <dt className={styles.label}>Focus</dt>
                   <dd>{m.about}</dd>
                 </div>
                 {m.credentials && (
                   <div className={styles.fact}>
-                    <dt>Credentials</dt>
+                    <dt className={styles.label}>Credentials</dt>
                     <dd>
                       <span className={styles.badge}>{m.credentials}</span>
                     </dd>
                   </div>
                 )}
                 <div className={styles.fact}>
-                  <dt>Based in</dt>
+                  <dt className={styles.label}>Based in</dt>
                   <dd>{m.basedIn}</dd>
                 </div>
               </dl>

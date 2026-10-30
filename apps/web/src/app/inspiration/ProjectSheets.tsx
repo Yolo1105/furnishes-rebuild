@@ -167,7 +167,6 @@ export function ProjectSheets() {
         <div ref={railRef} className={styles.rail}>
           <div className={styles.intro}>
             <p className={styles.index}>
-              <span>I-300</span>
               <span>Selected projects</span>
             </p>
             <div className={styles.introBody}>
@@ -187,7 +186,7 @@ export function ProjectSheets() {
               const frame = room && frameOf(room);
               const photo = ROOM_PHOTOS.find((ph) => ph.room === p.room);
               const view = views[i];
-              const sheetNo = `I-${301 + i}`;
+              const sheetNo = pad(i + 1);
               return (
                 <li key={p.slug} className={styles.sheet} data-sheet onFocus={bringIntoView}>
                   <div className={styles.figure} data-view={view}>
@@ -252,7 +251,7 @@ export function ProjectSheets() {
           </ol>
 
           <div className={styles.end}>
-            <p className={styles.index}>{pad(PROJECTS.length)} projects on file</p>
+            <p className={styles.count}>{pad(PROJECTS.length)} projects on file</p>
             <ArrowLink href={routes.contact}>Talk to us about yours</ArrowLink>
           </div>
         </div>

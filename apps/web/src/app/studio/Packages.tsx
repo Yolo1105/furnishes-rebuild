@@ -19,7 +19,6 @@ export function Packages() {
           <tr>
             <td className={styles.head}>
               <p className={styles.index}>
-                <span>A-500</span>
                 <span>Packages</span>
               </p>
               <h2 id="packages-title" className={styles.title}>
@@ -28,7 +27,7 @@ export function Packages() {
             </td>
             {PACKAGES.map((p, i) => (
               <th key={p.name} scope="col" className={styles.package}>
-                <span className={styles.code}>P-{pad(i + 1)}</span>
+                <span className={styles.code}>{pad(i + 1)}</span>
                 <span className={styles.name}>{p.name}</span>
                 <span className={styles.line}>{p.line}</span>
               </th>

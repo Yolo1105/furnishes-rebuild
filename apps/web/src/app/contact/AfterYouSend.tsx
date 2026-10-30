@@ -10,7 +10,6 @@ export function AfterYouSend() {
   return (
     <section className={styles.after} aria-labelledby="after-title">
       <p className={styles.index}>
-        <span>A-920</span>
         <span>After you send</span>
       </p>
       <h2 id="after-title" className={styles.title}>

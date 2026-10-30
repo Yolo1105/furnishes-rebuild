@@ -1,0 +1,10 @@
+.page {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Fills any screen, trimming whichever sides the screen's shape leaves over. */
+.photo {
+  object-fit: cover;
+}

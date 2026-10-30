@@ -6,7 +6,7 @@
   position: absolute;
   top: var(--nav-h);
   bottom: 0;
-  left: var(--gutter);
+  left: var(--ruler-x);
   width: var(--ruler-w);
   overflow: hidden;
   color: var(--color-umber);
@@ -53,8 +53,8 @@
   top: 50%;
   translate: 0 -50%;
   font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  line-height: 1;
+  font-size: var(--text-caps);
+  line-height: var(--leading-display);
   white-space: nowrap;
 }
 

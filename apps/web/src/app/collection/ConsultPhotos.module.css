@@ -1,0 +1,94 @@
+/* The running photos: wide, a wash at the foot under the words. */
+.frame {
+  position: relative;
+  aspect-ratio: 2.86;
+  overflow: hidden;
+  background: var(--color-peach-paper);
+  color: var(--color-cream);
+}
+
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 0;
+  background: linear-gradient(transparent, var(--color-shade));
+}
+
+.photo {
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--dur-fade) ease;
+}
+
+.photo[data-shown] {
+  opacity: 1;
+}
+
+.foot {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  padding: clamp(16px, 2.2vw, 40px);
+}
+
+.small {
+  margin: 0;
+  font-size: var(--text-small);
+}
+
+.line {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--track-heading);
+  line-height: var(--leading-heading);
+}
+
+/* a white disc: two bars to pause, a triangle to play */
+.toggle {
+  position: relative;
+  flex: none;
+  width: clamp(44px, 4.2vw, 64px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-cream);
+  color: var(--color-umber);
+  cursor: pointer;
+}
+
+.toggle::before {
+  content: "";
+  position: absolute;
+  inset: 34% 37%;
+  border-inline: 4px solid currentcolor;
+}
+
+.toggle[data-paused]::before {
+  inset: 32% 30% 32% 38%;
+  border: 0;
+  background: currentcolor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.toggle:focus-visible {
+  outline: 1px solid var(--color-cream);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .frame {
+    aspect-ratio: 1.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo {
+    transition: none;
+  }
+}

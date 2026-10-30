@@ -3,8 +3,6 @@
 .packages {
   padding: clamp(72px, 14vh, 160px) var(--gutter);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.packages) :where(h2, p) {
@@ -12,14 +10,16 @@
 }
 
 /* the small capitals: the index, the package codes, the row labels */
-.index,
-.code,
+.index {
+  composes: label from global;
+}
+
+.code {
+  composes: caps from global;
+}
+
 .label {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  font-weight: 400;
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+  composes: caps from global;
 }
 
 .table {
@@ -39,23 +39,14 @@
   vertical-align: top;
 }
 
-.index {
-  display: flex;
-  gap: var(--space-6);
-}
 
 .title {
   margin-top: var(--space-6);
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 /* each package's head: a rule over all three, its code, name and line */
 .package {
   padding: var(--space-6) var(--gutter) clamp(32px, 6vh, 64px) 0;
-  border-top: 1px solid var(--color-umber);
   font-weight: inherit;
   text-align: start;
   vertical-align: top;
@@ -68,36 +59,29 @@
 .name {
   display: block;
   margin-top: var(--space-4);
-  font-size: var(--text-plan-head);
-  font-weight: 340;
+  font-size: var(--text-title);
   letter-spacing: var(--track-heading);
-  line-height: 1.1;
+  line-height: var(--leading-title);
 }
 
 .line,
 .cell,
 .foot {
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.5;
+  font-size: var(--text-body);
 }
 
 .line {
   display: block;
   margin-top: var(--space-4);
-  opacity: 0.85;
+  color: var(--color-soft);
 }
 
-/* each row over a fine rule, the last closed with a full one */
+/* each row over a fine rule */
 .row > * {
   padding: var(--space-6) var(--gutter) var(--space-6) 0;
-  border-top: 1px solid var(--color-umber-rule);
+  border-top: var(--rule);
   text-align: start;
   vertical-align: top;
-}
-
-.row:last-child > * {
-  border-bottom: 1px solid var(--color-umber);
 }
 
 /* the agreement on the left, the call on the right */
@@ -129,11 +113,7 @@
 
   .row {
     padding: var(--space-4) 0;
-    border-top: 1px solid var(--color-umber-rule);
-  }
-
-  .row:last-child {
-    border-bottom: 1px solid var(--color-umber);
+    border-top: var(--rule);
   }
 
   .row > *,
@@ -146,8 +126,8 @@
     content: attr(data-package);
     display: block;
     font-family: var(--font-studio-mono);
-    font-size: var(--text-ruler);
-    letter-spacing: var(--track-menu);
+    font-size: var(--text-caps);
+    letter-spacing: var(--track-caps);
     text-transform: uppercase;
     opacity: 0.7;
   }

@@ -47,9 +47,9 @@
 }
 
 .caption {
+  composes: caps from global;
+}
+
+.caption {
   margin-top: var(--space-2);
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
 }

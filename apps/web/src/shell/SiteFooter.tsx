@@ -40,7 +40,7 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
 
 /**
  * The footer, over the page's own ground, in three bands ruled apart: the
- * call (a label over a large two-line headline, its second line italic)
+ * call (a label over a large two-line headline)
  * beside how to reach us (the address to write to, large, then the hours and
  * the studio); then who we are and where else to find us beside the link
  * columns; then the copyright, centred.
@@ -53,7 +53,7 @@ export function SiteFooter() {
           <p className={styles.label}>Open for collaboration</p>
           <p className={styles.call}>
             <span>Design a room</span>
-            <em>that feels like yours.</em>
+            <span>that feels like yours.</span>
           </p>
         </div>
         <div>
@@ -89,7 +89,7 @@ export function SiteFooter() {
             A design studio for high-quality, modern interiors, shaped around how you live, work and rest.
           </p>
           <div>
-            <p className={styles.visit}>Visit us on:</p>
+            <p className={styles.visit}>Visit us on</p>
             <ul className={styles.social}>
               {SOCIAL.map(({ label, href }) => (
                 <li key={label}>

@@ -3,12 +3,10 @@
 .partners {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
-  gap: var(--gutter);
+  gap: var(--gap);
   align-items: start;
   padding: clamp(72px, 14vh, 160px) var(--gutter);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.partners) :where(h2, p, ul) {
@@ -16,34 +14,24 @@
 }
 
 /* the small capitals: the index and each card's number */
-.index,
-.code {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+.index {
+  composes: label from global;
 }
 
-.index {
-  display: flex;
-  gap: var(--space-6);
+.code {
+  composes: caps from global;
 }
+
 
 .title {
   margin-top: var(--space-6);
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 .lede {
   max-width: 34ch;
   margin-top: var(--space-6);
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.5;
-  opacity: 0.85;
+  font-size: var(--text-body);
+  color: var(--color-soft);
 }
 
 .title + .lede {
@@ -58,54 +46,39 @@
   list-style: none;
 }
 
-/* a card, a little taller than wide: the mark at the top, the name at the foot */
+/* a photo a little taller than wide, the mark and name at its foot */
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: var(--space-1);
   aspect-ratio: 4 / 5;
   padding: clamp(16px, 1.4vw, 26px);
   overflow: hidden;
-  background: var(--color-peach-paper);
-  color: inherit;
+  color: var(--color-cream);
   text-decoration: none;
   isolation: isolate;
-  transition: color var(--dur-fade) var(--ease-rise);
 }
 
-/* its room's photo behind it, under a warm wash, while it is pointed at */
+/* settling closer while the card is pointed at */
 .photo {
   z-index: -2;
   object-fit: cover;
-  opacity: 0;
-  scale: 1.06;
-  transition:
-    opacity var(--dur-fade) var(--ease-rise),
-    scale var(--dur-rise) var(--ease-rise);
+  transition: scale var(--dur-rise) var(--ease-rise);
 }
 
+.card:hover .photo {
+  scale: 1.04;
+}
+
+/* the fade the words sit on */
 .card::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: rgb(46 33 24 / 55%);
-  opacity: 0;
-  transition: opacity var(--dur-fade) var(--ease-rise);
-}
-
-.card:hover {
-  color: var(--color-cream);
-}
-
-.card:hover .photo,
-.card:hover::before {
-  opacity: 1;
-}
-
-.card:hover .photo {
-  scale: 1;
+  background: linear-gradient(to bottom, transparent 35%, rgb(46 33 24 / 80%));
 }
 
 /* the trade, set large as a wordmark, its number over it */
@@ -113,10 +86,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  font-size: var(--text-tour-name);
-  font-weight: 500;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.1;
+  line-height: var(--leading-title);
 }
 
 .logo {
@@ -125,16 +97,12 @@
   height: clamp(24px, 2.6vw, 44px);
   object-fit: contain;
   object-position: left;
-}
-
-/* a logo goes cream with the words over the photo */
-.card:hover .logo {
+  /* cream, with the words */
   filter: brightness(0) invert(1);
 }
 
 .name {
-  font-size: var(--text-plan-more);
-  font-weight: 340;
+  font-size: var(--text-small);
 }
 
 /* the head over the grid on narrower screens, two cards to a row on phones */
@@ -152,9 +120,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card,
-  .photo,
-  .card::before {
+  .photo {
     transition: none;
   }
 }

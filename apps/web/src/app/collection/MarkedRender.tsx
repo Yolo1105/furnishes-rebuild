@@ -16,16 +16,19 @@ export function MarkedRender({
   render,
   sizes,
   className,
+  soft,
   children,
 }: {
   render: Marked;
   sizes: string;
   className?: string;
+  /** Rounded frame and pill labels in sentence case, for the page's banner. */
+  soft?: boolean;
   children?: ReactNode;
 }) {
   return (
-    <figure className={`${styles.frame} ${className ?? ""}`}>
-      <div className={styles.render}>
+    <figure className={`${styles.frame} ${className ?? ""}`} data-soft={soft || undefined}>
+      <div className={styles.render} style={{ aspectRatio: `${render.src.width} / ${render.src.height}` }}>
         <Image className={styles.image} src={render.src} alt={render.alt} fill sizes={sizes} placeholder="blur" />
         <ul className={styles.spots}>
           {render.spots.map((s) => {

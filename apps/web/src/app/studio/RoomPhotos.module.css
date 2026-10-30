@@ -1,8 +1,16 @@
 /* The photos fill their half, stacked; the one in view (data-active) fades
    in as the last fades out. */
 .frame {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   height: 100%;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
   isolation: isolate;
 }
@@ -34,6 +42,70 @@
   height: var(--h);
 }
 
+/* The strip below the photo: a row of landscape thumbnails sharing its width, the one in view framed in cream and the rest a little quieter. They scroll
+   sideways if they outrun it. */
+.strip {
+  position: relative;
+  flex: none;
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb {
+  position: relative;
+  flex: 1 0 64px;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: none;
+  /* solid, so the photo behind never shows through */
+  filter: brightness(0.7);
+  cursor: pointer;
+  transition: filter var(--dur-fast) ease;
+}
+
+.thumb:hover,
+.thumb[aria-current] {
+  filter: none;
+}
+
+/* the frame drawn over the picture, so the photo never shifts */
+.thumb[aria-current]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--color-cream);
+}
+
+.thumb img {
+  object-fit: cover;
+}
+
+/* The room in view, at the photo's bottom left, in umber or, on a dark photo, cream. */
+.roomName {
+  position: absolute;
+  z-index: 2;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  margin: 0;
+  color: var(--color-umber);
+  font-size: var(--text-title);
+  letter-spacing: var(--track-heading);
+  line-height: 1;
+  animation: rise var(--dur-rise) var(--ease-rise) both;
+}
+
+.roomName[data-on-dark] {
+  color: var(--color-cream);
+}
+
 /* The label at the bottom left, set as the old landing's hero title: Archivo
    stretched wide, in capitals, "Interior" smaller over "Revolution". On a
    light photo it is umber over clay; each word on a dark one (data-on-dark)
@@ -50,12 +122,10 @@
   align-items: flex-start;
   /* the wide capitals sit inside their box: pulled back to the gutter */
   margin: 0 0 0 -0.09em;
-  font-family: var(--font-studio);
-  font-size: var(--text-photo-title);
-  font-variation-settings:
-    "wght" 280,
-    "wdth" 118;
-  line-height: 0.92;
+  font-size: var(--text-display);
+  font-weight: var(--weight-light);
+  font-stretch: var(--stretch-wide);
+  line-height: var(--leading-display);
   text-transform: uppercase;
   white-space: nowrap;
   /* hidden for now; still laid out, so the bar's colour is still measured */
@@ -100,7 +170,8 @@
   }
 
   .lead,
-  .echo {
+  .echo,
+  .roomName {
     animation: none;
   }
 }

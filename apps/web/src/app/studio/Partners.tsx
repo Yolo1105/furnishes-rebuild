@@ -7,17 +7,15 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
  * The makers and collaborators, after the packages: the index, headline and
- * two lines on the left, a grid of cards on the right, each with its mark at
- * the top (a logo once there is one, else its trade) and its name at the
- * foot. Pointing at one brings a room's photo up behind it, under a warm
- * wash, and its words turn cream; a card with an address links out.
+ * two lines on the left, a grid of photo cards on the right, each with its
+ * mark (a logo once there is one, else its trade) and its name at the foot, in
+ * cream over a fade; a card with an address links out.
  */
 export function Partners() {
   return (
     <section className={styles.partners} aria-labelledby="partners-title">
-      <header className={`${styles.head} reveal`}>
+      <header className="reveal">
         <p className={styles.index}>
-          <span>A-600</span>
           <span>Makers</span>
         </p>
         <h2 id="partners-title" className={styles.title}>
@@ -40,7 +38,7 @@ export function Partners() {
                 <Image className={styles.logo} src={m.logo} alt="" />
               ) : (
                 <span className={styles.mark} aria-hidden="true">
-                  <span className={styles.code}>M-{pad(i + 1)}</span>
+                  <span className={styles.code}>{pad(i + 1)}</span>
                   {m.trade}
                 </span>
               )}

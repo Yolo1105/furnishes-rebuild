@@ -3,8 +3,6 @@
 .making {
   padding: clamp(72px, 14vh, 160px) var(--gutter);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
   view-timeline-name: --making;
 }
 
@@ -16,25 +14,21 @@
 .head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 30ch);
-  gap: var(--space-6) var(--gutter);
+  gap: var(--space-6) var(--gap);
   align-items: end;
+}
+
+.index {
+  composes: label from global;
 }
 
 .index {
   grid-column: 1 / -1;
   display: flex;
   gap: var(--space-6);
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
 }
 
 .title {
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 .lead,
@@ -43,77 +37,51 @@
 }
 
 .soft {
-  opacity: 0.5;
+  color: var(--color-soft);
 }
 
 .line {
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.5;
-}
-
-/* the rule the days run along, drawn across as the band scrolls through */
-.rule {
-  height: 1px;
-  margin-top: clamp(48px, 9vh, 96px);
-  background: var(--color-clay);
-  transform-origin: left;
+  font-size: var(--text-body);
 }
 
 .days {
   display: grid;
   grid-template-columns: repeat(var(--count), minmax(0, 1fr));
-  gap: var(--gutter);
-  margin-top: var(--space-6);
+  gap: var(--gap);
+  margin-top: clamp(48px, 9vh, 96px);
   padding: 0;
   list-style: none;
 }
 
 .dayNo {
+  composes: caps from global;
+}
+
+.dayNo {
   color: var(--color-clay);
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
 }
 
 .dayTitle {
   margin-top: var(--space-4);
-  font-size: var(--text-tour-name);
-  font-weight: 340;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.2;
+  line-height: var(--leading-title);
 }
 
 .body {
   margin-top: var(--space-2);
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.5;
-  opacity: 0.85;
+  font-size: var(--text-small);
+  color: var(--color-soft);
 }
 
-/* the drawing on: the rule over the middle of the band's pass, each day
-   lighting up in its share of it, the rest waiting faint */
+/* each day lighting up in its share of the band's pass, the rest waiting faint */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .rule {
-      animation: draw linear both;
-      animation-timeline: --making;
-      animation-range: cover 25% cover 60%;
-    }
-
     .day {
       animation: light linear both;
       animation-timeline: --making;
       animation-range: cover calc(25% + 35% * var(--i) / var(--count)) cover calc(25% + 35% * (var(--i) + 1) / var(--count));
     }
-  }
-}
-
-@keyframes draw {
-  from {
-    scale: 0 1;
   }
 }
 

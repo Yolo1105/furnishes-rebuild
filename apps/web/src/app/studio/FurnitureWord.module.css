@@ -1,0 +1,138 @@
+/* Sized to its own width, so the word always spans the plan's side. */
+.word {
+  grid-column: 1 / -1;
+  position: relative;
+  justify-self: start;
+  margin-top: var(--space-2);
+  /* on the plan's left wall */
+  margin-left: calc(var(--gutter) / 2 - var(--space-4));
+  width: 65%;
+  container-type: inline-size;
+  display: grid;
+  grid-template:
+    "furn  i right" auto
+    "left  i ture" auto / max-content auto minmax(0, 1fr);
+}
+
+.furn {
+  font-size: 16.5cqw;
+}
+
+.tallI {
+  font-size: 17.6cqw;
+}
+
+.furn,
+.ture,
+.room,
+.dot,
+.interior {
+  font-family: var(--font-raleway);
+  font-stretch: normal;
+  font-weight: 325;
+  letter-spacing: 0.05em;
+  line-height: 0.82;
+}
+
+.furn {
+  grid-area: furn;
+  /* the room the widening below takes up, which a transform does not reserve */
+  margin-right: 0.09em;
+}
+
+.furn,
+.ture,
+.room,
+.interior {
+  transform: scaleX(1.04);
+  transform-origin: left;
+}
+
+.ture {
+  grid-area: ture;
+  font-size: 13.8cqw;
+  align-self: end;
+}
+
+/* "Interior" at "ture"'s size and on its baseline, in the space right of it. */
+.room {
+  position: absolute;
+  left: 84cqw;
+  bottom: 0;
+  font-size: 13.8cqw;
+  white-space: nowrap;
+}
+
+/* The dot between "ture" and "Interior", in the middle of the gap. */
+.dot {
+  position: absolute;
+  left: 80cqw;
+  bottom: 0;
+  font-size: 13.8cqw;
+  translate: -50% 0;
+}
+
+/* In the space right of "ture", its last line on its baseline. */
+.interior {
+  position: absolute;
+  left: 91.6cqw;
+  bottom: 0.5cqw;
+  color: var(--color-clay);
+  font-size: 3.8cqw;
+  line-height: 1.1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.orange {
+  color: var(--color-orange);
+}
+
+/* The "i", drawn: a dot over a stem running the word's full height. */
+.tallI {
+  grid-area: i;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1015em;
+  /* Raleway's own "i" at the word's size: its stem, its taller-than-wide dot, the gap between, widened as the word is */
+  width: 0.0536em;
+  /* the same clear space to the "n" and the "t": less on the left, where the letter spacing and the "n" add their own */
+  margin-inline: 0.1715em 0.27em;
+  padding-top: 0.08em;
+}
+
+.tallI::before {
+  content: "";
+  height: 0.0847em;
+  background: currentcolor;
+}
+
+.tallI::after {
+  content: "";
+  flex: 1;
+  background: currentcolor;
+}
+
+.word .leftLine,
+.word .rightLine {
+  /* the word in umber, its small lines in clay, as the old landing's two browns */
+  color: var(--color-clay);
+  /* in step with the word */
+  font-size: 3.5cqw;
+  line-height: 1.5;
+}
+
+.word .leftLine {
+  grid-area: left;
+  /* ends with the "n", less the space kept after it */
+  margin: var(--space-2) 2.06cqw 0 0;
+  text-align: right;
+}
+
+.word .rightLine {
+  grid-area: right;
+  /* out over "Interior" too, past the word's own width */
+  white-space: nowrap;
+  margin-bottom: var(--space-2);
+  font-size: 3.8cqw;
+}

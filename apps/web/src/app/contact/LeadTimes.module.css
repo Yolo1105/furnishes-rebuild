@@ -1,42 +1,33 @@
-/* The lead times, on the warm dark at the foot of About, in linen. */
+/* The lead times, at the foot of the contact page. */
 .band {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: var(--gutter);
+  gap: var(--gap);
   align-items: start;
   padding: clamp(72px, 14vh, 160px) var(--gutter);
-  background: var(--color-espresso);
-  color: var(--color-linen);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.band) :where(h2, p, dl, dd, figure) {
   margin: 0;
 }
 
+.mono {
+  composes: caps from global;
+}
+
 /* the small capitals: the index, labels, the scale and its notes */
 .mono {
   display: flex;
   gap: var(--space-6);
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
 }
 
 .title {
   margin-top: var(--space-6);
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 .lede {
   margin-top: clamp(24px, 5vh, 56px);
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
+  font-size: var(--text-body);
 }
 
 /* the email over its line, the orange button under it */
@@ -64,8 +55,7 @@
   background: none;
   color: inherit;
   font: inherit;
-  font-size: var(--text-tour-name);
-  font-weight: 340;
+  font-size: var(--text-item);
   outline: none;
 }
 
@@ -80,32 +70,7 @@
 }
 
 .button {
-  display: inline-flex;
-  gap: var(--space-4);
-  align-items: center;
-  padding: var(--space-4) clamp(20px, 1.8vw, 32px);
-  border: 0;
-  background: var(--color-orange);
-  color: var(--color-night);
-  font: inherit;
-  font-size: var(--text-plan-more);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-rise);
-}
-
-.button:hover {
-  background: var(--color-apricot);
-}
-
-.button:focus-visible {
-  outline: 1px solid var(--color-orange);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .button {
-    transition: none;
-  }
+  composes: button from global;
 }
 
 /* the chart: a name column, then the weeks; each row ruled below */
@@ -117,6 +82,7 @@
 
 .caption {
   justify-content: space-between;
+  white-space: nowrap;
 }
 
 .row {
@@ -125,10 +91,10 @@
   gap: var(--space-4);
   align-items: end;
   padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-white-rule);
 }
 
 .list .row {
+  border-top: var(--rule);
   align-items: center;
   min-height: clamp(80px, 11vh, 110px);
   padding: var(--space-4) 0;
@@ -149,10 +115,9 @@
 }
 
 .name {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.2;
+  line-height: var(--leading-title);
 }
 
 .range {
@@ -178,7 +143,10 @@
   .band {
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(56px, 10vh, 96px);
-  }
+  
+  --button-bg: var(--color-orange);
+  --button-fg: var(--color-night);
+}
 
   .row {
     grid-template-columns: 7em minmax(0, 1fr);

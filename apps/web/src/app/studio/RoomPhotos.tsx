@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
+import { ROOMS } from "@/features/plan/flat";
 import type { ROOM_PHOTOS } from "./rooms";
 import styles from "./RoomPhotos.module.css";
 
@@ -25,8 +26,8 @@ function tokenLuminances<T extends string>(names: readonly T[]): Record<T, numbe
   return out;
 }
 
-/** The colours the label and the bar choose between. */
-const TOKENS = ["--color-umber", "--color-apricot", "--color-clay", "--color-linen", "--color-rust", "--color-cream"] as const;
+/** The colours the label chooses between. */
+const TOKENS = ["--color-umber", "--color-apricot", "--color-clay", "--color-linen"] as const;
 
 /** How far apart two luminances read, from 1 (the same) to 21 (black on white). */
 function contrast(a: number, b: number): number {
@@ -85,18 +86,29 @@ function lightWins(readings: [number, number][]): boolean {
  * to fill its box, `zoom` times closer, with the room's middle (`focus`) kept
  * central. The label is in its browns or its creams, whichever pair reads
  * better over the photo behind its words (unless the photo says to keep it
- * brown), and the bar over the photo turns cream too where that reads better:
- * measured from each photo as it loads and whenever the half changes size.
- * The bar is told through the page's body (data-bar-on-dark), only while
- * the photos show (not `faded`). Each photo is
- * decoded as soon as it arrives, so it fades in without a stall.
+ * brown): measured from each photo as it loads and whenever the half changes
+ * size. Each photo is
+ * decoded as soon as it arrives, so it fades in without a stall. A strip of
+ * every photo runs below it, the one in view framed: picking one calls
+ * `onPick`, and `hold` (pointer handlers) goes on the strip to pause the turning.
  */
-export function RoomPhotos({ photos, at, faded = false }: { photos: typeof ROOM_PHOTOS; at: number; faded?: boolean }) {
+export function RoomPhotos({
+  photos,
+  at,
+  onPick,
+  hold,
+}: {
+  photos: typeof ROOM_PHOTOS;
+  at: number;
+  onPick: (i: number) => void;
+  hold: { onPointerEnter: () => void; onPointerLeave: () => void };
+}) {
   const frame = useRef<HTMLDivElement>(null);
   const lead = useRef<HTMLSpanElement>(null);
   const echo = useRef<HTMLSpanElement>(null);
-  // for each photo, whether cream reads better for the label and for the bar
-  const [dark, setDark] = useState<[boolean, boolean][]>([]);
+  const strip = useRef<HTMLDivElement>(null);
+  // for each photo, whether cream reads better for the label
+  const [dark, setDark] = useState<boolean[]>([]);
 
   // measures the photos given (by index), or all of them
   const measure = useCallback((only?: number) => {
@@ -106,19 +118,11 @@ export function RoomPhotos({ photos, at, faded = false }: { photos: typeof ROOM_
     const lum = tokenLuminances(TOKENS);
     const leadBox = lead.current.getBoundingClientRect();
     const echoBox = echo.current.getBoundingClientRect();
-    // the bar's links that lie over the photo
-    const half = frame.current.getBoundingClientRect();
-    const barBoxes = [...document.querySelectorAll("header a")]
-      .map((link) => link.getBoundingClientRect())
-      .filter((box) => box.right <= half.right && box.bottom > half.top);
-    const read = (img: HTMLImageElement): [boolean, boolean] => [
+    const read = (img: HTMLImageElement) =>
       lightWins([
         readability(img, leadBox, lum["--color-umber"], lum["--color-apricot"]),
         readability(img, echoBox, lum["--color-clay"], lum["--color-linen"]),
-      ]),
-      barBoxes.length > 0 &&
-        lightWins(barBoxes.map((box) => readability(img, box, lum["--color-rust"], lum["--color-cream"]))),
-    ];
+      ]);
     setDark((prev) => {
       const next = prev.slice();
       let changed = false;
@@ -126,7 +130,7 @@ export function RoomPhotos({ photos, at, faded = false }: { photos: typeof ROOM_
         const img = imgs[i];
         if (!img) continue;
         const v = read(img);
-        if (next[i]?.[0] !== v[0] || next[i]?.[1] !== v[1]) {
+        if (next[i] !== v) {
           next[i] = v;
           changed = true;
         }
@@ -150,57 +154,90 @@ export function RoomPhotos({ photos, at, faded = false }: { photos: typeof ROOM_
     };
   }, [measure]);
 
-  // the bar follows the photo in view while it shows; left as it was otherwise
-  const barOnDark = !faded && (dark[at]?.[1] ?? false);
+  // the strip keeps the photo in view in sight, moving only itself, not the page
   useEffect(() => {
-    document.body.toggleAttribute("data-bar-on-dark", barOnDark);
-    return () => document.body.removeAttribute("data-bar-on-dark");
-  }, [barOnDark]);
+    const row = strip.current;
+    const thumb = row?.children[at] as HTMLElement | undefined;
+    if (!row || !thumb) return;
+    row.scrollTo({ left: thumb.offsetLeft - (row.clientWidth - thumb.offsetWidth) / 2, behavior: "smooth" });
+  }, [at]);
 
-  const labelOnDark = photos[at]?.label !== "light" && (dark[at]?.[0] ?? false);
+  const labelOnDark = photos[at]?.label !== "light" && (dark[at] ?? false);
+  const ink = photos[at]?.ink;
+  const nameOnDark = ink ? ink === "cream" : labelOnDark;
+  const roomName = ROOMS.find((r) => r.key === photos[at]?.room)?.name;
 
   return (
     <div ref={frame} className={styles.frame}>
-      {photos.map(({ src, alt, focus = [50, 50], zoom = 1 }, i) => (
-        <div key={src.src} className={styles.slide} data-active={i === at || undefined} aria-hidden={i !== at}>
-          <div
-            className={styles.canvas}
-            style={
-              {
-                "--ratio": src.width / src.height,
-                "--focus-x": focus[0] / 100,
-                "--focus-y": focus[1] / 100,
-                "--zoom": zoom,
-              } as CSSProperties
-            }
+      <div className={styles.stage}>
+        {photos.map(({ src, alt, focus = [50, 50], zoom = 1 }, i) => (
+          <div key={src.src} className={styles.slide} data-active={i === at || undefined} aria-hidden={i !== at}>
+            <div
+              className={styles.canvas}
+              style={
+                {
+                  "--ratio": src.width / src.height,
+                  "--focus-x": focus[0] / 100,
+                  "--focus-y": focus[1] / 100,
+                  "--zoom": zoom,
+                } as CSSProperties
+              }
+            >
+              {/* the photo runs past its half: about the screen's width, more on phones */}
+              <Image
+                src={src}
+                alt={alt}
+                fill
+                sizes="(orientation: portrait) 240vw, 100vw"
+                priority={i === 0}
+                placeholder="blur"
+                onLoad={(e) => {
+                  // decoded now, not as it first fades in; measured once it is
+                  e.currentTarget.decode().then(
+                    () => measure(i),
+                    () => measure(i),
+                  );
+                }}
+              />
+            </div>
+          </div>
+        ))}
+        {/* the room in view */}
+        <p key={roomName} className={styles.roomName} data-on-dark={nameOnDark || undefined}>
+          {roomName}
+        </p>
+        <p className={styles.label}>
+          <span ref={lead} className={styles.lead} data-on-dark={labelOnDark || undefined}>
+            Interior
+          </span>
+          <span ref={echo} className={styles.echo} data-on-dark={labelOnDark || undefined}>
+            Revolution
+          </span>
+        </p>
+      </div>
+      {/* every photo in a row below, the one in view framed; any can be picked */}
+      <div ref={strip} className={styles.strip} {...hold}>
+        {photos.map(({ src, alt, focus = [50, 50] }, i) => (
+          <button
+            key={src.src}
+            type="button"
+            className={styles.thumb}
+            aria-label={alt}
+            aria-current={i === at || undefined}
+            onClick={() => onPick(i)}
           >
-            {/* the photo runs past its half: about the screen's width, more on phones */}
             <Image
               src={src}
-              alt={alt}
+              alt=""
               fill
-              sizes="(orientation: portrait) 240vw, 100vw"
-              priority={i === 0}
+              sizes="130px"
               placeholder="blur"
-              onLoad={(e) => {
-                // decoded now, not as it first fades in; measured once it is
-                e.currentTarget.decode().then(
-                  () => measure(i),
-                  () => measure(i),
-                );
-              }}
+              loading="eager"
+              style={{ objectPosition: `${focus[0]}% ${focus[1]}%` }}
             />
-          </div>
-        </div>
-      ))}
-      <p className={styles.label}>
-        <span ref={lead} className={styles.lead} data-on-dark={labelOnDark || undefined}>
-          Interior
-        </span>
-        <span ref={echo} className={styles.echo} data-on-dark={labelOnDark || undefined}>
-          Revolution
-        </span>
-      </p>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

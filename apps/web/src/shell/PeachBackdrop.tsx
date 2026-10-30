@@ -10,6 +10,7 @@ export function PeachBackdrop() {
       <span className={styles.glow} />
       <span className={styles.glow} />
       <span className={styles.glow} />
+      <span className={styles.underBar} />
       <svg className={styles.grain} preserveAspectRatio="none">
         <filter id="peach-grain" x="0" y="0" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />

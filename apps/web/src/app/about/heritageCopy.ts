@@ -1,17 +1,16 @@
 /**
  * The heritage band's words, ported as they stand from furnishes_prod's
  * homepage (content/site/heritage-content.ts): its heading, with "we" set
- * apart, the call over it, the two paragraphs beside it and the five steps
- * of the studio's history under it, each with its tag.
+ * apart, the two paragraphs beside it and the five steps of the studio's
+ * history under it, each with its tag.
  */
 export const HERITAGE = {
-  call: "Start your project",
   heading: "Heritage",
   we: "we",
   rest: " preserve",
   tagline: [
     "From workshop roots to full interiors, craft, clarity, and lasting materials stay at the center of how we work.",
-    "We still sketch with real samples, watch light move through a room, and choose finishes that feel honest in the hand. Our process stays quiet and deliberate: clear plans, steady partners, and spaces built to live well long after the first reveal.",
+    "We still sketch with real samples, watch light move through a room, and choose finishes that feel honest in the hand. Our process stays quiet and deliberate. Clear plans, steady partners, and spaces built to live well long after the first reveal.",
   ],
 } as const;
 

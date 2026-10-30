@@ -3,8 +3,8 @@
  * Product Story v1.1, chapter 03, with each scene's call from chapter 05): a
  * corner of a home, the things that gather there and what the furniture does
  * for them. No figures: the story gives none it will stand behind. `span`:
- * what the case runs between, set on its dimension line. `room`: the room
- * photo (rooms.ts, by its plan room) that comes up behind it, a stand-in
+ * what the case runs between. `room`: the room
+ * photo (rooms.ts, by its plan room) at the top of its card, a stand-in
  * till the product's own photos are taken.
  */
 export const CASES: readonly {
@@ -35,7 +35,7 @@ export const CASES: readonly {
     kind: "The workspace",
     span: "Tools to cables",
     title: "A desk that grows its own way.",
-    body: "Tools in sight and ready, or a clear top with the cables tucked away, or work beside the things you collect: arranged for how you work.",
+    body: "Tools in sight and ready, or a clear top with the cables tucked away, or work beside the things you collect, arranged for how you work.",
     call: "Find your way of working",
     room: "bedroom3",
   },

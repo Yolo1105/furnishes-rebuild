@@ -8,11 +8,11 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
   {
     question: "Do you order and deliver the furniture?",
     answer:
-      "On a whole home, yes: we order, track each delivery and check every piece in. On a room plan you get the list with links and order it yourself.",
+      "On a whole home, yes. We order, track each delivery and check every piece in. On a room plan you get the list with links and order it yourself.",
   },
   {
     question: "Can I hire you for one room?",
-    answer: "Yes. The Room package takes one room start to finish on paper: the plan, two layouts and the list.",
+    answer: "Yes. The Room package takes one room start to finish on paper. The plan, two layouts and the list.",
   },
   {
     question: "Do you work outside Singapore?",
@@ -22,6 +22,6 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
   {
     question: "What do I need before the consultation?",
     answer:
-      "A floor plan if you have one, a few photos of each room, and a sense of what you would keep. Rough is fine: we measure what we need on the day.",
+      "A floor plan if you have one, a few photos of each room, and a sense of what you would keep. Rough is fine. We measure what we need on the day.",
   },
 ];

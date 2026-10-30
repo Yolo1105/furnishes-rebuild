@@ -88,7 +88,8 @@ export function Manifesto() {
     };
   }, []);
 
-  // the figures roll once, the first time they are well into view
+  // the figures roll once, the first time they are up in the middle of the
+  // screen (not just over its foot), so the spin is seen
   useEffect(() => {
     const el = figures.current;
     if (!el) return;
@@ -98,7 +99,7 @@ export function Manifesto() {
         setRolled(true);
         seen.disconnect();
       },
-      { threshold: 0.6 },
+      { rootMargin: "0px 0px -35% 0px", threshold: 0.5 },
     );
     seen.observe(el);
     return () => seen.disconnect();
@@ -107,13 +108,7 @@ export function Manifesto() {
   return (
     <section ref={section} className={styles.manifesto} aria-labelledby="who-title" style={{ "--n": COUNT } as CSSProperties}>
       <h2 id="who-title" className={styles.label}>
-        <span className={styles.bracket} aria-hidden="true">
-          [
-        </span>
-        Who we are
-        <span className={styles.bracket} aria-hidden="true">
-          ]
-        </span>
+        <span>Who we are</span>
       </h2>
       <p className={styles.text}>
         {RUNS.map((run) =>

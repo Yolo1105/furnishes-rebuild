@@ -13,19 +13,6 @@
   list-style: none;
 }
 
-/* "Find" slanted, "your piece" upright, all in capitals */
-.title {
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.title em {
-  font-weight: 300;
-}
-
 .body {
   display: grid;
   grid-template-columns: minmax(180px, 1fr) minmax(0, 4.4fr);
@@ -38,27 +25,26 @@
 .filters {
   position: sticky;
   top: calc(var(--nav-h) + var(--space-6));
-  font-size: var(--text-ruler);
+  font-size: var(--text-caps);
 }
 
 .filtersHead {
   display: flex;
   justify-content: space-between;
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-ink-rule);
-}
-
-.filtersHead span {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border-bottom: var(--rule);
 }
 
 .filtersHead a {
-  color: var(--color-ink-soft);
+  color: var(--color-soft);
+  text-decoration: none;
 }
 
 .group {
-  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.group + .group {
+  border-top: var(--rule);
 }
 
 .groupHead {
@@ -85,11 +71,6 @@
   content: "−";
 }
 
-.groupHead:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: 2px;
-}
-
 .options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -101,7 +82,7 @@
 .sortList a {
   display: inline-block;
   padding-block: var(--space-1);
-  color: var(--color-ink-soft);
+  color: var(--color-soft);
   text-decoration: none;
 }
 
@@ -109,9 +90,7 @@
 .sortList a:hover,
 .options a[aria-current],
 .sortList a[aria-current] {
-  color: var(--color-ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--color-umber);
 }
 
 /* the count left, the order right, as pills */
@@ -125,8 +104,7 @@
 }
 
 .count {
-  font-size: var(--text-tour-name);
-  letter-spacing: var(--track-narrow);
+  font-size: var(--text-item);
 }
 
 .sort {
@@ -134,25 +112,15 @@
 }
 
 .pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: var(--tap);
-  padding: 0 var(--space-6);
-  border: 1px solid var(--color-ink-rule);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
+  composes: button-outline from global;
+}
+
+.pill {
   list-style: none;
-  font-size: var(--text-plan-more);
 }
 
 .pill::-webkit-details-marker {
   display: none;
-}
-
-.pill:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: 2px;
 }
 
 .chevron {
@@ -177,9 +145,8 @@
   display: grid;
   min-width: 100%;
   padding: var(--space-2) var(--space-6);
-  border: 1px solid var(--color-ink-rule);
-  border-radius: var(--radius-lg);
-  background: var(--color-stone);
+  border: var(--frame);
+  background: var(--color-peach-paper);
 }
 
 /* the tiles: four across, the wide pieces two by two, gaps filled */
@@ -196,7 +163,7 @@
   flex-direction: column;
   min-height: clamp(220px, 21vw, 340px);
   padding: clamp(12px, 1.1vw, 18px);
-  background: var(--color-stone-tile);
+  background: var(--color-peach-paper);
 }
 
 .tile[data-large] {
@@ -211,13 +178,12 @@
 }
 
 .name {
-  font-size: var(--text-plan-more);
-  font-weight: 400;
-  line-height: 1.2;
+  font-size: var(--text-small);
+  line-height: var(--leading-title);
 }
 
 .tile[data-large] .name {
-  font-size: var(--text-tour-name);
+  font-size: var(--text-item);
 }
 
 .link {
@@ -229,15 +195,6 @@
   content: "";
   position: absolute;
   inset: 0;
-}
-
-.link:focus-visible {
-  outline: none;
-}
-
-.tile:has(.link:focus-visible) {
-  outline: 1px solid var(--color-ink);
-  outline-offset: 2px;
 }
 
 /* the plus, two fine strokes, turning on hover */
@@ -266,28 +223,34 @@
   rotate: 90deg;
 }
 
+.record {
+  composes: caps from global;
+}
+
+.meta {
+  composes: caps from global;
+}
+
 .record,
 .meta {
-  font-size: var(--text-ruler);
-  color: var(--color-ink-soft);
-  text-transform: uppercase;
-  letter-spacing: var(--track-narrow);
+  color: var(--color-soft);
 }
 
 .record {
   margin-top: var(--space-1);
 }
 
-/* the piece on its own, floating in the tile, a little larger on hover */
+/* the photograph, filling the tile's width, a little larger on hover */
 .stage {
   position: relative;
   flex: 1;
-  min-height: 120px;
-  margin: var(--space-4) 8%;
+  min-height: 160px;
+  margin-block: var(--space-4);
+  overflow: hidden;
 }
 
 .object {
-  object-fit: contain;
+  object-fit: cover;
   transition: scale var(--dur-fade) var(--ease-rise);
 }
 
@@ -312,8 +275,7 @@
 /* the family's line, under the filter once one is chosen */
 .familyLine {
   padding-top: var(--space-4);
-  color: var(--color-ink-soft);
-  line-height: 1.5;
+  color: var(--color-soft);
 }
 
 /* a launch piece's status in orange, a coming one's quiet */
@@ -323,13 +285,18 @@
 
 .note {
   margin-top: var(--space-6);
-  color: var(--color-ink-soft);
-  font-size: var(--text-ruler);
+  color: var(--color-soft);
+  font-size: var(--text-caps);
 }
 
 .none {
   padding: var(--space-6) 0;
-  font-size: var(--text-plan-lede);
+  font-size: var(--text-body);
+}
+
+.none a {
+  color: var(--color-orange);
+  text-decoration: none;
 }
 
 @media (max-width: 1100px) {
@@ -365,7 +332,7 @@
   }
 }
 
-/* the search: one rounded field and its button, above everything */
+/* the search: one field and its button, above everything */
 .search {
   display: flex;
   gap: var(--space-2);
@@ -377,29 +344,19 @@
   flex: 1;
   min-width: 0;
   min-height: var(--tap);
-  padding: 0 var(--space-6);
-  border: 1px solid var(--color-ink-rule);
-  border-radius: var(--radius-pill);
+  padding: 0 var(--space-4);
+  border: var(--rule);
   background: transparent;
   color: inherit;
-  font: inherit;
-  font-size: var(--text-plan-more);
+  font-size: var(--text-small);
 }
 
-.search input:focus-visible {
-  outline: 1px solid var(--color-ink);
-  outline-offset: 2px;
-}
-
-.search .pill {
-  background: var(--color-ink);
-  color: var(--color-stone);
-  font: inherit;
-  font-size: var(--text-plan-more);
+.searchButton {
+  composes: button from global;
 }
 
 .searched {
-  color: var(--color-ink-soft);
+  color: var(--color-soft);
 }
 
 /* an option that would show nothing, faded */
@@ -407,7 +364,7 @@
   opacity: 0.45;
 }
 
-/* the views and the kind chips: a row of pills, the chosen one filled */
+/* the views and the kind chips: a row of outlined buttons, the chosen one filled */
 .views,
 .chips {
   display: flex;
@@ -416,29 +373,14 @@
   margin-bottom: var(--space-6);
 }
 
-.views a,
-.chips a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  padding: 0 var(--space-6);
-  border: 1px solid var(--color-ink-rule);
-  border-radius: var(--radius-pill);
-  color: var(--color-ink-soft);
-  font-size: var(--text-plan-more);
-  text-decoration: none;
+.view {
+  composes: button-outline from global;
 }
 
-.views a:hover,
-.chips a:hover {
-  color: var(--color-ink);
-}
-
-.views a[aria-current],
-.chips a[aria-current] {
-  border-color: var(--color-ink);
-  background: var(--color-ink);
-  color: var(--color-stone);
+.view[aria-current] {
+  border-color: var(--button-bg);
+  background: var(--button-bg);
+  color: var(--button-fg);
 }
 
 /* a family's or room's group of tiles, under its name and line */
@@ -453,21 +395,18 @@
 }
 
 .clusterHead h3 {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
 }
 
 .clusterHead p {
   max-width: 60ch;
-  color: var(--color-ink-soft);
-  line-height: 1.5;
+  color: var(--color-soft);
 }
 
 /* the index: one ruled row per design */
 .index {
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-ink-rule);
 }
 
 .row {
@@ -477,16 +416,20 @@
   gap: var(--space-4);
   align-items: center;
   padding-block: var(--space-4);
-  border-bottom: 1px solid var(--color-ink-rule);
+}
+
+.row + .row {
+  border-top: var(--rule);
 }
 
 .rowRecord,
 .kind,
 .plan {
-  font-size: var(--text-ruler);
-  color: var(--color-ink-soft);
-  text-transform: uppercase;
-  letter-spacing: var(--track-narrow);
+  composes: caps from global;
+}
+
+.plan {
+  color: var(--color-soft);
   font-variant-numeric: tabular-nums;
 }
 
@@ -494,8 +437,7 @@
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--color-stone-tile);
+  background: var(--color-peach-paper);
 }
 
 .thumb img {
@@ -508,21 +450,20 @@
 }
 
 .rowName {
-  font-size: var(--text-plan-more);
+  font-size: var(--text-small);
 }
 
 .rowLine,
 .rowWith {
-  color: var(--color-ink-soft);
-  line-height: 1.45;
+  color: var(--color-soft);
 }
 
 .rowWith {
-  font-size: var(--text-ruler);
+  font-size: var(--text-caps);
 }
 
 .kind[data-kind="launch"],
-.chips a[data-kind="launch"]:not([aria-current]) {
+.view[data-kind="launch"]:not([aria-current]) {
   color: var(--color-orange);
 }
 
@@ -539,15 +480,15 @@
 }
 
 .footprint .body {
-  fill: var(--color-ink-rule);
-  stroke: var(--color-ink);
+  fill: var(--color-umber-rule);
+  stroke: var(--color-umber);
   stroke-width: 1px;
   vector-effect: non-scaling-stroke;
 }
 
 .footprint .base {
   fill: none;
-  stroke: var(--color-ink-soft);
+  stroke: var(--color-soft);
   stroke-width: 1px;
   stroke-dasharray: 3 2;
   vector-effect: non-scaling-stroke;
@@ -572,7 +513,3 @@
   }
 }
 
-.row:has(.link:focus-visible) {
-  outline: 1px solid var(--color-ink);
-  outline-offset: 2px;
-}

@@ -9,8 +9,8 @@ export const LEAD_TIMES: readonly ({ name: string } & ({ from: number; to: numbe
   { name: "Stone", note: "Back to normal" },
 ];
 
-/** When the figures were last checked. */
-export const LEAD_TIMES_AS_OF = "2026-10-01";
+/** When the figures were last checked, as written and as a machine reads it. */
+export const LEAD_TIMES_AS_OF = { shown: "1 October 2026", iso: "2026-10-01" };
 
 /** The scale's end, in weeks, and the step between its numbers. */
 export const WEEKS = 16;

@@ -5,7 +5,7 @@ import type { StaticImageData } from "next/image";
  * kind of maker till the studio's real partners are set. To show a real one,
  * give its `name`, its `logo` (shown in place of the trade's mark) and its
  * `href` (the card then links out). `room`: the room photo (rooms.ts, by its
- * plan room) that comes up behind the card when it is pointed at.
+ * plan room) that fills the card.
  */
 export const MAKERS: readonly {
   trade: string;

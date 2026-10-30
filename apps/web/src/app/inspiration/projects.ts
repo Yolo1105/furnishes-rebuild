@@ -17,7 +17,7 @@ export const PROJECTS: readonly {
   {
     slug: "tampines-living-dining",
     title: "Tampines living and dining",
-    body: "The sofa turned to face the window; one long low unit takes the TV, the books and the router.",
+    body: "The sofa turned to face the window. One long low unit takes the TV, the books and the router.",
     place: "Tampines",
     room: "living",
     view: "built",
@@ -41,7 +41,7 @@ export const PROJECTS: readonly {
   {
     slug: "queenstown-master-bedroom",
     title: "Queenstown master bedroom",
-    body: "The window seat kept; a bench at the foot of the bed takes the clothes that never reach the wardrobe.",
+    body: "The window seat kept. A bench at the foot of the bed takes the clothes that never reach the wardrobe.",
     place: "Queenstown",
     room: "master",
     view: "drawn",
@@ -49,7 +49,7 @@ export const PROJECTS: readonly {
   {
     slug: "sengkang-reading-room",
     title: "Sengkang reading room",
-    body: "The second bedroom as a reading room: two low chairs, a lamp between them, books where the bed was.",
+    body: "The second bedroom as a reading room. Two low chairs, a lamp between them, books where the bed was.",
     place: "Sengkang",
     room: "bedroom2",
     view: "built",

@@ -1,10 +1,10 @@
 import type { StaticImageData } from "next/image";
-import renderBedHead from "@/assets/render-bed-head.webp";
-import renderBookwall from "@/assets/render-bookwall.webp";
-import renderDesk from "@/assets/render-desk.webp";
-import renderEdge from "@/assets/render-edge.webp";
-import renderEntry from "@/assets/render-entry.webp";
-import renderKitchen from "@/assets/render-kitchen.webp";
+import afternoonRoom from "@/assets/afternoon-living-room.jpg";
+import readingCorner from "@/assets/reading-corner.jpg";
+import gardenDining from "@/assets/garden-dining-room.jpg";
+import sageSideboard from "@/assets/sage-sideboard.jpg";
+import staircaseCorner from "@/assets/staircase-reading-corner.jpg";
+import aFrameRoom from "@/assets/a-frame-living-room.jpg";
 
 /**
  * A run of the paragraph: words (`mark`ed ones in orange), or a picture set
@@ -18,21 +18,21 @@ export type Run = { words: string; mark?: boolean } | { photo: StaticImageData; 
  * speaks of set into its line.
  */
 export const MANIFESTO: readonly Run[] = [
-  { words: "A change at home can start somewhere small: an entryway where the bag finds its place," },
-  { photo: renderEntry, alt: "A Furnishes entryway piece with hooks, a shallow tray and a low shelf" },
+  { words: "A change at home can start somewhere small, an entryway where the bag finds its place," },
+  { photo: staircaseCorner, alt: "Two armchairs by a tall window at the foot of a staircase" },
   { words: "a bedside with the book" },
   { words: "within reach,", mark: true },
-  { photo: renderBedHead, alt: "A Furnishes bed head with shelves at hand's height" },
+  { photo: afternoonRoom, alt: "A living room in afternoon light" },
   { words: "a desk that holds work and the things you love." },
-  { photo: renderDesk, alt: "A Furnishes desk with open shelves and a side unit" },
+  { photo: gardenDining, alt: "A dining table in a glass room facing a garden" },
   { words: "We design whole pieces from boards, structure and fittings," },
-  { photo: renderEdge, alt: "The edge of an 18 mm Furnishes board, close up" },
+  { photo: sageSideboard, alt: "A sideboard against a sage wall" },
   { words: "each one good to look at and to use on its own. A piece should" },
-  { words: "make today better first;", mark: true },
+  { words: "make today better first,", mark: true },
   { words: "adding to it later is a bonus. What you already own stays" },
-  { photo: renderBookwall, alt: "A Furnishes bookwall round a room's own furniture" },
+  { photo: readingCorner, alt: "A reading corner with wall shelves and an orange armchair" },
   { words: "part of the home, and every choice starts from" },
-  { photo: renderKitchen, alt: "A Furnishes kitchen cart beside a counter" },
+  { photo: aFrameRoom, alt: "An open kitchen under a tall triangular window" },
   { words: "what matters to you.", mark: true },
 ];
 
@@ -44,7 +44,7 @@ export const MANIFESTO: readonly Run[] = [
  */
 export const FIGURES: readonly { value: string; unit?: string; label: string }[] = [
   { value: "18", unit: "mm", label: "every board, cut to your plan." },
-  { value: "24/7", label: "our AI Interior Consultant, day or night." },
+  { value: "24", unit: "hours", label: "a day, our AI Interior Consultant answers." },
   { value: "11", unit: "steps", label: "from a floor plan to your door." },
   { value: "1", unit: "chat", label: "is all it takes to begin." },
 ];

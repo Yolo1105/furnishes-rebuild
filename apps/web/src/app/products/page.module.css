@@ -4,8 +4,6 @@
   isolation: isolate;
   padding: calc(var(--nav-h) + clamp(32px, 6vh, 72px)) var(--gutter) clamp(72px, 14vh, 160px);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.page) :where(h1, p) {
@@ -13,19 +11,18 @@
 }
 
 /* the small capitals: the index line, the room chips, the count */
-.index,
-.chip,
-.count {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+.index {
+  composes: label from global;
 }
 
-.index {
-  display: flex;
-  gap: var(--space-6);
+.chip {
+  composes: caps button-outline from global;
 }
+
+.count {
+  composes: caps from global;
+}
+
 
 .head {
   display: grid;
@@ -34,17 +31,11 @@
 }
 
 .title {
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
 }
 
 .lede {
   max-width: 40rem;
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
-  line-height: 1.5;
+  font-size: var(--text-body);
 }
 
 /* the rooms, one row of outlined chips; the one in view filled in umber */
@@ -56,29 +47,13 @@
 }
 
 .chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-umber);
-  text-decoration: none;
-  transition:
-    background-color var(--dur-fast) ease,
-    color var(--dur-fast) ease;
-}
-
-.chip:hover {
-  background: var(--color-peach-paper);
+  padding-inline: var(--space-4);
 }
 
 .chip[aria-current="page"] {
-  background: var(--color-umber);
-  color: var(--color-cream);
-}
-
-.chip:focus-visible {
-  outline: 1px solid var(--color-orange);
-  outline-offset: 2px;
+  border-color: var(--button-bg);
+  background: var(--button-bg);
+  color: var(--button-fg);
 }
 
 .group {
@@ -93,23 +68,21 @@
   align-items: baseline;
   gap: var(--space-4);
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-umber);
+  border-bottom: var(--frame);
   font-variant-numeric: tabular-nums;
 }
 
 .groupName {
   margin: 0;
   font-size: inherit;
-  font-weight: 700;
   letter-spacing: inherit;
+  line-height: inherit;
 }
 
 .groupLine {
   max-width: 48rem;
   margin-top: var(--space-4);
-  font-size: var(--text-plan-more);
-  font-weight: 340;
-  line-height: 1.5;
+  font-size: var(--text-small);
 }
 
 .end {
@@ -120,8 +93,3 @@
   margin-top: clamp(56px, 10vh, 120px);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .chip {
-    transition: none;
-  }
-}

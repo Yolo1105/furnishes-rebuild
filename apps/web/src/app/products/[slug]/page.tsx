@@ -85,7 +85,7 @@ export default async function ProductPage({ params }: Props) {
         <header className={styles.head}>
           <p className={styles.index}>
             <span>No. {p.record}</span>
-            <span>{p.uses.map((u) => USES[u]).join(" / ")}</span>
+            <span>{p.uses.map((u) => USES[u]).join(" and ")}</span>
           </p>
           <h1 className={styles.title}>{p.name}</h1>
           <p className={styles.use}>{p.line}</p>
@@ -95,7 +95,7 @@ export default async function ProductPage({ params }: Props) {
           <div className={styles.media}>
             <Gallery product={p} />
             <p className={styles.note}>
-              {CLAIMS.renders.detail} {p.scene}
+              {CLAIMS.renders.detail}
             </p>
           </div>
 
@@ -117,20 +117,20 @@ export default async function ProductPage({ params }: Props) {
 
             <dl className={styles.facts}>
               <div>
-                <dt>Size</dt>
+                <dt className={styles.label}>Size</dt>
                 <dd>
                   {sizeLabel(p.size)}, width × height × depth, nominal
                   {p.size.baseD && `; steel base ${p.size.baseD / 10} cm deep`}
                 </dd>
               </div>
               <div>
-                <dt>Family</dt>
+                <dt className={styles.label}>Family</dt>
                 <dd>
                   {FAMILIES[p.family].name}: {FAMILIES[p.family].line}
                 </dd>
               </div>
               <div>
-                <dt>Price</dt>
+                <dt className={styles.label}>Price</dt>
                 <dd>{CLAIMS.price.detail}</dd>
               </div>
             </dl>

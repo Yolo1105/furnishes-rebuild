@@ -7,13 +7,20 @@
   --color-linen: #fbeedc; /* "Revolution" under it */
   --color-espresso: #2e2118; /* the warm dark of the washes */
   --color-mist: #ddd8d1; /* the landing's text on the photo: a soft neutral white, solid, not cream */
-  --color-rust: #8c3812; /* the bar's links, the wall title */
-  --color-burgundy: #5e1f24; /* the wordmark */
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
-  --color-umber: #6b2c12; /* "Interior" over a light studio photo; the studio's plan, its heading and words */
-  --color-umber-rule: rgb(107 44 18 / 22%); /* the fine rules between a schedule's rows */
-  --color-clay: #9a4017; /* "Revolution" under it; the flat's kind, its labels, "Scroll to explore" */
-  --color-white-rule: rgb(255 255 255 / 45%); /* fine rules on a dark or orange ground */
+  --color-umber: #6b2c12; /* the words, the plan, the rules and frames */
+  --color-umber-rule: rgb(107 44 18 / 22%); /* the plan's fine lines */
+  --color-clay: #9a4017; /* "Revolution" under it; the flat's kind, its labels, the one word of a heading */
+
+  /* Rules and frames, in the text's own colour: a fine rule between rows and
+     between sections, a solid frame round a sheet or a card. */
+  --rule: 1px solid color-mix(in srgb, currentcolor 22%, transparent);
+  --frame: 1px solid currentcolor;
+  --color-soft: color-mix(in srgb, currentcolor 70%, transparent); /* the quieter words: a lede, a note, a second line */
+
+  /* A filled button's colours; a dark band sets its own. */
+  --button-bg: var(--color-umber);
+  --button-fg: var(--color-cream);
 
   /* the peach backdrop: a cream-to-peach diagonal, with light blobs drifting over it */
   --color-peach-paper: #fff4e3;
@@ -23,10 +30,77 @@
   --color-peach-glow-2: rgb(255 198 156 / 70%);
   --color-peach-glow-3: rgb(255 248 235 / 90%);
 
-  --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
-  --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
-  --font-studio: var(--font-archivo), "Archivo", system-ui, sans-serif; /* all of the studio's words, as on the old landing */
-  --font-studio-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace; /* the studio's small capitals */
+  /* the bar's background: the old landing's orange to amber, then a warm
+     apricot as it fades: deep enough not to look pale over a photo or the cream */
+  --wash-orange: linear-gradient(
+    180deg,
+    #e83200 0%,
+    #f24a00 9%,
+    #fa6400 20%,
+    #ff8410 33%,
+    #ff9c18 46%,
+    rgb(255 164 50 / 92%) 54%,
+    rgb(255 170 72 / 78%) 62%,
+    rgb(255 176 90 / 60%) 70%,
+    rgb(255 182 104 / 42%) 78%,
+    rgb(255 188 118 / 24%) 86%,
+    rgb(255 194 130 / 10%) 93%,
+    rgb(255 194 130 / 0%) 100%
+  );
+  /* a faint, wide glow under it, so the eye comes down off the orange by degrees
+     (a quick change to the page's cream makes the cream look white) */
+  --wash-glow: linear-gradient(
+    180deg,
+    rgb(248 183 138 / 55%) 30%,
+    rgb(248 183 138 / 42%) 45%,
+    rgb(248 183 138 / 27%) 60%,
+    rgb(248 183 138 / 13%) 75%,
+    rgb(248 183 138 / 4%) 88%,
+    rgb(248 183 138 / 0%) 100%
+  );
+
+  /* The site's two faces: Archivo for every word, set narrow; Space Mono for
+     small capitals (labels, codes, index lines). The wordmark alone keeps Jost. */
+  --font-studio: var(--font-archivo), "Archivo", system-ui, sans-serif;
+  --font-studio-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
+  --font-wordmark: var(--font-jost), "Jost", system-ui, sans-serif;
+
+  /* The type scale, from the page's one big line down to the small capitals.
+     Each size is used for one role, wherever it appears. */
+  --text-display: clamp(44px, 6.4vw, 120px); /* one line across a band or a photo */
+  --text-h1: clamp(40px, 5.2vw, 92px); /* a page's title */
+  --text-h2: clamp(32px, 3.8vw, 64px); /* a section's title */
+  --text-title: clamp(22px, 2.6vw, 44px); /* a large paragraph, a package or figure title */
+  --text-item: clamp(17px, 1.7vw, 28px); /* a card, row, question or note title */
+  --text-body: clamp(16px, 1.5vw, 22px); /* paragraphs */
+  --text-small: clamp(15px, 1.35vw, 20px); /* captions, calls, buttons, inputs */
+  --text-caps: clamp(11px, 0.95vw, 14px); /* the small capitals */
+  --text-nav: clamp(12px, 1.05vw, 14px); /* the bar's links */
+  --text-number: clamp(56px, 6.5vw, 120px); /* a big number: a step, a figure, an initial */
+  --text-marquee: clamp(64px, 10.5vw, 200px); /* the collection's words running across */
+  --text-wordmark: clamp(18px, 1.5vw, 22px);
+  --text-wordmark-sm: 18px;
+
+  /* Weights: one for words, one lighter for big numbers and display lines. */
+  --weight-body: 340;
+  --weight-light: 300;
+
+  /* Tracking: tight on display lines, a touch tight on headings, open on small capitals. */
+  --track-display: -0.03em;
+  --track-heading: -0.015em;
+  --track-caps: 0.16em;
+  --track-label: 0.12em; /* a section's label */
+  --track-nav: 0.06em; /* the bar's links: Archivo capitals, lightly tracked */
+
+  /* Leading, by role. */
+  --leading-display: 1;
+  --leading-heading: 1.02;
+  --leading-title: 1.15;
+  --leading-body: 1.5;
+  --leading-loose: 1.75; /* a large paragraph with pictures set into its lines */
+
+  --stretch-narrow: 78%; /* Archivo, set narrow, for every word */
+  --stretch-wide: 118%; /* the photo label, set wide, as the old landing's hero */
 
   --space-1: 4px;
   --space-2: 8px;
@@ -35,44 +109,16 @@
 
   --radius-sm: 2px;
   --radius-md: 4px;
+  --radius-frame: 12px; /* the collection banner's frame */
+  --radius-pill: 999px;
 
-  --text-xs: 11px;
-  --text-nav: clamp(12px, 1.05vw, 14px);
-  --text-wordmark: clamp(18px, 1.5vw, 22px);
-  --text-wordmark-sm: 18px;
-  --text-label: 1.25rem;
-  --text-display: 9.5vw; /* the landing's headline */
-  --text-display-sm: 15.5vw; /* the same on upright phones */
-  --text-title-sm: clamp(40px, 13vw, 72px); /* the title on upright phones */
-  --text-plan-head: clamp(22px, 3.05vw, 54px); /* the heading over the plan */
-  --text-section-head: clamp(36px, 4.6vw, 84px); /* the headlines of the sections after the cases */
-  --text-plan-lede: clamp(16px, 1.5vw, 22px); /* the line on what the studio does */
-  --text-footer-call: clamp(1.6rem, 4.6vw, 4rem); /* the address to write to, in the footer */
-  --text-footer-head: clamp(1.6rem, 3.3vw, 3.4rem); /* the footer's two-line call, each line kept whole */
-  --text-footer-body: clamp(17px, 1.4vw, 21px); /* the footer's paragraphs */
-  --text-footer-label: clamp(14px, 1.1vw, 17px); /* the small capitals over each part of it */
-  --text-footer-legal: clamp(15px, 1.2vw, 17px); /* the copyright */
-  --text-plan-more: clamp(15px, 1.35vw, 20px); /* "How it works?" under the plan */
-  --text-ruler: clamp(11px, 0.95vw, 14px); /* the room numbers on the tour's scale */
-  --text-tour-head: clamp(15px, 1.6vw, 28px); /* the tour's headline, beside the plan */
-  --text-tour-number: clamp(56px, 6.5vw, 120px); /* the tour's big room number */
-  --text-tour-name: clamp(17px, 1.7vw, 28px); /* the tour's room name */
-  --text-manifesto: clamp(26px, 3.1vw, 56px); /* "Who we are", the paragraph with photos in its lines */
-  --text-figure: clamp(44px, 4.8vw, 88px); /* the figures under it, rolling to their values */
-  --dur-roll: 1.8s; /* a figure's digits rolling to their values */
-  --text-photo-title: clamp(40px, 6.4vw, 104px); /* "Revolution" over the studio photos, as the old landing's hero */
-  --track-title: 0.08em;
-  --track-display: -0.03em;
-  --track-narrow: 0.06em;
-  --track-heading: -0.015em; /* the studio's headings, as the old landing's */
-  --track-menu: 0.16em; /* the studio's mono labels, as the old landing's Menu */
-  --stretch-narrow: 78%; /* the old landing's Archivo, set narrow */
-  --stretch-wide: 106%; /* the heading over the plan, set wide */
+  --dur-roll: 1s; /* a figure's digits spinning to their values */
 
   /* page edge to content: the bar and everything under it */
-  --gutter: clamp(16px, 2.5vw, 48px);
-  --pad-section: clamp(32px, 6.8vw, 120px); /* a full-width band's sides, as the old landing's */
-  --nav-h: 64px;
+  --gutter: clamp(32px, 6.8vw, 120px);
+  --gap: clamp(16px, 2.5vw, 48px); /* between the columns of a section */
+  --nav-h: 72px;
+  --nav-pad-x: clamp(16px, 2.5vw, 48px); /* the bar's sides, as they were */
   --nav-pad-y: clamp(10px, 1.2vh, 14px);
   --nav-gap: clamp(18px, 2.4vw, 36px);
 
@@ -108,6 +154,144 @@ body {
   overscroll-behavior: none;
 }
 
+/* The site's words: Archivo, narrow, at body size, in umber. Every page and
+   section inherits this; only a dark band or a filled button recolours. */
+body {
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-size: var(--text-body);
+  font-weight: var(--weight-body);
+  font-stretch: var(--stretch-narrow);
+  line-height: var(--leading-body);
+}
+
+/* Headings: the page's title, a section's title, an item's title. Each
+   module places them (margins, measure, colour); it does not resize them. */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: inherit;
+  letter-spacing: var(--track-heading);
+}
+
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-heading);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+}
+
+h3 {
+  font-size: var(--text-item);
+  line-height: var(--leading-title);
+}
+
+/* Links carry no underline; a call shows itself by its arrow, its frame or
+   its fill, and a link in running text by the orange. */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Buttons: one filled, one outlined, square, at the small size. Modules take
+   them with `composes: button from global` or `button-outline`. */
+.button,
+.button-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  padding: 0 var(--space-6);
+  border: 1px solid transparent;
+  background: none;
+  color: inherit;
+  font-size: var(--text-small);
+  line-height: var(--leading-display);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    opacity var(--dur-fast) ease;
+}
+
+.button {
+  border-color: var(--button-bg);
+  background: var(--button-bg);
+  color: var(--button-fg);
+}
+
+.button:hover {
+  opacity: 0.85;
+}
+
+.button-outline {
+  border-color: currentcolor;
+}
+
+.button-outline:hover {
+  background: color-mix(in srgb, currentcolor 10%, transparent);
+}
+
+/* A section's label, over its title: Archivo capitals, a size up from the
+   small capitals and spaced wide. Modules take this with
+   `composes: label from global`. */
+.label {
+  display: flex;
+  gap: var(--space-6);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-label);
+  line-height: var(--leading-display);
+  text-transform: uppercase;
+}
+
+/* its first words in brackets, the brackets in orange */
+.label > :first-child::before,
+.label > :first-child::after {
+  color: var(--color-orange);
+}
+
+.label > :first-child::before {
+  content: "[";
+  margin-right: 0.6em;
+}
+
+.label > :first-child::after {
+  content: "]";
+  margin-left: 0.6em;
+}
+
+/* The small capitals: codes, labels on rows, tabs. Modules take this
+   with `composes: caps from global`. After the buttons, so a button in small
+   capitals keeps their size. */
+.caps {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-caps);
+  font-weight: 400;
+  font-stretch: normal;
+  letter-spacing: var(--track-caps);
+  line-height: normal;
+  text-transform: uppercase;
+}
+
+/* Controls take the page's face rather than the browser's. */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
 /* The page still scrolls, but shows no scrollbars, across or down. */
 html {
   scrollbar-width: none;
@@ -117,23 +301,22 @@ html::-webkit-scrollbar {
   display: none;
 }
 
-a {
-  color: inherit;
-}
-
-/* No box round what is clicked or tapped: the focus ring only for the
-   keyboard (each part's own :focus-visible), none where focus is moved in
-   code, and no grey flash on a tap. */
+/* No box round anything in focus, however it got there, and no grey flash on
+   a tap. The keyboard's place shows by dimming what it is on. */
 html {
   -webkit-tap-highlight-color: transparent;
 }
 
-:focus:not(:focus-visible),
-[tabindex="-1"]:focus {
+:focus {
   outline: none;
 }
 
-/* For text that only screen readers should hear. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  opacity: 0.6;
+}
+
 /* Rising into view as it scrolls on, where scroll-driven animation is
    supported (elsewhere, and for anyone who asks for less motion, simply
    there): the studio's sections below the plan, a block or card at a time. */
@@ -154,6 +337,7 @@ html {
   }
 }
 
+/* For text that only screen readers should hear. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -163,27 +347,12 @@ html {
   white-space: nowrap;
 }
 
-/* The collection's tokens: its stone ground, ink and sage band, its rounded
-   frames and pills, and its display sizes (app/collection). */
+/* Over a photo or a render: a frosted label or panel, and the wash under
+   words (app/collection). */
 :root {
-  --color-stone: #efede8; /* the collection's ground */
-  --color-stone-tile: #dfd6cb; /* a piece's tile on it: the studio renders' own stone */
-  --color-ink: #24211c; /* its words */
-  --color-ink-soft: rgb(36 33 28 / 62%); /* its quieter words */
-  --color-ink-rule: rgb(36 33 28 / 16%); /* its fine rules */
-  --color-sage: #6b7a6f; /* the band and the panel */
   --color-frost: rgb(255 255 255 / 24%); /* a label or panel over a render */
   --color-frost-line: rgb(255 255 255 / 85%); /* a label's line and dot */
   --color-shade: rgb(20 16 12 / 45%); /* the wash under words on a photo */
 
-  --radius-lg: 14px;
-  --radius-pill: 999px;
-
-  --text-marquee: clamp(64px, 10.5vw, 200px); /* the words running across */
-  --text-stat: clamp(26px, 2.8vw, 48px); /* a figure on the frosted panel */
-  --text-room-tile: clamp(24px, 2.6vw, 44px); /* a room's name on its tile */
-  --text-ring: 11px; /* the turning ring of words */
-
   --dur-marquee: 48s; /* the words running across once */
-  --dur-ring: 24s; /* one turn of the ring */
 }

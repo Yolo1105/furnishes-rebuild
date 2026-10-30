@@ -36,7 +36,6 @@ export default async function Products({ searchParams }: { searchParams: Promise
         <PeachBackdrop />
         <header className={styles.head}>
           <p className={styles.index}>
-            <span>P-100</span>
             <span>Products</span>
           </p>
           <h1 className={styles.title}>The pieces.</h1>

@@ -1,10 +1,10 @@
 import type { StaticImageData } from "next/image";
-import bedHead from "@/assets/render-bed-head.webp";
-import lowConsole from "@/assets/render-console.webp";
-import entry from "@/assets/render-entry.webp";
-import kitchen from "@/assets/render-kitchen.webp";
-import sofaBack from "@/assets/render-sofa-back.webp";
-import workCart from "@/assets/render-work-cart.webp";
+import afternoonRoom from "@/assets/afternoon-living-room.jpg";
+import whiteRoom from "@/assets/white-living-room.jpg";
+import staircaseCorner from "@/assets/staircase-reading-corner.jpg";
+import aFrameRoom from "@/assets/a-frame-living-room.jpg";
+import brightRoom from "@/assets/bright-living-room.jpg";
+import gallery from "@/assets/furniture-gallery.jpg";
 
 /**
  * The about page's words, ported from furnishes_prod's about page
@@ -21,16 +21,16 @@ export const WHO_HEADLINE: readonly { text: string; highlight?: boolean }[] = [
   { text: "passion", highlight: true },
   { text: " and " },
   { text: "craft", highlight: true },
-  { text: ": every space tells a story with Furnishes." },
+  { text: ". Every space tells a story with Furnishes." },
 ];
 
-export const WHO_TAGLINE = "Honest materials, careful detail: rooms that feel like yours.";
+export const WHO_TAGLINE = "Honest materials, careful detail, rooms that feel like yours.";
 
 export const WHO_LEAD = "We understand that good design goes beyond aesthetics. We listen first to what matters, then we shape light and layout to how you live, work and rest.";
 
 export const WHO_COLUMNS = [
   "Furnishes draws on a wide spectrum of design traditions and contemporary practice. From the clarity of minimalism and the richness of natural materials to the rigor of space planning, our roots run deep in both craft and function.",
-  "This blend of influence fuels interiors that are as livable as they are distinctive, balancing rhythm, restraint and refinement. It is in this intersection that Furnishes creates something lasting: spaces shaped by care and expertise.",
+  "This blend of influence fuels interiors that are as livable as they are distinctive, balancing rhythm, restraint and refinement. It is in this intersection that Furnishes creates something lasting. Spaces shaped by care and expertise.",
 ] as const;
 
 export const WORKSHOP: readonly { label: string; value: string }[] = [
@@ -57,9 +57,9 @@ export const PROJECTS: readonly {
     project: "Nordic Retreat House",
     result: "Winner",
     images: [
-      { src: entry, alt: "An entry unit by the door: hooks, a shelf and a shoe tray" },
-      { src: kitchen, alt: "A kitchen cart with jars on top, against a tiled wall" },
-      { src: bedHead, alt: "A bed head with shelves and a lamp, under a sloping roof" },
+      { src: staircaseCorner, alt: "Two armchairs by a tall window at the foot of a staircase" },
+      { src: aFrameRoom, alt: "An open kitchen under a tall triangular window" },
+      { src: afternoonRoom, alt: "A living room in afternoon light" },
     ],
   },
   {
@@ -68,9 +68,9 @@ export const PROJECTS: readonly {
     project: "Oslo Civic Pavilion",
     result: "Honorable mention",
     images: [
-      { src: lowConsole, alt: "A low console against a sunlit wall" },
-      { src: sofaBack, alt: "A shelf unit standing behind a sofa" },
-      { src: workCart, alt: "A work cart on castors" },
+      { src: whiteRoom, alt: "A white living room with a sofa and a round table" },
+      { src: brightRoom, alt: "A bright living room with a leather sofa and a bookcase" },
+      { src: gallery, alt: "A gallery of wooden furniture" },
     ],
   },
   { year: "2022", award: "Global Design Awards, Eco Innovation", project: "Forestline Studio", result: "Finalist" },

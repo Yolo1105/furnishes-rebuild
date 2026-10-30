@@ -94,7 +94,6 @@ export function Inquiry() {
     <section className={styles.inquiry} aria-labelledby="inquiry-title">
       <aside className={styles.side}>
         <p className={styles.index}>
-          <span>A-910</span>
           <span>Inquiry</span>
         </p>
         <ol className={styles.steps}>
@@ -108,8 +107,6 @@ export function Inquiry() {
           ))}
         </ol>
         <div className={styles.sheet}>
-          <p className={styles.label}>Sheet</p>
-          <p className={styles.sheetNumber}>A-{911 + step}</p>
           <p className={styles.label}>
             Step {step + 1} of {STEPS.length}
           </p>
@@ -128,7 +125,7 @@ export function Inquiry() {
               <legend className="visually-hidden">{heading}</legend>
               {SCOPES.map((s, i) => (
                 <label key={s.name} className={styles.card}>
-                  <span className={styles.code}>S-{pad(i + 1)}</span>
+                  <span className={styles.code}>{pad(i + 1)}</span>
                   <input
                     type="checkbox"
                     className={styles.check}
@@ -312,7 +309,6 @@ export function Inquiry() {
             )}
             <button type="submit" className={styles.next}>
               {last ? "Send request" : `Next: ${STEPS[step + 1]?.name.toLowerCase()}`}
-              <span aria-hidden="true">→</span>
             </button>
           </div>
         </footer>

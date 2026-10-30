@@ -2,12 +2,10 @@
 .inquiry {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
-  gap: var(--gutter);
+  gap: var(--gap);
   align-items: stretch;
   padding: clamp(40px, 8vh, 96px) var(--gutter);
   color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-stretch: var(--stretch-narrow);
 }
 
 :where(.inquiry) :where(h2, p, ol, dl, dd, fieldset) {
@@ -26,19 +24,18 @@
 }
 
 /* the small capitals: the index, the labels and each card's code */
-.index,
-.label,
-.code {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+.index {
+  composes: label from global;
 }
 
-.index {
-  display: flex;
-  gap: var(--space-6);
+.label {
+  composes: caps from global;
 }
+
+.code {
+  composes: caps from global;
+}
+
 
 /* the steps down the left, ruled; the one in view marked in orange */
 .side {
@@ -48,12 +45,14 @@
 
 .steps {
   margin-top: var(--space-6);
-  border-top: 1px solid var(--color-umber-rule);
   list-style: none;
 }
 
 .step {
-  border-bottom: 1px solid var(--color-umber-rule);
+}
+
+.step + .step {
+  border-top: var(--rule);
 }
 
 .stepButton {
@@ -64,8 +63,7 @@
   padding: var(--space-6) 0;
   border: 0;
   background: none;
-  font-size: var(--text-tour-name);
-  font-weight: 340;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
   text-align: start;
   cursor: pointer;
@@ -74,11 +72,6 @@
 
 .stepButton:not(:disabled):hover {
   background: var(--color-peach-glow-1);
-}
-
-.stepButton:focus-visible {
-  outline: 1px solid currentcolor;
-  outline-offset: -1px;
 }
 
 /* steps not reached yet are faint and can't be chosen */
@@ -97,15 +90,9 @@
 .sheet {
   margin-top: auto;
   padding-top: var(--space-6);
-  border-top: 1px solid var(--color-umber);
+  border-top: var(--frame);
 }
 
-.sheetNumber {
-  font-size: var(--text-section-head);
-  font-weight: 600;
-  letter-spacing: var(--track-heading);
-  line-height: 1.1;
-}
 
 /* the step's question, in a ruled frame */
 .frame {
@@ -113,21 +100,16 @@
   flex-direction: column;
   gap: var(--space-6);
   padding: clamp(24px, 3vw, 56px);
-  border: 1px solid var(--color-umber);
+  border: var(--frame);
 }
 
 .title {
-  font-size: var(--text-section-head);
-  font-weight: 340;
-  letter-spacing: var(--track-heading);
-  line-height: 1.02;
   outline: none;
 }
 
 .lede {
   margin-top: calc(-1 * var(--space-2));
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
+  font-size: var(--text-body);
 }
 
 /* the choices as cards: three across, or four for the start */
@@ -149,7 +131,7 @@
   gap: var(--space-2);
   min-height: clamp(140px, 13vw, 200px);
   padding: var(--space-6);
-  border: 1px solid var(--color-umber-rule);
+  border: var(--rule);
   cursor: pointer;
   transition:
     background var(--dur-fast) var(--ease-rise),
@@ -169,16 +151,10 @@
   background: var(--color-peach-glow-1);
 }
 
-.card:has(:focus-visible) {
-  outline: 1px solid currentcolor;
-  outline-offset: 2px;
-}
-
 .cardName {
-  font-size: var(--text-tour-name);
-  font-weight: 400;
+  font-size: var(--text-item);
   letter-spacing: var(--track-heading);
-  line-height: 1.2;
+  line-height: var(--leading-title);
 }
 
 /* the box (or circle) in a card's corner */
@@ -228,25 +204,24 @@
 }
 
 .ask {
-  font-size: var(--text-plan-lede);
-  font-weight: 340;
+  font-size: var(--text-body);
 }
 
 /* the room counts as one row of joined boxes */
 .segments {
   display: flex;
   width: fit-content;
-  border: 1px solid var(--color-umber-rule);
+  border: var(--rule);
 }
 
 .segment {
   padding: var(--space-4) var(--space-6);
-  font-size: var(--text-plan-lede);
+  font-size: var(--text-body);
   cursor: pointer;
 }
 
 .segment + .segment {
-  border-left: 1px solid var(--color-umber-rule);
+  border-left: var(--rule);
 }
 
 .segment:has(:checked) {
@@ -254,17 +229,12 @@
   color: var(--color-cream);
 }
 
-.segment:has(:focus-visible) {
-  outline: 1px solid var(--color-umber);
-  outline-offset: 2px;
-}
-
 /* a text field: the words over an umber line */
 .underline {
   display: flex;
   gap: var(--space-4);
   align-items: baseline;
-  border-bottom: 1px solid var(--color-umber);
+  border-bottom: var(--frame);
   white-space: nowrap;
 }
 
@@ -274,8 +244,7 @@
   padding: var(--space-2) 0;
   border: 0;
   background: none;
-  font-size: var(--text-tour-name);
-  font-weight: 340;
+  font-size: var(--text-item);
   outline: none;
 }
 
@@ -283,6 +252,10 @@
 .notes::placeholder {
   color: inherit;
   opacity: 0.5;
+}
+
+.input.underline {
+  border-bottom: 1px solid currentcolor;
 }
 
 .input:focus-visible {
@@ -293,19 +266,15 @@
 .notes {
   min-height: 8em;
   padding: var(--space-4);
-  border: 1px solid var(--color-umber-rule);
+  border: var(--rule);
   background: none;
-  font-size: var(--text-plan-lede);
+  font-size: var(--text-body);
   resize: vertical;
-}
-
-.notes:focus-visible {
-  outline: 1px solid var(--color-umber);
 }
 
 /* the review: each answer over a rule, with an edit at its end */
 .review {
-  border-top: 1px solid var(--color-umber);
+  border-top: var(--rule);
 }
 
 .reviewRow {
@@ -314,12 +283,14 @@
   gap: var(--space-4);
   align-items: baseline;
   padding: var(--space-6) 0;
-  border-bottom: 1px solid var(--color-umber-rule);
+}
+
+.reviewRow + .reviewRow {
+  border-top: var(--rule);
 }
 
 .reviewValue {
-  font-size: var(--text-tour-name);
-  font-weight: 340;
+  font-size: var(--text-item);
   overflow-wrap: anywhere;
 }
 
@@ -332,22 +303,19 @@
   padding: var(--space-2) 0;
   border: 0;
   background: none;
-  font-size: var(--text-plan-more);
+  font-size: var(--text-small);
   cursor: pointer;
-  text-decoration: underline transparent;
-  text-underline-offset: 0.2em;
   transition: text-decoration-color var(--dur-fast) var(--ease-rise);
 }
 
 .edit:hover,
 .back:hover {
-  text-decoration-color: currentcolor;
+  opacity: 0.7;
 }
 
 .error {
   color: var(--color-orange);
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-ruler);
+  font-size: var(--text-small);
 }
 
 .error:empty {
@@ -355,7 +323,7 @@
 }
 
 .sent {
-  font-size: var(--text-plan-lede);
+  font-size: var(--text-body);
 }
 
 /* the foot: a way to write instead, then back and on */
@@ -367,16 +335,19 @@
   justify-content: space-between;
   margin-top: auto;
   padding-top: var(--space-6);
-  border-top: 1px solid var(--color-umber-rule);
+  border-top: var(--rule);
 }
 
 .write {
-  font-size: var(--text-plan-more);
-  font-weight: 340;
+  font-size: var(--text-small);
+}
+
+.write a,
+.sent a {
+  color: var(--color-orange);
 }
 
 .write a {
-  font-weight: 400;
   overflow-wrap: anywhere;
 }
 
@@ -387,25 +358,7 @@
 }
 
 .next {
-  display: inline-flex;
-  gap: var(--space-4);
-  align-items: center;
-  padding: var(--space-4) clamp(20px, 1.8vw, 32px);
-  border: 0;
-  background: var(--color-night);
-  color: var(--color-cream);
-  font-size: var(--text-plan-more);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-rise);
-}
-
-.next:hover {
-  background: var(--color-espresso);
-}
-
-.next:focus-visible {
-  outline: 1px solid var(--color-night);
-  outline-offset: 2px;
+  composes: button from global;
 }
 
 /* the steps over the frame, and the cards two or one across, on narrower screens */
@@ -418,12 +371,14 @@
     display: flex;
     overflow-x: auto;
     scrollbar-width: none;
-    border-bottom: 1px solid var(--color-umber-rule);
   }
 
   .step {
     flex: none;
-    border-bottom: 0;
+  }
+
+  .step + .step {
+    border-top: 0;
   }
 
   .stepButton {

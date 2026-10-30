@@ -295,7 +295,7 @@ function Index({ state }: { state: FinderState }) {
     <>
       <ul className={styles.chips} aria-label="Kind of design">
         <li>
-          <Link href={hrefFor(state, { kind: undefined })} aria-current={state.kind ? undefined : "true"} scroll={false}>
+          <Link href={hrefFor(state, { kind: undefined })} className={styles.view} aria-current={state.kind ? undefined : "true"} scroll={false}>
             Every kind <span className={styles.n}>{DESIGNS.filter((d) => designMatches(d, { ...state, kind: undefined })).length}</span>
           </Link>
         </li>
@@ -303,6 +303,7 @@ function Index({ state }: { state: FinderState }) {
           <li key={k}>
             <Link
               href={hrefFor(state, { kind: k })}
+              className={styles.view}
               aria-current={state.kind === k ? "true" : undefined}
               data-kind={k}
               scroll={false}
@@ -389,7 +390,7 @@ export function Finder({ state }: { state: FinderState }) {
   return (
     <section id="find" className={styles.finder} aria-labelledby="find-title">
       <h2 id="find-title" className={styles.title}>
-        <em>Find</em> your piece
+        Find your piece
       </h2>
 
       <form className={styles.search} action={`${routes.collection}#find`} role="search">
@@ -402,7 +403,7 @@ export function Finder({ state }: { state: FinderState }) {
           return v ? <input key={f} type="hidden" name={f} value={v} /> : null;
         })}
         {state.view !== "grid" && <input type="hidden" name="view" value={state.view} />}
-        <button type="submit" className={styles.pill}>
+        <button type="submit" className={styles.searchButton}>
           Search
         </button>
       </form>
@@ -418,7 +419,7 @@ export function Finder({ state }: { state: FinderState }) {
             )}
           </p>
           {index ? (
-            <p className={styles.familyLine}>The index lists every design; narrow it by kind or search above.</p>
+            <p className={styles.familyLine}>The index lists every design. Narrow it by kind or search above.</p>
           ) : (
             GROUPS.map((g) => <Group key={g.field} {...g} state={state} />)
           )}
@@ -427,11 +428,11 @@ export function Finder({ state }: { state: FinderState }) {
           {!index && state.object && <p className={styles.familyLine}>Each one has {OBJECTS[state.object].fits}.</p>}
         </aside>
 
-        <div className={styles.results}>
+        <div>
           <ul className={styles.views} aria-label="Lay out as">
             {(Object.keys(VIEWS) as ViewId[]).map((v) => (
               <li key={v}>
-                <Link href={hrefFor(state, { view: v })} aria-current={state.view === v ? "true" : undefined} scroll={false}>
+                <Link href={hrefFor(state, { view: v })} className={styles.view} aria-current={state.view === v ? "true" : undefined} scroll={false}>
                   {VIEWS[v]}
                 </Link>
               </li>

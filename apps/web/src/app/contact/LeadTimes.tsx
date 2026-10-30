@@ -17,7 +17,6 @@ export function LeadTimes() {
     <section className={styles.band} aria-labelledby="lead-title">
       <div className={styles.call}>
         <p className={styles.mono}>
-          <span>A-500</span>
           <span>Newsletter</span>
         </p>
         <h2 id="lead-title" className={styles.title}>
@@ -39,7 +38,6 @@ export function LeadTimes() {
           </label>
           <button type="submit" className={styles.button}>
             Get lead times by email
-            <span aria-hidden="true">→</span>
           </button>
         </form>
       </div>
@@ -48,7 +46,7 @@ export function LeadTimes() {
         <figcaption className={`${styles.mono} ${styles.caption}`}>
           <span>Lead times in Singapore</span>
           <span>
-            As of <time dateTime={LEAD_TIMES_AS_OF}>{LEAD_TIMES_AS_OF}</time>
+            As of <time dateTime={LEAD_TIMES_AS_OF.iso}>{LEAD_TIMES_AS_OF.shown}</time>
           </span>
         </figcaption>
         <div className={styles.row} aria-hidden="true">
@@ -85,7 +83,7 @@ export function LeadTimes() {
             </div>
           ))}
         </dl>
-        <p className={`${styles.mono} ${styles.key}`}>Solid, the usual wait; dashed, how long it can run</p>
+        <p className={`${styles.mono} ${styles.key}`}>Solid is the usual wait, dashed is how long it can run</p>
       </figure>
     </section>
   );

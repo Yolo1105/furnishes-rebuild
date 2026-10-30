@@ -2,4 +2,4 @@
 export const EMAIL = "hello@furnish-es.com";
 
 /** When the studio is open. */
-export const HOURS = ["Mon-Fri · 9am-6pm SGT", "Sat · 10am-4pm SGT", "Closed Sun & public holidays"] as const;
+export const HOURS = ["Monday to Friday, 9am to 6pm SGT", "Saturday, 10am to 4pm SGT", "Closed Sundays and public holidays"] as const;

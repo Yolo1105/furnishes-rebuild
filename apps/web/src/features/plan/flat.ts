@@ -78,6 +78,9 @@ function sidesOf(r: Room): Side[] {
   });
 }
 
+/** How far boxes cleared side by side run into each other, mm: enough to overlap by a pixel, or a hairline of wall shows between them. */
+export const SEAM = 50;
+
 /**
  * The walls as boxes to fill and boxes to clear: every room, grown by half
  * the gap, fills its share of the walls round it; each room's floor is then
@@ -107,7 +110,8 @@ export function wallBoxes() {
         // at a corner where both sides are partitions, run on to meet the other one's face
         const lo = a0 === side.range[0] && turnsInside(side, a0) ? a0 - grow : a0;
         const hi = a1 === side.range[1] && turnsInside(side, a1) ? a1 + grow : a1;
-        clear.push(strip(side, 0, grow, lo, hi));
+        // (from a little inside the room, so no seam shows where the two meet)
+        clear.push(strip(side, -SEAM, grow, lo, hi));
       }
       // the rest of the side is outside: cut the wall back to its thickness
       // there, running on round the room's corner, and stopping at another
