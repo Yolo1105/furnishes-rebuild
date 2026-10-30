@@ -10,4 +10,7 @@ export const routes = {
   contact: "/contact",
   studio: "/studio",
   signIn: "/sign-in",
+  terms: "/terms",
+  privacy: "/privacy-policy",
+  refunds: "/refund-policy",
 } as const;

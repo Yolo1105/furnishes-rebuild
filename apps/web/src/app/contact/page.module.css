@@ -1,0 +1,95 @@
+/* Contact, over the peach: in the studio's words and umber. */
+.page {
+  isolation: isolate;
+}
+
+/* the headline on the left, the ruled list on the right, as the questions */
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: var(--gutter);
+  align-items: start;
+  padding: clamp(140px, 22vh, 240px) var(--gutter) clamp(40px, 8vh, 96px);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.contact) :where(h1, p, dl, dd) {
+  margin: 0;
+}
+
+/* the small capitals: the index and each row's label */
+.index,
+.label {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.title {
+  margin-top: var(--space-6);
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+.lede {
+  margin-top: var(--space-6);
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+/* each way to reach us over a rule, closed with one */
+.list {
+  border-top: 1px solid var(--color-umber);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 6em minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: baseline;
+  padding: var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--color-umber);
+}
+
+.value {
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.35;
+}
+
+.email {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+
+.hour {
+  display: block;
+}
+
+/* the headline over the list on narrower screens */
+@media (max-width: 900px) {
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(40px, 8vh, 64px);
+  }
+
+  .row {
+    grid-template-columns: 4.5em minmax(0, 1fr);
+    padding-inline: 0;
+  }
+}

@@ -1,0 +1,116 @@
+/* The workshop band: the photo across it, a pale card over its left. */
+.band {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: clamp(560px, 100vh, 960px);
+  padding: calc(var(--nav-h) + var(--space-6)) var(--gutter) clamp(40px, 8vh, 96px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* the machine sits right in the photo, so keep that side when it crops */
+.photo {
+  z-index: -1;
+  object-fit: cover;
+  object-position: right center;
+}
+
+.card {
+  width: min(100%, 640px);
+  margin-left: clamp(0px, 4vw, 80px);
+  padding: clamp(28px, 2.6vw, 44px);
+  background: var(--color-paper);
+  color: var(--color-night);
+  font-family: var(--font-studio);
+}
+
+:where(.card) :where(h2, p, dl, dd) {
+  margin: 0;
+}
+
+.title {
+  font-size: clamp(28px, 2.6vw, 44px);
+  font-weight: 500;
+  letter-spacing: var(--track-heading);
+  line-height: 1.1;
+}
+
+.lede {
+  margin-top: var(--space-6);
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.6;
+}
+
+/* the schedule: label left, figure right, each over a fine rule */
+.list {
+  margin-top: var(--space-6);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-umber-rule);
+}
+
+.row dd {
+  font-size: 1.3em;
+  text-align: right;
+}
+
+/* the orange block */
+.button {
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: center;
+  min-height: var(--tap);
+  margin-top: clamp(24px, 2.4vw, 36px);
+  padding: var(--space-4) clamp(24px, 2vw, 32px);
+  background: var(--color-orange);
+  color: var(--color-night);
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-plan-more);
+  font-weight: 700;
+  letter-spacing: var(--track-narrow);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.arrow {
+  transition: translate var(--dur-fast) var(--ease-rise);
+}
+
+.button:hover .arrow {
+  translate: 4px 0;
+}
+
+/* on phones the card sits under the photo rather than over it */
+@media (max-width: 700px) {
+  .band {
+    flex-direction: column;
+    align-items: stretch;
+    padding: calc(var(--nav-h) + 56vw) 0 0;
+  }
+
+  .photo {
+    height: calc(var(--nav-h) + 64vw) !important;
+  }
+
+  .card {
+    margin: 0;
+    width: 100%;
+    padding-inline: var(--gutter);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+  }
+}

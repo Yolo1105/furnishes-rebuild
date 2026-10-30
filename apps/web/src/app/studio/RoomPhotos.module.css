@@ -34,10 +34,11 @@
   height: var(--h);
 }
 
-/* The label at the bottom left, in one face stretched wide, in capitals:
-   "Interior" smaller and darker over "Revolution". Each line rises in, the
-   second just after the first. A pale wash comes up from that corner of the
-   photo so the browns stand on light, whatever the room. */
+/* The label at the bottom left, set as the old landing's hero title: Archivo
+   stretched wide, in capitals, "Interior" smaller over "Revolution". On a
+   light photo it is umber over clay; each word on a dark one (data-on-dark)
+   turns, "Interior" to apricot, "Revolution" to a pale cream. Each line rises in, the
+   second just after the first. */
 .label {
   position: absolute;
   z-index: 2;
@@ -45,34 +46,26 @@
   bottom: var(--gutter);
   display: flex;
   flex-direction: column;
-  margin: 0 0 0 -0.02em;
-  font-family: var(--font-photo);
+  /* each word only as wide as itself, so it is measured against what is behind it */
+  align-items: flex-start;
+  /* the wide capitals sit inside their box: pulled back to the gutter */
+  margin: 0 0 0 -0.09em;
+  font-family: var(--font-studio);
   font-size: var(--text-photo-title);
   font-variation-settings:
-    "wght" 400,
-    "wdth" 125;
+    "wght" 280,
+    "wdth" 118;
   line-height: 0.92;
   text-transform: uppercase;
   white-space: nowrap;
-}
-
-.frame::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 70% 45% at 0% 100%,
-    color-mix(in srgb, var(--color-paper) 92%, transparent),
-    color-mix(in srgb, var(--color-paper) 60%, transparent) 45%,
-    transparent
-  );
-  pointer-events: none;
+  /* hidden for now; still laid out, so the bar's colour is still measured */
+  visibility: hidden;
 }
 
 .lead,
 .echo {
   animation: rise var(--dur-rise) var(--ease-rise) both;
+  transition: color var(--dur-fade) ease-in-out;
 }
 
 .lead {
@@ -82,7 +75,16 @@
 
 .echo {
   color: var(--color-clay);
+  font-size: 0.78em;
   animation-delay: 0.14s;
+}
+
+.lead[data-on-dark] {
+  color: var(--color-apricot);
+}
+
+.echo[data-on-dark] {
+  color: var(--color-linen);
 }
 
 @keyframes rise {

@@ -1,0 +1,12 @@
+/* The walk fills its holder, and the holder whatever it is put in. */
+.holder,
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* nothing to show while the 3D context is lost */
+.canvas[data-lost] {
+  visibility: hidden;
+}

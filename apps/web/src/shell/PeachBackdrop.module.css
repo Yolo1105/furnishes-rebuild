@@ -1,7 +1,7 @@
 /* The peach backdrop: cream at the top left deepening to peach at the
    bottom right, with three soft lights drifting over it on loops of
-   different lengths, so the whole never quite repeats. It fills the screen,
-   behind everything. */
+   different lengths, so the whole never quite repeats, and a still grain
+   over all of it. It fills the screen, behind everything. */
 .peach {
   position: fixed;
   inset: 0;
@@ -47,6 +47,25 @@
   background: radial-gradient(circle, var(--color-peach-glow-3), transparent 60%);
   animation-name: drift-3;
   animation-duration: 53s;
+}
+
+/* The grain, as on the old landing: grey noise darkening it faintly, warm
+   flecks laid over it. */
+.grain,
+.flecks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.grain {
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+}
+
+.flecks {
+  opacity: 0.4;
 }
 
 @keyframes drift-1 {

@@ -194,8 +194,9 @@ export const DRAWN: Box = [-WALL, -WALL - Math.max(...BAYS.map((b) => b.depth)),
 /** The flat's floor area, m²: every room's floor, walls not counted. */
 export const FLOOR_AREA = Math.round(ROOMS.reduce((sum, r) => sum + r.w * r.d, 0) / 1e6);
 
-/** How the flat is named and summed up over its plan. */
+/** How the flat is named (its size, then its kind) and summed up over its plan. */
 export const FLAT = {
-  name: "5-room HDB",
+  name: "5-room",
+  kind: "HDB",
   rooms: "3 bedrooms · 2 bathrooms",
 } as const;

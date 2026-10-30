@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Instrument_Serif, Jost, Outfit } from "next/font/google";
+import { Archivo, Instrument_Serif, Jost, Outfit, Space_Mono } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
 import "./globals.css";
 
@@ -27,12 +27,20 @@ const outfit = Outfit({
   display: "swap",
 });
 
-// The words over the studio photos: a grotesque, set stretched wide (variable, with its width).
+// The studio's words: the old landing's grotesque (variable, with its width, for the wide title).
 const archivo = Archivo({
   subsets: ["latin"],
   weight: "variable",
   axes: ["wdth"],
   variable: "--font-archivo",
+  display: "swap",
+});
+
+// The studio's small capitals and the footer's name: the old landing's mono, in its two weights.
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
   display: "swap",
 });
 
@@ -42,8 +50,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // the studio marks its arrival on the root before React takes over (studio/intro.ts)
   return (
-    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable} ${archivo.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable} ${archivo.variable} ${spaceMono.variable}`}>
       <body>
         <SiteHeader />
         {children}

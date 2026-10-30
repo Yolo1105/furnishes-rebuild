@@ -37,8 +37,8 @@
 
 .names text {
   fill: currentColor;
-  font-family: var(--font-sans);
-  font-weight: 450;
+  font-family: var(--font-studio-mono);
+  font-weight: 400;
   letter-spacing: var(--track-title);
   text-anchor: middle;
   dominant-baseline: central;
@@ -68,4 +68,105 @@
 
 .rooms rect[data-active] {
   fill-opacity: 0.28;
+}
+
+/* Arrival: while the page's arrival plays (data-intro="play" on the root),
+   the plan draws itself, each piece from its own moment (--at, FloorPlan's
+   DRAW) after the plan's start (--plan-at). Each room's walls are traced
+   then fade as the walls fill under them; every other line is drawn along
+   its length; the faint marks fade in; the names are typed, a letter at a
+   time (--chars); the shading of the room in view comes up last. Off the
+   arrival, all of it is simply there, and the traced walls hidden. */
+.outline path {
+  stroke-width: 1px;
+  opacity: 0;
+}
+
+:global(:root[data-intro="play"]) .lines path {
+  animation: draw var(--dur-draw) var(--ease-draw) calc(var(--plan-at) + var(--at)) backwards;
+}
+
+:global(:root[data-intro="play"]) .outline path {
+  animation: trace calc(var(--dur-draw) * 2.6) var(--ease-draw) calc(var(--plan-at) + var(--at)) both;
+}
+
+:global(:root[data-intro="play"]) .lines .light {
+  animation-name: faint;
+}
+
+:global(:root[data-intro="play"]) .walls {
+  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 0.9s) backwards;
+}
+
+:global(:root[data-intro="play"]) .names text {
+  animation: type calc(var(--chars) * 40ms) steps(var(--chars), end) calc(var(--plan-at) + var(--at)) backwards;
+}
+
+:global(:root[data-intro="play"]) .rooms {
+  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 2.9s) backwards;
+}
+
+@keyframes draw {
+  from {
+    opacity: 0;
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1;
+  }
+
+  2% {
+    opacity: 1;
+  }
+
+  to {
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* drawn over the first two fifths, held, then gone once the walls are filled */
+@keyframes trace {
+  from {
+    opacity: 0;
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1;
+  }
+
+  1% {
+    opacity: 1;
+  }
+
+  40% {
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 0;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes faint {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
 }

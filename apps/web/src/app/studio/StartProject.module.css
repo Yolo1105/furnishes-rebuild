@@ -1,0 +1,62 @@
+/* The band before the footer: a photo across the screen, the question and the call at its foot. */
+.band {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: clamp(420px, 90vh, 900px);
+  padding: clamp(40px, 8vh, 96px) var(--gutter);
+  overflow: hidden;
+  color: var(--color-cream);
+  isolation: isolate;
+}
+
+.photo {
+  z-index: -2;
+  object-fit: cover;
+}
+
+/* a dark wash rising from the foot, so the words hold over any part of the photo */
+.band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgb(26 18 10 / 55%), rgb(26 18 10 / 0%) 55%);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7vw, 132px);
+  font-weight: 400;
+  letter-spacing: var(--track-display);
+  line-height: 0.95;
+}
+
+/* the dark pill */
+.button {
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) clamp(24px, 2vw, 36px);
+  border-radius: 999px;
+  background: var(--color-night);
+  color: var(--color-cream);
+  font-family: var(--font-nav);
+  font-size: var(--text-plan-more);
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-rise);
+}
+
+.button:hover {
+  background: var(--color-espresso);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

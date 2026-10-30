@@ -1,0 +1,64 @@
+/* The scale down the stage's left, on the bar's margin, fading out above and
+   below. Every tick sits --gap apart per room (--t, in rooms from the first),
+   slid so the room in view (--along, from the holder) is at --point-y. */
+.ruler {
+  --gap: var(--ruler-gap);
+  position: absolute;
+  top: var(--nav-h);
+  bottom: 0;
+  left: var(--gutter);
+  width: var(--ruler-w);
+  overflow: hidden;
+  color: var(--color-umber);
+  pointer-events: none;
+  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+}
+
+.tick,
+.mark {
+  position: absolute;
+  left: 0;
+  top: calc(var(--point-y, 50%) - var(--nav-h) + (var(--t) - var(--along, 0)) * var(--gap));
+  height: 1px;
+  background: currentColor;
+}
+
+.tick {
+  width: 8px;
+  opacity: 0.45;
+}
+
+/* a mark past the rooms: long but light */
+.mark {
+  width: 24px;
+  opacity: 0.45;
+}
+
+/* a room's mark: long and bold; the room in view's darkest */
+.mark[data-room] {
+  width: 32px;
+  height: 2px;
+  translate: 0 -0.5px;
+  opacity: 0.6;
+}
+
+.mark[data-on] {
+  opacity: 1;
+}
+
+/* a room's number, beside its mark, centred on it */
+.number {
+  position: absolute;
+  left: calc(100% + var(--space-2));
+  top: 50%;
+  translate: 0 -50%;
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* the room in view's number is the big one beside it, so none here */
+.mark[data-on] .number {
+  visibility: hidden;
+}

@@ -1,15 +1,204 @@
-/* Two parts, a screen tall, 60:40: the photos left, the plan right on the
-   peach. Upright screens stack them, the photos above. */
-.split {
-  /* its own layer, so the peach (fixed, behind) paints over the page's night */
+/* its own layer, so the peach (fixed, behind) paints over the page's night */
+.page {
   isolation: isolate;
+}
+
+/* The scroll the two parts below hold the screen through: a screen for
+   them, a screen for the plan to take the stage, then a stretch (--hold)
+   for each step of the tour (--steps). */
+.track {
+  position: relative;
+  height: calc(200svh + var(--steps) * var(--hold));
+}
+
+/* Two parts, a screen tall, 55:45: the photos left, the plan right on the
+   peach. Through the second screen the plan's half widens (--shift) to
+   70% as the photos (--photo) and words (--words) fade, and the plan grows
+   into the room they leave, centred in its half: each of these 1 to 0 or 0
+   to 1 over its own stretch of the scroll (StudioView's PHASES). Upright
+   screens stack them, the photos above. */
+.split {
+  --walk-in: 0;
+  --words: 1;
+  --photo: 1;
+  --shift: 0;
+  --ruler-in: 0;
+  --tour-head: 0;
+  --tour-room: 0;
+  --ruler-w: 72px; /* the scale's width, its numbers in it */
+  --ruler-gap: clamp(90px, 15vh, 150px); /* from one room's mark on the scale to the next's */
+  position: sticky;
+  top: 0;
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  /* held at its split whatever is inside */
+  grid-template-columns: minmax(0, calc(55% - 25% * var(--shift))) minmax(0, 1fr);
   height: 100svh;
 }
 
 .photo {
   min-height: 0;
+  opacity: var(--photo);
+}
+
+/* the words go first, drifting up as they fade, and fold away as the split
+   moves (from more than they need), so the plan has the whole half by the end */
+.head,
+.more {
+  overflow: hidden;
+  opacity: var(--words);
+  translate: 0 calc((1 - var(--words)) * -12px);
+}
+
+.head {
+  max-height: calc((1 - var(--shift)) * 40svh);
+}
+
+.more {
+  max-height: calc((1 - var(--shift)) * 10svh);
+}
+
+.split[data-wide] .head,
+.split[data-wide] .more,
+.split[data-wide] .photo {
+  pointer-events: none;
+}
+
+/* the ruler, over the whole stage (out of its grid), comes in from the left
+   once the photo has mostly gone */
+.ruler {
+  position: absolute;
+  inset: 0;
+  opacity: var(--ruler-in);
+  translate: calc((1 - var(--ruler-in)) * -16px) 0;
+  pointer-events: none;
+}
+
+/* The tour, in the left 30% beside the plan, clear of the ruler: its
+   headline, then the room in view's number, name and line, as one block
+   held at the same height whatever the room. The headline comes in after
+   the ruler, rising, and the room last. */
+.tour {
+  position: absolute;
+  inset: var(--nav-h) 70% 0 0;
+  display: grid;
+  /* from the top, so a room's longer or shorter line never moves the rest */
+  align-content: start;
+  gap: clamp(28px, 7vh, 72px);
+  padding: clamp(48px, 11.5svh, 140px) var(--gutter) var(--gutter) calc(var(--gutter) + var(--ruler-w) + var(--gutter) * 0.75);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+  pointer-events: none;
+}
+
+.tour h2,
+.tour h3,
+.tour p {
+  margin: 0;
+}
+
+.tourHead {
+  /* room for its longest headline, so a shorter one never moves the number */
+  min-height: 3.6em;
+  opacity: var(--tour-head);
+  translate: 0 calc((1 - var(--tour-head)) * 16px);
+  font-size: var(--text-tour-head);
+  font-weight: 300;
+  letter-spacing: var(--track-heading);
+  line-height: 1.05;
+}
+
+/* each step's headline rises in afresh */
+.headLines {
+  display: block;
+  animation: rise var(--dur-room) var(--ease-rise) both;
+}
+
+/* the first half larger, the second softer, each on lines of its own */
+.tourLead {
+  display: block;
+  margin-bottom: 0.25em;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.tourSoft {
+  display: block;
+  opacity: 0.75;
+}
+
+/* the number over the name and line, a small gap between */
+.tourRoom {
+  display: grid;
+  gap: var(--space-2);
+  opacity: var(--tour-room);
+  translate: 0 calc((1 - var(--tour-room)) * 16px);
+}
+
+.numeral {
+  font-size: var(--text-tour-number);
+  font-weight: 200;
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* each room's number and words rise in afresh, quick enough to keep up with the scroll */
+.numeral,
+.about {
+  animation: rise var(--dur-room) var(--ease-rise) both;
+}
+
+.about {
+  animation-delay: 0.08s;
+}
+
+.roomName {
+  color: var(--color-clay);
+  font-size: var(--text-tour-name);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+}
+
+.tour .roomLine {
+  max-width: 22em;
+  margin-top: var(--space-2);
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--space-4);
+  }
+}
+
+/* The 3D walk over the plan's side (beside the tour), coming in as the 2D
+   plan goes (--walk-in) at the second step; the 2D plan takes the pointer
+   only on the first. */
+.walk {
+  position: absolute;
+  inset: var(--nav-h) 0 0 30%;
+  opacity: var(--walk-in);
+  pointer-events: none;
+  /* softened at its left edge, beside the tour */
+  mask-image: linear-gradient(to right, transparent, #000 8%);
+}
+
+.drawing {
+  opacity: calc(1 - var(--walk-in));
+}
+
+.split[data-walking] .drawing {
+  pointer-events: none;
+}
+
+/* "How it works?"'s end: a screen down, where the plan is at its widest */
+.how {
+  position: absolute;
+  top: 100svh;
 }
 
 /* The plan, clear of the bar above: its heading, then the drawing centred
@@ -17,19 +206,22 @@
 .plan {
   display: flex;
   flex-direction: column;
-  gap: var(--gutter);
+  gap: calc((1 - var(--shift)) * var(--gutter));
   min-height: 0;
-  padding: calc(var(--nav-h) + var(--gutter)) calc(var(--gutter) / 2) var(--gutter);
-  color: var(--color-brown);
+  padding: calc(var(--nav-h) + var(--space-4)) calc(var(--gutter) / 2) var(--gutter);
+  color: var(--color-umber);
 }
 
-/* The heading: the name and the size large, a line of detail under them. */
+/* The heading: a bracketed label (its rooms) over the name and "Interior assistant"
+   large, then the line on what the studio does,
+   inked like the photo's label (umber over clay), in Archivo set narrow as
+   the old landing's headings and body. */
 .head {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: baseline;
   row-gap: var(--space-2);
-  column-gap: var(--space-4);
+  column-gap: var(--space-2);
   padding-inline: calc(var(--gutter) / 2);
 }
 
@@ -39,24 +231,30 @@
 }
 
 .big {
-  font-family: var(--font-sans);
+  font-family: var(--font-studio);
   font-size: var(--text-plan-head);
-  font-weight: 400;
-  letter-spacing: var(--track-display);
+  font-weight: 300;
+  font-stretch: var(--stretch-wide);
+  letter-spacing: var(--track-heading);
   line-height: 0.9;
-  text-transform: uppercase;
   white-space: nowrap;
-}
-
-.big sup {
-  font-size: 0.45em;
-  vertical-align: 0.9em;
-}
-
-.small {
   grid-column: 1 / -1;
-  font-family: var(--font-sans);
-  font-size: var(--text-plan-sub);
+}
+
+/* the heading's two lines: what you can do, then how */
+.intro,
+.name {
+  display: block;
+}
+
+.name {
+  margin-top: 0.2em;
+  opacity: 0.75;
+}
+
+/* the heading's one word inked like its line of detail */
+.accent {
+  color: var(--color-clay);
 }
 
 /* What the studio does, in a line under the flat's details, across both
@@ -64,24 +262,26 @@
 .head .lede {
   grid-column: 1 / -1;
   margin-top: var(--space-4);
-  font-family: var(--font-sans);
+  font-family: var(--font-studio);
   font-size: var(--text-plan-lede);
-  line-height: 1.35;
+  font-weight: 340;
+  font-stretch: var(--stretch-narrow);
+  line-height: 1.55;
 }
 
-.end {
-  justify-self: end;
-  text-align: end;
-}
-
+/* The plan, across the whole of its half: out past the side padding to its edges. */
 .drawing {
   flex: 1;
+  margin-inline: calc(var(--gutter) / -2);
+  /* clear of the screen's edge once the plan has the stage */
+  padding-inline: calc(var(--shift) * var(--gutter) * 1.5);
   min-height: 0;
   display: grid;
   place-items: center;
 }
 
-/* "Scroll to explore" at the foot, set like the bar's links, over an arrow
+/* "How it works?" at the foot, a link down to it, set as the flat's name but small and in
+   sentence case, in clay, over an arrow
    bobbing down and back (the words hold still, to stay readable). */
 .more {
   display: flex;
@@ -89,11 +289,15 @@
   align-items: center;
   gap: var(--space-1);
   margin: 0;
-  font-family: var(--font-nav);
-  font-weight: 500;
-  font-size: var(--text-plan-sub);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
+  color: var(--color-clay);
+  font-family: var(--font-studio);
+  font-size: var(--text-plan-more);
+  font-weight: 300;
+  font-stretch: var(--stretch-narrow);
+  letter-spacing: var(--track-heading);
+  line-height: 0.9;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .more svg {
@@ -113,14 +317,73 @@
   }
 }
 
+/* Arrival (intro.ts): the photo uncovered from its foot, settling as it
+   comes; the heading's lines rising in, one after the other, its one word
+   warming to clay; then the line under it; "How it works?" last, once the
+   plan has drawn itself. */
+:global(:root[data-intro="play"]) .photo {
+  animation: unveil calc(var(--dur-enter) * 0.85) var(--ease-rise) 0.2s backwards;
+}
+
+:global(:root[data-intro="play"]) .intro,
+:global(:root[data-intro="play"]) .name {
+  animation: rise var(--dur-enter) var(--ease-rise) 0.4s backwards;
+}
+
+:global(:root[data-intro="play"]) .name {
+  animation-delay: calc(0.4s + var(--stagger));
+}
+
+:global(:root[data-intro="play"]) .accent {
+  animation: warm var(--dur-enter) ease-in-out 1s backwards;
+}
+
+:global(:root[data-intro="play"]) .head .lede {
+  animation: rise var(--dur-enter) var(--ease-rise) 1.2s backwards;
+}
+
+:global(:root[data-intro="play"]) .more {
+  animation: rise var(--dur-enter) var(--ease-rise) 3s backwards;
+}
+
+@keyframes unveil {
+  from {
+    clip-path: inset(100% 0 0 0);
+    scale: 1.04;
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes warm {
+  from {
+    color: var(--color-umber);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .more svg {
+  .more svg,
+  .numeral,
+  .about,
+  .headLines {
     animation: none;
   }
 }
 
 @media (orientation: portrait) {
+  .track {
+    height: auto;
+  }
+
+  .tour,
+  .walk {
+    display: none;
+  }
+
   .split {
+    position: static;
     grid-template-columns: 1fr;
     grid-template-rows: 60svh auto;
     height: auto;

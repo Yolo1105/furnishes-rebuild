@@ -1,0 +1,4 @@
+/* its own layer, so the peach (fixed, behind) paints over the page's night */
+.page {
+  isolation: isolate;
+}

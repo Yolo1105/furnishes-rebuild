@@ -1,0 +1,154 @@
+/* The packages, after the cases: in the studio's words and umber, ruled
+   like a drawing's schedule. */
+.packages {
+  padding: clamp(72px, 14vh, 160px) var(--gutter);
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.packages) :where(h2, p) {
+  margin: 0;
+}
+
+/* the small capitals: the index, the package codes, the row labels */
+.index,
+.code,
+.label {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  font-weight: 400;
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* the headline's column wider than each package's */
+.head,
+.label {
+  width: 40%;
+}
+
+.head {
+  padding: 0 var(--gutter) clamp(32px, 6vh, 64px) 0;
+  vertical-align: top;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.title {
+  margin-top: var(--space-6);
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+/* each package's head: a rule over all three, its code, name and line */
+.package {
+  padding: var(--space-6) var(--gutter) clamp(32px, 6vh, 64px) 0;
+  border-top: 1px solid var(--color-umber);
+  font-weight: inherit;
+  text-align: start;
+  vertical-align: top;
+}
+
+.code {
+  display: block;
+}
+
+.name {
+  display: block;
+  margin-top: var(--space-4);
+  font-size: var(--text-plan-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.1;
+}
+
+.line,
+.cell,
+.foot {
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+.line {
+  display: block;
+  margin-top: var(--space-4);
+  opacity: 0.85;
+}
+
+/* each row over a fine rule, the last closed with a full one */
+.row > * {
+  padding: var(--space-6) var(--gutter) var(--space-6) 0;
+  border-top: 1px solid var(--color-umber-rule);
+  text-align: start;
+  vertical-align: top;
+}
+
+.row:last-child > * {
+  border-bottom: 1px solid var(--color-umber);
+}
+
+/* the agreement on the left, the call on the right */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: var(--space-6);
+}
+
+/* on phones the headline stacks over the rows, each row's cells under its
+   label, each named for its package */
+@media (max-width: 800px) {
+  .table,
+  .table thead,
+  .table tbody,
+  .table tr,
+  .head,
+  .row > * {
+    display: block;
+    width: auto;
+  }
+
+  .package {
+    display: none;
+  }
+
+  .row {
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-umber-rule);
+  }
+
+  .row:last-child {
+    border-bottom: 1px solid var(--color-umber);
+  }
+
+  .row > *,
+  .row:last-child > * {
+    padding: var(--space-2) 0;
+    border: 0;
+  }
+
+  .cell::before {
+    content: attr(data-package);
+    display: block;
+    font-family: var(--font-studio-mono);
+    font-size: var(--text-ruler);
+    letter-spacing: var(--track-menu);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+}

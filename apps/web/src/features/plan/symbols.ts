@@ -8,8 +8,9 @@ import { DOORS, WALL } from "./flat";
  *
  * Lines come in tiers, heaviest first: the door leaves; fittings built into
  * the flat (the kitchen, bathrooms, wardrobes); furniture; then the lightest
- * marks (rugs, shower falls, door swings). `tags` are the small labels a
- * plan puts on appliances.
+ * marks (rugs, shower falls); the door swings on their own. Each tier is a
+ * list of pieces, one path each, so each can be drawn in on its own. `tags`
+ * are the small labels a plan puts on appliances.
  */
 
 const mm = (m: number) => Math.round(m * 1000);
@@ -42,6 +43,7 @@ export function planSymbols() {
   const fittings: string[] = [];
   const furniture: string[] = [];
   const light: string[] = [];
+  const swings: string[] = [];
   const tags: { text: string; x: number; y: number }[] = [];
   const tag = (text: string, x: number, z: number) => tags.push({ text, x: mm(x), y: mm(z) });
 
@@ -181,9 +183,8 @@ export function planSymbols() {
     const [ex, ez] = at(hinge + toward * w, face);
     const r = mm(w);
     const sweep = (toward * d.swing.side > 0) === (d.run === "ew") ? 0 : 1;
-    light.push(`M${mm(sx)} ${mm(sz)}A${r} ${r} 0 0 ${sweep} ${mm(ex)} ${mm(ez)}`);
+    swings.push(`M${mm(sx)} ${mm(sz)}A${r} ${r} 0 0 ${sweep} ${mm(ex)} ${mm(ez)}`);
   }
 
-  const join = (tier: string[]) => tier.join("");
-  return { doors: join(doors), fittings: join(fittings), furniture: join(furniture), light: join(light), tags };
+  return { doors, swings, fittings, furniture, light, tags };
 }

@@ -1,0 +1,344 @@
+/* The selected projects: in the studio's words and umber, the plan's clay
+   for its dimensions and the turned-to side of each sheet. On wider screens
+   the section is as tall as a screen plus the rail's overrun (--run, set by
+   ProjectSheets), and its stage holds still while the rail moves left by
+   --x; --along is how far along it is, 0 to 1. */
+.projects {
+  --x: 0px;
+  --along: 0;
+  --run: 0px;
+  --sheet-pad: clamp(20px, 1.8vw, 32px);
+  position: relative;
+  height: calc(100svh + var(--run));
+  color: var(--color-umber);
+  font-family: var(--font-studio);
+  font-stretch: var(--stretch-narrow);
+}
+
+:where(.projects) :where(h1, h2, p, ol, dl, dd) {
+  margin: 0;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100svh;
+  padding-top: var(--nav-h);
+  /* clip, not hidden: focus must not scroll the stage itself across */
+  overflow: clip;
+}
+
+/* the small capitals: the index line, the counter, the end's count, the tabs, the title block */
+.index,
+.counter,
+.tab,
+.block {
+  font-family: var(--font-studio-mono);
+  font-size: var(--text-ruler);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+}
+
+.index {
+  display: flex;
+  gap: var(--space-6);
+}
+
+/* which sheet is in view, at the top right */
+.counter {
+  position: absolute;
+  top: calc(var(--nav-h) + var(--space-6));
+  right: var(--gutter);
+  font-variant-numeric: tabular-nums;
+}
+
+/* the intro, the sheets and the end in one row, moved left as the page scrolls */
+.rail {
+  display: flex;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: stretch;
+  padding-inline: var(--gutter);
+  translate: calc(-1 * var(--x)) 0;
+  will-change: translate;
+}
+
+/* the intro: its index line at the top, the headline, words and call low down */
+.intro {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-6);
+  width: clamp(280px, 26vw, 460px);
+}
+
+.introBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+
+.title {
+  font-size: var(--text-section-head);
+  font-weight: 340;
+  letter-spacing: var(--track-heading);
+  line-height: 1.02;
+}
+
+.lede {
+  font-size: var(--text-plan-lede);
+  font-weight: 340;
+  line-height: 1.5;
+}
+
+.sheets {
+  display: flex;
+  gap: clamp(32px, 4vw, 64px);
+  padding: 0;
+  list-style: none;
+}
+
+/* a sheet: its figure over a rule, its name, words and title block under it;
+   as wide as a screen's height leaves room for */
+.sheet {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: min(46vw, calc((100svh - var(--nav-h) - 300px) * 1.6 + 2 * var(--sheet-pad)));
+  padding: var(--sheet-pad);
+  border: 1px solid var(--color-umber);
+}
+
+/* the room as drawn or as built, one fading over the other */
+.figure {
+  position: relative;
+  aspect-ratio: 1.6;
+  overflow: hidden;
+  background: var(--color-peach-paper);
+}
+
+.photo,
+.drawing {
+  transition: opacity var(--dur-fade) var(--ease-rise);
+}
+
+.photo {
+  object-fit: cover;
+}
+
+.drawing {
+  position: absolute;
+  inset: 0;
+  background: var(--color-peach-paper);
+}
+
+.figure[data-view="built"] .drawing,
+.figure[data-view="drawn"] .photo {
+  opacity: 0;
+}
+
+/* its part of the plan: the rooms round it faded back, the room washed in orange, its sizes in clay */
+.dims .fade {
+  fill: var(--color-peach-paper);
+  fill-opacity: 0.65;
+}
+
+.dims .wash {
+  fill: var(--color-orange);
+  fill-opacity: 0.12;
+}
+
+.dims path {
+  fill: none;
+  stroke: var(--color-clay);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+.dims text {
+  fill: var(--color-clay);
+  font-family: var(--font-studio-mono);
+  text-anchor: middle;
+  dominant-baseline: central;
+  /* each length on a chip of paper, the line broken behind it */
+  paint-order: stroke;
+  stroke: var(--color-peach-paper);
+  stroke-width: 90px;
+  stroke-linejoin: round;
+}
+
+/* the two sides to turn to, on a paper tab at the figure's top left: the one in view marked in clay */
+.tabs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  background: var(--color-peach-paper);
+}
+
+.tab {
+  min-height: var(--tap);
+  padding: 0 var(--space-4);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) ease;
+}
+
+.tab:hover,
+.tab[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.tab[aria-pressed="true"] {
+  font-weight: 700;
+}
+
+.tab[aria-pressed="true"]::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-right: var(--space-2);
+  background: var(--color-orange);
+  vertical-align: -0.15em;
+}
+
+.tab:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: -4px;
+}
+
+/* the name and words left, the title block right, over a rule */
+.caption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-umber);
+}
+
+.name {
+  font-size: var(--text-tour-name);
+  font-weight: 400;
+  letter-spacing: var(--track-heading);
+  line-height: 1.15;
+}
+
+.body {
+  margin-top: var(--space-2);
+  font-size: var(--text-plan-more);
+  font-weight: 340;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.block {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.sheetNo {
+  font-weight: 700;
+}
+
+/* the end: the count and a call, low down, as the intro's */
+.end {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--space-6);
+  width: clamp(220px, 18vw, 320px);
+  padding-bottom: var(--space-6);
+}
+
+/* how far along: a fine rule, a heavier one over it growing with --along */
+.progress {
+  position: absolute;
+  inset: auto var(--gutter) clamp(16px, 4vh, 40px);
+  height: 1px;
+  background: var(--color-umber-rule);
+}
+
+.progressBar {
+  position: absolute;
+  inset: 0;
+  background: var(--color-umber);
+  transform-origin: left;
+  scale: var(--along) 1;
+}
+
+/* narrower screens: no holding, the sheets one under another */
+@media (max-width: 799px) {
+  .projects {
+    height: auto;
+    padding-bottom: clamp(72px, 14vh, 160px);
+  }
+
+  .stage {
+    position: static;
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+
+  .counter,
+  .progress {
+    display: none;
+  }
+
+  .rail,
+  .sheets {
+    flex-direction: column;
+    translate: none;
+  }
+
+  .rail {
+    padding-top: var(--space-6);
+  }
+
+  .intro,
+  .sheet,
+  .end {
+    width: auto;
+  }
+
+  .introBody {
+    margin-top: clamp(48px, 10vh, 96px);
+  }
+
+  .caption {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .block dd {
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo,
+  .drawing,
+  .tab {
+    transition: none;
+  }
+}

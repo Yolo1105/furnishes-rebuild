@@ -21,6 +21,18 @@
   line-height: 1;
 }
 
+/* On the studio's arrival (studio/intro.ts), the bar drops in first. */
+:global(:root[data-intro="play"]) .header {
+  animation: drop calc(var(--dur-enter) / 2) var(--ease-rise) backwards;
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
 .start,
 .end {
   display: flex;
@@ -46,6 +58,13 @@
   text-underline-offset: 0.45em;
   text-decoration-thickness: 1px;
   white-space: nowrap;
+}
+
+/* On the studio and inspiration, the links take the studio's face, spaced
+   only a little (the wordmark keeps its own). */
+:global(body:has([data-page="studio"], [data-page="inspiration"])) .link {
+  font-family: var(--font-studio);
+  letter-spacing: var(--track-narrow);
 }
 
 .link:hover {
@@ -77,6 +96,18 @@
   /* lowercase and larger, it reads low beside the links' caps though its box
      is centred like theirs: lifted so its letters' middle meets theirs */
   translate: 0 -0.15em;
+}
+
+/* Over a dark photo (the page marks its body), the wordmark and the links
+   over it turn cream; its full stop stays orange. */
+.wordmark,
+.start {
+  transition: color var(--dur-fade) ease-in-out;
+}
+
+:global(body[data-bar-on-dark]) .wordmark,
+:global(body[data-bar-on-dark]) .start {
+  color: var(--color-cream);
 }
 
 /* The wordmark's full stop, in the classic orange. */
