@@ -81,7 +81,7 @@
 }
 
 /* "Scroll to explore" at the foot, set as the line on what we do is, over
-   an arrow bobbing down and back. */
+   an arrow bobbing down and back (the words hold still, to stay readable). */
 .more {
   display: flex;
   flex-direction: column;
@@ -89,7 +89,7 @@
   gap: var(--space-1);
   margin: 0;
   font-family: var(--font-sans);
-  font-size: var(--text-plan-sub);
+  font-size: var(--text-plan-lede);
 }
 
 .more svg {

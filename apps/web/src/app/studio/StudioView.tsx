@@ -37,7 +37,7 @@ export function StudioView() {
             {FLOOR_AREA} m<sup>2</sup>
           </p>
           <p className={styles.small}>{FLAT.rooms}</p>
-          <p className={`${styles.small} ${styles.end}`}>Sleeps {FLAT.sleeps}</p>
+          <p className={`${styles.small} ${styles.end}`}>{FLAT.household}</p>
           <p className={styles.lede}>Just describe your dream room in a chat, and design it yourself from start to finish, from 2D floor plan to 3D visualizer.</p>
         </header>
         <div className={styles.drawing}>
