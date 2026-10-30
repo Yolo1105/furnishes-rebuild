@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Jost, Outfit } from "next/font/google";
+import { Fraunces, Instrument_Serif, Jost, Outfit } from "next/font/google";
 import { SiteHeader } from "@/shell/SiteHeader";
 import "./globals.css";
 
@@ -27,6 +27,15 @@ const outfit = Outfit({
   display: "swap",
 });
 
+// The words over the studio photos: a soft, light serif (variable, with its optical size).
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: "variable",
+  axes: ["opsz"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: { default: "Furnishes", template: "%s · Furnishes" },
   description: "Modular furniture you can see in your own home before you buy it.",
@@ -34,7 +43,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable}`}>
+    <html lang="en" className={`${jost.variable} ${instrumentSerif.variable} ${outfit.variable} ${fraunces.variable}`}>
       <body>
         <SiteHeader />
         {children}

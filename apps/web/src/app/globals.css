@@ -9,6 +9,7 @@
   --color-burgundy: #5e1f24; /* the wordmark */
   --color-brown: #4e2f1b; /* the studio's floor plan, its heading and figures */
   --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
+  --color-linen: #fcf2e8; /* the words over the studio photos */
 
   /* the peach backdrop: a cream-to-peach diagonal, with light blobs drifting over it */
   --color-peach-paper: #fff4e3;
@@ -21,6 +22,7 @@
   --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
   --font-nav: var(--font-outfit), "Outfit", system-ui, sans-serif; /* the bar's links */
+  --font-photo: var(--font-fraunces), "Fraunces", Georgia, serif; /* the words over the studio photos */
 
   --space-1: 4px;
   --space-2: 8px;
@@ -41,7 +43,7 @@
   --text-plan-head: clamp(28px, 2.8vw, 48px); /* the flat's name and size over its plan */
   --text-plan-sub: clamp(12px, 1.05vw, 15px); /* the lines under it */
   --text-plan-lede: clamp(14px, 1.25vw, 18px); /* the line on what the studio does */
-  --text-photo-title: clamp(48px, 5.6vw, 96px); /* the big word over the studio photos */
+  --text-photo-title: clamp(28px, 4.75vw, 56px); /* the words over the studio photos */
   --track-title: 0.08em;
   --track-display: -0.03em;
   --track-wide: 0.18em;

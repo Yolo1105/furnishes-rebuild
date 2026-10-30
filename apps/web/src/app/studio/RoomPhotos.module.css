@@ -34,9 +34,8 @@
   height: var(--h);
 }
 
-/* The label at the bottom left, in light on the photo, on two lines: a small
-   word in the bar's face, spaced out in capitals, over a big one in the
-   display serif. */
+/* The label at the bottom left, on two lines alike: a light, soft serif in
+   linen, lifted off the photo by a dark shadow, its full stop in orange. */
 .label {
   position: absolute;
   z-index: 1;
@@ -44,25 +43,23 @@
   bottom: var(--gutter);
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
   margin: 0;
-  color: var(--color-paper);
-  text-shadow: 0 1px 6px color-mix(in srgb, var(--color-night) 60%, transparent);
-}
-
-.kicker {
-  font-family: var(--font-nav);
-  font-weight: 500;
-  font-size: var(--text-plan-lede);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
-}
-
-.title {
-  font-family: var(--font-display);
-  font-weight: 400;
+  color: var(--color-linen);
+  font-family: var(--font-photo);
+  font-weight: 340;
   font-size: var(--text-photo-title);
-  line-height: 0.85;
+  font-synthesis: none;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 90%),
+    0 2px 8px rgb(0 0 0 / 75%),
+    0 4px 20px rgb(0 0 0 / 55%);
+}
+
+.accent {
+  color: var(--color-orange);
 }
 
 @media (prefers-reduced-motion: reduce) {
