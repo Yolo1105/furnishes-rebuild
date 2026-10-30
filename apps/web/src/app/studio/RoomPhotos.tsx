@@ -36,7 +36,7 @@ export function RoomPhotos({ photos, at }: { photos: typeof ROOM_PHOTOS; at: num
       <p className={styles.label}>
         <span>Interior</span>
         <span>
-          revolution<span className={styles.accent}>.</span>
+          rev<span className={styles.accent}>o</span>lution<span className={styles.accent}>.</span>
         </span>
       </p>
     </div>

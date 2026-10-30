@@ -62,6 +62,8 @@
   --dur-fade: 0.6s; /* one photo fading into the next */
   --dur-bob: 1.6s; /* one bob of the arrow at the foot of the studio's plan */
   --dur-enter: 1.2s; /* words and buttons fading in on arrival */
+  --dur-slide-in: 1s; /* the words over the studio photos sliding in */
+  --delay-slide-in: 1.5s; /* ...once the first photo has settled */
   --stagger: 150ms; /* between one arriving and the next */
 
   --z-header: 60;

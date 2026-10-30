@@ -35,7 +35,8 @@
 }
 
 /* The label at the bottom left, on two lines alike: a light, soft serif in
-   linen, lifted off the photo by a dark shadow, its full stop in orange. */
+   linen, lifted off the photo by a dark shadow, an o and the full stop in
+   orange. It slides in from the left once the first photo has settled. */
 .label {
   position: absolute;
   z-index: 1;
@@ -43,6 +44,7 @@
   bottom: var(--gutter);
   display: flex;
   flex-direction: column;
+  gap: clamp(0.1rem, 0.6vw, 0.3rem);
   margin: 0;
   color: var(--color-linen);
   font-family: var(--font-photo);
@@ -56,14 +58,26 @@
     0 1px 2px rgb(0 0 0 / 90%),
     0 2px 8px rgb(0 0 0 / 75%),
     0 4px 20px rgb(0 0 0 / 55%);
+  animation: slide-in var(--dur-slide-in) ease-out var(--delay-slide-in) both;
 }
 
 .accent {
   color: var(--color-orange);
 }
 
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    translate: -30px 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .slide {
     transition: none;
+  }
+
+  .label {
+    animation: none;
   }
 }
