@@ -34,22 +34,35 @@
   height: var(--h);
 }
 
-/* The label at the bottom left, in the bar's face at the size of the plan's
-   heading opposite, in light on the photo. */
+/* The label at the bottom left, in light on the photo, on two lines: a small
+   word in the bar's face, spaced out in capitals, over a big one in the
+   display serif. */
 .label {
   position: absolute;
   z-index: 1;
   left: var(--gutter);
   bottom: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
   margin: 0;
   color: var(--color-paper);
+  text-shadow: 0 1px 6px color-mix(in srgb, var(--color-night) 60%, transparent);
+}
+
+.kicker {
   font-family: var(--font-nav);
   font-weight: 500;
-  font-size: var(--text-plan-head);
-  letter-spacing: var(--track-display);
-  line-height: 0.9;
+  font-size: var(--text-plan-lede);
+  letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  text-shadow: 0 1px 6px color-mix(in srgb, var(--color-night) 60%, transparent);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-photo-title);
+  line-height: 0.85;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -33,7 +33,10 @@ export function RoomPhotos({ photos, at }: { photos: typeof ROOM_PHOTOS; at: num
           </div>
         </div>
       ))}
-      <p className={styles.label}>Interior revolution</p>
+      <p className={styles.label}>
+        <span className={styles.kicker}>Interior</span>
+        <span className={styles.title}>revolution</span>
+      </p>
     </div>
   );
 }
