@@ -34,7 +34,8 @@
   height: var(--h);
 }
 
-/* The label at the bottom left, set like the bar's links, in light on the photo. */
+/* The label at the bottom left, in the bar's face at the size of the plan's
+   heading opposite, in light on the photo. */
 .label {
   position: absolute;
   z-index: 1;
@@ -44,8 +45,9 @@
   color: var(--color-paper);
   font-family: var(--font-nav);
   font-weight: 500;
-  font-size: var(--text-nav);
-  letter-spacing: var(--track-wide);
+  font-size: var(--text-plan-head);
+  letter-spacing: var(--track-display);
+  line-height: 0.9;
   text-transform: uppercase;
   text-shadow: 0 1px 6px color-mix(in srgb, var(--color-night) 60%, transparent);
 }

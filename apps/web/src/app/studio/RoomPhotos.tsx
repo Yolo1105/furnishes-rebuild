@@ -7,7 +7,7 @@ import styles from "./RoomPhotos.module.css";
 
 /**
  * The room photos, one at a time: `at` is the one in view, labelled
- * "Interior design" at the bottom left. All are fetched, so any can come up
+ * "Interior revolution" at the bottom left. All are fetched, so any can come up
  * at once (hovering a room on the plan brings its photo up). Each is cropped
  * to fill its box, `zoom` times closer, with the room's middle (`focus`) kept
  * central.
@@ -33,7 +33,7 @@ export function RoomPhotos({ photos, at }: { photos: typeof ROOM_PHOTOS; at: num
           </div>
         </div>
       ))}
-      <p className={styles.label}>Interior design</p>
+      <p className={styles.label}>Interior revolution</p>
     </div>
   );
 }
