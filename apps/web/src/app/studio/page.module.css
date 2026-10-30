@@ -81,16 +81,19 @@
   place-items: center;
 }
 
-/* "Scroll to explore" at the foot, set as the line on what we do is, over
-   an arrow bobbing down and back (the words hold still, to stay readable). */
+/* "Scroll to explore" at the foot, set like the bar's links, over an arrow
+   bobbing down and back (the words hold still, to stay readable). */
 .more {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-nav);
+  font-weight: 500;
   font-size: var(--text-plan-lede);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
 }
 
 .more svg {
