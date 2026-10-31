@@ -16,7 +16,7 @@
      between sections, a solid frame round a sheet or a card. */
   --rule: 1px solid color-mix(in srgb, currentcolor 22%, transparent);
   --frame: 1px solid currentcolor;
-  --color-soft: color-mix(in srgb, currentcolor 70%, transparent); /* the quieter words: a lede, a note, a second line */
+  --color-soft: color-mix(in srgb, currentcolor 84%, transparent); /* the quieter words: a lede, a note, a second line */
 
   /* A filled button's colours; a dark band sets its own. */
   --button-bg: var(--color-umber);

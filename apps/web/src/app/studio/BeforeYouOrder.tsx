@@ -28,7 +28,7 @@ export function BeforeYouOrder() {
           </li>
         ))}
       </ol>
-      <div className={styles.columns}>
+      <div className={`${styles.columns} ${styles.two}`}>
         <div className={`${styles.point} reveal`}>
           <h3 className={styles.name}>In your order</h3>
           <ul className={`${styles.line} ${styles.list}`}>

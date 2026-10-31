@@ -50,6 +50,10 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .point {
   display: flex;
   flex-direction: column;
@@ -75,7 +79,7 @@
 /* a link in words: quiet till pointed at */
 .link {
   font-size: var(--text-body);
-  color: var(--color-soft);
+  color: var(--color-clay);
   text-decoration: none;
 }
 
@@ -94,7 +98,7 @@
 /* the add-on parts under a piece */
 .parts {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 .parts li {
@@ -104,6 +108,7 @@
 
 .partName {
   font-size: var(--text-body);
+  font-weight: 500;
 }
 
 .tier {
@@ -205,8 +210,12 @@
   vertical-align: top;
 }
 
-.table thead th {
+.table thead th,
+.table thead td {
   border-top: 0;
+}
+
+.table thead th {
   font-size: var(--text-item);
 }
 
@@ -240,6 +249,7 @@
 @media (max-width: 700px) {
   .columns,
   .four,
+  .two,
   .guide {
     grid-template-columns: minmax(0, 1fr);
   }

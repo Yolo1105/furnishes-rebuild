@@ -79,7 +79,7 @@ export function SoundFamiliar() {
       <dl className={`${styles.guide} reveal`}>
         {GUIDE.map((g) => (
           <div key={g.want}>
-            <dt className={styles.line}>{g.want}</dt>
+            <dt className={styles.line}>If {g.want.charAt(0).toLowerCase() + g.want.slice(1)}:</dt>
             <dd>
               <Link className={styles.link} href={g.href}>
                 {g.choose}
