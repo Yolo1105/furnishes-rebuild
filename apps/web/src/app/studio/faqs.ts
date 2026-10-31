@@ -67,4 +67,36 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
     question: "What if a part breaks or goes missing?",
     answer: `Write to us with your order number and photos. ${shown("replacementParts")}`,
   },
+  {
+    question: "Do you sell furniture, or parts?",
+    answer: "Furniture. You start with a whole piece and never need to learn how the parts work. Add-ons are sold for the pieces that take them.",
+  },
+  {
+    question: "Does every piece need customizing?",
+    answer: "No. The standard version is complete as it stands. Change something only if it makes a real difference for you.",
+  },
+  {
+    question: "Do I have to use the AI assistant?",
+    answer: "No. You can browse, compare and buy without ever chatting to it. It's there for people who find it easier to describe what they want.",
+  },
+  {
+    question: "Will it work with furniture I already have?",
+    answer: "Yes, you can plan around your own desk, bed or cabinet. Standing beside it and being fixed to it are different things, and we only connect to it where a piece's page says so.",
+  },
+  {
+    question: "Is everything in the picture included?",
+    answer: "No. The list on the piece's page is what you get. Computers, old desks, lamps and decorations in a picture may not be part of the sale.",
+  },
+  {
+    question: "What am I paying for?",
+    answer: "A finished piece: the making and surface, its structure and add-ons, the way it's arranged for its use, and delivery. It should be worth it for what it does today, not only for what you might add later.",
+  },
+  {
+    question: "Can I take it when I move?",
+    answer: "It depends on the piece. We check the parts, how they travel and the new spot, and it may need arranging differently there. We don't promise it for the whole range.",
+  },
+  {
+    question: "Will a room divider block sound?",
+    answer: "No. It gives you privacy from view, storage and two usable sides, but it isn't soundproofing and it isn't building work.",
+  },
 ];
