@@ -37,7 +37,7 @@ export const MARQUEE_END = ["Design", "Cut", "Assemble"];
 
 export const HERO = {
   title: "Furniture cut to fit the way you live",
-  lede: `${launch.length} pieces you can order first, and ${soon.length} that follow them, plus the other uses and arrangements they make: ${DESIGN_COUNT} designs in all.`,
+  lede: `Our modular designs: ${launch.length} pieces you can order first, and ${soon.length} that follow them, plus the other uses and arrangements they make: ${DESIGN_COUNT} designs in all.`,
   call: "Find your piece",
   readyMade: "See ready-made furniture",
 };

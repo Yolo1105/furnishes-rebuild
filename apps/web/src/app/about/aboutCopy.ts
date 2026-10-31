@@ -22,9 +22,9 @@ export const WHO_HEADLINE: readonly { text: string; highlight?: boolean }[] = [
   { text: " and work." },
 ];
 
-export const WHO_TAGLINE = "Ready-made furniture, and pieces you can adjust to your space.";
+export const WHO_TAGLINE = "Ready-made furniture, modular designs, and modular pieces you compose.";
 
-export const WHO_LEAD = "Furnishes sells furniture for Singapore homes and small offices. Some pieces are ready to buy as they are. Others are built from a family of birch panels, so you can change the size, the finish and the add-ons within clear limits.";
+export const WHO_LEAD = "Furnishes sells furniture for Singapore homes and small offices. Some pieces are usual ready-made furniture. Others are modular, built from a family of birch panels: you can buy one of our finished designs, or compose your own, choosing the board size, colour, texture and add-ons within clear limits.";
 
 export const WHO_COLUMNS = [
   "A change at home can start with something small: a place for the bag by the door, or a bedside that keeps the book within reach. It can also be bigger: a tall cabinet that divides a rented room, or a work area that changes as a team grows.",

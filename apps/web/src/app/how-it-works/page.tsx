@@ -10,15 +10,17 @@ export default function HowItWorks() {
   return (
     <TextPage
       label="How it works"
-      title="Buy it ready-made, or adjust it to fit."
+      title="Ready-made, already designed, or composed by you."
       lede="Furnishes sells furniture for Singapore homes and small offices, made by our partner factory in China. You can browse and buy without talking to anyone."
       jump
       sections={[
         {
-          heading: "Two kinds of furniture",
+          heading: "Three kinds of furniture",
           body: [
             `Ready-made furniture is sold as it is: office, storage, dining and living pieces. Choose this when a standard size suits the space. ${shown("readyMadeList")}`,
-            "Modular furniture is 18 mm birch plywood on one grid, standing on a base or on casters. Choose this when a standard size doesn't fit, or when you may want the piece to do something else later. Each piece is complete as it stands, so you don't have to change anything.",
+            "Modular furniture, already designed, is 18 mm birch plywood on one grid, standing on a base or on casters. We've designed each piece for a job, and it is complete as it stands. Choose this when a standard size doesn't fit, or when you may want the piece to do something else later.",
+            "Modular furniture, composed by you, uses the same panels and parts. You choose the board size, colour, texture and add-ons, and the AI assistant works out how your version goes together. Choose this when no finished design suits your space.",
+            "Both modular kinds can arrive already built, or flat-packed for you to build yourself.",
           ],
         },
         {

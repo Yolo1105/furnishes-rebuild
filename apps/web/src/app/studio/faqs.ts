@@ -115,4 +115,16 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
     question: "Can a bedside table go beside the sofa?",
     answer: "It can, but check the height first. A good height by a bed may not suit a sofa arm, so compare it with what you'd be reaching from.",
   },
+  {
+    question: "Can I return a piece once it's built or installed?",
+    answer: shown("returnsBuilt"),
+  },
+  {
+    question: "Can I use accessories from other makers?",
+    answer: "Accessories we offer are checked against the piece they fit. A hole spacing that looks the same doesn't mean another maker's part is safe to use.",
+  },
+  {
+    question: "Is it made for children?",
+    answer: "No. We don't claim any piece is safe for children, even if it's low or has rounded corners. Keep children from climbing on it, and fix tall pieces as their guide says.",
+  },
 ];

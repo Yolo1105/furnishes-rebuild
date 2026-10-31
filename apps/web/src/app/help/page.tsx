@@ -27,7 +27,7 @@ export default function Help() {
         {
           heading: "Buying a piece",
           body: [
-            "We sell furniture. Each design is a complete piece with a use, and you can choose it as it is. Accessories that fit a piece can be added to it. Ask us whether a single part can be bought on its own.",
+            "We sell furniture in three kinds: ready-made, modular designs, and modular pieces you compose. Each modular design is a complete piece with a use, and you can choose it as it is. Accessories that fit a piece can be added to it. Ask us whether a single part can be bought on its own.",
             "No piece needs customizing. The standard version is already complete, so change it only if you want a different size, finish or accessory.",
             "The pictures are 3D renders, and the lamps, books, bags and other objects in them aren't included. Each product page says what is.",
           ],

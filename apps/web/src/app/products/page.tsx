@@ -44,8 +44,8 @@ export default async function Products({ searchParams }: { searchParams: Promise
           </p>
           <h1 className={styles.title}>The pieces.</h1>
           <p className={styles.lede}>
-            {PRODUCTS.length} pieces from one family of birch panels, made by our partner factory in China. You can order the first{" "}
-            {count("launch")}, and the other {count("soon")} follow them. There is ready-made furniture too.
+            {PRODUCTS.length} modular designs from one family of birch panels, made by our partner factory in China. You can order the first{" "}
+            {count("launch")}, and the other {count("soon")} follow them. You can also compose your own, and there is usual ready-made furniture too.
           </p>
           <ArrowLink href={routes.collection}>Search and filter by budget in the collection</ArrowLink>
         </header>
