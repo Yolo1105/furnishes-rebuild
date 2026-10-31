@@ -986,7 +986,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "strip",
     record: "1.18",
-    name: "Long mixed strip",
+    name: "Long wall of shelves",
     line: "Low, middle and tall segments along one wall, each standing on its own first.",
     members: [
       { product: "low-cabinet", count: 1 },
@@ -999,7 +999,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "shape-l",
     record: "2.3",
-    name: "L arrangement",
+    name: "Corner shelves",
     line: "One segment along, one across. A corner where there was none.",
     members: [
       { product: "divider", count: 1, note: "two segments, one turned" },
@@ -1010,7 +1010,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "shape-u",
     record: "2.4",
-    name: "U arrangement",
+    name: "Three-sided nook",
     line: "Three segments around a place to read or work, open on one side.",
     members: [{ product: "divider", count: 1, note: "three segments" }],
     note: "Arrangement only. A version with a seat is not offered.",
@@ -1019,7 +1019,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "shape-t-plain",
     record: "2.5",
-    name: "T arrangement",
+    name: "Two-way divider",
     line: "One segment meets the middle of another. Both sides get a face.",
     members: [{ product: "divider", count: 1, note: "two segments" }],
     note: "Concept. Details to come.",
@@ -1028,7 +1028,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "steps",
     record: "2.6",
-    name: "Stepped line",
+    name: "Stepped shelves",
     line: "Segments of different heights in a row, low end to high end.",
     members: [{ product: "divider", count: 1, note: "three segments" }],
     note: "Arrangement only.",
@@ -1049,7 +1049,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "shape-z",
     record: "2.17",
-    name: "Z arrangement",
+    name: "Zigzag divider",
     line: "Two turns. Display on one side, storage on the other.",
     members: [{ product: "divider", count: 1, note: "three segments" }],
     note: "Concept. Details to come.",
@@ -1058,7 +1058,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "offset",
     record: "2.18",
-    name: "Offset line",
+    name: "Staggered divider",
     line: "Two segments stepped past each other, so the wall has a fold.",
     members: [{ product: "divider", count: 1, note: "two segments" }],
     note: "Concept. Details to come.",
@@ -1088,7 +1088,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
   {
     id: "shape-t",
     record: "2.23",
-    name: "Bed head with two bedsides",
+    name: "Bed wall with two bedside tables",
     line: "A behind-the-bed section with a bedside table on each side.",
     members: [
       { product: "bed-head", count: 1 },
