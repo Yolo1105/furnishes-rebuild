@@ -99,4 +99,20 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
     question: "Will a room divider block sound?",
     answer: "No. It gives you privacy from view, storage and two usable sides, but it isn't soundproofing and it isn't building work.",
   },
+  {
+    question: "Do you ship outside Singapore?",
+    answer: `Mainly Singapore for now, with worldwide delivery planned. ${shown("exportRoutes")} Write to us and we quote each order.`,
+  },
+  {
+    question: "Will new parts match the ones I already have?",
+    answer: "They work the same, but colour and grain can differ between batches, and older parts change with use. If a difference is noticeable, we tell you before you buy.",
+  },
+  {
+    question: "Can I have it opening to the left or the right?",
+    answer: "It depends on the piece, so ask us about the one you want. Its page shows only the choices that have been checked.",
+  },
+  {
+    question: "Can a bedside table go beside the sofa?",
+    answer: "It can, but check the height first. A good height by a bed may not suit a sofa arm, so compare it with what you'd be reaching from.",
+  },
 ];

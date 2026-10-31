@@ -76,6 +76,7 @@ export const FACTS = {
   team: placeholder("other team names and roles"),
   weightLimits: placeholder("tested weight limits"),
   stability: placeholder("tested stability guidance"),
+  exportRoutes: placeholder("the two export routes from China, with costs and times"),
   careGuide: placeholder("how to clean and look after each surface"),
   returnsTerms: draft("You have 14 days from delivery to return an unused piece in its original packaging."),
   warranty: draft("Manufacturing faults are covered for 12 months from delivery."),
