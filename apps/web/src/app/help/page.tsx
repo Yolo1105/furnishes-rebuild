@@ -44,8 +44,8 @@ export default function Help() {
           heading: "Delivery and lead times",
           body: ["We deliver in Singapore, and every piece is made to order at our partner factory in China."],
           points: [
-            `Customizable, flat-packed: ${shown("leadFlatPack")}`,
-            `Customizable, built: ${shown("leadBuilt")}`,
+            `Modular, flat-packed: ${shown("leadFlatPack")}`,
+            `Modular, built: ${shown("leadBuilt")}`,
             `Custom sizes: ${shown("leadCustomExtra")}`,
             `Ready-made furniture: ${shown("leadReadyMade")}`,
             `Add-ons: ${shown("leadAddOns")}`,

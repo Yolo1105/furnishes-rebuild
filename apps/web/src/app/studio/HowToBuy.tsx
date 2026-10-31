@@ -3,8 +3,8 @@ import { shown } from "@/lib/facts";
 import styles from "./HowToBuy.module.css";
 
 const STEPS: readonly { name: string; line: string }[] = [
-  { name: "Choose", line: "A ready-made piece, or a customizable one that suits your space." },
-  { name: "Adjust, if you want", line: "On a customizable piece, change the size, finish and add-ons, and choose built or flat-packed." },
+  { name: "Choose", line: "A ready-made piece, or a modular one that suits your space." },
+  { name: "Adjust, if you want", line: "On a modular piece, change the size, finish and add-ons, and choose built or flat-packed." },
   { name: "Pay", line: `Sign in to buy. Each piece shows its price before you pay. ${shown("paymentMethods")}` },
   { name: "Receive it", line: `Flat-packed in ${shown("leadFlatPack")}, built in ${shown("leadBuilt")}, ready-made in ${shown("leadReadyMade")}.` },
 ];

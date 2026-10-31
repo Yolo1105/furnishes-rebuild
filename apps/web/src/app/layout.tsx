@@ -35,7 +35,7 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "Furnishes", template: "%s · Furnishes" },
-  description: "Ready-made and customizable furniture for Singapore homes and small offices.",
+  description: "Ready-made and modular furniture for Singapore homes and small offices.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

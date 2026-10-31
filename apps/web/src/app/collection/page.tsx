@@ -44,7 +44,7 @@ import { MarkedRender } from "./MarkedRender";
 import styles from "../products/sections.module.css";
 import { productHref } from "../products/productHref";
 
-export const metadata: Metadata = { title: "Collection", description: "Browse Furnishes furniture by room, use and budget, in ready-made and customizable lines." };
+export const metadata: Metadata = { title: "Collection", description: "Browse Furnishes furniture by room, use and budget, in ready-made and modular lines." };
 
 const pad = (n: number) => String(n).padStart(2, "0");
 

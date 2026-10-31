@@ -18,7 +18,7 @@ export default function HowItWorks() {
           heading: "Two kinds of furniture",
           body: [
             `Ready-made furniture is sold as it is: office, storage, dining and living pieces. Choose this when a standard size suits the space. ${shown("readyMadeList")}`,
-            "Customizable furniture is 18 mm birch plywood on one grid, standing on a base or on casters. Choose this when a standard size doesn't fit, or when you may want the piece to do something else later. Each piece is complete as it stands, so you don't have to change anything.",
+            "Modular furniture is 18 mm birch plywood on one grid, standing on a base or on casters. Choose this when a standard size doesn't fit, or when you may want the piece to do something else later. Each piece is complete as it stands, so you don't have to change anything.",
           ],
         },
         {
@@ -54,7 +54,7 @@ export default function HowItWorks() {
           body: ["Every piece is made to order, so there is a wait."],
           points: [
             "You order and pay. Each page shows the price before you buy.",
-            `The factory in China makes it. Flat-packed customizable pieces take ${shown("leadFlatPack")}, built pieces ${shown("leadBuilt")}, and ready-made furniture ${shown("leadReadyMade")}. Custom sizes add ${shown("leadCustomExtra")}.`,
+            `The factory in China makes it. Flat-packed modular pieces take ${shown("leadFlatPack")}, built pieces ${shown("leadBuilt")}, and ready-made furniture ${shown("leadReadyMade")}. Custom sizes add ${shown("leadCustomExtra")}.`,
             `It is shipped to Singapore and delivered to you. ${shown("gstTerms")}`,
             `Flat-packed pieces come with their steps for you to build yourself. Built pieces arrive put together, though large ones may be finished at your home. Installation costs ${shown("installPrice")}.`,
           ],

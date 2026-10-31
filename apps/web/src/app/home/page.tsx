@@ -25,7 +25,7 @@ const STARTS: readonly { name: string; line: string; href: string; render: Stati
   { name: "In an office", line: "A team that keeps changing shape.", href: `${routes.collection}?use=work#find`, render: mobileScreenRender },
 ];
 
-/** What the customizable furniture does that ordinary furniture doesn't. */
+/** What the modular furniture does that ordinary furniture doesn't. */
 const STRENGTHS: readonly { name: string; line: string; href: string; render: StaticImageData }[] = [
   {
     name: "Room dividers that fit your room",
@@ -48,7 +48,7 @@ const STRENGTHS: readonly { name: string; line: string; href: string; render: St
 ];
 
 const STEPS: readonly { name: string; line: string }[] = [
-  { name: "Choose", line: "Pick a ready-made piece, or a customizable one that suits your space." },
+  { name: "Choose", line: "Pick a ready-made piece, or a modular one that suits your space." },
   { name: "Adjust, if you want", line: "Change the size, finish and add-ons within clear limits. It is complete without any of this." },
   { name: "Receive it", line: `Flat-packed in ${shown("leadFlatPack")}, or already built in ${shown("leadBuilt")}.` },
 ];
@@ -56,7 +56,7 @@ const STEPS: readonly { name: string; line: string }[] = [
 const BASICS: readonly { label: string; value: string }[] = [
   { label: "Made in", value: "China, by our partner factory" },
   { label: "Delivered to", value: "Singapore" },
-  { label: "Prices", value: `Customizable pieces ${priceFrom("bedside")}` },
+  { label: "Prices", value: `Modular pieces ${priceFrom("bedside")}` },
   { label: "Support", value: "By email, plus the AI assistant once you sign in" },
 ];
 
@@ -92,7 +92,7 @@ export default function Home() {
               <p>Sold as it is: {READY_MADE.map((r) => r.name.toLowerCase()).join(", ")}.</p>
             </Link>
             <Link href={`${routes.collection}#find`} className={styles.way}>
-              <h3>Customizable furniture</h3>
+              <h3>Modular furniture</h3>
               <p>Birch panel pieces, complete as they stand. Change the size, finish and add-ons if you want to.</p>
             </Link>
           </div>

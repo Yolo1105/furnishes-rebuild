@@ -271,7 +271,7 @@ export function StudioView() {
             </p> */}
             <FurnitureWord />
             <div className={styles.pitch}>
-              <p className={styles.pitchLine}>Ready-made and customizable furniture for Singapore homes and small offices.</p>
+              <p className={styles.pitchLine}>Ready-made and modular furniture for Singapore homes and small offices.</p>
               <div className={styles.pitchCalls}>
                 <Link href={routes.collection} className={styles.pitchPrimary}>
                   See the furniture

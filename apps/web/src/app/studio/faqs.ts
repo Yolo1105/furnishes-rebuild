@@ -5,15 +5,15 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
   {
     question: "What do you sell?",
     answer:
-      "Ready-made furniture, and customizable pieces built from birch panels. Both are made by our partner factory in China and delivered in Singapore.",
+      "Three kinds: usual ready-made furniture, modular pieces we have already designed, and modular pieces you compose yourself. All are made by our partner factory in China and delivered in Singapore.",
   },
   {
     question: "How long does it take?",
-    answer: `Flat-packed customizable pieces take ${shown("leadFlatPack")}, and built pieces ${shown("leadBuilt")}. Ready-made furniture takes ${shown("leadReadyMade")}.`,
+    answer: `Flat-packed modular pieces take ${shown("leadFlatPack")}, and built pieces ${shown("leadBuilt")}. Ready-made furniture takes ${shown("leadReadyMade")}.`,
   },
   {
     question: "Does it come built?",
-    answer: "Customizable pieces can arrive already built or flat-packed with their steps. You choose before you order.",
+    answer: "Modular pieces can arrive already built or flat-packed with their steps. You choose before you order.",
   },
   {
     question: "What finishes can I choose?",
@@ -29,7 +29,7 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
   },
   {
     question: "Can I change the size?",
-    answer: `Yes, on customizable pieces. Height changes in steps of 40 cm up to 160 cm, and width is 60, 120 or 180 cm. A custom size costs ${shown("customSizePrice")} and takes ${shown("leadCustomExtra")}.`,
+    answer: `Yes, on modular pieces. Height changes in steps of 40 cm up to 160 cm, and width is 60, 120 or 180 cm. A custom size costs ${shown("customSizePrice")} and takes ${shown("leadCustomExtra")}.`,
   },
   {
     question: "Who puts it together?",
@@ -72,7 +72,7 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
     answer: "Furniture. You start with a whole piece and never need to learn how the parts work. Add-ons are sold for the pieces that take them.",
   },
   {
-    question: "Does every piece need customizing?",
+    question: "Do I have to compose my own?",
     answer: "No. The standard version is complete as it stands. Change something only if it makes a real difference for you.",
   },
   {

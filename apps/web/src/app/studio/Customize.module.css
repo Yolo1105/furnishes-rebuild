@@ -1,4 +1,4 @@
-/* What a customizable piece can change, beside what it is made of. */
+/* What a modular piece can change, beside what it is made of. */
 .customize {
   padding: clamp(56px, 10vh, 112px) var(--gutter);
   color: var(--color-umber);

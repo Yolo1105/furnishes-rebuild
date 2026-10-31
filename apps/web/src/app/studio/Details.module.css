@@ -59,6 +59,102 @@
   gap: var(--space-1);
 }
 
+/* a link in words: quiet till pointed at */
+.link {
+  font-size: var(--text-body);
+  color: var(--color-soft);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--color-orange);
+}
+
+.foot {
+  margin-top: var(--space-6);
+}
+
+.subhead {
+  margin-top: clamp(48px, 8vh, 96px);
+}
+
+/* the add-on parts under a piece */
+.parts {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.parts li {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.partName {
+  font-size: var(--text-body);
+}
+
+.tier {
+  composes: caps from global;
+}
+
+/* the explorer: rooms, then the problems beside the answer */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: clamp(32px, 6vh, 64px);
+}
+
+.explorer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--gap);
+  margin-top: var(--space-6);
+}
+
+.problems {
+  display: grid;
+  align-content: start;
+}
+
+.problem {
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--space-1) 0;
+  background: none;
+  border: 0;
+  color: var(--color-soft);
+  font: inherit;
+  font-size: var(--text-body);
+  text-align: start;
+  cursor: pointer;
+}
+
+.problem:hover,
+.problem[aria-pressed="true"] {
+  color: var(--color-orange);
+}
+
+.answer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.answer .picture {
+  align-self: start;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.guide {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-4) var(--gap);
+  margin-top: var(--space-4);
+}
+
 /* a picture over a point, its call at the foot */
 .picture {
   position: relative;
@@ -106,16 +202,32 @@
   width: 24%;
 }
 
+@media (min-width: 701px) {
+  .three .rowLabel {
+    width: 16%;
+  }
+}
+
 @media (max-width: 900px) {
   .columns,
   .four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .explorer,
+  .answer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .guide {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 700px) {
   .columns,
-  .four {
+  .four,
+  .guide {
     grid-template-columns: minmax(0, 1fr);
   }
 

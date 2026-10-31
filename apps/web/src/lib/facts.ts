@@ -19,7 +19,7 @@ export const LEAD_WEEKS = {
   addOns: { from: 4, to: 6 },
 } as const;
 
-/** Each customizable piece's price in S$, by its id in the catalogue: flat-packed, then built. */
+/** Each modular piece's price in S$, by its id in the catalogue: flat-packed, then built. */
 export const PIECE_PRICES: Record<string, { flat: number; built: number }> = {
   entry: { flat: 420, built: 540 },
   desk: { flat: 450, built: 570 },
@@ -76,6 +76,7 @@ export const FACTS = {
   team: placeholder("other team names and roles"),
   weightLimits: placeholder("tested weight limits"),
   stability: placeholder("tested stability guidance"),
+  careGuide: placeholder("how to clean and look after each surface"),
   returnsTerms: draft("You have 14 days from delivery to return an unused piece in its original packaging."),
   warranty: draft("Manufacturing faults are covered for 12 months from delivery."),
   gstTerms: draft("Prices include GST and delivery in Singapore."),

@@ -93,7 +93,7 @@ export function SiteFooter() {
       <div className={styles.middle}>
         <div className={styles.about}>
           <p className={styles.body}>
-            Ready-made and customizable furniture for Singapore homes and small offices, made by our partner factory in China.
+            Ready-made and modular furniture for Singapore homes and small offices, made by our partner factory in China.
           </p>
           <div>
             <p className={styles.visit}>Visit us on</p>

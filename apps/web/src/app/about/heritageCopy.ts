@@ -17,7 +17,7 @@ export const HERITAGE_STEPS: readonly { title: string; tag: string; body: string
   {
     title: "What we do today",
     tag: "Today",
-    body: "We sell ready-made furniture and customizable pieces, made by our partner factory in China, to homes and small offices in Singapore.",
+    body: "We sell ready-made furniture and modular pieces, made by our partner factory in China, to homes and small offices in Singapore.",
   },
   {
     title: "Where we are going",

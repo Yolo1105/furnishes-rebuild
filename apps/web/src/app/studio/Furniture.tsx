@@ -7,7 +7,7 @@ import { routes } from "@/lib/routes";
 import { productHref } from "../products/productHref";
 import styles from "./Furniture.module.css";
 
-/** The customizable pieces shown first, by catalogue id, named for where they go. */
+/** The modular pieces shown first, by catalogue id, named for where they go. */
 const PIECES = [
   { id: "bedside", name: "Beside the bed" },
   { id: "entry", name: "By the door" },
@@ -15,7 +15,7 @@ const PIECES = [
   { id: "divider", name: "To divide a room" },
 ] as const;
 
-/** What we sell, straight after the tour: the customizable pieces, then the ready-made kinds, each with its price. */
+/** What we sell, straight after the tour: the modular pieces, then the ready-made kinds, each with its price. */
 export function Furniture() {
   return (
     <section className={styles.furniture} aria-labelledby="furniture-title">
@@ -23,12 +23,12 @@ export function Furniture() {
         <p className={styles.index}>
           <span>The furniture</span>
         </p>
-        <h2 id="furniture-title">Two ways to buy.</h2>
+        <h2 id="furniture-title">See what we have.</h2>
       </header>
       <div className={styles.lines}>
         <div className={`${styles.line} reveal`}>
-          <h3 className={styles.name}>Customizable</h3>
-          <p className={styles.about}>Birch panel pieces, complete as they stand. Change the size, finish and add-ons if you want to.</p>
+          <h3 className={styles.name}>Modular</h3>
+          <p className={styles.about}>Our finished designs in birch panels, each complete as it stands, delivered built or flat-packed. Start from one of these, or compose your own.</p>
           <ul className={styles.pieces}>
             {PIECES.map(({ id, name }) => (
               <li key={id}>
@@ -47,7 +47,7 @@ export function Furniture() {
             ))}
           </ul>
           <Link href={`${routes.collection}#find`} className={styles.call}>
-            See all customizable
+            See all modular
           </Link>
           <p className={styles.small}>{CLAIMS.renders.detail}</p>
         </div>

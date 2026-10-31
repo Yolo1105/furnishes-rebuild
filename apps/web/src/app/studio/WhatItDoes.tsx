@@ -31,7 +31,7 @@ const STRENGTHS: readonly { name: string; line: string; href: string; call: stri
   },
 ];
 
-/** The three reasons to choose the customizable line over ordinary furniture. */
+/** The three reasons to choose the modular line over ordinary furniture. */
 export function WhatItDoes() {
   return (
     <section className={styles.section} aria-labelledby="does-title">

@@ -27,7 +27,7 @@ export function FurnitureWord() {
       <p className={styles.rightLine}>
         Made by our partner factory, delivered in Singapore.
         <br />
-        Customizable pieces {priceFrom("bedside")}, delivery and GST included.
+        Modular pieces {priceFrom("bedside")}, delivery and GST included.
       </p>
       <span className={styles.ture} aria-hidden="true">
         tu<span className={styles.orange}>r</span>e

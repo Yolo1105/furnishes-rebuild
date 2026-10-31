@@ -4,7 +4,7 @@ import { contactHref } from "@/lib/routes";
 import { ArrowLink } from "./ArrowLink";
 import styles from "./Customize.module.css";
 
-/** What can change on a customizable piece, and what each costs and adds to the wait. */
+/** What can change on a modular piece, and what each costs and adds to the wait. */
 const OPTIONS: readonly { name: string; what: string; cost: string }[] = [
   { name: "Built or flat-packed", what: "Flat-packed comes with its steps. Built arrives put together, though large pieces may be finished at your home.", cost: "Each piece shows both prices" },
   { name: "Size", what: "Height in steps of 40 cm up to 160 cm. Width of 60, 120 or 180 cm.", cost: `${shown("customSizePrice")}, and ${shown("leadCustomExtra")}` },
@@ -13,7 +13,7 @@ const OPTIONS: readonly { name: string; what: string; cost: string }[] = [
   { name: "Installation", what: "We put it together in your home if you'd rather not.", cost: shown("installPrice") },
 ];
 
-/** What a customizable piece can change, what each costs, and what it is made of. */
+/** What a modular piece can change, what each costs, and what it is made of. */
 export function Customize() {
   return (
     <section className={styles.customize} aria-labelledby="customize-title">
