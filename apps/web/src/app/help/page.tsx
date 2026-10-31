@@ -33,6 +33,15 @@ export default function Help() {
           ],
         },
         {
+          heading: "Which kind to choose",
+          points: [
+            "Ready-made: when a usual desk, chair, cabinet, table or sofa suits you. It's sold as it is.",
+            "Modular, already designed: when you want a finished piece for one job, such as an entryway or a bedside, with no planning.",
+            "Modular, composed by you: when no finished design suits your space. You choose the board size, colour, texture and add-ons, and the AI assistant works out how they go together.",
+          ],
+          body: [],
+        },
+        {
           heading: "Ordering and payment",
           body: [
             `Sign in to buy. Each piece shows its price before you pay. ${shown("paymentMethods")} ${shown("gstTerms")}`,
@@ -102,6 +111,13 @@ export default function Help() {
           body: [
             `${shown("stability")} ${shown("weightLimits")}`,
             "Our dividers and screens separate a room visually. They do not block sound. If you rent, or live in an HDB flat, check your landlord's or HDB's rules before you drill into a wall.",
+          ],
+        },
+        {
+          heading: "Children and other makers' parts",
+          body: [
+            "We don't claim any piece is safe for children, even if it's low or has rounded corners. Keep children from climbing on it.",
+            "Accessories we offer are checked against the piece they fit. A hole spacing that looks the same doesn't mean another maker's part is safe to use.",
           ],
         },
         {

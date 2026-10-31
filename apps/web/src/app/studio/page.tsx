@@ -20,6 +20,7 @@ import { Manifesto } from "./Manifesto";
 import { NotNoticed } from "./NotNoticed";
 import { NotSure } from "./NotSure";
 import { OtherUses } from "./OtherUses";
+import { OnThisPage } from "./OnThisPage";
 import { Packages } from "./Packages";
 import { Questions } from "./Questions";
 import { SoundFamiliar } from "./SoundFamiliar";
@@ -34,7 +35,7 @@ import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Furniture for Singapore homes and small offices" };
 
-/** The studio: the room photos and the flat's floor plan side by side over the peach (the plan taking the stage as it scrolls on), then the three kinds of furniture and why, the furniture itself, who it is for, what it can do and what matters in each space, exploring by problem, why modular, its parts and what else they can become, who we are and its figures, the everyday cases, needs you may not have noticed, before and after, keeping what you own, what can be changed, how to buy, what to measure, building it yourself, how long it takes, life after buying, what the AI does, designing your room, the packages, the heritage, the swatches, the questions, help for the unsure, partners and a last call to start a project, then the footer. */
+/** The studio: the room photos and the flat's floor plan side by side over the peach (the plan taking the stage as it scrolls on), then the three kinds of furniture and why, a guide to the page, the furniture itself, who it is for, what it can do and what matters in each space, exploring by problem, why modular, its parts and what else they can become, who we are and its figures, the everyday cases, needs you may not have noticed, before and after, keeping what you own, what can be changed, how to buy, what to measure, building it yourself, how long it takes, life after buying, what the AI does, designing your room, the packages, the heritage, the swatches, the questions, help for the unsure, partners and a last call to start a project, then the footer. */
 export default function Studio() {
   return (
     <>
@@ -43,6 +44,7 @@ export default function Studio() {
         <PeachBackdrop />
         <StudioView />
         <Compare />
+        <OnThisPage />
         <Furniture />
         <WhoFor />
         <WhatItDoes />

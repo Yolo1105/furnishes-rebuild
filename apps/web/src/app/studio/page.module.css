@@ -4,6 +4,11 @@
   overflow-x: clip;
 }
 
+/* a link from the page's guide stops clear of the bar */
+.page :global(h2) {
+  scroll-margin-top: calc(var(--nav-h) + var(--space-6));
+}
+
 /* The scroll the two parts below hold the screen through: a screen for
    them, a screen for the plan to take the stage, then a stretch (--hold)
    for each step of the tour (--steps). */

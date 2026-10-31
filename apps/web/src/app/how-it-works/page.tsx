@@ -24,6 +24,17 @@ export default function HowItWorks() {
           ],
         },
         {
+          heading: "Why modular",
+          body: ["Modular furniture is built from panels and parts that work together. If a standard size suits you, ready-made furniture is simpler."],
+          points: [
+            "It fits where fixed sizes don't, using parts in set heights and widths.",
+            "It can change its job: the same frame can take another set of parts.",
+            "It can grow, with a door, a drawer, a second segment or wheels added later.",
+            "A damaged part can often be looked at on its own.",
+            "Not every part fits every piece, so we check against the version you own.",
+          ],
+        },
+        {
           heading: "What you can customize",
           body: ["Start with a finished piece, then change only what you need. Its page shows what applies to it and what it costs."],
           points: [

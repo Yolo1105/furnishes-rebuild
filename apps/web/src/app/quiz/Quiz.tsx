@@ -106,7 +106,10 @@ export function Quiz() {
             )}
             <nav className={styles.next} aria-label="Next steps">
               <Link href={routes.collection} className={inquiry.back}>
-                See the collection
+                See the modular designs
+              </Link>
+              <Link href={routes.designYourRoom} className={inquiry.back}>
+                Compose your own
               </Link>
               <Link href={`${routes.products}#ready-made`} className={inquiry.back}>
                 See ready-made furniture
