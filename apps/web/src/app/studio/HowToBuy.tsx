@@ -5,18 +5,21 @@ import styles from "./HowToBuy.module.css";
 const STEPS: readonly { name: string; line: string }[] = [
   { name: "Choose", line: "A ready-made piece, or a customizable one that suits your space." },
   { name: "Adjust, if you want", line: "On a customizable piece, change the size, finish and add-ons, and choose built or flat-packed." },
-  { name: "Pay", line: shown("paymentMethods") },
+  { name: "Pay", line: `Sign in to buy. Each piece shows its price before you pay. ${shown("paymentMethods")}` },
   { name: "Receive it", line: `Flat-packed in ${shown("leadFlatPack")}, built in ${shown("leadBuilt")}, ready-made in ${shown("leadReadyMade")}.` },
 ];
 
 /** The things to know before buying. */
 const BASICS: readonly { label: string; value: string }[] = [
-  { label: "Delivery", value: shown("gstTerms") },
+  { label: "Delivery", value: `${shown("gstTerms")} Every piece is made to order, and custom sizes take ${shown("leadCustomExtra")}.` },
   { label: "Returns", value: `${shown("returnsTerms")} Custom pieces only for faults, damage or a wrong item.` },
   { label: "Warranty", value: shown("warranty") },
   { label: "Assembly", value: `${shown("assemblyDetails")} Installation costs ${shown("installPrice")}.` },
-  { label: "Made", value: "From birch panels and fittings, by our partner factory in China." },
-  { label: "Help", value: `By email at ${EMAIL}, and the AI assistant once you sign in. No phone or live chat.` },
+  { label: "Before you order", value: "Measure the spot, above any skirting board, and the way in: the lift, the doors and the corners." },
+  { label: "Fixing and moving", value: "Taller pieces may need fixing to the wall. Pieces on wheels can move, within limits we confirm for each one." },
+  { label: "Offices and bulk orders", value: shown("officeTerms") },
+  { label: "Where it's made", value: "By our partner factory in China, then delivered to you in Singapore." },
+  { label: "Help", value: `By email at ${EMAIL}, ${shown("supportHours")}, with a reply within ${shown("replyTime")}. The AI assistant answers any time once you sign in. No phone or live chat.` },
 ];
 
 /** How buying works, step by step, then the basics. */

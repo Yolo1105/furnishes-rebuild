@@ -1,0 +1,87 @@
+/* What a customizable piece can change, beside what it is made of. */
+.customize {
+  padding: clamp(56px, 10vh, 112px) var(--gutter);
+  color: var(--color-umber);
+}
+
+:where(.customize) :where(h2, h3, p, dl, dd) {
+  margin: 0;
+}
+
+.index {
+  composes: label from global;
+}
+
+.head {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.lede {
+  max-width: 38em;
+  font-size: var(--text-body);
+  color: var(--color-soft);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: calc(var(--gap) * 2);
+  margin-top: clamp(32px, 6vh, 64px);
+}
+
+.heading {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-item);
+  font-weight: inherit;
+}
+
+.option,
+.material {
+  display: grid;
+  gap: var(--space-1) var(--space-4);
+  padding-block: var(--space-4);
+  border-top: var(--rule);
+  font-size: var(--text-small);
+}
+
+.option {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.material {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+.name {
+  color: var(--color-umber);
+}
+
+.what {
+  color: var(--color-soft);
+}
+
+.cost {
+  color: var(--color-clay);
+  text-align: end;
+}
+
+.note {
+  margin-block: var(--space-4);
+  font-size: var(--text-small);
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .option,
+  .material {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cost {
+    text-align: start;
+  }
+}

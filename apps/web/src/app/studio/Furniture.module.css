@@ -81,6 +81,34 @@
   color: var(--color-orange);
 }
 
+.pieceLine,
+.kindLine,
+.small {
+  font-size: var(--text-small);
+  color: var(--color-soft);
+}
+
+.pieceLine {
+  margin-block: var(--space-1);
+}
+
+.piecePrice {
+  font-size: var(--text-small);
+  color: var(--color-clay);
+}
+
+.pieceMeta {
+  composes: caps from global;
+}
+
+.kindName {
+  flex: 1 1 14em;
+}
+
+.kindLine {
+  display: block;
+}
+
 .price {
   font-size: var(--text-small);
   color: var(--color-clay);
@@ -109,7 +137,6 @@
 
 .call {
   composes: caps button-outline from global;
-  margin-top: auto;
   padding-inline: var(--space-4);
 }
 

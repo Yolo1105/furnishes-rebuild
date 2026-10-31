@@ -22,7 +22,10 @@ export function Questions() {
           Questions
         </h2>
         <p className={styles.promise}>{`We reply within ${shown("replyTime")}.`}</p>
-        <ArrowLink href={routes.contact}>Ask a question</ArrowLink>
+        <div className={styles.calls}>
+          <ArrowLink href={routes.contact}>Ask a question</ArrowLink>
+          <ArrowLink href={routes.help}>All help topics</ArrowLink>
+        </div>
       </header>
       <div className={styles.list}>
         {QUESTIONS.map((q, i) => (

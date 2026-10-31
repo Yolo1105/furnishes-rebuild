@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { priceFrom, productById, STATUS } from "@/features/products/catalogue";
+import { CLAIMS, productById, sizeLabel, STATUS } from "@/features/products/catalogue";
 import { READY_MADE } from "@/features/products/readyMade";
+import { priceInFull, shown } from "@/lib/facts";
 import { routes } from "@/lib/routes";
 import { productHref } from "../products/productHref";
 import styles from "./Furniture.module.css";
@@ -36,9 +37,10 @@ export function Furniture() {
                     <Image src={productById(id)!.room} alt="" fill sizes="(max-width: 800px) 50vw, 25vw" placeholder="blur" />
                   </span>
                   <span className={styles.pieceName}>{name}</span>
-                  <span className={styles.price}>
-                    {priceFrom(id)}
-                    {productById(id)!.status === "soon" && `, ${STATUS.soon.name.toLowerCase()}`}
+                  <span className={styles.pieceLine}>{productById(id)!.line}</span>
+                  <span className={styles.piecePrice}>{priceInFull(id)}</span>
+                  <span className={styles.pieceMeta}>
+                    {sizeLabel(productById(id)!.size)} · {STATUS[productById(id)!.status].name}
                   </span>
                 </Link>
               </li>
@@ -47,6 +49,7 @@ export function Furniture() {
           <Link href={`${routes.collection}#find`} className={styles.call}>
             See all customizable
           </Link>
+          <p className={styles.small}>{CLAIMS.renders.detail}</p>
         </div>
         <div className={`${styles.line} reveal`}>
           <h3 className={styles.name}>Ready-made</h3>
@@ -54,7 +57,10 @@ export function Furniture() {
           <ul className={styles.kinds}>
             {READY_MADE.map((r) => (
               <li key={r.name} className={styles.kind}>
-                <span>{r.name}</span>
+                <span className={styles.kindName}>
+                  {r.name}
+                  <span className={styles.kindLine}>{r.line}</span>
+                </span>
                 <span className={styles.price}>{r.range}</span>
               </li>
             ))}
@@ -62,6 +68,7 @@ export function Furniture() {
           <Link href={`${routes.products}#ready-made`} className={styles.call}>
             See all ready-made
           </Link>
+          <p className={styles.small}>{`Takes ${shown("leadReadyMade")}. Prices are per piece and vary by model, so ask us for the current list.`}</p>
         </div>
       </div>
     </section>

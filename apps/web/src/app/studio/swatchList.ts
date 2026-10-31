@@ -8,7 +8,7 @@ import { marked } from "@/lib/facts";
  */
 export const SWATCH_HEADLINE = { lead: "See the finish.", soft: "Then decide." };
 
-export const SWATCH_LINE = "Ask to see samples before you decide. We start with white matte faces and birch edges, and these are the finishes we are looking at next.";
+export const SWATCH_LINE = "Pieces come in white matte faces and birch edges today, and you can ask to see samples before you decide. The finishes shown here are not on sale yet: they are the ones we are looking at next.";
 
 export const SWATCHES: readonly {
   name: string;
