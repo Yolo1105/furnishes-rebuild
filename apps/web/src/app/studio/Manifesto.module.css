@@ -4,7 +4,7 @@
 .manifesto {
   --read: 0;
   position: relative;
-  padding: clamp(96px, 18vh, 200px) var(--gutter) clamp(72px, 14vh, 160px);
+  padding: clamp(56px, 10vh, 112px) var(--gutter) clamp(48px, 8vh, 96px);
   color: var(--color-umber);
 }
 
@@ -19,7 +19,7 @@
 
 .text {
   max-width: 34em;
-  margin-top: clamp(32px, 6vh, 64px);
+  margin-top: clamp(20px, 3.5vh, 40px);
   font-size: var(--text-title);
   letter-spacing: var(--track-heading);
   line-height: var(--leading-loose);
@@ -57,7 +57,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--gap);
-  margin-top: clamp(80px, 16vh, 180px);
+  margin-top: clamp(40px, 7vh, 80px);
 }
 
 .fact {
@@ -73,6 +73,7 @@
   font-weight: var(--weight-light);
   line-height: var(--leading-display);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .caption {
@@ -81,40 +82,8 @@
   color: var(--color-soft);
 }
 
-/* a figure: its digits each a window onto a strip of them, rolling to its own (--to) */
-.figure {
-  display: inline-flex;
-  align-items: flex-end;
-}
-
-.digit {
-  display: inline-block;
-  height: 1em;
-  overflow: hidden;
-  /* the digits passing through fade at the window's edges */
-  mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent);
-}
-
-.strip {
-  display: flex;
-  flex-direction: column;
-  translate: 0 calc(var(--to) * -1em);
-  transition: translate calc(var(--dur-roll) + var(--k) * 0.12s) var(--ease-rise);
-}
-
-.strip span {
-  height: 1em;
-  line-height: var(--leading-display);
-}
-
-.still {
-  line-height: var(--leading-display);
-}
-
 /* "mm" and the like, at the digits' size beside them, softer */
 .unit {
-  margin-left: 0.25em;
-  line-height: var(--leading-display);
   color: var(--color-soft);
 }
 

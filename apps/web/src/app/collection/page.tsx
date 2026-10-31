@@ -15,7 +15,7 @@ import {
   sizeLabel,
   USES,
 } from "@/features/products/catalogue";
-import { routes } from "@/lib/routes";
+import { contactHref, routes } from "@/lib/routes";
 import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import {
@@ -37,15 +37,14 @@ import {
   ROOMS_HEAD,
   STEPS,
   STEPS_HEAD,
-  STORY,
 } from "./collectionCopy";
 import { ConsultPhotos } from "./ConsultPhotos";
-import { Finder, readFinder } from "./Finder";
+import { Finder, readFinder } from "../products/Finder";
 import { MarkedRender } from "./MarkedRender";
-import styles from "./page.module.css";
-import { productHref } from "./productHref";
+import styles from "../products/sections.module.css";
+import { productHref } from "../products/productHref";
 
-export const metadata: Metadata = { title: "Collection" };
+export const metadata: Metadata = { title: "Collection", description: "Browse Furnishes furniture by room, use and budget, in ready-made and customizable lines." };
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -95,7 +94,7 @@ function Marquee({ words, className }: { words: readonly string[]; className?: s
  * the rooms; the consultation band; the first products; pieces in their rooms; the launch
  * pieces in brief; what to know; find your piece (search, filters, views,
  * tiles or the index); what is open on each piece; their
- * other uses; the add-on kits; the photo and orange panel; how the catalogue works; and the closing photo
+ * other uses; the add-on kits; how the catalogue works; and the closing photo
  * under its running words. Then the footer.
  */
 export default async function Collection({
@@ -103,13 +102,13 @@ export default async function Collection({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const state = readFinder(await searchParams);
+  const state = readFinder(await searchParams, routes.collection);
   const launch = PRODUCTS.filter((p) => p.status === "launch");
   const following = PRODUCTS.filter((p) => p.status !== "launch");
 
   return (
     <>
-      <main className={styles.page} data-page="collection">
+      <main id="main" className={styles.page} data-page="collection">
         <PeachBackdrop />
         <section className={styles.hero} aria-labelledby="hero-title">
           <p className={styles.index}>
@@ -123,6 +122,9 @@ export default async function Collection({
             <a href="#find" className={styles.pillOutline}>
               {HERO.call}
             </a>
+            <Link href={`${routes.products}#ready-made`} className={styles.pillOutline}>
+              {HERO.readyMade}
+            </Link>
           </div>
           <MarkedRender render={HERO_RENDER} sizes="(max-width: 700px) 100vw, 92vw" className={styles.heroRender} soft>
             <dl className={styles.figures}>
@@ -173,7 +175,7 @@ export default async function Collection({
             <div className={styles.consultSide}>
               <h3 className={styles.consultName}>{CONSULT.side}</h3>
               <p className={styles.consultBody}>{CONSULT.body}</p>
-              <Link href={routes.contact} className={styles.pillOutline}>
+              <Link href={contactHref("visit")} className={styles.pillOutline}>
                 {CONSULT.call}
               </Link>
             </div>
@@ -401,24 +403,6 @@ export default async function Collection({
                 </ul>
               </section>
             ))}
-          </div>
-        </section>
-
-        <section className={styles.story} aria-labelledby="story-title">
-          <div className={styles.storyPhoto}>
-            <Image src={STORY.photo} alt={STORY.photoAlt} fill sizes="(max-width: 900px) 100vw, 45vw" placeholder="blur" />
-          </div>
-          <div className={styles.storyPanel}>
-            <p className={styles.index}>
-              <span>{STORY.label}</span>
-            </p>
-            <h2 id="story-title" className={styles.sectionTitle}>
-              {STORY.title}
-            </h2>
-            <p className={styles.storyBody}>{STORY.body}</p>
-            <Link href={routes.about} className={styles.pillOutline}>
-              {STORY.call}
-            </Link>
           </div>
         </section>
 

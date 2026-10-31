@@ -1,4 +1,4 @@
-import { routes } from "@/lib/routes";
+import { contactHref } from "@/lib/routes";
 import { ArrowLink } from "./ArrowLink";
 import { PACKAGE_ROWS, PACKAGES } from "./packageList";
 import styles from "./Packages.module.css";
@@ -19,10 +19,10 @@ export function Packages() {
           <tr>
             <td className={styles.head}>
               <p className={styles.index}>
-                <span>Packages</span>
+                <span>Design help</span>
               </p>
               <h2 id="packages-title" className={styles.title}>
-                What each package covers
+                What each way of getting help covers
               </h2>
             </td>
             {PACKAGES.map((p, i) => (
@@ -50,8 +50,8 @@ export function Packages() {
         </tbody>
       </table>
       <footer className={`${styles.foot} reveal`}>
-        <p>Every package is agreed before we start.</p>
-        <ArrowLink href={routes.contact}>Book a consultation</ArrowLink>
+        <p>You don't need any of these to buy.</p>
+        <ArrowLink href={contactHref("visit")}>Book a visit</ArrowLink>
       </footer>
     </section>
   );

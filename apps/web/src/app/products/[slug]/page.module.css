@@ -275,3 +275,7 @@
   }
 }
 
+
+.secondary {
+  composes: button-outline from global;
+}

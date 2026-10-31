@@ -1,0 +1,62 @@
+/* What "Design your room" is, after the everyday cases. */
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  padding: clamp(56px, 10vh, 112px) var(--gutter);
+  scroll-margin-top: var(--nav-h);
+  color: var(--color-umber);
+}
+
+:where(.section) :where(h2, h3, p, ol) {
+  margin: 0;
+}
+
+.head {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+}
+
+.index {
+  composes: label from global;
+}
+
+.lede {
+  font-size: var(--text-body);
+}
+
+.calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.primary {
+  composes: caps button from global;
+  padding-inline: var(--space-4);
+}
+
+.call {
+  composes: caps button-outline from global;
+  padding-inline: var(--space-4);
+}
+
+.steps {
+  display: grid;
+  gap: var(--space-6);
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-body);
+}
+
+.stepTitle {
+  font-size: var(--text-item);
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

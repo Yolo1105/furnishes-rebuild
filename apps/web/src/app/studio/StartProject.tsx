@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import aFrameLivingRoom from "@/assets/a-frame-living-room.jpg";
-import { routes } from "@/lib/routes";
+import { shown } from "@/lib/facts";
+import { contactHref, routes } from "@/lib/routes";
 import styles from "./StartProject.module.css";
 
 /**
@@ -19,15 +20,15 @@ export function StartProject() {
             <span>Next step</span>
           </p>
           <h2 id="start-title" className={styles.title}>
-            Start with one 90-minute visit.
+            Not sure? Start with a visit to your room.
           </h2>
-          <p className={styles.lede}>You get a written summary three days later, whether you hire us or not.</p>
+          <p className={styles.lede}>{`We come to you for ${shown("consultLength")} and answer any questions. It costs ${shown("consultPrice")}.`}</p>
           <div className={styles.calls}>
-            <Link href={routes.contact} className={`${styles.button} ${styles.primary}`}>
-              Book a consult
+            <Link href={contactHref("visit")} className={`${styles.button} ${styles.primary}`}>
+              Book a consultation
             </Link>
-            <Link href={routes.contact} className={styles.button}>
-              Start a project
+            <Link href={routes.collection} className={styles.button}>
+              See the furniture
             </Link>
           </div>
         </div>

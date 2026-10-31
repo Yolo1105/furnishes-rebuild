@@ -13,6 +13,8 @@ export const FINISH = {
   rust: "#9a4017", // the armchair
   screen: "#2a2420",
   furnishes: "#e7551a", // the bookcase's boards
+  white: "#f1eee6", // white matte faces
+  birch: "#d8bd93", // birch edges
 } as const;
 
 /** The swatches the panel shows, in the order it shows them. */

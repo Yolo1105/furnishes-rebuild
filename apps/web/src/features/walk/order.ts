@@ -7,13 +7,12 @@ import { STOPS } from "./rig";
  * the way to the hall, and the finishes tried on it in turn.
  */
 export const ORDER = {
-  name: "Furnishes low cabinet",
+  name: "Example low cabinet",
   size: "120 × 40 × 72 cm",
-  made: "18 mm boards, put together in your home",
+  made: "18 mm birch panels, built or flat-packed",
   finishes: [
-    { name: "Furnishes orange", color: FINISH.furnishes },
-    { name: "Oak", color: FINISH.oak },
-    { name: "Walnut", color: FINISH.walnut },
+    { name: "White matte", color: FINISH.white },
+    { name: "Birch", color: FINISH.birch },
   ],
 } as const;
 

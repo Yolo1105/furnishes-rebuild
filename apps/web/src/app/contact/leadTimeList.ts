@@ -1,16 +1,12 @@
-/**
- * How long things take to arrive in Singapore, in weeks from order: the
- * usual wait (`from`) and the long end (`to`), or a word where there is no
- * wait to speak of. Stand-in figures till the studio's own are set.
- */
-export const LEAD_TIMES: readonly ({ name: string } & ({ from: number; to: number } | { note: string }))[] = [
-  { name: "Upholstery", from: 10, to: 14 },
-  { name: "Custom cabinetry", from: 8, to: 12 },
-  { name: "Stone", note: "Back to normal" },
-];
+import { LEAD_WEEKS } from "@/lib/facts";
 
-/** When the figures were last checked, as written and as a machine reads it. */
-export const LEAD_TIMES_AS_OF = { shown: "1 October 2026", iso: "2026-10-01" };
+/** How long pieces take to arrive in Singapore, in weeks from order: the usual wait (`from`) and the long end (`to`). */
+export const LEAD_TIMES: readonly { name: string; from: number; to: number }[] = [
+  { name: "Customizable, flat-packed", ...LEAD_WEEKS.flatPack },
+  { name: "Customizable, built", ...LEAD_WEEKS.built },
+  { name: "Ready-made furniture", ...LEAD_WEEKS.readyMade },
+  { name: "Add-ons", ...LEAD_WEEKS.addOns },
+];
 
 /** The scale's end, in weeks, and the step between its numbers. */
 export const WEEKS = 16;

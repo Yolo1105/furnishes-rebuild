@@ -43,8 +43,8 @@ export const MANIFESTO: readonly Run[] = [
  * at its size, softer, and `label` reads on from the unit.
  */
 export const FIGURES: readonly { value: string; unit?: string; label: string }[] = [
-  { value: "18", unit: "mm", label: "every board, cut to your plan." },
-  { value: "24", unit: "hours", label: "a day, our AI Interior Consultant answers." },
-  { value: "11", unit: "steps", label: "from a floor plan to your door." },
-  { value: "1", unit: "chat", label: "is all it takes to begin." },
+  { value: "18", unit: "mm", label: "birch plywood, in the panels of every customizable piece." },
+  { value: "24", unit: "hours", label: "a day, the AI assistant answers once you sign in." },
+  { value: "11", unit: "steps", label: "in the example below, from a floor plan to your door." },
+  { value: "1", unit: "place", label: "to ask anything, from the first idea to the last piece." },
 ];

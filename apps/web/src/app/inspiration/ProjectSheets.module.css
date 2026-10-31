@@ -134,8 +134,8 @@
   background: var(--color-peach-paper);
 }
 
-.figure[data-view="built"] .drawing,
-.figure[data-view="drawn"] .photo {
+.figure[data-view="photo"] .drawing,
+.figure[data-view="plan"] .photo {
   opacity: 0;
 }
 

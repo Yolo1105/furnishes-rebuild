@@ -195,6 +195,16 @@ export const AC_LEDGE = { x0: 15400, y0: 300, x1: 16000, y1: 1300, wall: 100 } a
 /** All that is drawn: the flat, the bays to the north and the A/C ledge to the east. */
 export const DRAWN: Box = [-WALL, -WALL - Math.max(...BAYS.map((b) => b.depth)), AC_LEDGE.x1, 9000 + WALL];
 
+/** The drafting grid round the plan, mm: its squares, and how far it runs past the drawing, fading out over that. */
+export const GRID_STEP = 500;
+export const GRID_REACH = 1500;
+/** How far from each corner of the reach the grid is dimmed further, so the corners go first. */
+export const GRID_CORNER = 4000;
+/** The share of GRID_CORNER nearest the corner where the grid is gone altogether. */
+export const GRID_CORNER_GONE = 0.35;
+/** How strong the grid's lines are, 0 to 1. */
+export const GRID_INK = 0.22;
+
 /** The flat's floor area, m²: every room's floor, walls not counted. */
 export const FLOOR_AREA = Math.round(ROOMS.reduce((sum, r) => sum + r.w * r.d, 0) / 1e6);
 

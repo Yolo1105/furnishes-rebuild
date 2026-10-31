@@ -4,17 +4,20 @@ import {
   ACTIVITIES,
   type ActivityId,
   ARRANGEMENTS,
+  BUDGETS,
+  type BudgetId,
   CATEGORIES,
   type CategoryId,
-  CLAIMS,
   FAMILIES,
   type FamilyId,
+  lowestPrice,
   matchesSearch,
   searchWords,
   OBJECTS,
   type ObjectId,
   OTHER_USE_STATE,
   OTHER_USES,
+  priceFrom,
   type Product,
   productName,
   PRODUCTS,
@@ -54,15 +57,18 @@ export type FinderState = {
   use?: UseId;
   category?: CategoryId;
   width?: WidthId;
+  budget?: BudgetId;
   activity?: ActivityId;
   object?: ObjectId;
   kind?: KindId;
   sort: SortId;
   view: ViewId;
+  /** The page the finder sits on, which its links stay on. */
+  base: string;
 };
 
 /** The filters on the pieces, each kept under its own name in the address. */
-const FILTERS = ["status", "family", "use", "category", "width", "activity", "object"] as const;
+const FILTERS = ["status", "family", "use", "category", "width", "budget", "activity", "object"] as const;
 type FilterField = (typeof FILTERS)[number];
 const CLEARED = Object.fromEntries([...FILTERS, "q", "kind"].map((f) => [f, undefined])) as Partial<FinderState>;
 
@@ -72,7 +78,7 @@ const isIn = <T extends string>(o: Record<T, unknown>, v: unknown): v is T => ty
 const one = (q: Query, k: string) => (typeof q[k] === "string" ? q[k] : undefined);
 
 /** The state from the address: ?q=, each filter, ?kind=, ?sort= and ?view=. */
-export function readFinder(q: Query): FinderState {
+export function readFinder(q: Query, base: string = routes.products): FinderState {
   const search = one(q, "q")?.trim().slice(0, 60);
   return {
     q: search || undefined,
@@ -81,11 +87,13 @@ export function readFinder(q: Query): FinderState {
     use: isIn(USES, q.use) ? q.use : undefined,
     category: isIn(CATEGORIES, q.category) ? q.category : undefined,
     width: isIn(WIDTHS, q.width) ? q.width : undefined,
+    budget: isIn(BUDGETS, q.budget) ? q.budget : undefined,
     activity: isIn(ACTIVITIES, q.activity) ? q.activity : undefined,
     object: isIn(OBJECTS, q.object) ? q.object : undefined,
     kind: isIn(KINDS, q.kind) ? q.kind : undefined,
     sort: isIn(SORTS, q.sort) ? q.sort : "record",
     view: isIn(VIEWS, q.view) ? q.view : "grid",
+    base,
   };
 }
 
@@ -100,7 +108,7 @@ function hrefFor(state: FinderState, change: Partial<FinderState>) {
   if (s.sort !== "record") q.set("sort", s.sort);
   if (s.view !== "grid") q.set("view", s.view);
   const query = q.toString();
-  return `${routes.collection}${query ? `?${query}` : ""}#find`;
+  return `${s.base}${query ? `?${query}` : ""}#find`;
 }
 
 const matches = (p: Product, s: FinderState) =>
@@ -110,6 +118,7 @@ const matches = (p: Product, s: FinderState) =>
   (!s.use || p.uses.includes(s.use)) &&
   (!s.category || p.category === s.category) &&
   (!s.width || WIDTHS[s.width].fits(p.size.w)) &&
+  (!s.budget || BUDGETS[s.budget].fits(lowestPrice(p.id))) &&
   (!s.activity || p.activities.includes(s.activity)) &&
   (!s.object || p.objects.includes(s.object));
 
@@ -128,6 +137,7 @@ const GROUPS: { field: FilterField; name: string; options: Record<string, string
   { field: "status", name: "Status", options: names(STATUS), open: true },
   { field: "family", name: "Family", options: names(FAMILIES), open: true },
   { field: "use", name: "Room", options: USES, open: true },
+  { field: "budget", name: "Budget", options: names(BUDGETS), open: true },
   { field: "category", name: "Kind of piece", options: CATEGORIES },
   { field: "width", name: "Fits a width of", options: names(WIDTHS) },
   { field: "activity", name: "What it lets you do", options: names(ACTIVITIES) },
@@ -210,6 +220,7 @@ function Tiles({ products }: { products: readonly Product[] }) {
               <span className={styles.status} data-status={p.status}>
                 {STATUS[p.status].name}
               </span>
+              <span>{priceFrom(p.id)}</span>
               <span>{sizeLabel(p.size)}</span>
             </p>
           </li>
@@ -393,7 +404,7 @@ export function Finder({ state }: { state: FinderState }) {
         Find your piece
       </h2>
 
-      <form className={styles.search} action={`${routes.collection}#find`} role="search">
+      <form className={styles.search} action={`${state.base}#find`} role="search">
         <label htmlFor="find-q" className="visually-hidden">
           Search the collection
         </label>
@@ -489,7 +500,7 @@ export function Finder({ state }: { state: FinderState }) {
             <Tiles products={shown} />
           )}
           <p className={styles.note}>
-            {CLAIMS.price.label}. {CLAIMS.leadTime.label}. Sizes are nominal.
+            Prices are for flat-packed pieces. Sizes are nominal.
           </p>
         </div>
       </div>

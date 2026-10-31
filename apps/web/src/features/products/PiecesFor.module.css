@@ -1,0 +1,11 @@
+.pieces {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: clamp(40px, 7vh, 88px);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-item);
+  font-weight: 500;
+}

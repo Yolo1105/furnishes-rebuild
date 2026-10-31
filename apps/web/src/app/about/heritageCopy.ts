@@ -1,43 +1,27 @@
-/**
- * The heritage band's words, ported as they stand from furnishes_prod's
- * homepage (content/site/heritage-content.ts): its heading, with "we" set
- * apart, the two paragraphs beside it and the five steps of the studio's
- * history under it, each with its tag.
- */
+import { shown } from "@/lib/facts";
+
+/** The story band's words. The history itself is a placeholder till it is written from fact. */
 export const HERITAGE = {
-  heading: "Heritage",
-  we: "we",
-  rest: " preserve",
-  tagline: [
-    "From workshop roots to full interiors, craft, clarity, and lasting materials stay at the center of how we work.",
-    "We still sketch with real samples, watch light move through a room, and choose finishes that feel honest in the hand. Our process stays quiet and deliberate. Clear plans, steady partners, and spaces built to live well long after the first reveal.",
-  ],
+  heading: "Our",
+  we: "story",
+  rest: "",
+  tagline: [shown("companyStory")],
 } as const;
 
 export const HERITAGE_STEPS: readonly { title: string; tag: string; body: string }[] = [
   {
-    title: "Workshop beginnings",
+    title: "How we started",
     tag: "Origins",
-    body: "What began as a small workshop grew through joinery, samples, and clients who valued care over volume. That early habit of listening to materials, light, and daily use still shapes how we plan each project today.",
+    body: shown("companyStory"),
   },
   {
-    title: "First signature spaces",
-    tag: "Milestones",
-    body: "Early residential and studio projects set our language of honest materials, clear plans, and rooms built to age well with daily life.",
+    title: "What we do today",
+    tag: "Today",
+    body: "We sell ready-made furniture and customizable pieces, made by our partner factory in China, to homes and small offices in Singapore.",
   },
   {
-    title: "Craft & collaborators",
-    tag: "Makers",
-    body: "We deepened ties with local makers and suppliers so bespoke details and trusted fabrication stay central to every brief.",
-  },
-  {
-    title: "Broader commissions",
-    tag: "Growth",
-    body: "Larger renovations and mixed use work stretched our process while keeping the same bar for light, proportion, and finish.",
-  },
-  {
-    title: "Today & next chapters",
-    tag: "Legacy",
-    body: "The studio now balances new builds and careful renewals, carrying forward a heritage of clarity, warmth, and buildable design.",
+    title: "Where we are going",
+    tag: "Next",
+    body: "We start in Singapore, with HDB families and startup offices first, and may deliver further once that works well.",
   },
 ];

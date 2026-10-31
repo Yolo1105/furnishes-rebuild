@@ -1,6 +1,7 @@
 /* its own layer, so the peach (fixed, behind) paints over the page's night */
 .page {
   isolation: isolate;
+  overflow-x: clip;
 }
 
 /* The scroll the two parts below hold the screen through: a screen for
@@ -178,6 +179,8 @@
   /* from just past the tour's words, so the plan has room as the walls go up */
   inset: var(--nav-h) 0 0 24%;
   opacity: var(--walk-in);
+  /* its left side melts into the tour's, so the grid and the walls never stop at a hard line */
+  mask-image: linear-gradient(to right, transparent, #000 var(--space-6));
   pointer-events: none;
 }
 
@@ -383,7 +386,7 @@
 
   .split {
     position: static;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 60svh auto;
     height: auto;
   }
@@ -399,4 +402,38 @@
   .drawingEnd {
     display: none;
   }
+}
+
+/* What is sold and where to go, under the word on the first screen. */
+.pitch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  grid-column: 1 / -1;
+}
+
+.head .pitchLine {
+  flex: 1 1 18rem;
+  margin: 0;
+  max-width: none;
+  font-size: var(--text-body);
+  color: var(--color-umber);
+}
+
+.pitchCalls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pitchPrimary {
+  composes: caps button from global;
+  padding-inline: var(--space-4);
+}
+
+.pitchCall {
+  composes: caps button-outline from global;
+  padding-inline: var(--space-4);
 }

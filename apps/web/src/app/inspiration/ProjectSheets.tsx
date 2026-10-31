@@ -72,12 +72,12 @@ function Dimensions({ room: r, frame: [f0, g0, f1, g1] }: { room: Room; frame: B
 }
 
 /**
- * The selected projects, set out like the sheets of a drawing set. On wider
+ * The ideas, set out like the sheets of a drawing set. On wider
  * screens the section holds the screen while the page scrolls, and the
  * sheets run across it from right to left: first the intro, then a sheet for
- * each project, then a count and a call, with which sheet is in view at the
- * top right and how far along at the foot. Each sheet shows its room as we
- * drew it (its part of the plan, dimensioned) or as built (its photo), and
+ * each idea, then a count and a call, with which sheet is in view at the
+ * top right and how far along at the foot. Each sheet shows its room on the
+ * plan (its part of it, dimensioned) or as a mood photo, and
  * either can be turned to; under it, its name, its words and its title block.
  */
 export function ProjectSheets() {
@@ -155,7 +155,7 @@ export function ProjectSheets() {
     if (Math.abs(top - window.scrollY) > 1) window.scrollTo({ top });
   };
 
-  const turn = (i: number, view: "drawn" | "built") => setViews((v) => v.map((old, j) => (j === i ? view : old)));
+  const turn = (i: number, view: "plan" | "photo") => setViews((v) => v.map((old, j) => (j === i ? view : old)));
 
   return (
     <section ref={sectionRef} className={styles.projects} aria-labelledby="projects-title">
@@ -167,16 +167,16 @@ export function ProjectSheets() {
         <div ref={railRef} className={styles.rail}>
           <div className={styles.intro}>
             <p className={styles.index}>
-              <span>Selected projects</span>
+              <span>Ideas for your home</span>
             </p>
             <div className={styles.introBody}>
               <h1 id="projects-title" className={styles.title}>
-                Selected projects
+                Ideas for your home
               </h1>
               <p className={styles.lede}>
-                Rooms we have worked on, each shown as its sheet: the plan we drew, then the room as built.
+                These are ideas, not finished jobs. Each shows a room on an example HDB plan, then a mood photo. The furniture in the photos is not ours.
               </p>
-              <ArrowLink href={routes.studio}>Design your room</ArrowLink>
+              <ArrowLink href={routes.products}>See the furniture</ArrowLink>
             </div>
           </div>
 
@@ -198,18 +198,18 @@ export function ProjectSheets() {
                         fill
                         sizes="(max-width: 800px) 100vw, 46vw"
                         placeholder="blur"
-                        aria-hidden={view !== "built"}
+                        aria-hidden={view !== "photo"}
                       />
                     )}
                     {room && frame && (
-                      <div className={styles.drawing} aria-hidden={view !== "drawn"}>
+                      <div className={styles.drawing} aria-hidden={view !== "plan"}>
                         <FloorPlan frame={frame} label={`Plan of the ${room.name.toLowerCase()}, ${room.w} by ${room.d} mm`}>
                           <Dimensions room={room} frame={frame} />
                         </FloorPlan>
                       </div>
                     )}
                     <div className={styles.tabs} role="group" aria-label={`Show ${p.title} as`}>
-                      {(["drawn", "built"] as const).map((v) => (
+                      {(["plan", "photo"] as const).map((v) => (
                         <button
                           key={v}
                           type="button"
@@ -229,8 +229,8 @@ export function ProjectSheets() {
                       <p className={styles.body}>{p.body}</p>
                     </div>
                     <dl className={styles.block}>
-                      <dt className="visually-hidden">Estate</dt>
-                      <dd>{p.place}</dd>
+                      <dt className="visually-hidden">Status</dt>
+                      <dd>Concept</dd>
                       <dt className="visually-hidden">Flat</dt>
                       <dd>
                         {FLAT.name} {FLAT.kind}
@@ -251,7 +251,7 @@ export function ProjectSheets() {
           </ol>
 
           <div className={styles.end}>
-            <p className={styles.count}>{pad(PROJECTS.length)} projects on file</p>
+            <p className={styles.count}>{pad(PROJECTS.length)} ideas so far</p>
             <ArrowLink href={routes.contact}>Talk to us about yours</ArrowLink>
           </div>
         </div>

@@ -1,27 +1,26 @@
-/** The questions people ask, after the journal. Stand-in answers till the studio's own are set. */
+import { shown } from "@/lib/facts";
+
+/** The questions people ask first. Drafts for approval; fuller answers are on the help page. */
 export const QUESTIONS: readonly { question: string; answer: string }[] = [
   {
+    question: "What do you sell?",
+    answer:
+      "Ready-made furniture, and customizable pieces built from birch panels. Both are made by our partner factory in China and delivered in Singapore.",
+  },
+  {
     question: "How long does it take?",
-    answer:
-      "Three to five weeks for a single room plan. Four to seven months for a whole home, measured from the first consultation to the last delivery. Six to ten weeks if you only need renovation drawings.",
+    answer: `Flat-packed customizable pieces take ${shown("leadFlatPack")}, and built pieces ${shown("leadBuilt")}. Ready-made furniture takes ${shown("leadReadyMade")}.`,
   },
   {
-    question: "Do you order and deliver the furniture?",
-    answer:
-      "On a whole home, yes. We order, track each delivery and check every piece in. On a room plan you get the list with links and order it yourself.",
+    question: "Does it come built?",
+    answer: "Customizable pieces can arrive already built or flat-packed with their steps. You choose before you order.",
   },
   {
-    question: "Can I hire you for one room?",
-    answer: "Yes. The Room package takes one room start to finish on paper. The plan, two layouts and the list.",
+    question: "What finishes can I choose?",
+    answer: "We start with white matte faces and birch edges. More colours and textures follow once real samples are confirmed.",
   },
   {
-    question: "Do you work outside Singapore?",
-    answer:
-      "Consultations and room plans work anywhere over a video call with your measurements and photos. Whole homes we take on where we can visit the site.",
-  },
-  {
-    question: "What do I need before the consultation?",
-    answer:
-      "A floor plan if you have one, a few photos of each room, and a sense of what you would keep. Rough is fine. We measure what we need on the day.",
+    question: "Can someone come and look at my room?",
+    answer: `Yes. We come to your room for a consultation of ${shown("consultLength")} and answer any questions. It costs ${shown("consultPrice")}. There is no showroom.`,
   },
 ];

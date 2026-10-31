@@ -1,15 +1,14 @@
 import type { CSSProperties } from "react";
 import { EMAIL } from "@/lib/contact";
 import { Dimension } from "../studio/Dimension";
-import { LEAD_TIMES, LEAD_TIMES_AS_OF, WEEK_STEP, WEEKS } from "./leadTimeList";
+import { LEAD_TIMES, WEEK_STEP, WEEKS } from "./leadTimeList";
 import styles from "./LeadTimes.module.css";
 
 const at = (weeks: number) => ({ "--at": weeks / WEEKS }) as CSSProperties;
 
 /**
- * The last word on the dark: on the left the call to get lead times by
- * email (there is no list to join yet, so it writes to us); on the right the
- * lead times now, each a dimension along a scale of weeks, the usual wait
+ * The last word on the dark: on the left a line and a call to ask by email;
+ * on the right the lead times, each a dimension along a scale of weeks, the usual wait
  * solid and the long end dashed.
  */
 export function LeadTimes() {
@@ -17,37 +16,21 @@ export function LeadTimes() {
     <section className={styles.band} aria-labelledby="lead-title">
       <div className={styles.call}>
         <p className={styles.mono}>
-          <span>Newsletter</span>
+          <span>Lead times</span>
         </p>
         <h2 id="lead-title" className={styles.title}>
-          Lead times, by email
+          How long it takes
         </h2>
-        <p className={styles.lede}>Sourcing lead times, updated each quarter. Nothing else.</p>
-        <form className={styles.form} action={`mailto:${EMAIL}`} method="get">
-          <input type="hidden" name="subject" value="Lead times by email" />
-          <label className={styles.field}>
-            <span className={styles.mono}>Email</span>
-            <input
-              className={styles.input}
-              type="email"
-              name="body"
-              required
-              autoComplete="email"
-              placeholder="For example alex@example.com"
-            />
-          </label>
-          <button type="submit" className={styles.button}>
-            Get lead times by email
-          </button>
-        </form>
+        <p className={styles.lede}>From the day you order to the day it reaches you in Singapore. Your order confirms the time for your piece.</p>
+        <a className={styles.button} href={`mailto:${EMAIL}?subject=${encodeURIComponent("Lead times")}`}>
+          Ask about a piece
+        </a>
       </div>
 
       <figure className={styles.chart}>
         <figcaption className={`${styles.mono} ${styles.caption}`}>
           <span>Lead times in Singapore</span>
-          <span>
-            As of <time dateTime={LEAD_TIMES_AS_OF.iso}>{LEAD_TIMES_AS_OF.shown}</time>
-          </span>
+          <span>Estimates</span>
         </figcaption>
         <div className={styles.row} aria-hidden="true">
           <span className={styles.mono}>Weeks</span>
@@ -63,23 +46,19 @@ export function LeadTimes() {
           {LEAD_TIMES.map((t) => (
             <div key={t.name} className={styles.row}>
               <dt className={styles.name}>{t.name}</dt>
-              {"note" in t ? (
-                <dd className={styles.mono}>{t.note}</dd>
-              ) : (
-                <dd className={styles.scale}>
-                  <span className={`${styles.mono} ${styles.range}`}>
-                    {t.from} to {t.to} weeks
+              <dd className={styles.scale}>
+                <span className={`${styles.mono} ${styles.range}`}>
+                  {t.from} to {t.to} weeks
+                </span>
+                <span className={styles.bars} aria-hidden="true">
+                  <span className={styles.bar} style={at(t.from)}>
+                    <Dimension />
                   </span>
-                  <span className={styles.bars} aria-hidden="true">
-                    <span className={styles.bar} style={at(t.from)}>
-                      <Dimension />
-                    </span>
-                    <span className={styles.bar} style={at(t.to - t.from)}>
-                      <Dimension dashed />
-                    </span>
+                  <span className={styles.bar} style={at(t.to - t.from)}>
+                    <Dimension dashed />
                   </span>
-                </dd>
-              )}
+                </span>
+              </dd>
             </div>
           ))}
         </dl>

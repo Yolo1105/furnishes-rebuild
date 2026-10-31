@@ -162,3 +162,58 @@
     letter-spacing: var(--track-nav);
   }
 }
+
+/* The bar's links on phones, where they no longer fit across it. */
+.menu {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .header {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .start {
+    display: none;
+  }
+
+  .menu {
+    display: block;
+    position: relative;
+    justify-self: end;
+  }
+
+  .menuButton {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .menuButton::-webkit-details-marker {
+    display: none;
+  }
+
+  .menuLinks {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    display: grid;
+    min-width: 12rem;
+    margin: 0;
+    padding: var(--space-2);
+    list-style: none;
+    background: var(--color-umber);
+    color: var(--color-cream);
+  }
+
+  .menuLinks a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    color: inherit;
+  }
+}

@@ -347,41 +347,6 @@
 }
 
 /* ——— a photo left, an orange panel right ——— */
-.story {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  margin: clamp(80px, 13vh, 150px) var(--gutter) 0;
-}
-
-.storyPhoto {
-  position: relative;
-  min-height: clamp(320px, 36vw, 620px);
-}
-
-.storyPhoto img {
-  object-fit: cover;
-}
-
-.storyPanel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: var(--space-6);
-  padding: clamp(32px, 5vw, 96px);
-  background: var(--color-orange);
-  color: var(--color-cream);
-}
-
-.storyPanel .index {
-  margin-bottom: 0;
-}
-
-.storyBody {
-  max-width: 30em;
-  font-size: var(--text-small);
-}
-
 /* ——— pieces in their rooms: wide banners, the piece's name at the top right ——— */
 .banners {
   display: grid;

@@ -28,7 +28,7 @@ export function Team() {
         {TEAM.map((m, i) => (
           <li key={m.name} className={styles.card}>
             <div className={styles.portrait} aria-hidden="true">
-              {m.name[0]}
+              {m.initial ?? m.name[0]}
             </div>
             <div className={styles.cardText}>
               <p className={styles.cardCode}>{pad(i + 1)}</p>

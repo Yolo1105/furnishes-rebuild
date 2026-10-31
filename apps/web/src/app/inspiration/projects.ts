@@ -1,65 +1,55 @@
 /**
- * The projects on the inspiration page, each set out as a sheet: the room
- * on the showcase flat's plan as we drew it, and its photo as built. All of
- * them stand-ins, in the showcase flat's rooms (a key of ROOMS in
- * features/plan/flat) and with the studio's room photos (studio/rooms.ts),
- * till real projects are photographed. `view`: which side of the sheet shows
- * first. `place`: the estate it stands for.
+ * The ideas on the inspiration page, each set out as a sheet: the room on an
+ * example HDB plan, and a mood photo (studio/rooms.ts) that is not of our
+ * pieces. Concepts, not finished jobs. `view`: which side of the sheet shows first.
  */
 export const PROJECTS: readonly {
   slug: string;
   title: string;
   body: string;
-  place: string;
   room: string;
-  view: "drawn" | "built";
+  view: "plan" | "photo";
 }[] = [
   {
-    slug: "tampines-living-dining",
-    title: "Tampines living and dining",
-    body: "The sofa turned to face the window. One long low unit takes the TV, the books and the router.",
-    place: "Tampines",
+    slug: "living-dining",
+    title: "Living and dining",
+    body: "Turn the sofa to face the window. Let one long low unit take the TV, the books and the router.",
     room: "living",
-    view: "built",
+    view: "photo",
   },
   {
-    slug: "punggol-kitchen",
-    title: "Punggol kitchen",
-    body: "A second surface on castors parks under the counter and rolls out to the hob when two people cook.",
-    place: "Punggol",
+    slug: "kitchen",
+    title: "Kitchen",
+    body: "A second surface on casters that rolls out to the hob when two people cook.",
     room: "kitchen",
-    view: "drawn",
+    view: "plan",
   },
   {
-    slug: "bishan-study",
-    title: "Bishan study",
+    slug: "study",
+    title: "Study",
     body: "A desk along the window wall, its cables run in the back rail, and shelves above it to the ceiling.",
-    place: "Bishan",
     room: "bedroom3",
-    view: "built",
+    view: "photo",
   },
   {
-    slug: "queenstown-master-bedroom",
-    title: "Queenstown master bedroom",
-    body: "The window seat kept. A bench at the foot of the bed takes the clothes that never reach the wardrobe.",
-    place: "Queenstown",
+    slug: "master-bedroom",
+    title: "Master bedroom",
+    body: "Keep the window seat. A bench at the foot of the bed could take the clothes that never reach the wardrobe.",
     room: "master",
-    view: "drawn",
+    view: "plan",
   },
   {
-    slug: "sengkang-reading-room",
-    title: "Sengkang reading room",
-    body: "The second bedroom as a reading room. Two low chairs, a lamp between them, books where the bed was.",
-    place: "Sengkang",
+    slug: "reading-room",
+    title: "Reading room",
+    body: "Make the second bedroom a reading room. Two low chairs, a lamp between them, books where the bed was.",
     room: "bedroom2",
-    view: "built",
+    view: "photo",
   },
   {
-    slug: "toa-payoh-hall",
-    title: "Toa Payoh hall",
-    body: "Shoes, bags and the bicycle given one wall by the door, so the hall stays a way through.",
-    place: "Toa Payoh",
+    slug: "hall",
+    title: "Hall",
+    body: "Give shoes, bags and the bicycle one wall by the door, so the hall stays a way through.",
     room: "hall",
-    view: "drawn",
+    view: "plan",
   },
 ];

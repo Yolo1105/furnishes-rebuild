@@ -20,10 +20,10 @@
   opacity: calc(1 - var(--plan-gone, 0));
 }
 
-/* The drafting grid behind the flat, in a fine line of its colour: it stays
-   under the 3D plan while that still lies flat, going as the walls go up (--grid-gone). */
+/* The drafting grid behind the flat, in a fine line of its colour: it hands
+   over to the 3D plan's own, on the ground, as that comes in. */
 .grid {
-  opacity: calc(1 - var(--grid-gone, 0));
+  opacity: calc(1 - var(--walk-in, 0));
   pointer-events: none;
 }
 
@@ -31,7 +31,6 @@
   fill: none;
   stroke: currentColor;
   stroke-width: 1px;
-  stroke-opacity: 0.22;
   vector-effect: non-scaling-stroke;
 }
 
@@ -107,8 +106,8 @@
 }
 
 /* Arrival: while the page's arrival plays (data-intro="play" on the root),
-   the plan draws itself, each piece from its own moment (--at, FloorPlan's
-   DRAW) after the plan's start (--plan-at). Each room's walls are traced
+   the plan draws itself, each piece from a scattered moment and at its own
+   pace (--at, --pace, FloorPlan's DRAW) after the plan's start (--plan-at). Each room's walls are traced
    then fade as the walls fill under them; every other line is drawn along
    its length; the faint marks fade in; the names are typed, a letter at a
    time (--chars); the shading of the room in view comes up last. Off the
@@ -119,11 +118,11 @@
 }
 
 :global(:root[data-intro="play"]) .lines path {
-  animation: draw var(--dur-draw) var(--ease-draw) calc(var(--plan-at) + var(--at)) backwards;
+  animation: draw calc(var(--dur-draw) * var(--pace, 1)) var(--ease-draw) calc(var(--plan-at) + var(--at)) backwards;
 }
 
 :global(:root[data-intro="play"]) .outline path {
-  animation: trace calc(var(--dur-draw) * 2.6) var(--ease-draw) calc(var(--plan-at) + var(--at)) both;
+  animation: trace calc(var(--dur-draw) * 2.6 * var(--pace, 1)) var(--ease-draw) calc(var(--plan-at) + var(--at)) both;
 }
 
 :global(:root[data-intro="play"]) .lines .light {
@@ -131,7 +130,7 @@
 }
 
 :global(:root[data-intro="play"]) .walls {
-  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 0.9s) backwards;
+  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 1.5s) backwards;
 }
 
 :global(:root[data-intro="play"]) .names text {

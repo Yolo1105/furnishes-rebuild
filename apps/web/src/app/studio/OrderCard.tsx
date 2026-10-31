@@ -112,10 +112,10 @@ export function OrderCard({
             <p className={styles.state}>
               {built ? (
                 <>
-                  <Tick /> Delivered and put together
+                  <Tick /> Delivered
                 </>
               ) : (
-                "At your door, being put together"
+                "At your door"
               )}
             </p>
             <h3 className={styles.name}>{ORDER.name}</h3>

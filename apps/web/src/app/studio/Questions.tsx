@@ -1,3 +1,4 @@
+import { shown } from "@/lib/facts";
 import { routes } from "@/lib/routes";
 import { ArrowLink } from "./ArrowLink";
 import { QUESTIONS } from "./faqs";
@@ -6,7 +7,7 @@ import styles from "./Questions.module.css";
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
- * The questions, after the journal: the index, headline, a promise and a
+ * The questions: the index, headline, a promise and a
  * call on the left; on the right a ruled list, each question opening to its
  * answer (the first open), a plus turning to a cross while it is.
  */
@@ -20,8 +21,8 @@ export function Questions() {
         <h2 id="questions-title" className={styles.title}>
           Questions
         </h2>
-        <p className={styles.promise}>We answer inside one business day.</p>
-        <ArrowLink href={routes.contact}>Start a project</ArrowLink>
+        <p className={styles.promise}>{`We reply within ${shown("replyTime")}.`}</p>
+        <ArrowLink href={routes.contact}>Ask a question</ArrowLink>
       </header>
       <div className={styles.list}>
         {QUESTIONS.map((q, i) => (

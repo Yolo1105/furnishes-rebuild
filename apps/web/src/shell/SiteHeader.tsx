@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { routes } from "@/lib/routes";
+import { PhoneMenu } from "./PhoneMenu";
 import styles from "./SiteHeader.module.css";
 
 /**
@@ -8,6 +9,15 @@ import styles from "./SiteHeader.module.css";
  * then yours (designing your room, your account), with "Design your room" boxed as
  * the bar's one button.
  */
+const MENU: readonly { label: string; href: string }[] = [
+  { label: "Collection", href: routes.collection },
+  { label: "Inspiration", href: routes.inspiration },
+  { label: "Quiz", href: routes.quiz },
+  { label: "About", href: routes.about },
+  { label: "Contact", href: routes.contact },
+  { label: "Sign in", href: routes.signIn },
+];
+
 export function SiteHeader() {
   return (
     <header className={styles.header}>
@@ -37,11 +47,13 @@ export function SiteHeader() {
         </Link>
       </nav>
 
+      <PhoneMenu links={MENU} />
+
       <nav className={styles.end} aria-label="Your space">
         <Link href={routes.contact} className={styles.link}>
           Contact
         </Link>
-        <Link href={routes.studio} className={`${styles.link} ${styles.primary}`}>
+        <Link href={routes.designYourRoom} className={`${styles.link} ${styles.primary}`}>
           Design your room
         </Link>
         <Link href={routes.signIn} className={styles.link}>

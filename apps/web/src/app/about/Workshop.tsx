@@ -6,21 +6,20 @@ import { WORKSHOP } from "./aboutCopy";
 import styles from "./page.module.css";
 
 /**
- * The workshop band: on the left the index, the headline, a line on why
- * owning the tools matters, the ruled schedule of what is in there and an
- * orange block to come and see it; on the right, a sideboard against a sage wall.
+ * How it is made: on the left the index, the headline, a line, the ruled
+ * schedule of the facts and an orange block to ask more; on the right, a mood photo.
  */
 export function Workshop() {
   return (
     <section className={styles.workshop} aria-labelledby="workshop-title">
       <div>
         <p className={styles.index}>
-          <span>The workshop</span>
+          <span>How it is made</span>
         </p>
         <h2 id="workshop-title" className={styles.heading}>
-          We own the tools, so we can change our minds late.
+          Made by our partner factory in China.
         </h2>
-        <p className={styles.lede}>When a panel needs recutting on a Thursday, it gets recut on Thursday.</p>
+        <p className={styles.lede}>We choose the designs and the materials. The factory makes them and ships them to Singapore.</p>
         <dl className={styles.schedule}>
           {WORKSHOP.map((row) => (
             <div key={row.label} className={styles.scheduleRow}>
@@ -30,11 +29,11 @@ export function Workshop() {
           ))}
         </dl>
         <Link href={routes.contact} className={styles.block}>
-          Inside the workshop
+          Ask how it is made
         </Link>
       </div>
       <div className={styles.workshopPhoto}>
-        <Image src={sageSideboard} alt="A sideboard against a sage wall" fill sizes="(max-width: 900px) 100vw, 40vw" placeholder="blur" />
+        <Image src={sageSideboard} alt="A mood photo of a sideboard against a sage wall, not a Furnishes piece" fill sizes="(max-width: 900px) 100vw, 40vw" placeholder="blur" />
       </div>
     </section>
   );

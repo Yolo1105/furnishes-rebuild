@@ -2,6 +2,7 @@
 
 import { type RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
+import { GRID_REACH } from "../plan/flat";
 import { smooth, stage } from "./ease";
 import { finishAt, ORDER } from "./order";
 import { makeRig, STOPS } from "./rig";
@@ -20,6 +21,8 @@ const SHIFT_FROM = 0.3;
  * to leave room for a panel on the right, and here the panel is on the left.
  */
 const SHIFT = 0.12;
+/** How far past the flat the ground's grid runs once the walls are up, m: from the 2D plan's reach, out to this. */
+const GROUND_REACH = 6;
 
 /**
  * Where a drawing of the flat already on the page puts it, in the canvas's
@@ -37,8 +40,8 @@ const css = (name: string) => getComputedStyle(document.documentElement).getProp
  * there is no 3D to show (no WebGL, or the context lost), so the holder can
  * keep to its 2D plan. Given `fitRef`, the sheet lies exactly over that
  * drawing, and the camera eases from there to its own views as the walls
- * rise. The canvas is clear, so the page's background shows
- * round the flat.
+ * rise. The canvas is clear, so the page's background shows round the flat,
+ * and the drafting grid lies on the ground under it.
  */
 export function WalkView({
   goRef,
@@ -69,7 +72,7 @@ export function WalkView({
     renderer.setClearColor(0x000000, 0);
 
     const palette = { paper: css("--color-cream"), ink: css("--color-umber") };
-    const { scene, cut, roomBox, lineMats, disposables, rise, later } = buildFlatScene(palette);
+    const { scene, cut, roomBox, lineMats, disposables, rise, later, grid } = buildFlatScene(palette);
     const camera = new THREE.PerspectiveCamera(2, 1, 1, 500);
     camera.rotation.order = "YXZ";
     let rig = makeRig(1);
@@ -131,6 +134,7 @@ export function WalkView({
       const notes = 1 - smooth(stage(s, STOPS.sheet, STOPS.sheet + NOTES_FADE));
       sheet?.fade(notes);
       rise(1 - notes);
+      grid.reach(GRID_REACH / 1000 + (GROUND_REACH - GRID_REACH / 1000) * (1 - notes));
       renderer.render(scene, camera);
       shown = s;
       shownFit = fitKey();
@@ -142,6 +146,7 @@ export function WalkView({
       // a little less sharp on touch screens, to spare their GPUs and batteries
       renderer.setPixelRatio(Math.min(devicePixelRatio || 1, coarse.matches ? 1.5 : 2));
       renderer.setSize(w, h, false);
+      grid.pixel(renderer.getPixelRatio());
       camera.aspect = w / h;
       for (const m of lineMats) m.resolution.set(w, h);
       draw(eased);
@@ -178,12 +183,12 @@ export function WalkView({
     canvas.addEventListener("webglcontextrestored", restored);
 
     // the plan's notes are drawn in the site's mono face, once it has loaded,
-    // in full ink with no grid or tile joints, as the 2D plan draws them
+    // in full ink with no tile joints, as the 2D plan draws them
     let alive = true;
     const font = css("--font-space-mono") || "monospace";
     document.fonts.load(`700 40px ${font}`).finally(() => {
       if (!alive) return;
-      sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, { grid: false, tiles: false, solid: true });
+      sheet = addSheet(scene, palette, font, disposables, lineMats, roomBox, { tiles: false, solid: true });
       sheet.furnishTo(Infinity);
       resize();
     });

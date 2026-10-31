@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import { marked } from "@/lib/facts";
 
 /**
  * The makers and collaborators, after the packages: stand-ins naming the
@@ -14,12 +15,12 @@ export const MAKERS: readonly {
   logo?: StaticImageData;
   href?: string;
 }[] = [
-  { trade: "Joinery", name: "Joinery workshop", room: "kitchen" },
-  { trade: "Upholstery", name: "Upholstery maker", room: "living" },
-  { trade: "Timber", name: "Timber mill", room: "bedroom3" },
-  { trade: "Stone", name: "Stone supplier", room: "bathroom" },
-  { trade: "Lighting", name: "Lighting studio", room: "master" },
-  { trade: "Textiles", name: "Textile mill", room: "bedroom2" },
-  { trade: "Finishes", name: "Paint and finish", room: "hall" },
-  { trade: "Delivery", name: "Delivery and install", room: "shelter" },
+  { trade: "Joinery", name: marked("supplierName", "Joinery workshop"), room: "kitchen" },
+  { trade: "Upholstery", name: marked("supplierName", "Upholstery maker"), room: "living" },
+  { trade: "Timber", name: marked("supplierName", "Timber mill"), room: "bedroom3" },
+  { trade: "Stone", name: marked("supplierName", "Stone supplier"), room: "bathroom" },
+  { trade: "Lighting", name: marked("supplierName", "Lighting studio"), room: "master" },
+  { trade: "Textiles", name: marked("supplierName", "Textile mill"), room: "bedroom2" },
+  { trade: "Finishes", name: marked("supplierName", "Paint and finish"), room: "hall" },
+  { trade: "Delivery", name: marked("supplierName", "Delivery and install"), room: "shelter" },
 ];

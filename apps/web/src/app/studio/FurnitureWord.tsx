@@ -12,7 +12,7 @@ export function FurnitureWord() {
   return (
     <div className={`${styles.word} ${raleway.variable}`}>
       <h2 id="flat-name" className="visually-hidden">
-        Furniture interior
+        Furniture
       </h2>
       <span className={styles.furn} aria-hidden="true">
         F<span className={styles.orange}>u</span>rn

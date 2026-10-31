@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // the tokens and base rules first, so every module's own rules cascade over them
 import "./globals.css";
 import { Archivo, Jost, Space_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import { SiteHeader } from "@/shell/SiteHeader";
 import { INTRO_SCRIPT } from "./studio/intro";
 
@@ -32,8 +33,9 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: "Furnishes", template: "%s · Furnishes" },
-  description: "Modular furniture you can see in your own home before you buy it.",
+  description: "Ready-made and customizable furniture for Singapore homes and small offices.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -45,6 +47,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
       <body>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <SiteHeader />
         {children}
       </body>

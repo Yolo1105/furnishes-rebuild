@@ -25,11 +25,12 @@ type Answers = {
 const EMPTY: Answers = { scopes: [], rooms: "", size: "", start: "", by: "", name: "", email: "", phone: "", place: "", notes: "" };
 
 /** The review's rows, label then answer, each with the step that sets it. */
-function summary(a: Answers): { label: string; value: string; step: number }[] {
+function summary(a: Answers, about?: string): { label: string; value: string; step: number }[] {
   const join = (...parts: string[]) => parts.filter(Boolean).join(", ") || NOT_GIVEN;
   return [
+    ...(about ? [{ label: "About", value: about, step: 0 }] : []),
     {
-      label: "Scope",
+      label: "Topic",
       value: join(a.scopes.join(", "), a.rooms && `${a.rooms} rooms`, a.size && `about ${a.size} sq ft`),
       step: 0,
     },
@@ -46,10 +47,13 @@ function summary(a: Answers): { label: string; value: string; step: number }[] {
  * in a ruled frame, Back and Next at its foot. There is no server to send to
  * yet, so sending opens the sender's email app with the answers written in.
  */
-export function Inquiry() {
+export function Inquiry({ topic, about }: { topic?: string; about?: string }) {
   const [step, setStep] = useState(0);
   const [reached, setReached] = useState(0);
-  const [a, setA] = useState(EMPTY);
+  const [a, setA] = useState(() => {
+    const picked = SCOPES.find((s) => s.id === topic);
+    return picked ? { ...EMPTY, scopes: [picked.name] } : EMPTY;
+  });
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const title = useRef<HTMLHeadingElement>(null);
@@ -80,10 +84,10 @@ export function Inquiry() {
       go(step + 1);
       return;
     }
-    const body = summary(a)
+    const body = summary(a, about)
       .map((row) => `${row.label}: ${row.value}`)
       .join("\n");
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(`Project inquiry from ${a.name}`)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(`Enquiry from ${a.name}${about ? `: ${about}` : ""}`)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
 
@@ -94,7 +98,7 @@ export function Inquiry() {
     <section className={styles.inquiry} aria-labelledby="inquiry-title">
       <aside className={styles.side}>
         <p className={styles.index}>
-          <span>Inquiry</span>
+          <span>Enquiry</span>
         </p>
         <ol className={styles.steps}>
           {STEPS.map((s, i) => (
@@ -121,6 +125,7 @@ export function Inquiry() {
 
         {step === 0 && (
           <>
+            {about && <p className={styles.ask}>About: {about}</p>}
             <fieldset className={styles.cards}>
               <legend className="visually-hidden">{heading}</legend>
               {SCOPES.map((s, i) => (
@@ -140,7 +145,7 @@ export function Inquiry() {
             <div className={styles.pair}>
               <fieldset className={styles.field}>
                 <legend className={styles.label}>Rooms</legend>
-                <p className={styles.ask}>How many rooms are in it?</p>
+                <p className={styles.ask}>How many rooms is it for, if any?</p>
                 <div className={styles.segments}>
                   {ROOM_COUNTS.map((r) => (
                     <label key={r} className={styles.segment}>
@@ -195,7 +200,7 @@ export function Inquiry() {
             </fieldset>
             <label className={styles.field}>
               <span className={styles.label}>Fixed date</span>
-              <span className={styles.ask}>Is there a date it has to be done by?</span>
+              <span className={styles.ask}>Is there a date you need it by?</span>
               <input
                 className={`${styles.input} ${styles.underline}`}
                 placeholder="Optional, for example a move-in date"
@@ -271,7 +276,7 @@ export function Inquiry() {
 
         {last && (
           <dl className={styles.review}>
-            {summary(a).map((row) => (
+            {summary(a, about).map((row) => (
               <div key={row.label} className={styles.reviewRow}>
                 <dt className={styles.label}>{row.label}</dt>
                 <dd className={styles.reviewValue} data-empty={row.value === NOT_GIVEN || undefined}>
@@ -292,7 +297,7 @@ export function Inquiry() {
         </p>
         {sent && (
           <p className={styles.sent} role="status">
-            Your email app should open with this written in. If it did not, write to us at{" "}
+            Your email app should open with this written in, for you to send. If it did not, write to us at{" "}
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
           </p>
         )}
@@ -308,7 +313,7 @@ export function Inquiry() {
               </button>
             )}
             <button type="submit" className={styles.next}>
-              {last ? "Send request" : `Next: ${STEPS[step + 1]?.name.toLowerCase()}`}
+              {last ? "Open in my email app" : `Next: ${STEPS[step + 1]?.name.toLowerCase()}`}
             </button>
           </div>
         </footer>

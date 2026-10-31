@@ -21,6 +21,7 @@ import {
   WINDOWS,
   type Opening,
 } from "./flat";
+import { DRAWN, GRID_CORNER, GRID_CORNER_GONE, GRID_INK, GRID_STEP } from "../plan/flat";
 import { smooth, stage } from "./ease";
 import { FINISH } from "./finishes";
 import { BoxSolid } from "./solid";
@@ -594,7 +595,67 @@ export function buildFlatScene(palette: Palette, { floors = true }: { floors?: b
     roomBox[3]!.constant = z1;
   };
 
-  return { scene, cut, roomBox, lineMats, disposables, rise, later, reveal };
+  // ---- the drafting grid, the 2D plan's own, on the ground the flat stands on ----
+  // Under the slab, so the flat hides it; drawn from where each pixel lies on
+  // the ground, so its lines stay fine however far off and it fades out evenly.
+  const gridReach = { value: 0 };
+  const gridPixel = { value: 1 };
+  const groundMat = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    uniforms: {
+      uInk: { value: ink },
+      uStrength: { value: GRID_INK },
+      uStep: { value: GRID_STEP * M },
+      uCorner: { value: GRID_CORNER * M },
+      uGone: { value: GRID_CORNER_GONE },
+      uMin: { value: new THREE.Vector2(DRAWN[0] * M, DRAWN[1] * M) },
+      uMax: { value: new THREE.Vector2(DRAWN[2] * M, DRAWN[3] * M) },
+      uReach: gridReach,
+      uPixel: gridPixel,
+    },
+    vertexShader: `
+      varying vec2 vFloor;
+      void main() {
+        vec4 world = modelMatrix * vec4(position, 1.0);
+        vFloor = world.xz;
+        gl_Position = projectionMatrix * viewMatrix * world;
+      }`,
+    fragmentShader: `
+      uniform vec3 uInk;
+      uniform float uStrength, uStep, uCorner, uGone, uReach, uPixel;
+      uniform vec2 uMin, uMax;
+      varying vec2 vFloor;
+      void main() {
+        vec2 off = abs(mod(vFloor + uStep / 2.0, uStep) - uStep / 2.0) / fwidth(vFloor);
+        vec2 line = clamp(uPixel / 2.0 + 0.5 - off, 0.0, 1.0);
+        vec2 edge = min(vFloor - uMin + uReach, uMax + uReach - vFloor);
+        vec2 fade = clamp(edge / uReach, 0.0, 1.0);
+        float corner = clamp((length(edge) / uCorner - uGone) / (1.0 - uGone), 0.0, 1.0);
+        gl_FragColor = vec4(uInk, max(line.x, line.y) * fade.x * fade.y * corner * uStrength);
+        #include <colorspace_fragment>
+      }`,
+  });
+  const groundGeo = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.position.y = -SLAB - 0.001;
+  scene.add(ground);
+  disposables.push(groundMat, groundGeo);
+  const grid = {
+    /** How far past the flat the grid runs, m, fading out over that. */
+    reach(m: number) {
+      gridReach.value = m;
+      ground.position.x = ((DRAWN[0] + DRAWN[2]) / 2) * M;
+      ground.position.z = ((DRAWN[1] + DRAWN[3]) / 2) * M;
+      ground.scale.set((DRAWN[2] - DRAWN[0]) * M + m * 2, 1, (DRAWN[3] - DRAWN[1]) * M + m * 2);
+    },
+    /** How many of the canvas's pixels make one on the page, for a line as fine as the 2D plan's. */
+    pixel(ratio: number) {
+      gridPixel.value = ratio;
+    },
+  };
+
+  return { scene, cut, roomBox, lineMats, disposables, rise, later, reveal, grid };
 }
 
 /** A line material and the objects that use it, so the plan's notes can fade. */
@@ -603,14 +664,12 @@ type Fader = { mats: { opacity: number }[]; objects: THREE.Object3D[] };
 /**
  * What an architect adds to a plan that is not the building: room names,
  * tile joints, door swings, window glass, the furniture and fittings drawn
- * as symbols (symbols.ts, drawn in across the plan by `furnishTo`), and the
- * metre grid on the ground. All of it lies on the floor or the ground. The
- * notes that only make sense on a flat drawing fade as the walls rise; room
- * names, tiles, window glass and the ground grid stay.
+ * as symbols (symbols.ts, drawn in across the plan by `furnishTo`). All of it
+ * lies on the floor. The notes that only make sense on a flat drawing fade as
+ * the walls rise; room names, tiles and window glass stay.
  * `lineMats` collects the line materials so the caller can size them;
- * Options: `grid` false leaves out the ground's metre grid, `tiles` false the
- * wet rooms' tile joints; `solid` draws every line in the full ink, none of
- * the lighter tiers.
+ * Options: `tiles` false leaves out the wet rooms' tile joints; `solid` draws
+ * every line in the full ink, none of the lighter tiers.
  */
 export function addSheet(
   scene: THREE.Scene,
@@ -619,7 +678,7 @@ export function addSheet(
   disposables: { dispose(): void }[],
   lineMats: LineMaterial[],
   box: THREE.Plane[] = [],
-  { grid = true, tiles = true, solid = false }: { grid?: boolean; tiles?: boolean; solid?: boolean } = {},
+  { tiles = true, solid = false }: { tiles?: boolean; solid?: boolean } = {},
 ) {
   const PX = 220; // canvas pixels a metre
   const FLOOR = 0.003; // notes lie this far over the floor, m
@@ -647,11 +706,10 @@ export function addSheet(
   /**
    * What is drawn next is clipped by the scene's room box (`box`, so the
    * notes show only where the flat does) and by `clip`, set while the
-   * furniture is drawn; the ground grid, drawn with `grounded`, by neither.
+   * furniture is drawn.
    */
   let clip: THREE.Plane[] = [];
-  let grounded = false;
-  const planes = () => (grounded ? [] : [...box, ...clip]);
+  const planes = () => [...box, ...clip];
 
   /**
    * Text drawn into a canvas and laid flat at height `y`, turned `rot`
@@ -756,9 +814,6 @@ export function addSheet(
     }),
   );
 
-  // the flat's outer bounds, m
-  const b = BOUNDS_M;
-
   // ---- door swings: the arc each leaf sweeps (the leaves themselves stand open in the model)
   const swings: number[] = [];
   for (const d of [...DOORS, FRONT_DOOR]) {
@@ -811,32 +866,6 @@ export function addSheet(
   segments(onFloor(symbols.light), 0.5, true, lightInk);
   for (const t of symbols.tags) text([{ text: t.text, size: 0.11, track: 0.08 }], t.x, t.z, { fade: true });
   clip = [];
-
-  // ---- the drafting grid: a metre grid on the ground the flat stands on ----
-  // It thins out away from the flat, in rings, and stays once the walls rise.
-  const GROUND = -SLAB - 0.001;
-  const RINGS = [
-    { out: 4, opacity: 0.16 },
-    { out: 10, opacity: 0.1 },
-    { out: 18, opacity: 0.05 },
-  ];
-  const reach = RINGS[RINGS.length - 1]!.out;
-  /** How far a point lies outside the flat's bounds, m. */
-  const away = (x: number, z: number) => Math.hypot(Math.max(b.x0 - x, 0, x - b.x1), Math.max(b.y0 - z, 0, z - b.y1));
-  const rings = RINGS.map(() => [] as number[]);
-  const [gx0, gx1] = [Math.floor(b.x0 - reach), Math.ceil(b.x1 + reach)];
-  const [gz0, gz1] = [Math.floor(b.y0 - reach), Math.ceil(b.y1 + reach)];
-  const put = (x0: number, z0: number, x1: number, z1: number) => {
-    const ring = RINGS.findIndex((r) => away((x0 + x1) / 2, (z0 + z1) / 2) < r.out);
-    if (ring >= 0) rings[ring]!.push(x0, GROUND, z0, x1, GROUND, z1);
-  };
-  if (grid) {
-    for (let x = gx0; x <= gx1; x++) for (let z = gz0; z < gz1; z++) put(x, z, x, z + 1);
-    for (let z = gz0; z <= gz1; z++) for (let x = gx0; x < gx1; x++) put(x, z, x + 1, z);
-    grounded = true;
-    rings.forEach((pts, i) => segments(pts, 0.6, false, ink, RINGS[i]!.opacity));
-    grounded = false;
-  }
 
   return {
     /** How much of the flat-drawing notes shows, 0 to 1. */

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { EMAIL, HOURS } from "@/lib/contact";
+import { shown } from "@/lib/facts";
 import { routes } from "@/lib/routes";
 import styles from "./SiteFooter.module.css";
 
@@ -16,6 +17,7 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
     links: [
       { label: "Studio", href: routes.studio },
       { label: "Collection", href: routes.collection },
+      { label: "Products", href: routes.products },
       { label: "Inspiration", href: routes.inspiration },
       { label: "About", href: routes.about },
       { label: "Contact", href: routes.contact },
@@ -24,7 +26,12 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
   {
     label: "Account",
     links: [
-      { label: "Design your room", href: routes.studio },
+      { label: "Design your room", href: routes.designYourRoom },
+      { label: "How it works", href: routes.howItWorks },
+      { label: "Help", href: routes.help },
+      { label: "Room dividers", href: routes.roomDividers },
+      { label: "HDB homes", href: routes.hdbHomes },
+      { label: "Workspaces", href: routes.workspaces },
       { label: "Sign in", href: routes.signIn },
     ],
   },
@@ -42,7 +49,7 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
  * The footer, over the page's own ground, in three bands ruled apart: the
  * call (a label over a large two-line headline)
  * beside how to reach us (the address to write to, large, then the hours and
- * the studio); then who we are and where else to find us beside the link
+ * where we are); then who we are and where else to find us beside the link
  * columns; then the copyright, centred.
  */
 export function SiteFooter() {
@@ -76,7 +83,7 @@ export function SiteFooter() {
               <p className={styles.label}>Studio</p>
               <p className={styles.body}>
                 <span className={styles.row}>Singapore</span>
-                <span className={styles.row}>By appointment</span>
+                <span className={styles.row}>By appointment, in your room</span>
               </p>
             </div>
           </div>
@@ -86,7 +93,7 @@ export function SiteFooter() {
       <div className={styles.middle}>
         <div className={styles.about}>
           <p className={styles.body}>
-            A design studio for high-quality, modern interiors, shaped around how you live, work and rest.
+            Ready-made and customizable furniture for Singapore homes and small offices, made by our partner factory in China.
           </p>
           <div>
             <p className={styles.visit}>Visit us on</p>
@@ -125,7 +132,7 @@ export function SiteFooter() {
         </nav>
       </div>
 
-      <p className={styles.copy}>Copyright © {new Date().getFullYear()} Furnishes Pte Ltd. All rights reserved.</p>
+      <p className={styles.copy}>Copyright © {new Date().getFullYear()} Furnishes Pte Ltd. All rights reserved. {shown("companyDetails")}</p>
     </footer>
   );
 }

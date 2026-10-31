@@ -4,26 +4,25 @@ import { SiteFooter } from "@/shell/SiteFooter";
 import { Questions } from "../studio/Questions";
 import { StartProject } from "../studio/StartProject";
 import { MakingDays } from "./MakingDays";
-import { Projects } from "./Projects";
 import { Team } from "./Team";
 import { WhoWeAre } from "./WhoWeAre";
 import { Heritage } from "./Heritage";
 import { Workshop } from "./Workshop";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = { title: "About", description: "Who Furnishes is and how we make furniture for Singapore homes and small offices." };
 
-/** About, over the peach in the studio's words: who we are, the workshop and its heritage, a piece's days from order to door, the projects and the team, then the studio's questions, its last call and the footer. */
+/** About, over the peach: who we are, how it is made and our story, a piece's way from order to door, the team, then the questions, the last call and the footer. */
 export default function About() {
   return (
     <>
-      <main className={styles.page}>
+      <main id="main" className={styles.page}>
         <PeachBackdrop />
         <WhoWeAre />
         <Workshop />
         <Heritage />
         <MakingDays />
-        <Projects />
+        {/* Recognition (Projects.tsx) comes back here once it can be shown. */}
         <Team />
         <Questions />
         <StartProject />

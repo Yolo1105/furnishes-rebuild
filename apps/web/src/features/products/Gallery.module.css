@@ -10,3 +10,8 @@
 .room {
   object-fit: cover;
 }
+
+.stack {
+  display: grid;
+  gap: var(--space-4);
+}

@@ -24,7 +24,7 @@ export const ROOM_NOTES: Record<string, { name: string; line: string }> = {
 /**
  * The tour's steps, as the landing-page branch's walk told them: first the
  * plan, a room at a time as you pick them; then the walls go up, you step
- * inside, the bookcase is built, the materials go on, and the room is yours;
+ * inside, the bookcase is built, the finish goes on, and the room is yours;
  * then a piece is ordered for it, from picking it to having it at home.
  * Each has its headline (a lead line, then softer lines) and, from the
  * second, its label and a line on it. `walk` is the stretch of the 3D walk
@@ -53,17 +53,17 @@ export const STEPS: readonly {
     walk: [STOPS.lifted, STOPS.walked],
   },
   {
-    lead: "Made for that wall,",
-    soft: ["board by board."],
+    lead: "A piece for that wall,",
+    soft: ["within clear limits."],
     label: "The Furnishes bookcase",
-    body: "Cut to the millimetre from 18 mm boards, and put together in your home. Every piece we make starts from your plan, so it meets the wall, the corner and the things you already own as it should.",
+    body: "Built from 18 mm birch panels, in set heights and widths. Choose what suits the wall, the corner and the things you already own. Anything outside the limits goes to our team for a quote.",
     walk: [STOPS.walked, STOPS.built],
   },
   {
-    lead: "Then choose what",
-    soft: ["it is made of."],
+    lead: "Then choose",
+    soft: ["its finish."],
     label: "Materials",
-    body: "Oak or walnut, wool or linen, any colour. Try a finish across the whole room before you decide, and see how it sits beside the floor, the walls and everything else that stays.",
+    body: "We start with white matte faces and birch edges, with more colours and textures to follow once real samples are confirmed. See how a finish sits beside the floor, the walls and everything else that stays.",
     walk: [STOPS.built, STOPS.finished],
   },
   {
@@ -98,14 +98,14 @@ export const STEPS: readonly {
     lead: "On its way,",
     soft: ["and you can see where."],
     label: "Delivery",
-    body: "Made to your choices, then out for delivery. Each stage shows as it happens, from the workshop to your door, and you can see when it is near, so you know when to be home.",
+    body: "Made to your choices by our partner factory in China, then shipped to Singapore. Each stage shows as it happens, so you know when to be home.",
     walk: [STOPS.ordered, STOPS.sent],
   },
   {
     lead: "Here it is.",
     soft: ["Just as you saw it."],
     label: "In your room",
-    body: "Put together in your home, where you first drew it in, and everything as it was on the plan. The same wall, the same finish, the same size you saw before you ordered, now there to use.",
+    body: "It arrives already built, or flat-packed with its steps, whichever you chose. The same wall, the same finish, the same size you saw before you ordered, now there to use.",
     walk: [STOPS.sent, STOPS.home],
   },
 ];

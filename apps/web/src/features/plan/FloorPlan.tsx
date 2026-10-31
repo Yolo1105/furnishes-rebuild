@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { AC_LEDGE, BAYS, type Box, COLUMNS, DOORS, DRAWN, NAME_AT, ROOMS, SEAM, WALL, WINDOWS, type Opening, wallBoxes } from "./flat";
+import { AC_LEDGE, BAYS, type Box, COLUMNS, DOORS, DRAWN, GRID_CORNER, GRID_CORNER_GONE, GRID_INK, GRID_REACH, GRID_STEP, NAME_AT, ROOMS, type Room, SEAM, WALL, WINDOWS, type Opening, wallBoxes } from "./flat";
 import { planSymbols } from "./symbols";
 import styles from "./FloorPlan.module.css";
 
@@ -17,12 +17,6 @@ const GLASS_APART = 25;
 const box = ([x0, y0, x1, y1]: Box, fill: string) => (
   <rect key={`${x0} ${y0} ${x1} ${y1}`} x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={fill} />
 );
-
-/** The drafting grid behind the plan, mm: its squares, and how far it runs past the drawing, fading out over that. */
-const GRID_STEP = 500;
-const GRID_REACH = 1500;
-/** How far from each corner of the reach the grid is dimmed further, so the corners go first. */
-const GRID_CORNER = 4000;
 
 /** The grid's lines, on its squares, over the drawing and its reach. */
 function gridLines([x0, y0, x1, y1]: Box) {
@@ -60,35 +54,37 @@ function glass(o: Opening) {
     .join("");
 }
 
-/** Where the drawing starts on arrival, mm: the front door, the rest spreading out from it. */
-const ENTRANCE: readonly [number, number] = [14050, 6350];
-const FARTHEST = Math.hypot(ENTRANCE[0] - DRAWN[0], ENTRANCE[1] - DRAWN[1]);
-
 /**
- * When each tier starts drawing on arrival, and over how long it spreads
- * from the front door to the far corner, seconds from the plan's start:
- * the walls traced, then filled, the glass, the doors and their swings, the
- * fittings, the furniture, the faint marks, then the names typed in.
+ * When each tier starts drawing on arrival, and over how long its pieces
+ * scatter, seconds from the plan's start: the walls traced, then filled, the
+ * glass, the doors and their swings, the fittings, the furniture, the faint
+ * marks, then the names typed in.
  */
 const DRAW = {
-  outline: [0, 0.7],
-  glass: [1.1, 0.4],
-  doors: [1.5, 0.4],
-  swings: [1.65, 0.4],
-  fittings: [1.8, 0.5],
-  furniture: [2.0, 0.5],
-  light: [2.4, 0.3],
-  names: [2.5, 0.3],
+  outline: [0, 1.2],
+  glass: [1.2, 0.6],
+  doors: [1.4, 0.7],
+  swings: [1.6, 0.7],
+  fittings: [1.6, 0.9],
+  furniture: [1.8, 0.9],
+  light: [2.2, 0.6],
+  names: [2.3, 0.6],
 } as const;
 
-/** How far a point is from the front door, 0 to 1. */
-const far = (x: number, y: number) => Math.hypot(x - ENTRANCE[0], y - ENTRANCE[1]) / FARTHEST;
+/** A number from 0 to 1 that looks random but is always the same for a text, so server and browser agree. */
+function scatter(text: string) {
+  let hash = 2166136261;
+  for (const c of text) hash = Math.imul(hash ^ c.charCodeAt(0), 16777619);
+  return (hash >>> 0) / 2 ** 32;
+}
 
-/** A piece's start on arrival, from its tier and where its path begins. */
+/** A piece's start and pace on arrival, scattered within its tier: some early, some late, some quick, some slow. */
 function at(tier: keyof typeof DRAW, d: string) {
-  const [x = 0, y = 0] = d.slice(1).split(/[ A-Z]/, 2).map(Number);
   const [from, spread] = DRAW[tier];
-  return { "--at": `${(from + far(x, y) * spread).toFixed(2)}s` } as CSSProperties;
+  return {
+    "--at": `${(from + scatter(d) ** 1.5 * spread).toFixed(2)}s`,
+    "--pace": (0.5 + scatter(`${d}pace`) * 1.2).toFixed(2),
+  } as CSSProperties;
 }
 
 /** A tier's pieces, each its own path so each draws in on its own. */
@@ -96,8 +92,17 @@ const pieces = (tier: keyof typeof DRAW, list: readonly string[], className?: st
   list.map((d, i) => <path key={i} className={className} d={d} pathLength={1} style={at(tier, d)} />);
 
 /** A name's start on arrival, and its letters, for it to be typed in one at a time. */
-const typed = (text: string, x: number, y: number) =>
-  ({ "--at": `${(DRAW.names[0] + far(x, y) * DRAW.names[1]).toFixed(2)}s`, "--chars": text.length }) as CSSProperties;
+const typed = (text: string) =>
+  ({ "--at": `${(DRAW.names[0] + scatter(text) * DRAW.names[1]).toFixed(2)}s`, "--chars": text.length }) as CSSProperties;
+
+/** A room's walls as one path, starting from a corner of its own and going round either way. */
+function roomOutline(r: Room) {
+  const corners = [`${r.x} ${r.y}`, `${r.x + r.w} ${r.y}`, `${r.x + r.w} ${r.y + r.d}`, `${r.x} ${r.y + r.d}`];
+  const first = Math.floor(scatter(r.key) * 4);
+  const turned = [...corners.slice(first), ...corners.slice(0, first)];
+  const [start, ...rest] = scatter(`${r.key}way`) < 0.5 ? turned : [turned[0]!, ...turned.slice(1).reverse()];
+  return `M${start}L${rest.join("L")}Z`;
+}
 
 /** The parapet round the A/C ledge, open to the living room's wall. */
 const LEDGE: Box[] = [
@@ -188,7 +193,7 @@ export function FloorPlan({
             {gridFade("plan-grid-across", "x", reach[2] - reach[0])}
             {gridFade("plan-grid-down", "y", reach[3] - reach[1])}
             <radialGradient id="plan-grid-corner">
-              <stop offset="35%" stopColor="black" />
+              <stop offset={`${GRID_CORNER_GONE * 100}%`} stopColor="black" />
               <stop offset="100%" stopColor="black" stopOpacity={0} />
             </radialGradient>
             <mask id="plan-grid-fade-across" maskUnits="userSpaceOnUse" x={reach[0]} y={reach[1]} width={reach[2] - reach[0]} height={reach[3] - reach[1]}>
@@ -211,7 +216,7 @@ export function FloorPlan({
           <g className={styles.grid} mask="url(#plan-grid-fade-across)">
             <g mask="url(#plan-grid-fade-down)">
               <g mask="url(#plan-grid-outside)">
-                <path d={gridLines(reach)} />
+                <path d={gridLines(reach)} strokeOpacity={GRID_INK} />
               </g>
             </g>
           </g>
@@ -255,7 +260,7 @@ export function FloorPlan({
           <g className={styles.outline} mask="url(#plan-openings)">
             {pieces(
               "outline",
-              ROOMS.map((r) => `M${r.x} ${r.y}H${r.x + r.w}V${r.y + r.d}H${r.x}Z`),
+              ROOMS.map(roomOutline),
             )}
           </g>
           {pieces("glass", BAYS.map((b) => `M${b.x0} ${top}V${top - b.depth}H${b.x1}V${top}`), styles.heavy)}
@@ -288,13 +293,13 @@ export function FloorPlan({
           const [x, y] = NAME_AT[r.key] ?? [r.x + r.w / 2, r.y + r.d / 2];
           const small = r.w < 2400 || r.d < 1500;
           return (
-            <text key={r.key} x={x} y={y} fontSize={small ? 150 : 200} style={typed(r.name, x, y)}>
+            <text key={r.key} x={x} y={y} fontSize={small ? 150 : 200} style={typed(r.name)}>
               {r.name}
             </text>
           );
         })}
         {symbols.tags.map((t) => (
-          <text key={t.text} x={t.x} y={t.y} fontSize={110} style={typed(t.text, t.x, t.y)}>
+          <text key={t.text} x={t.x} y={t.y} fontSize={110} style={typed(t.text)}>
             {t.text}
           </text>
         ))}
@@ -303,7 +308,7 @@ export function FloorPlan({
           y={(AC_LEDGE.y0 + AC_LEDGE.y1) / 2}
           fontSize={110}
           transform={`rotate(90 ${AC_LEDGE.x1 + 180} ${(AC_LEDGE.y0 + AC_LEDGE.y1) / 2})`}
-          style={typed("A/C ledge", AC_LEDGE.x1, AC_LEDGE.y0)}
+          style={typed("A/C ledge")}
         >
           A/C ledge
         </text>

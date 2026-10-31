@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Marked } from "./collectionCopy";
 import styles from "./MarkedRender.module.css";
-import { productHref } from "./productHref";
+import { productHref } from "../products/productHref";
 
 /**
  * A large render in a rounded frame, with its points marked: a dot on each,

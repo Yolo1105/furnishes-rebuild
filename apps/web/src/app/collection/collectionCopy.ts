@@ -9,10 +9,10 @@ import gardenDining from "@/assets/garden-dining-room.jpg";
 import aFrameRoom from "@/assets/a-frame-living-room.jpg";
 import brightRoom from "@/assets/bright-living-room.jpg";
 import gallery from "@/assets/furniture-gallery.jpg";
+import { shown } from "@/lib/facts";
 import {
   CLAIMS,
   DESIGN_COUNT,
-  MATERIALS,
   OTHER_USES,
   PRODUCTS,
   STATUS,
@@ -37,8 +37,9 @@ export const MARQUEE_END = ["Design", "Cut", "Assemble"];
 
 export const HERO = {
   title: "Furniture cut to fit the way you live",
-  lede: `${launch.length} launch pieces, being made and tested now, and ${soon.length} that follow them, plus the other uses and arrangements they make: ${DESIGN_COUNT} designs in all.`,
+  lede: `${launch.length} pieces you can order first, and ${soon.length} that follow them, plus the other uses and arrangements they make: ${DESIGN_COUNT} designs in all.`,
   call: "Find your piece",
+  readyMade: "See ready-made furniture",
 };
 
 export const HERO_RENDER: Marked = {
@@ -74,8 +75,8 @@ export const ROOM_TILES: readonly { use: UseId; photo: StaticImageData }[] = [
 export const CONSULT = {
   label: "Consultations",
   title: ["Talk your room", "through with us"],
-  side: "A 90 minute consultation",
-  body: "Over a video call, with your measurements and photos, we work out which pieces fit your room and how they stand together.",
+  side: `A visit of ${shown("consultLength")}`,
+  body: `We come to your room, answer any questions and work out which pieces fit. It costs ${shown("consultPrice")}.`,
   call: "Book a consultation",
   small: "Furniture cut to fit",
   line: "Guided in an easy way",
@@ -86,7 +87,7 @@ export const CONSULT = {
 export const EXPLORE = {
   label: "Launch",
   title: "Explore the pieces we make first",
-  body: "One each for the entry, the desk and the bedside. Being made and tested in real homes now, with the rest to follow on the frames they prove.",
+  body: "One each for the entry, the desk and the bedside, with the rest to follow.",
   call: "See detail",
 };
 
@@ -94,18 +95,8 @@ export const EXPLORE = {
 export const DISCOVER = {
   label: "Pieces",
   title: "Discover product",
-  lede: "The first three pieces, being made and tested now, and the next one to follow them.",
+  lede: "The first three pieces, and the next one to follow them.",
   count: 4,
-};
-
-/** A photo left, an orange panel right: what makes a piece ours. */
-export const STORY = {
-  photo: staircaseCorner,
-  photoAlt: "Two armchairs by a tall window at the foot of a staircase",
-  label: "Our make",
-  title: "Unmistakably Furnishes",
-  body: MATERIALS.body,
-  call: "Learn more",
 };
 
 /** The products shown full width in their rooms, each with its parts marked. */
@@ -152,7 +143,7 @@ export const STEPS: readonly { title: string; photo: StaticImageData; points: re
     title: STATUS.launch.name,
     photo: whiteRoom,
     points: [
-      { head: "Being made now", body: STATUS.launch.detail },
+      { head: "Order first", body: STATUS.launch.detail },
       { head: "Price", body: CLAIMS.price.detail },
     ],
   },
@@ -176,7 +167,7 @@ export const STEPS: readonly { title: string; photo: StaticImageData; points: re
 
 export const STEPS_HEAD = {
   title: ["How the", "catalogue works"],
-  body: "Three pieces first, made and tested in real homes. The rest follow on the frames they prove, and every one can be set up for more than one use.",
+  body: "Three pieces first, with the rest to follow, and every one can be set up for more than one use.",
 };
 
 export const QUESTIONS_HEAD = {
@@ -186,7 +177,7 @@ export const QUESTIONS_HEAD = {
 };
 
 export const QUESTIONS: readonly { question: string; answer: string }[] = [
-  { question: "Why is there no price?", answer: CLAIMS.price.detail },
+  { question: "What does it cost?", answer: CLAIMS.price.detail },
   { question: "How does it arrive?", answer: CLAIMS.delivery.detail },
   { question: "Will the tall pieces tip?", answer: CLAIMS.stability.detail },
   { question: "Will it fit my room?", answer: CLAIMS.fit.detail },

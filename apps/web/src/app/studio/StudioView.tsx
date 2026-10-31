@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { routes } from "@/lib/routes";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { FloorPlan } from "@/features/plan/FloorPlan";
 import { BOUNDS } from "@/features/walk/flat";
@@ -22,9 +24,6 @@ const AUTOPLAY_MS = 5000;
 
 /** Screens of scroll each step of the tour holds for, once the plan has the stage. */
 const HOLD = 1;
-
-/** Steps of scroll the plan's grid takes to go, from the second step's start. */
-const GRID_OUT = 0.3;
 
 /** The share of the first step, at its end, over which the 3D plan comes in over the 2D one, so the walls can rise as the second starts. */
 const TO_3D = 0.05;
@@ -183,8 +182,6 @@ export function StudioView() {
       const in3d = !upright && walkTo.current ? smooth(clamp01((walked - (1 - TO_3D)) / TO_3D)) : 0;
       stage.current.style.setProperty("--walk-in", String(in3d));
       stage.current.style.setProperty("--plan-gone", in3d === 1 ? "1" : "0");
-      // the grid outlasts the 2D plan, going as the 3D one starts to rise
-      stage.current.style.setProperty("--grid-gone", String(smooth(clamp01((walked - 1) / GRID_OUT))));
       // (the 3D sheet laid over the plan once the plan is in its place)
       const svg = drawing.current?.querySelector("svg");
       const ctm = svg?.getScreenCTM();
@@ -273,6 +270,17 @@ export function StudioView() {
               Just chat, and our AI Interior Consultant answers right away, day or night.
             </p> */}
             <FurnitureWord />
+            <div className={styles.pitch}>
+              <p className={styles.pitchLine}>Ready-made and customizable furniture for Singapore homes and small offices.</p>
+              <div className={styles.pitchCalls}>
+                <Link href={routes.collection} className={styles.pitchPrimary}>
+                  See the furniture
+                </Link>
+                <Link href={routes.quiz} className={styles.pitchCall}>
+                  Get help choosing
+                </Link>
+              </div>
+            </div>
           </header>
           <div ref={slot} className={styles.slot}>
             <div ref={drawing} className={styles.drawing} {...hold}>

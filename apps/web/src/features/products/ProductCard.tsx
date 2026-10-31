@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
-import { CLAIMS, type Product, STATUS, sizeLabel } from "./catalogue";
+import { priceFrom, type Product, STATUS, sizeLabel } from "./catalogue";
 import styles from "./ProductCard.module.css";
 
 /**
@@ -29,7 +29,7 @@ export function ProductCard({ product: p, sizes }: { product: Product; sizes: st
       <p className={styles.line}>{p.line}</p>
       <p className={styles.meta}>
         <span>{sizeLabel(p.size)}</span>
-        <span>{CLAIMS.price.label}</span>
+        <span>{priceFrom(p.id)}</span>
       </p>
     </article>
   );

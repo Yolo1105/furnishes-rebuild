@@ -12,7 +12,7 @@ export function Projects() {
     <section className={styles.section} aria-labelledby="projects-title">
       <header className={styles.sectionHead}>
         <p className={styles.index}>
-          <span>Projects</span>
+          <span>Recognition</span>
         </p>
         <h2 id="projects-title" className={styles.heading}>
           {PROJECTS_HEADLINE}
@@ -29,7 +29,7 @@ export function Projects() {
             </>
           );
           return (
-            <li key={p.year} className={styles.projectRow}>
+            <li key={i} className={styles.projectRow}>
               {p.images ? (
                 <details open={i === 0}>
                   <summary className={styles.projectLine}>

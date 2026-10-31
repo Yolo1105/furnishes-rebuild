@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { routes } from "@/lib/routes";
+import { contactHref } from "@/lib/routes";
 import { ArrowLink } from "./ArrowLink";
 import { SWATCH_HEADLINE, SWATCH_LINE, SWATCHES } from "./swatchList";
 import styles from "./Swatches.module.css";
@@ -23,10 +23,10 @@ export function Swatches() {
         </h2>
         <p className={styles.line}>{SWATCH_LINE}</p>
         <div className={styles.calls}>
-          <Link href={routes.contact} className={styles.button}>
-            Order swatches
+          <Link href={contactHref("product")} className={styles.button}>
+            Ask for samples
           </Link>
-          <ArrowLink href={routes.contact}>Plan a studio visit</ArrowLink>
+          <ArrowLink href={contactHref("visit")}>Book a visit</ArrowLink>
         </div>
       </div>
       <ul className={styles.grid}>

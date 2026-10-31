@@ -112,7 +112,6 @@
   --radius-frame: 12px; /* the collection banner's frame */
   --radius-pill: 999px;
 
-  --dur-roll: 1s; /* a figure's digits spinning to their values */
 
   /* page edge to content: the bar and everything under it */
   --gutter: clamp(32px, 6.8vw, 120px);
@@ -335,6 +334,22 @@ summary:focus-visible {
     opacity: 0;
     translate: 0 16px;
   }
+}
+
+/* The first stop for a keyboard, seen only when it is reached. */
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--gutter);
+  z-index: 1000;
+  padding: var(--space-2);
+  background: var(--button-bg);
+  color: var(--button-fg);
+  translate: 0 -200%;
+}
+
+.skip-link:focus-visible {
+  translate: 0 0;
 }
 
 /* For text that only screen readers should hear. */

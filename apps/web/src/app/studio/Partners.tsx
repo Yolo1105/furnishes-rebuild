@@ -22,10 +22,9 @@ export function Partners() {
           Makers &amp; collaborators
         </h2>
         <p className={styles.lede}>
-          We work alongside workshops, mills and suppliers we know by name, so what is drawn is what gets made.
+          Everything is made by our partner factory in China and delivered in Singapore.
         </p>
-        <p className={styles.lede}>Each one is chosen for the work, not the catalogue.</p>
-      </header>
+              </header>
       <ul className={styles.grid}>
         {MAKERS.map((m, i) => {
           const photo = ROOM_PHOTOS.find((p) => p.room === m.room);

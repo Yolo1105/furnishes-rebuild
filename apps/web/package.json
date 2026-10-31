@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "next typegen && tsc --noEmit -p tsconfig.json"
+    "typecheck": "next typegen && tsc --noEmit -p tsconfig.json",
+    "check:facts": "node scripts/check-facts.mjs"
   },
   "dependencies": {
     "next": "16.3.8",

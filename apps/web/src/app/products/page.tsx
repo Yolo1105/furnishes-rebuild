@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PRODUCTS, STATUS, type Status, type UseId, USES } from "@/features/products/catalogue";
 import { ProductGrid } from "@/features/products/ProductGrid";
-import { routes } from "@/lib/routes";
+import { READY_MADE } from "@/features/products/readyMade";
+import { shown as fact } from "@/lib/facts";
+import { contactHref, READY_MADE_PIECE, routes } from "@/lib/routes";
 import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { ArrowLink } from "../studio/ArrowLink";
 import styles from "./page.module.css";
+import sections from "./sections.module.css";
 
-export const metadata: Metadata = { title: "Products" };
+export const metadata: Metadata = { title: "Products", description: "Every Furnishes piece, with its size, price and what can be changed." };
 
 const ROOMS = Object.keys(USES) as UseId[];
 
@@ -19,7 +22,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
 /**
  * The products: an index line, the headline and how the catalogue stands, a
  * row of rooms to narrow it to (kept in the address, `?room=`), then the
- * products as cards in two groups, the launch pieces first, then the footer.
+ * products as cards in two groups, the launch pieces first, then the
+ * ready-made line and the footer.
  */
 export default async function Products({ searchParams }: { searchParams: Promise<{ room?: string | string[] }> }) {
   const { room } = await searchParams;
@@ -32,7 +36,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      <main className={styles.page} data-page="products">
+      <main id="main" className={styles.page} data-page="products">
         <PeachBackdrop />
         <header className={styles.head}>
           <p className={styles.index}>
@@ -40,9 +44,10 @@ export default async function Products({ searchParams }: { searchParams: Promise
           </p>
           <h1 className={styles.title}>The pieces.</h1>
           <p className={styles.lede}>
-            {PRODUCTS.length} pieces from one family of birch panels. The first {count("launch")} are being made and tested now;
-            the other {count("soon")} follow on frames they prove.
+            {PRODUCTS.length} pieces from one family of birch panels, made by our partner factory in China. You can order the first{" "}
+            {count("launch")}, and the other {count("soon")} follow them. There is ready-made furniture too.
           </p>
+          <ArrowLink href={routes.collection}>Search and filter by budget in the collection</ArrowLink>
         </header>
 
         <nav className={styles.rooms} aria-label="Narrow by room">
@@ -60,6 +65,9 @@ export default async function Products({ searchParams }: { searchParams: Promise
               {USES[r]}
             </Link>
           ))}
+          <a href="#ready-made" className={styles.chip}>
+            Ready-made furniture
+          </a>
         </nav>
 
         {groups.map((g) => (
@@ -77,6 +85,27 @@ export default async function Products({ searchParams }: { searchParams: Promise
             <ProductGrid products={g.products} />
           </section>
         ))}
+
+        <section id="ready-made" className={sections.section} aria-labelledby="ready-title">
+          <div className={sections.sectionHead}>
+            <h2 id="ready-title" className={sections.sectionTitle}>
+              Ready-made furniture
+            </h2>
+            <p className={sections.sectionAside}>Sold as it is, with no customizing. {fact("readyMadeList")}</p>
+          </div>
+          <ul className={sections.uses}>
+            {READY_MADE.map((r) => (
+              <li key={r.name} className={sections.use}>
+                <h3 className={sections.useName}>{r.name}</h3>
+                <p className={sections.useLine}>{r.line}</p>
+                <p className={sections.useNote}>{r.range}</p>
+              </li>
+            ))}
+          </ul>
+          <div className={styles.end}>
+            <ArrowLink href={contactHref("product", READY_MADE_PIECE)}>Ask about ready-made furniture</ArrowLink>
+          </div>
+        </section>
 
         <div className={styles.end}>
           <p className={styles.index}>Not sure which?</p>

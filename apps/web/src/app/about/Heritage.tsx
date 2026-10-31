@@ -4,10 +4,9 @@ import styles from "./Heritage.module.css";
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
- * The heritage band, after the workshop, as furnishes_prod's homepage had
- * it: over the page's own peach, the index line over the heading on the
- * left, its two paragraphs on the right, then the studio's history as a
- * ruled list, each step opening to its words (the first open), a plus
+ * The story band, after the factory: over the page's own peach, the index
+ * line over the heading on the left, its words on the right, then the
+ * company's story as a ruled list, each step opening to its words (the first open), a plus
  * turning to a cross while it is.
  */
 export function Heritage() {
@@ -15,7 +14,7 @@ export function Heritage() {
     <section className={styles.band} aria-labelledby="heritage-title">
       <div className={`${styles.head} reveal`}>
         <p className={styles.index}>
-          <span>Heritage</span>
+          <span>Our story</span>
         </p>
         <h2 id="heritage-title" className={styles.title}>
           <span className={styles.titleFirst}>{HERITAGE.heading}</span>

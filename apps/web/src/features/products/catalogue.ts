@@ -1,73 +1,74 @@
 import type { StaticImageData } from "next/image";
-import bathCartObject from "@/assets/bright-living-room.jpg";
-import bedScreenObject from "@/assets/white-living-room.jpg";
-import coffeeObject from "@/assets/reading-corner.jpg";
-import doubleObject from "@/assets/garden-dining-room.jpg";
-import dropLeafObject from "@/assets/a-frame-living-room.jpg";
-import fittingObject from "@/assets/afternoon-living-room.jpg";
-import grilleObject from "@/assets/staircase-reading-corner.jpg";
-import islandObject from "@/assets/furniture-gallery.jpg";
-import kitchenScreenObject from "@/assets/sage-sideboard.jpg";
-import offsetObject from "@/assets/balcony-doors.jpg";
-import openingObject from "@/assets/bright-living-room.jpg";
-import phoneBoothObject from "@/assets/white-living-room.jpg";
-import recordWallObject from "@/assets/reading-corner.jpg";
-import shapeLObject from "@/assets/garden-dining-room.jpg";
-import shapeTPlainObject from "@/assets/a-frame-living-room.jpg";
-import shapeTObject from "@/assets/afternoon-living-room.jpg";
-import shapeUObject from "@/assets/staircase-reading-corner.jpg";
-import shapeZObject from "@/assets/furniture-gallery.jpg";
-import spiceFaceObject from "@/assets/sage-sideboard.jpg";
-import standingDeskObject from "@/assets/balcony-doors.jpg";
-import stepsObject from "@/assets/bright-living-room.jpg";
-import stripObject from "@/assets/white-living-room.jpg";
-import toolScreenObject from "@/assets/reading-corner.jpg";
-import tvCabinetObject from "@/assets/garden-dining-room.jpg";
-import twoDesksObject from "@/assets/a-frame-living-room.jpg";
-import videoBackgroundObject from "@/assets/afternoon-living-room.jpg";
-import wheeledPartitionObject from "@/assets/staircase-reading-corner.jpg";
-import workstationWallObject from "@/assets/furniture-gallery.jpg";
-import bedsideScene from "@/assets/afternoon-living-room.jpg";
-import coatStandScene from "@/assets/staircase-reading-corner.jpg";
-import deviceCabinetScene from "@/assets/white-living-room.jpg";
-import dividerScene from "@/assets/reading-corner.jpg";
-import lowCabinetScene from "@/assets/white-living-room.jpg";
-import mobileScreenScene from "@/assets/garden-dining-room.jpg";
-import bedHeadStudio from "@/assets/sage-sideboard.jpg";
-import bedsideStudio from "@/assets/balcony-doors.jpg";
-import bookwallStudio from "@/assets/bright-living-room.jpg";
-import coatStandStudio from "@/assets/white-living-room.jpg";
-import consoleStudio from "@/assets/reading-corner.jpg";
-import deskStudio from "@/assets/garden-dining-room.jpg";
-import deviceCabinetStudio from "@/assets/a-frame-living-room.jpg";
-import dividerStudio from "@/assets/afternoon-living-room.jpg";
-import entryStudio from "@/assets/staircase-reading-corner.jpg";
-import kitchenStudio from "@/assets/furniture-gallery.jpg";
-import lowCabinetStudio from "@/assets/sage-sideboard.jpg";
-import mobileScreenStudio from "@/assets/balcony-doors.jpg";
-import sofaBackStudio from "@/assets/bright-living-room.jpg";
-import workCartStudio from "@/assets/white-living-room.jpg";
-import bedHeadScene from "@/assets/afternoon-living-room.jpg";
-import bookwallScene from "@/assets/reading-corner.jpg";
-import consoleScene from "@/assets/white-living-room.jpg";
-import deskScene from "@/assets/garden-dining-room.jpg";
-import entryScene from "@/assets/staircase-reading-corner.jpg";
-import kitchenScene from "@/assets/a-frame-living-room.jpg";
-import sofaBackScene from "@/assets/bright-living-room.jpg";
-import workCartScene from "@/assets/furniture-gallery.jpg";
+import bathCartObject from "@/assets/catalogue/object/bath-cart.webp";
+import bedScreenObject from "@/assets/catalogue/object/bed-screen.webp";
+import coffeeObject from "@/assets/catalogue/object/coffee.webp";
+import doubleObject from "@/assets/catalogue/object/double.webp";
+import dropLeafObject from "@/assets/catalogue/object/drop-leaf.webp";
+import fittingObject from "@/assets/catalogue/object/fitting.webp";
+import grilleObject from "@/assets/catalogue/object/grille.webp";
+import islandObject from "@/assets/catalogue/object/island.webp";
+import kitchenScreenObject from "@/assets/catalogue/object/kitchen-screen.webp";
+import offsetObject from "@/assets/catalogue/object/offset.webp";
+import openingObject from "@/assets/catalogue/object/opening.webp";
+import phoneBoothObject from "@/assets/catalogue/object/phone-booth.webp";
+import recordWallObject from "@/assets/catalogue/object/record-wall.webp";
+import shapeLObject from "@/assets/catalogue/object/shape-l.webp";
+import shapeTPlainObject from "@/assets/catalogue/object/shape-t-plain.webp";
+import shapeTObject from "@/assets/catalogue/object/shape-t.webp";
+import shapeUObject from "@/assets/catalogue/object/shape-u.webp";
+import shapeZObject from "@/assets/catalogue/object/shape-z.webp";
+import spiceFaceObject from "@/assets/catalogue/object/spice-face.webp";
+import standingDeskObject from "@/assets/catalogue/object/standing-desk.webp";
+import stepsObject from "@/assets/catalogue/object/steps.webp";
+import stripObject from "@/assets/catalogue/object/strip.webp";
+import toolScreenObject from "@/assets/catalogue/object/tool-screen.webp";
+import tvCabinetObject from "@/assets/catalogue/object/tv-cabinet.webp";
+import twoDesksObject from "@/assets/catalogue/object/two-desks.webp";
+import videoBackgroundObject from "@/assets/catalogue/object/video-background.webp";
+import wheeledPartitionObject from "@/assets/catalogue/object/wheeled-partition.webp";
+import workstationWallObject from "@/assets/catalogue/object/workstation-wall.webp";
+import bedsideScene from "@/assets/catalogue/scene/bedside.webp";
+import coatStandScene from "@/assets/catalogue/scene/coat-stand.webp";
+import deviceCabinetScene from "@/assets/catalogue/scene/device-cabinet.webp";
+import dividerScene from "@/assets/catalogue/scene/divider.webp";
+import lowCabinetScene from "@/assets/catalogue/scene/low-cabinet.webp";
+import mobileScreenScene from "@/assets/catalogue/scene/mobile-screen.webp";
+import bedHeadStudio from "@/assets/catalogue/studio/bed-head.webp";
+import bedsideStudio from "@/assets/catalogue/studio/bedside.webp";
+import bookwallStudio from "@/assets/catalogue/studio/bookwall.webp";
+import coatStandStudio from "@/assets/catalogue/studio/coat-stand.webp";
+import consoleStudio from "@/assets/catalogue/studio/console.webp";
+import deskStudio from "@/assets/catalogue/studio/desk.webp";
+import deviceCabinetStudio from "@/assets/catalogue/studio/device-cabinet.webp";
+import dividerStudio from "@/assets/catalogue/studio/divider.webp";
+import entryStudio from "@/assets/catalogue/studio/entry.webp";
+import kitchenStudio from "@/assets/catalogue/studio/kitchen.webp";
+import lowCabinetStudio from "@/assets/catalogue/studio/low-cabinet.webp";
+import mobileScreenStudio from "@/assets/catalogue/studio/mobile-screen.webp";
+import sofaBackStudio from "@/assets/catalogue/studio/sofa-back.webp";
+import workCartStudio from "@/assets/catalogue/studio/work-cart.webp";
+import bedHeadScene from "@/assets/render-bed-head.webp";
+import bookwallScene from "@/assets/render-bookwall.webp";
+import consoleScene from "@/assets/render-console.webp";
+import deskScene from "@/assets/render-desk.webp";
+import entryScene from "@/assets/render-entry.webp";
+import kitchenScene from "@/assets/render-kitchen.webp";
+import sofaBackScene from "@/assets/render-sofa-back.webp";
+import workCartScene from "@/assets/render-work-cart.webp";
+import { PIECE_PRICES, priceFrom, shown } from "@/lib/facts";
 
 /**
  * The catalogue as the furniture record v2.0 (2026-10-13/14) sets it out,
  * read from personal_local/furnishes-landing (src/data/products.ts, claims.ts
  * and vocabulary.ts) and written fresh here:
  *
- * - launch: the three launch pieces, being made and tested now;
+ * - launch: the pieces available first;
  * - soon: the eleven that follow, reusing a frame the launch pieces prove;
  * - uses: other uses of a piece (packs), shown with their piece;
  * - arrangements: pieces standing together, never a product of their own.
  *
- * Names are working names. No price, estimate or date is shown anywhere
- * until the launch pieces' samples, quotes and tests are done (CLAIMS).
+ * Names are working names. Prices, dates and terms come from lib/facts, and
+ * show as marked placeholders until they are real.
  * Sizes in mm, width across the front × height × depth; `baseD` when a
  * steel base reaches deeper than the body.
  */
@@ -107,6 +108,7 @@ export type ObjectId =
   | "plants"
   | "tv-devices";
 export type WidthId = "narrow" | "medium" | "wide";
+export type BudgetId = "under-300" | "under-600" | "under-1000" | "over-1000";
 export type KitTier = "first" | "after-test";
 
 export type Product = {
@@ -165,14 +167,13 @@ export type Arrangement = {
 
 export const STATUS: Record<Status, { name: string; detail: string }> = {
   launch: {
-    name: "Launch piece",
-    detail:
-      "One of the first three pieces, being made and tested now. Choose its version and save it. A price, what's in the box and ordering arrive once its samples, quotes and tests are done.",
+    name: "Available",
+    detail: "One of the pieces you can order first. Ask us about the version you want.",
   },
   soon: {
     name: "Coming soon",
     detail:
-      "Comes after the launch pieces, reusing a frame they prove. Explore it, save it, and register interest. No price or date yet.",
+      "Follows the first pieces. Tell us you are interested, and we will let you know when it is ready.",
   },
 };
 
@@ -246,6 +247,18 @@ export const WIDTHS: Record<
   wide: { name: "Over 120 cm", fits: (w) => w > 1200 },
 };
 
+/** Budgets, by a piece's lowest price in S$, for "up to". */
+export const BUDGETS: Record<BudgetId, { name: string; fits: (price: number) => boolean }> = {
+  "under-300": { name: "Up to S$300", fits: (n) => n <= 300 },
+  "under-600": { name: "S$301–600", fits: (n) => n > 300 && n <= 600 },
+  "under-1000": { name: "S$601–1,000", fits: (n) => n > 600 && n <= 1000 },
+  "over-1000": { name: "Over S$1,000", fits: (n) => n > 1000 },
+};
+
+export const lowestPrice = (id: string) => PIECE_PRICES[id]?.flat ?? 0;
+
+export { priceFrom };
+
 export const USES: Record<UseId, string> = {
   entryway: "Entryway",
   work: "Work",
@@ -258,19 +271,16 @@ export const USES: Record<UseId, string> = {
 /** Every statement that depends on a fact not settled yet. Pages read these; they make no promises of their own. */
 export const CLAIMS = {
   price: {
-    label: "Price not set yet",
-    detail:
-      "Prices come after factory quotes and conversations with real buyers. Until then we don't show a price or an estimate.",
+    label: "Priced per piece",
+    detail: `Each piece shows its price before you buy. ${shown("gstTerms")}`,
   },
   delivery: {
-    label: "Delivery and assembly to be confirmed",
-    detail:
-      "Pieces are planned to arrive flat-packed with their steps. Delivery, assembly help and timing are confirmed before you buy.",
+    label: "Flat-packed or built",
+    detail: "Pieces arrive flat-packed with their steps, or already built. You choose before you order.",
   },
   stability: {
-    label: "Widened base, counterweight and wall strap included",
-    detail:
-      "Pieces 1.2 m and taller that you hang things on come with a 60 cm deep steel base and a counterweight, and a wall strap in the box. Used within the stated hanging range they can stand without fixing. Fix them with the strap whenever you want. Tip-over tests are still to come.",
+    label: "Stability guidance to come",
+    detail: `${shown("stability")} ${shown("weightLimits")}`,
   },
   fit: {
     label: "Fit needs checking",
@@ -278,24 +288,23 @@ export const CLAIMS = {
       "Sizes are nominal. Skirting boards, doors and the way into the room are checked before you buy.",
   },
   renders: {
-    label: "Room photographs",
+    label: "3D renders",
     detail:
-      "The rooms shown set the mood and are not our pieces. Real photographs of the pieces replace them once samples exist.",
+      "These images are 3D renders, not photographs. Anything around the piece, such as books, shoes or a lamp, is not included.",
   },
   leadTime: {
-    label: "Timing not set yet",
-    detail:
-      "No lead time is given until the factory has quoted for the launch pieces.",
+    label: shown("leadFlatPack"),
+    detail: `Flat-packed pieces take ${shown("leadFlatPack")}, and built pieces ${shown("leadBuilt")}. Custom sizes add ${shown("leadCustomExtra")}.`,
   },
   assembly: {
-    label: "Steps from the modelling spec",
+    label: "Steps in the box",
     detail:
-      "Assembly steps come from the launch pieces' modelling spec (v0). Sizes marked as assumptions there are replaced as samples are made, so the final instructions may differ.",
+      "Flat-packed pieces come with their steps. Final instructions may differ from what is shown here.",
   },
   parts: {
-    label: "Parts from the modelling spec",
+    label: "Parts lists",
     detail:
-      "Every part of a version comes from the modelling spec (v0). Sizes are nominal. Some are assumptions until the first samples are measured.",
+      "Sizes are nominal. Some may change as samples are measured.",
   },
   hangingFace: {
     label: "Hanging face being chosen",
@@ -303,9 +312,9 @@ export const CLAIMS = {
       "Two ways to hang things are being compared on samples. Locking pegs in the thick board, or a thin perforated face on spacers. Until then the face is drawn plain.",
   },
   accent: {
-    label: "Accent colour to be confirmed",
+    label: "Accent colour",
     detail:
-      "Accessories and add-ons come in one agreed accent colour, shown here in orange. The final colour is chosen with the samples.",
+      "Accessories and add-ons come in one agreed accent colour, shown here in orange.",
   },
 } as const;
 
@@ -351,10 +360,10 @@ export type Kit = {
 };
 
 export const KIT_TIER: Record<KitTier, { name: string; detail: string }> = {
-  first: { name: "Sold first", detail: "Planned with its launch piece." },
+  first: { name: "Offered first", detail: "Available with the first pieces." },
   "after-test": {
-    name: "After a test",
-    detail: "Shown now. Offered once its test is passed.",
+    name: "Coming later",
+    detail: "Offered once we have checked that it fits and holds up.",
   },
 };
 
@@ -548,8 +557,7 @@ export const PRODUCTS: readonly Product[] = [
       "Keys, post and the umbrella have no place",
     ],
     notes: [
-      "Depth is being compared at about 30 and 40 cm with full-size models in real homes. A 30 cm version would only be offered fixed to a wall.",
-      "Comes with a widened steel base and counterweight, and a wall strap in the box.",
+      "Comes with a wide steel base. Keep it within the weight limits on the help page.",
     ],
     scene: "Shoes, the bag, the door and the basket are not included.",
     studio: entryStudio,
@@ -573,7 +581,7 @@ export const PRODUCTS: readonly Product[] = [
     ],
     notes: [
       "Stands on its own. It doesn't lean on your desk.",
-      "An aluminium rail is optional, for things you hang and take down often.",
+      "An aluminium rail is available as an add-on.",
     ],
     scene: "The desk, chair, laptop and books are yours, not included.",
     studio: deskStudio,
@@ -593,7 +601,7 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["phone-glasses", "books", "cups"],
     situations: ["Phone and book on the floor by the bed"],
     notes: [
-      "Finished height is about 57 cm, to be confirmed with full-size models beside real beds.",
+      "Stands about 57 cm high. Check this against the height of your bed.",
     ],
     scene: "The bed, lamp, cup and books are not included.",
     studio: bedsideStudio,
@@ -613,7 +621,7 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["jars", "cups"],
     situations: ["The counter is too short when I cook"],
     notes: [
-      "We still have to show what it does better than a simple ready-made trolley.",
+      "Lock it, or empty it, before moving it over thresholds.",
     ],
     scene: "Jars, board, towel and plant are not included.",
     studio: kitchenStudio,
@@ -633,7 +641,7 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["laptop", "cables", "camera"],
     situations: ["The printer lives on the floor"],
     notes: [
-      "A neighbouring choice to the desk-side pack. Compare footprint, reach and moving it.",
+      "If your things stay in one place, compare it with the desk-side pack.",
     ],
     scene: "The desk, laptop and books are not included.",
     studio: workCartStudio,
@@ -652,7 +660,9 @@ export const PRODUCTS: readonly Product[] = [
     activities: ["store", "display", "set-down"],
     objects: ["records", "tv-devices", "books", "plants"],
     situations: ["Cables and boxes under the TV"],
-    notes: ["A long top across segments needs a support at every segment."],
+    notes: [
+      "The long top sits across three segments, each with its own support.",
+    ],
     scene: "The TV, lamp, books and plant are not included.",
     studio: lowCabinetStudio,
     room: lowCabinetScene,
@@ -671,7 +681,7 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["tv-devices", "cables"],
     situations: ["The router and all the chargers"],
     notes: [
-      "How far a pull-out shelf can reach, and what the devices weigh, is still to be tested.",
+      "Leave room around devices for air.",
     ],
     scene: "The router, boxes and plant are not included.",
     studio: deviceCabinetStudio,
@@ -691,7 +701,7 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["keys-post", "plants", "shoes"],
     situations: ["Post and keys need somewhere by the door"],
     notes: [
-      "A mirror would fix to structural inserts, never to the light hanging face.",
+      "Any mirror fixes to the frame, not to the hanging face.",
     ],
     scene: "The door, bowl, post and plant are not included.",
     studio: consoleStudio,
@@ -711,7 +721,7 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["bag-coat", "shoes"],
     situations: ["No hallway. Coats land on the chair by the door"],
     notes: [
-      "Offered after tests with coats hung unevenly, including a tip-over test.",
+      "Hang coats evenly on both sides where you can.",
     ],
     scene: "The coats, bag and basket are not included.",
     studio: coatStandStudio,
@@ -731,7 +741,6 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["books", "plants"],
     situations: ["Two people share one room, with no line between them"],
     notes: [
-      "Which side panels it uses is decided by a sideways-sway test.",
       "A visual divider, not a sound barrier.",
     ],
     scene: "The books, basket and rug are not included.",
@@ -751,7 +760,9 @@ export const PRODUCTS: readonly Product[] = [
     activities: ["divide", "display", "set-down"],
     objects: ["books", "cups", "plants"],
     situations: ["The sofa has its back to the whole room"],
-    notes: ["The 1.8 m top needs a support at every segment."],
+    notes: [
+      "The 1.8 m top is supported at every segment.",
+    ],
     scene: "The books, lamp and plant are not included.",
     studio: sofaBackStudio,
     room: sofaBackScene,
@@ -770,7 +781,6 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["books", "records", "camera"],
     situations: ["Books and records with no wall to live on"],
     notes: [
-      "The two narrow shelves leave about 2 mm to spare. The drawings are being checked.",
       "A visual divider, not a sound barrier.",
     ],
     scene: "The books, chair and plant are not included.",
@@ -791,7 +801,6 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["phone-glasses", "books"],
     situations: ["The bed and the living room are the same room"],
     notes: [
-      "Whether the fabric face is its own panel is still open.",
       "It stands on its own. The bed is not what keeps it upright.",
     ],
     scene: "The bed, lamp and books are not included.",
@@ -812,8 +821,8 @@ export const PRODUCTS: readonly Product[] = [
     objects: ["headphones", "camera", "bag-coat"],
     situations: ["A screen between two desks"],
     notes: [
-      "Offered after a dynamic stability test on its caster base.",
       "A visual divider, not a sound barrier.",
+      "Empty it before moving it far, and lock the casters when it stops.",
     ],
     scene: "The desk, chair, laptop and plant are not included.",
     studio: mobileScreenStudio,
@@ -829,7 +838,7 @@ export const OTHER_USES: readonly OtherUse[] = [
     line: "Cups on hooks, the machine at the right height, beans below.",
     parents: ["entry", "desk"],
     state: "with-parent",
-    note: "Water, heat and power are checked for each setting.",
+    note: "Keep water and heat away from devices.",
     image: coffeeObject,
   },
   {
@@ -839,7 +848,7 @@ export const OTHER_USES: readonly OtherUse[] = [
     line: "An upstand on the top for jars and spices.",
     parents: ["bedside", "kitchen"],
     state: "testing",
-    note: "Upstand kit. Offered after testing.",
+    note: "Upstand kit. Coming later.",
     image: spiceFaceObject,
   },
   {
@@ -859,7 +868,7 @@ export const OTHER_USES: readonly OtherUse[] = [
     line: "A back panel standing up from the top to carry the TV and its cables.",
     parents: ["low-cabinet"],
     state: "testing",
-    note: "TV panel kit. Offered after testing.",
+    note: "TV panel kit. Coming later.",
     image: tvCabinetObject,
   },
   {
@@ -879,7 +888,7 @@ export const OTHER_USES: readonly OtherUse[] = [
     line: "An open lattice in the upper tier, so light and a look get through.",
     parents: ["divider"],
     state: "testing",
-    note: "Face option. The change in stiffness has to be checked.",
+    note: "Face option. Coming later.",
     image: grilleObject,
   },
   {
@@ -889,7 +898,7 @@ export const OTHER_USES: readonly OtherUse[] = [
     line: "One face left open, to look through or pass a cup.",
     parents: ["divider"],
     state: "testing",
-    note: "Face option. Stiffness without the face has to be checked.",
+    note: "Face option. Coming later.",
     image: openingObject,
   },
   {
@@ -929,7 +938,7 @@ export const OTHER_USES: readonly OtherUse[] = [
     line: "A full-length mirror on one side, hooks on the other.",
     parents: ["mobile-screen"],
     state: "testing",
-    note: "Full-height safety mirror. Offered after testing.",
+    note: "Full-height mirror. Coming later.",
     image: fittingObject,
   },
   {
@@ -984,7 +993,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
       { product: "entry", count: 1 },
       { product: "coat-stand", count: 1 },
     ],
-    note: "Layout and seat height are not settled.",
+    note: "Concept. Details to come.",
     image: stripObject,
   },
   {
@@ -995,7 +1004,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
     members: [
       { product: "divider", count: 1, note: "two segments, one turned" },
     ],
-    note: "What the corner piece does is still to be defined.",
+    note: "Concept. Details to come.",
     image: shapeLObject,
   },
   {
@@ -1013,7 +1022,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
     name: "T arrangement",
     line: "One segment meets the middle of another. Both sides get a face.",
     members: [{ product: "divider", count: 1, note: "two segments" }],
-    note: "The joint in the middle is not resolved yet.",
+    note: "Concept. Details to come.",
     image: shapeTPlainObject,
   },
   {
@@ -1043,7 +1052,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
     name: "Z arrangement",
     line: "Two turns. Display on one side, storage on the other.",
     members: [{ product: "divider", count: 1, note: "three segments" }],
-    note: "Not yet tested for stability.",
+    note: "Concept. Details to come.",
     image: shapeZObject,
   },
   {
@@ -1052,7 +1061,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
     name: "Offset line",
     line: "Two segments stepped past each other, so the wall has a fold.",
     members: [{ product: "divider", count: 1, note: "two segments" }],
-    note: "The offset piece is not designed yet.",
+    note: "Concept. Details to come.",
     image: offsetObject,
   },
   {
@@ -1061,7 +1070,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
     name: "Wheeled partition",
     line: "Two function faces on casters, as one partition that moves.",
     members: [{ product: "mobile-screen", count: 2 }],
-    note: "Needs a whole-unit dynamic test.",
+    note: "Concept. Details to come.",
     image: wheeledPartitionObject,
   },
   {
@@ -1085,7 +1094,7 @@ export const ARRANGEMENTS: readonly Arrangement[] = [
       { product: "bed-head", count: 1 },
       { product: "bedside", count: 2 },
     ],
-    note: "The joining height is still to be drawn.",
+    note: "Concept. Details to come.",
     image: shapeTObject,
   },
   {
