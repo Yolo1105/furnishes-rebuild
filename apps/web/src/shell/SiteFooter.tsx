@@ -28,6 +28,8 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
     links: [
       { label: "Design your room", href: routes.designYourRoom },
       { label: "How it works", href: routes.howItWorks },
+      { label: "Why modular", href: routes.whyModular },
+      { label: "Buying guide", href: routes.buyingGuide },
       { label: "Help", href: routes.help },
       { label: "Room dividers", href: routes.roomDividers },
       { label: "HDB homes", href: routes.hdbHomes },

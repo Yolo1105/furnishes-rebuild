@@ -59,6 +59,10 @@
   border-top: var(--rule);
 }
 
+.more {
+  margin-top: var(--space-6);
+}
+
 @media (max-width: 900px) {
   .steps,
   .basics {

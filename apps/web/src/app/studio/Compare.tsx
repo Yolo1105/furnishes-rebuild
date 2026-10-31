@@ -118,6 +118,9 @@ export function Compare() {
           </tr>
         </tbody>
       </table>
+      <p className={`${styles.foot} reveal`}>
+        <ArrowLink href={routes.whyModular}>Why modular?</ArrowLink>
+      </p>
     </section>
   );
 }

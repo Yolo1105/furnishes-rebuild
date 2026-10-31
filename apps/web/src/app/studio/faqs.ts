@@ -128,3 +128,8 @@ export const QUESTIONS: readonly { question: string; answer: string }[] = [
     answer: "No. We don't claim any piece is safe for children, even if it's low or has rounded corners. Keep children from climbing on it, and fix tall pieces as their guide says.",
   },
 ];
+
+const COMMON = new Set(["What do you sell?", "How long does it take?", "Does it come built?", "Is delivery included?", "Can I change the size?", "Will it fit my HDB flat, and is it allowed?", "Can I return it?", "Do I have to use the AI assistant?"]);
+
+/** The few asked most, for pages that aren't the buying guide. */
+export const COMMON_QUESTIONS = QUESTIONS.filter((q) => COMMON.has(q.question));

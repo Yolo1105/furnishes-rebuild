@@ -1,5 +1,7 @@
 import { EMAIL } from "@/lib/contact";
 import { shown } from "@/lib/facts";
+import { routes } from "@/lib/routes";
+import { ArrowLink } from "./ArrowLink";
 import styles from "./HowToBuy.module.css";
 
 const STEPS: readonly { name: string; line: string }[] = [
@@ -49,6 +51,9 @@ export function HowToBuy() {
           </div>
         ))}
       </dl>
+      <p className={`${styles.more} reveal`}>
+        <ArrowLink href={routes.buyingGuide}>Read the full buying guide</ArrowLink>
+      </p>
     </section>
   );
 }

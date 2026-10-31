@@ -20,6 +20,19 @@
   gap: var(--space-6);
 }
 
+/* a page made of these sections: its title, clear of the bar */
+.pageHead {
+  display: grid;
+  gap: var(--space-4);
+  padding: calc(var(--nav-h) + clamp(48px, 8vh, 96px)) var(--gutter) 0;
+  color: var(--color-umber);
+}
+
+.pageHead h1,
+.pageHead p {
+  margin: 0;
+}
+
 .lede {
   max-width: 44em;
   font-size: var(--text-body);
@@ -35,10 +48,6 @@
 
 .four {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.guideColumns {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .point {
@@ -76,19 +85,6 @@
 
 .foot {
   margin-top: var(--space-6);
-}
-
-/* before and after, side by side */
-.pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1);
-  align-self: stretch;
-}
-
-.pair img {
-  width: 100%;
-  height: auto;
 }
 
 .subhead {
@@ -227,8 +223,7 @@
 
 @media (max-width: 900px) {
   .columns,
-  .four,
-  .guideColumns {
+  .four {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -245,7 +240,6 @@
 @media (max-width: 700px) {
   .columns,
   .four,
-  .guideColumns,
   .guide {
     grid-template-columns: minmax(0, 1fr);
   }

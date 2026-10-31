@@ -6,6 +6,8 @@ export const routes = {
   inspiration: "/inspiration",
   quiz: "/quiz",
   howItWorks: "/how-it-works",
+  whyModular: "/why-modular",
+  buyingGuide: "/buying-guide",
   help: "/help",
   roomDividers: "/room-dividers",
   hdbHomes: "/hdb-homes",

@@ -12,6 +12,8 @@ const PAGES = [
   routes.inspiration,
   routes.quiz,
   routes.howItWorks,
+  routes.whyModular,
+  routes.buyingGuide,
   routes.help,
   routes.roomDividers,
   routes.hdbHomes,
