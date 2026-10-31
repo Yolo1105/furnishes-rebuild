@@ -24,7 +24,7 @@ export function CaseSheets() {
           <span className={styles.count}>{pad(CASES.length)} cases</span>
         </p>
         <h2 id="cases-title" className={styles.heading}>
-          Everyday cases
+          Where it helps, day to day
         </h2>
       </header>
       <ol className={styles.sheets}>

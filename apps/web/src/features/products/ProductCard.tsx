@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
-import { priceFrom, type Product, STATUS, sizeLabel } from "./catalogue";
+import { CATEGORIES, priceFrom, type Product, STATUS, sizeLabel } from "./catalogue";
 import styles from "./ProductCard.module.css";
 
 /**
- * A product: its render in its room, its record number and status, its name
+ * A product: its render in its room, its kind and status, its name
  * and one line, then its size and price over a rule. The whole card is the
  * link; on hover the name turns orange and the room comes a little closer.
  */
@@ -16,7 +16,7 @@ export function ProductCard({ product: p, sizes }: { product: Product; sizes: st
         <Image className={styles.photo} src={p.room} alt="" fill sizes={sizes} placeholder="blur" />
       </div>
       <p className={styles.record}>
-        <span>No. {p.record}</span>
+        <span>{CATEGORIES[p.category]}</span>
         <span className={styles.status} data-status={p.status}>
           {STATUS[p.status].name}
         </span>

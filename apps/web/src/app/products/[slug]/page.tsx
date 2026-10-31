@@ -11,6 +11,7 @@ import {
   MATERIALS,
   OTHER_USE_STATE,
   OTHER_USES,
+  CATEGORIES,
   PRODUCTS,
   productById,
   productName,
@@ -87,7 +88,7 @@ export default async function ProductPage({ params }: Props) {
 
         <header className={styles.head}>
           <p className={styles.index}>
-            <span>No. {p.record}</span>
+            <span>{CATEGORIES[p.category]}</span>
             <span>{p.uses.map((u) => USES[u]).join(" and ")}</span>
           </p>
           <h1 className={styles.title}>{p.name}</h1>

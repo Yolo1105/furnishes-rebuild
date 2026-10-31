@@ -60,7 +60,7 @@ export const FIGURES = [
 ];
 
 /** The rooms, each a photo with its name; each leads to its pieces in the finder. */
-export const ROOMS_HEAD = { label: "By room", title: "Room category", call: "See all pieces" };
+export const ROOMS_HEAD = { label: "By room", title: "Shop by room", call: "See all pieces" };
 
 export const ROOM_TILES: readonly { use: UseId; photo: StaticImageData }[] = [
   { use: "bedroom", photo: afternoonRoom },
@@ -94,7 +94,7 @@ export const EXPLORE = {
 /** The first pieces in a row of four: photo, name, normal price, what it is. */
 export const DISCOVER = {
   label: "Pieces",
-  title: "Discover product",
+  title: "Start with these pieces",
   lede: "The first three pieces, and the next one to follow them.",
   count: 4,
 };

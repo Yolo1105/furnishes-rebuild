@@ -56,7 +56,7 @@ function Notes({ product }: { product: Product }) {
         <Image src={product.studio} alt="" fill sizes="(max-width: 900px) 100vw, 29vw" placeholder="blur" />
       </div>
       <h3 className={styles.notesName}>
-        {product.name} <span className={styles.n}>No. {product.record}</span>
+        {product.name}
       </h3>
       <ul className={styles.notesList}>
         {product.notes.map((n) => (
@@ -228,7 +228,7 @@ export default async function Collection({
               In their rooms
             </h2>
             <Link href={routes.inspiration} className={styles.pillOutline}>
-              See all projects
+              See more ideas
             </Link>
           </div>
           <div className={styles.banners}>

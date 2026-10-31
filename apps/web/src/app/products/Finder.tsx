@@ -204,7 +204,7 @@ function Tiles({ products }: { products: readonly Product[] }) {
               {href && <span className={styles.plus} aria-hidden="true" />}
             </div>
             <p className={styles.record}>
-              No. {p.record} · {CATEGORIES[p.category]}
+              {CATEGORIES[p.category]}
             </p>
             <div className={styles.stage}>
               <Image
@@ -328,7 +328,6 @@ function Index({ state }: { state: FinderState }) {
         <ol className={styles.index}>
           {shown.map((d) => (
             <li key={`${d.kind}-${d.id}`} className={styles.row}>
-              <span className={styles.rowRecord}>{d.record}</span>
               <span className={styles.thumb}>
                 <Image src={d.image} alt="" fill sizes="72px" />
               </span>

@@ -93,7 +93,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
             </h2>
             <p className={sections.sectionAside}>Sold as it is, with no customizing. {fact("readyMadeList")}</p>
           </div>
-          <ul className={sections.uses}>
+          <ul className={`${sections.uses} ${styles.readyMade}`}>
             {READY_MADE.map((r) => (
               <li key={r.name} className={sections.use}>
                 <h3 className={sections.useName}>{r.name}</h3>

@@ -13,7 +13,7 @@ export function AfterYouSend() {
         <span>After you send</span>
       </p>
       <h2 id="after-title" className={styles.title}>
-        After you send
+        What happens next
       </h2>
       <ol className={styles.steps}>
         {AFTER.map((s) => (

@@ -412,7 +412,7 @@
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: 4ch 72px minmax(0, 1fr) 11ch minmax(96px, 160px);
+  grid-template-columns: 72px minmax(0, 1fr) 11ch minmax(96px, 160px);
   gap: var(--space-4);
   align-items: center;
   padding-block: var(--space-4);

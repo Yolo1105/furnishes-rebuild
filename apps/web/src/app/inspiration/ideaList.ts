@@ -72,7 +72,7 @@ export const REVEALS = [
   { id: "bedside", title: "The last thing at night", now: "A phone on the floor. A glass on a book. A lamp on a box.", could: "A 40 cm block with a top and one open compartment." },
   { id: "kitchen", title: "Thirty centimetres of counter", now: "The rice cooker, the kettle and the chopping board share the only free stretch.", could: "A trolley with a worktop rolls in when you cook and out when you don't." },
   { id: "bookwall", title: "One room, two people", now: "A bed on each side and a line down the middle nobody can see.", could: "A double-sided bookcase makes the line real, with books on both sides." },
-  { id: "mobile-screen", title: "What the camera sees", now: "The call sees the laundry rack, the bed, the door.", could: "A mobile screen with a quiet face rolls behind your chair, with storage on your side." },
+  { id: "mobile-screen", title: "What the camera sees", now: "The call sees the laundry rack, the bed, the door.", could: "A screen on wheels with a quiet face rolls behind your chair, with storage on your side." },
   { id: "low-cabinet", title: "The long empty wall", now: "A TV and a lot of nothing. Things pile on the floor beside it.", could: "Three bays low along the wall. Open, doors, or both." },
   { id: "work-cart", title: "A corner with nothing in it yet", now: "You've just moved in. The corner is waiting for a desk.", could: "Start with what you need today, and add to it as the corner fills up." },
 ].flatMap((r) => {

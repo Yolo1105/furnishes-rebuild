@@ -93,3 +93,12 @@
   margin-top: clamp(56px, 10vh, 120px);
 }
 
+
+/* the ready-made kinds all in view, their prices with them, rather than running off sideways (doubled, to win over the shared row's styles) */
+.readyMade.readyMade {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  padding-inline-start: 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  overflow-x: visible;
+}
