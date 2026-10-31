@@ -36,6 +36,7 @@ export function WhyModular() {
       <p className={`${styles.lede} ${styles.foot} reveal`}>Its limits: not every part fits every piece, so we check against the version you own. Some changes leave parts over. And if a standard size suits you, ready-made furniture is simpler.</p>
 
       <h3 className={`${styles.name} ${styles.subhead} reveal`}>The parts each piece can take</h3>
+      <p className={`${styles.lede} reveal`}>Tap a part to see what it adds and takes off.</p>
       <div className={styles.columns}>
         {PIECES.map((id) => (
           <div key={id} className={`${styles.point} reveal`}>
@@ -43,10 +44,16 @@ export function WhyModular() {
             <ul className={styles.parts}>
               {KITS.filter((k) => k.applies.includes(id)).map((k) => (
                 <li key={k.id}>
-                  <span className={styles.partName}>{k.name}</span>
-                  <span className={styles.line}>{k.line}</span>
-                  <span className={styles.line}>Adds: {k.adds.join(", ")}.{k.removes.length > 0 ? ` Takes off: ${k.removes.join(", ")}.` : ""}</span>
-                  <span className={styles.tier}>{KIT_TIER[k.tier].name}</span>
+                  <details>
+                    <summary className={styles.partSummary}>
+                      <span className={styles.partName}>{k.name}</span>
+                      <span className={styles.tier}>{KIT_TIER[k.tier].name}</span>
+                    </summary>
+                    <p className={styles.line}>{k.line}</p>
+                    <p className={styles.line}>
+                      Adds: {k.adds.join(", ")}.{k.removes.length > 0 ? ` Takes off: ${k.removes.join(", ")}.` : ""}
+                    </p>
+                  </details>
                 </li>
               ))}
             </ul>

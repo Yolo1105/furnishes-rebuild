@@ -54,6 +54,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.guideColumns {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .point {
   display: flex;
   flex-direction: column;
@@ -91,6 +95,19 @@
   margin-top: var(--space-6);
 }
 
+/* before and after, side by side */
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  align-self: stretch;
+}
+
+.pair img {
+  width: 100%;
+  height: auto;
+}
+
 .subhead {
   margin-block: clamp(48px, 8vh, 96px) var(--space-2);
 }
@@ -98,12 +115,24 @@
 /* the add-on parts under a piece */
 .parts {
   display: grid;
-  gap: var(--space-6);
+  align-self: stretch;
 }
 
-.parts li {
+.partSummary {
   display: grid;
+  align-content: center;
   gap: var(--space-1);
+  min-height: var(--tap);
+  padding-block: var(--space-2);
+  cursor: pointer;
+}
+
+.partSummary:hover .partName {
+  color: var(--color-orange);
+}
+
+.parts details > p {
+  margin-bottom: var(--space-2);
 }
 
 .partName {
@@ -232,7 +261,8 @@
 
 @media (max-width: 900px) {
   .columns,
-  .four {
+  .four,
+  .guideColumns {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -250,6 +280,7 @@
   .columns,
   .four,
   .two,
+  .guideColumns,
   .guide {
     grid-template-columns: minmax(0, 1fr);
   }

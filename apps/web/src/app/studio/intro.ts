@@ -10,6 +10,6 @@ import { routes } from "@/lib/routes";
  * marks it "done" when it has played, or as soon as the page is scrolled,
  * and everything is then at once as it ends.
  */
-export const INTRO_MS = 4300;
+export const INTRO_MS = 2000;
 
 export const INTRO_SCRIPT = `try{if(location.pathname===${JSON.stringify(routes.studio)}){var s=sessionStorage;if(!s.getItem("studio-intro")&&!location.hash&&scrollY<1&&matchMedia("(prefers-reduced-motion: no-preference)").matches)document.documentElement.dataset.intro="play";s.setItem("studio-intro","1")}}catch(e){}`;

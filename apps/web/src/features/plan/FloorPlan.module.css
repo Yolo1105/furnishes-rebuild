@@ -130,15 +130,15 @@
 }
 
 :global(:root[data-intro="play"]) .walls {
-  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 1.5s) backwards;
+  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 0.6s) backwards;
 }
 
 :global(:root[data-intro="play"]) .names text {
-  animation: type calc(var(--chars) * 40ms) steps(var(--chars), end) calc(var(--plan-at) + var(--at)) backwards;
+  animation: type calc(var(--chars) * 20ms) steps(var(--chars), end) calc(var(--plan-at) + var(--at)) backwards;
 }
 
 :global(:root[data-intro="play"]) .rooms {
-  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 2.9s) backwards;
+  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 1.2s) backwards;
 }
 
 @keyframes draw {

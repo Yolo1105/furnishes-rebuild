@@ -7,7 +7,6 @@ import { AiHelps } from "../studio/AiHelps";
 import { BeforeYouOrder } from "../studio/BeforeYouOrder";
 import { BuildIt } from "../studio/BuildIt";
 import details from "../studio/Details.module.css";
-import { QUESTIONS } from "../studio/faqs";
 import { Questions } from "../studio/Questions";
 import styles from "../studio/page.module.css";
 
@@ -28,7 +27,7 @@ export default function BuyingGuide() {
         <LeadTimes />
         <AfterYouBuy />
         <AiHelps />
-        <Questions items={QUESTIONS} />
+        <Questions />
       </main>
       <SiteFooter />
     </>

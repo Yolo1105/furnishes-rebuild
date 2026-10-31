@@ -327,32 +327,32 @@
    warming to clay; then the line under it; "How it works?" last, once the
    plan has drawn itself. */
 :global(:root[data-intro="play"]) .photo {
-  animation: unveil calc(var(--dur-enter) * 0.85) var(--ease-rise) 0.2s backwards;
+  animation: unveil calc(var(--dur-enter) * 0.85) var(--ease-rise) backwards;
 }
 
 :global(:root[data-intro="play"]) .head {
-  animation: rise var(--dur-enter) var(--ease-rise) 0.4s backwards;
+  animation: rise var(--dur-enter) var(--ease-rise) backwards;
 }
 
 :global(:root[data-intro="play"]) .intro,
 :global(:root[data-intro="play"]) .name {
-  animation: rise var(--dur-enter) var(--ease-rise) 0.4s backwards;
+  animation: rise var(--dur-enter) var(--ease-rise) backwards;
 }
 
 :global(:root[data-intro="play"]) .name {
-  animation-delay: calc(0.4s + var(--stagger));
+  animation-delay: var(--stagger);
 }
 
 :global(:root[data-intro="play"]) .accent {
-  animation: warm var(--dur-enter) ease-in-out 1s backwards;
+  animation: warm var(--dur-enter) ease-in-out 0.4s backwards;
 }
 
 :global(:root[data-intro="play"]) .head .lede {
-  animation: rise var(--dur-enter) var(--ease-rise) 1.2s backwards;
+  animation: rise var(--dur-enter) var(--ease-rise) 0.2s backwards;
 }
 
 :global(:root[data-intro="play"]) .more {
-  animation: rise var(--dur-enter) var(--ease-rise) 3s backwards;
+  animation: rise var(--dur-enter) var(--ease-rise) 1.4s backwards;
 }
 
 @keyframes unveil {

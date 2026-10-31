@@ -1,12 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { FloorPlan } from "@/features/plan/FloorPlan";
 import { BOUNDS } from "@/features/walk/flat";
 import { finishAt } from "@/features/walk/order";
-import { type SheetFit, WalkView } from "@/features/walk/WalkView";
+import type { SheetFit } from "@/features/walk/WalkView";
 import { FurnitureWord } from "./FurnitureWord";
 import { OrderCard } from "./OrderCard";
 import { RoomPhotos } from "./RoomPhotos";
@@ -15,6 +16,9 @@ import { INTRO_MS } from "./intro";
 import { ROOM_PHOTOS } from "./rooms";
 import { FIRST_ORDER_STEP, ROOM_NOTES, STEPS } from "./tour";
 import styles from "./page.module.css";
+
+/** The 3D walk, loaded apart so its weight never holds up the first paint. */
+const WalkView = dynamic(() => import("@/features/walk/WalkView").then((m) => m.WalkView), { ssr: false });
 
 /** The rooms that have a photo: these answer the pointer on the plan. */
 const LINKED: ReadonlySet<string> = new Set(ROOM_PHOTOS.map((p) => p.room));
@@ -165,7 +169,11 @@ export function StudioView() {
       }
       setScrolled(down > 0);
       // any scroll ends the arrival at once
-      if (down > 0 && document.documentElement.dataset.intro === "play") document.documentElement.dataset.intro = "done";
+      if (down > 0 && document.documentElement.dataset.intro === "play") {
+        document.documentElement.dataset.intro = "done";
+        // scrolled early: the 3D walk is wanted now
+        setArrived(true);
+      }
       // the steps walked since the plan took the stage, with the share of the next
       const walked = Math.max(0, (down - innerHeight) / (innerHeight * HOLD));
       const i = Math.min(STEPS.length - 1, Math.floor(walked));

@@ -1,7 +1,7 @@
 import { shown } from "@/lib/facts";
 import { routes } from "@/lib/routes";
 import { ArrowLink } from "./ArrowLink";
-import { COMMON_QUESTIONS, type QUESTIONS } from "./faqs";
+import { QUESTIONS } from "./faqs";
 import styles from "./Questions.module.css";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -11,7 +11,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * call on the left; on the right a ruled list, each question opening to its
  * answer (the first open), a plus turning to a cross while it is.
  */
-export function Questions({ items = COMMON_QUESTIONS }: { items?: typeof QUESTIONS }) {
+export function Questions({ items = QUESTIONS }: { items?: typeof QUESTIONS }) {
   return (
     <section className={styles.questions} aria-labelledby="questions-title">
       <header className="reveal">

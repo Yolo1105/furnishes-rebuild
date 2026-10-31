@@ -61,14 +61,14 @@ function glass(o: Opening) {
  * marks, then the names typed in.
  */
 const DRAW = {
-  outline: [0, 1.2],
-  glass: [1.2, 0.6],
-  doors: [1.4, 0.7],
-  swings: [1.6, 0.7],
-  fittings: [1.6, 0.9],
-  furniture: [1.8, 0.9],
-  light: [2.2, 0.6],
-  names: [2.3, 0.6],
+  outline: [0, 0.5],
+  glass: [0.5, 0.3],
+  doors: [0.6, 0.3],
+  swings: [0.7, 0.3],
+  fittings: [0.7, 0.4],
+  furniture: [0.8, 0.4],
+  light: [1, 0.3],
+  names: [1, 0.3],
 } as const;
 
 /** A number from 0 to 1 that looks random but is always the same for a text, so server and browser agree. */

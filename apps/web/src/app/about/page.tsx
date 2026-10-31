@@ -3,7 +3,6 @@ import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { Questions } from "../studio/Questions";
 import { StartProject } from "../studio/StartProject";
-import { WorkWithUs } from "../studio/WorkWithUs";
 import { MakingDays } from "./MakingDays";
 import { Team } from "./Team";
 import { WhoWeAre } from "./WhoWeAre";
@@ -25,7 +24,6 @@ export default function About() {
         <MakingDays />
         {/* Recognition (Projects.tsx) comes back here once it can be shown. */}
         <Team />
-        <WorkWithUs />
         <Questions />
         <StartProject />
       </main>
