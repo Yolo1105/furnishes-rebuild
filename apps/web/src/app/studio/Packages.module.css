@@ -31,7 +31,7 @@
 /* the headline's column wider than each package's */
 .head,
 .label {
-  width: 40%;
+  width: 31%;
 }
 
 .head {
@@ -46,7 +46,7 @@
 
 /* each package's head: a rule over all three, its code, name and line */
 .package {
-  padding: var(--space-6) var(--gutter) clamp(32px, 6vh, 64px) 0;
+  padding: var(--space-6) var(--space-6) clamp(32px, 6vh, 64px);
   font-weight: inherit;
   text-align: start;
   vertical-align: top;
@@ -66,8 +66,9 @@
 
 .line,
 .cell,
-.foot {
+.note {
   font-size: var(--text-body);
+  hyphens: manual;
 }
 
 .line {
@@ -77,21 +78,31 @@
 }
 
 /* each row over a fine rule */
-.row > * {
-  padding: var(--space-6) var(--gutter) var(--space-6) 0;
+.row > *,
+.calls > * {
+  padding: var(--space-6);
   border-top: var(--rule);
   text-align: start;
   vertical-align: top;
 }
 
-/* the agreement on the left, the call on the right */
-.foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4) var(--space-6);
-  align-items: baseline;
-  justify-content: space-between;
-  margin-top: var(--space-6);
+.row > :first-child,
+.calls > :first-child {
+  padding-left: 0;
+}
+
+/* what it costs reads first; what it leaves out, quietest */
+.row:first-child .cell {
+  font-size: var(--text-item);
+}
+
+.row:last-child .cell {
+  color: var(--color-soft);
+}
+
+/* the visit, the one way that comes to you, on its own sheet of paper */
+.table tr > :nth-child(2) {
+  background: var(--color-paper);
 }
 
 /* on phones the headline stacks over the rows, each row's cells under its
@@ -100,9 +111,11 @@
   .table,
   .table thead,
   .table tbody,
+  .table tfoot,
   .table tr,
   .head,
-  .row > * {
+  .row > *,
+  .calls > * {
     display: block;
     width: auto;
   }
@@ -117,9 +130,18 @@
   }
 
   .row > *,
-  .row:last-child > * {
+  .calls > * {
     padding: var(--space-2) 0;
     border: 0;
+  }
+
+  .calls {
+    padding-top: var(--space-4);
+    border-top: var(--rule);
+  }
+
+  .table tr > :nth-child(2) {
+    background: none;
   }
 
   .cell::before {

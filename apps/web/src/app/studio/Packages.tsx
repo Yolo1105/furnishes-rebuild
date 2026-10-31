@@ -1,4 +1,3 @@
-import { contactHref } from "@/lib/routes";
 import { ArrowLink } from "./ArrowLink";
 import { PACKAGE_ROWS, PACKAGES } from "./packageList";
 import styles from "./Packages.module.css";
@@ -9,7 +8,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * The packages, after the cases, set out like a drawing's schedule: the
  * headline on the left, each package's number, name and line across the
  * top, then a ruled row for each thing they differ on, its label in small
- * capitals, and a call at the foot. On phones each row's cells carry their package's name.
+ * capitals, what it costs first and largest, and each package's own call at the foot. On phones each row's cells carry their package's name.
  */
 export function Packages() {
   return (
@@ -48,11 +47,17 @@ export function Packages() {
             </tr>
           ))}
         </tbody>
+        <tfoot>
+          <tr className={styles.calls}>
+            <td className={styles.note}>You don't need any of these to buy.</td>
+            {PACKAGES.map((p) => (
+              <td key={p.name}>
+                <ArrowLink href={p.href}>{p.call}</ArrowLink>
+              </td>
+            ))}
+          </tr>
+        </tfoot>
       </table>
-      <footer className={`${styles.foot} reveal`}>
-        <p>You don't need any of these to buy.</p>
-        <ArrowLink href={contactHref("visit")}>Book a visit</ArrowLink>
-      </footer>
     </section>
   );
 }

@@ -289,7 +289,7 @@ export function StudioView() {
           </div>
           {/* a nudge that there is more below, and the way down to it */}
           <a className={styles.more} href="#how">
-            How it works?
+            See it in a real flat
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 9l6 6 6-6" />
             </svg>

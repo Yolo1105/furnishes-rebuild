@@ -1,0 +1,67 @@
+/* Who the furniture is for: three pictures in a row, each a link. */
+.who {
+  padding: clamp(48px, 8vh, 96px) var(--gutter);
+  color: var(--color-umber);
+}
+
+:where(.who) :where(h2, p, ul) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index {
+  composes: label from global;
+}
+
+.head {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  margin-top: clamp(32px, 6vh, 64px);
+}
+
+.item {
+  display: grid;
+  gap: var(--space-2);
+  color: inherit;
+  text-decoration: none;
+}
+
+.picture {
+  position: relative;
+  display: block;
+  aspect-ratio: 5 / 4;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  background: var(--color-peach-paper);
+}
+
+.picture img {
+  object-fit: cover;
+}
+
+.name {
+  font-size: var(--text-item);
+}
+
+.item:hover .name {
+  color: var(--color-orange);
+}
+
+.line {
+  font-size: var(--text-body);
+  color: var(--color-soft);
+}
+
+@media (max-width: 800px) {
+  .list {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-6);
+  }
+}

@@ -1,4 +1,5 @@
 import { Raleway } from "next/font/google";
+import { priceFrom } from "@/lib/facts";
 import styles from "./FurnitureWord.module.css";
 
 // The word's face, and nothing else's.
@@ -18,15 +19,15 @@ export function FurnitureWord() {
         F<span className={styles.orange}>u</span>rn
       </span>
       <p className={styles.leftLine}>
-        No question too small,
+        Ready-made, or
         <br />
-        no change too many.
+        sized to your space.
       </p>
       <span className={styles.tallI} aria-hidden="true" />
       <p className={styles.rightLine}>
-        Just chat. Our AI Consultant answers day or night,
+        Made by our partner factory, delivered in Singapore.
         <br />
-        from the first idea to the last piece in your room.
+        Customizable pieces {priceFrom("bedside")}, delivery and GST included.
       </p>
       <span className={styles.ture} aria-hidden="true">
         tu<span className={styles.orange}>r</span>e

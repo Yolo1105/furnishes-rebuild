@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import { LEAD_WEEKS, PIECE_PRICES } from "@/lib/facts";
 import afternoonRoom from "@/assets/afternoon-living-room.jpg";
 import readingCorner from "@/assets/reading-corner.jpg";
 import gardenDining from "@/assets/garden-dining-room.jpg";
@@ -37,14 +38,13 @@ export const MANIFESTO: readonly Run[] = [
 ];
 
 /**
- * The figures under it, each one the page already stands behind: the
- * boards, the consultant, the tour's steps and how it all starts. `value`'s
- * digits roll to it, anything else in it staying still; `unit` follows it
- * at its size, softer, and `label` reads on from the unit.
+ * The figures under it, what a buyer asks first: the boards, the wait, the
+ * lowest price and the assistant. `unit` follows `value` at its size, softer,
+ * and `label` reads on from the unit.
  */
 export const FIGURES: readonly { value: string; unit?: string; label: string }[] = [
   { value: "18", unit: "mm", label: "birch plywood, in the panels of every customizable piece." },
+  { value: String(LEAD_WEEKS.flatPack.from), unit: "weeks", label: "at the soonest, from order to your door, for a flat-packed piece." },
+  { value: `S$${PIECE_PRICES.bedside!.flat}`, label: "to start, for our smallest customizable piece, delivery and GST included." },
   { value: "24", unit: "hours", label: "a day, the AI assistant answers once you sign in." },
-  { value: "11", unit: "steps", label: "in the example below, from a floor plan to your door." },
-  { value: "1", unit: "place", label: "to ask anything, from the first idea to the last piece." },
 ];
