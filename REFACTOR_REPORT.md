@@ -34,7 +34,7 @@ Other measured results:
 
 - **Contrast:** axe (WCAG 2 A/AA) finds **0 violations** on `/`, `/products`, `/contact`, `/collection`, `/products/entry`, `/about`, `/studio`, `/quiz`, `/inspiration` and `/help`.
 - **Product page:** `/products/entry` is **3,565 px** tall at 1440 (audit limit 3,600; the spec's target is 3,500, and 658 px of the height is the footer).
-- **Landing on phones:** **8,4xx px** at 390 px, under the 9,000 limit.
+- **Landing on phones:** under the 9,000 px limit at 390 px (the audit passes; the exact height wasn't recorded).
 - **Overflow:** none at 320 px on any route.
 
 ## 2. Static checks (§12.1 + §24), last run
