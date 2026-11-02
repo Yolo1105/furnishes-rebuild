@@ -17,6 +17,7 @@ export function MarkedRender({
   sizes,
   className,
   soft,
+  priority,
   children,
 }: {
   render: Marked;
@@ -24,12 +25,14 @@ export function MarkedRender({
   className?: string;
   /** Rounded frame and pill labels in sentence case, for the page's banner. */
   soft?: boolean;
+  /** Load at once, for a render on the first screen. */
+  priority?: boolean;
   children?: ReactNode;
 }) {
   return (
     <figure className={`${styles.frame} ${className ?? ""}`} data-soft={soft || undefined}>
       <div className={styles.render} style={{ aspectRatio: `${render.src.width} / ${render.src.height}` }}>
-        <Image className={styles.image} src={render.src} alt={render.alt} fill sizes={sizes} placeholder="blur" />
+        <Image className={styles.image} src={render.src} alt={render.alt} fill sizes={sizes} placeholder="blur" priority={priority} />
         <ul className={styles.spots}>
           {render.spots.map((s) => {
             const href = s.id && productHref(s.id);

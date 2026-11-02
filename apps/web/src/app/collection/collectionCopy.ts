@@ -10,6 +10,7 @@ import aFrameRoom from "@/assets/a-frame-living-room.jpg";
 import brightRoom from "@/assets/bright-living-room.jpg";
 import gallery from "@/assets/furniture-gallery.jpg";
 import { shown } from "@/lib/facts";
+import { routes } from "@/lib/routes";
 import {
   CLAIMS,
   DESIGN_COUNT,
@@ -62,13 +63,52 @@ export const FIGURES = [
 /** The rooms, each a photo with its name; each leads to its pieces in the finder. */
 export const ROOMS_HEAD = { label: "By room", title: "Shop by room", call: "See all pieces" };
 
-export const ROOM_TILES: readonly { use: UseId; photo: StaticImageData }[] = [
-  { use: "bedroom", photo: afternoonRoom },
-  { use: "kitchen", photo: aFrameRoom },
-  { use: "work", photo: gardenDining },
-  { use: "entryway", photo: staircaseCorner },
-  { use: "living", photo: brightRoom },
-  { use: "dividing", photo: readingCorner },
+export const ROOM_TILES: readonly { use: UseId; photo: StaticImageData; line: string }[] = [
+  { use: "bedroom", photo: afternoonRoom, line: "Keep what you need within reach, in a room that stays calm." },
+  { use: "kitchen", photo: aFrameRoom, line: "More places to put things, where counter space runs out." },
+  { use: "work", photo: gardenDining, line: "A place to work, at home or in a small office." },
+  { use: "entryway", photo: staircaseCorner, line: "Somewhere for what you carry in and out." },
+  { use: "living", photo: brightRoom, line: "Storage and display for the room everyone shares." },
+  { use: "dividing", photo: readingCorner, line: "Give one room two jobs, without building a wall." },
+];
+
+export const ROOM_GO = "See these pieces →";
+
+/** The ready-made line, in a band beside a photo. */
+export const READY_BAND = {
+  title: "Need it as it is?",
+  body: "Ready-made office, storage, dining and living furniture, for when a standard size suits the space.",
+  call: "See ready-made furniture",
+  photo: gardenDining,
+};
+
+/** What the pieces are made with: a large photo, then a panel. */
+export const MADE_WITH = {
+  title: "One material, one grid",
+  body: "Our customizable pieces are 18 mm birch plywood on one grid, so they line up, and can change later.",
+  call: "About us",
+  photo: gallery,
+};
+
+/** The next pieces: one large beside four small. */
+export const NEXT_HEAD = { label: "Coming soon", title: "The pieces that follow", call: "All products", count: 5 };
+
+/** Where to read more before buying. */
+export const GUIDES_HEAD = { label: "Guides", title: "Read before you buy", call: "All ideas" };
+
+export const GUIDES: readonly { title: string; line: string; href: string; photo: StaticImageData }[] = [
+  {
+    title: "How to measure before you order",
+    line: "The spot, the way in, and the room to build it.",
+    href: `${routes.help}#measuring`,
+    photo: whiteRoom,
+  },
+  {
+    title: "Furniture for HDB homes",
+    line: "What to check in a flat, and which pieces suit.",
+    href: routes.hdbHomes,
+    photo: brightRoom,
+  },
 ];
 
 /** The orange band: the offer left, what it is right, the running photos half out of its foot. */
@@ -91,12 +131,14 @@ export const EXPLORE = {
   call: "See detail",
 };
 
-/** The first pieces in a row of four: photo, name, normal price, what it is. */
+/** The first pieces in a row of three: photo, name, normal price, what it is. */
 export const DISCOVER = {
   label: "Pieces",
   title: "Start with these pieces",
-  lede: "The first three pieces, and the next one to follow them.",
-  count: 4,
+  lede: "The first three pieces you can order.",
+  count: 3,
+  all: "All products",
+  view: "View product",
 };
 
 /** The products shown full width in their rooms, each with its parts marked. */
@@ -198,6 +240,14 @@ export const NOTES_HEAD = {
 export const KITS_HEAD = {
   title: "Add-on kits",
   lede: "Parts that change a launch piece later. Another pack on the same frame, a door, a drawer, a desk top, casters. What each adds, and what it takes off.",
+};
+
+/** Hearing about new pieces: words left, a room right. */
+export const NEWS = {
+  title: "Hear when new pieces are ready",
+  body: "Tell us which ones you want, and we let you know when each is ready.",
+  call: "Tell us what you want",
+  photo: staircaseCorner,
 };
 
 /** The closing photo, under the second marquee. */
