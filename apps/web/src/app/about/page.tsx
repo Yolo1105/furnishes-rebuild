@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { Questions } from "../studio/Questions";
 import { StartProject } from "../studio/StartProject";
@@ -17,7 +16,6 @@ export default function About() {
   return (
     <>
       <main id="main" className={styles.page}>
-        <PeachBackdrop />
         <WhoWeAre />
         <Workshop />
         <Heritage />

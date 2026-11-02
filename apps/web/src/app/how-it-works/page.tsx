@@ -12,7 +12,6 @@ export default function HowItWorks() {
       label="How it works"
       title="Ready-made, already designed, or composed by you."
       lede="Furnishes sells furniture for Singapore homes and small offices, made by our partner factory in China. You can browse and buy without talking to anyone."
-      jump
       sections={[
         {
           heading: "Three kinds of furniture",

@@ -15,7 +15,7 @@ export const routes = {
   about: "/about",
   contact: "/contact",
   studio: "/studio",
-  designYourRoom: "/studio#design-your-room",
+  designYourRoom: "/studio",
   signIn: "/sign-in",
   terms: "/terms",
   privacy: "/privacy-policy",

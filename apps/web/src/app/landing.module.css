@@ -1,0 +1,86 @@
+/* The hero: words and calls beside one image, the words at the image's foot, all within the first screen. */
+.hero {
+  padding-top: var(--s-12);
+}
+
+.heroWords {
+  display: grid;
+  gap: var(--s-6);
+  align-self: end;
+}
+
+@media (max-width: 1023px) {
+  .heroWords {
+    order: 1;
+  }
+}
+
+/* The pinned plan: one screen of scroll held on wide screens, unpinned otherwise. */
+.track {
+  padding-block: var(--section);
+}
+
+.track[data-pinned] {
+  height: 200svh;
+  padding-block: 0;
+}
+
+.track[data-pinned] .split {
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100svh - var(--nav-h));
+  align-content: center;
+}
+
+.words {
+  align-self: center;
+  margin-bottom: 0;
+}
+
+.plan {
+  color: var(--ink);
+}
+
+.track[data-pinned] .plan {
+  height: calc(100svh - var(--nav-h) - var(--s-16));
+}
+
+/* until it scrolls in, the plan is not there to draw */
+.plan[data-draw="wait"] svg {
+  visibility: hidden;
+}
+
+.piece {
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+.piece[data-on] {
+  opacity: 1;
+}
+
+.piece rect {
+  fill: var(--accent);
+  fill-opacity: 0.25;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+
+.piece text {
+  fill: currentcolor;
+  font-family: var(--font-mono);
+  text-anchor: middle;
+}
+
+@media (max-width: 1023px) {
+  .plan {
+    order: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piece {
+    transition: none;
+  }
+}

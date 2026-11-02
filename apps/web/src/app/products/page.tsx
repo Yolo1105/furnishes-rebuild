@@ -5,7 +5,6 @@ import { ProductGrid } from "@/features/products/ProductGrid";
 import { READY_MADE } from "@/features/products/readyMade";
 import { shown as fact } from "@/lib/facts";
 import { contactHref, READY_MADE_PIECE, routes } from "@/lib/routes";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { ArrowLink } from "../studio/ArrowLink";
 import styles from "./page.module.css";
@@ -37,7 +36,6 @@ export default async function Products({ searchParams }: { searchParams: Promise
   return (
     <>
       <main id="main" className={styles.page} data-page="products">
-        <PeachBackdrop />
         <header className={styles.head}>
           <p className={styles.index}>
             <span>Products</span>

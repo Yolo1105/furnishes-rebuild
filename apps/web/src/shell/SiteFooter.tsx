@@ -1,32 +1,26 @@
 import Link from "next/link";
 import { EMAIL, HOURS } from "@/lib/contact";
-import { shown } from "@/lib/facts";
+import { isReal, shown } from "@/lib/facts";
 import { routes } from "@/lib/routes";
 import styles from "./SiteFooter.module.css";
-
-/** Our accounts elsewhere; none is live yet, so each shows greyed out without a link. */
-const SOCIAL: readonly { label: string; href: string | null }[] = [
-  { label: "Instagram", href: null },
-  { label: "Behance", href: null },
-];
 
 /** The link columns, each under its label. */
 const COLUMNS: readonly { label: string; links: readonly { label: string; href: string }[] }[] = [
   {
-    label: "Navigation",
+    label: "Shop",
     links: [
-      { label: "Studio", href: routes.studio },
       { label: "Collection", href: routes.collection },
       { label: "Products", href: routes.products },
       { label: "Inspiration", href: routes.inspiration },
+      { label: "Quiz", href: routes.quiz },
+      { label: "Design your room", href: routes.designYourRoom },
       { label: "About", href: routes.about },
       { label: "Contact", href: routes.contact },
     ],
   },
   {
-    label: "Account",
+    label: "Guides",
     links: [
-      { label: "Design your room", href: routes.designYourRoom },
       { label: "How it works", href: routes.howItWorks },
       { label: "Why modular", href: routes.whyModular },
       { label: "Buying guide", href: routes.buyingGuide },
@@ -34,7 +28,6 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
       { label: "Room dividers", href: routes.roomDividers },
       { label: "HDB homes", href: routes.hdbHomes },
       { label: "Workspaces", href: routes.workspaces },
-      { label: "Sign in", href: routes.signIn },
     ],
   },
   {
@@ -48,78 +41,41 @@ const COLUMNS: readonly { label: string; links: readonly { label: string; href: 
 ];
 
 /**
- * The footer, over the page's own ground, in three bands ruled apart: the
- * call (a label over a large two-line headline)
- * beside how to reach us (the address to write to, large, then the hours and
- * where we are); then who we are and where else to find us beside the link
- * columns; then the copyright, centred.
+ * The footer, on linen: the call beside how to reach us; then who we are
+ * beside the link columns; then the copyright.
  */
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
-      <div className={styles.top}>
-        <div>
-          <p className={styles.label}>Open for collaboration</p>
-          <p className={styles.call}>
-            <span>Design a room</span>
-            <span>that feels like yours.</span>
-          </p>
+      <div className="container">
+        <div className="span-6">
+          <h2>Design a room that feels like yours.</h2>
         </div>
-        <div>
-          <p className={styles.label}>Get in touch</p>
-          <a className={styles.email} href={`mailto:${EMAIL}`}>
+        <div className="span-6">
+          <a className={`btn-link ${styles.email}`} href={`mailto:${EMAIL}`}>
             {EMAIL}
           </a>
-          <div className={styles.details}>
-            <div>
-              <p className={styles.label}>Hours</p>
-              <p className={styles.body}>
-                {HOURS.map((row) => (
-                  <span key={row} className={styles.row}>
-                    {row}
-                  </span>
-                ))}
-              </p>
-            </div>
-            <div>
-              <p className={styles.label}>Studio</p>
-              <p className={styles.body}>
-                <span className={styles.row}>Singapore</span>
-                <span className={styles.row}>By appointment, in your room</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.middle}>
-        <div className={styles.about}>
-          <p className={styles.body}>
-            Ready-made and modular furniture for Singapore homes and small offices, made by our partner factory in China.
-          </p>
-          <div>
-            <p className={styles.visit}>Visit us on</p>
-            <ul className={styles.social}>
-              {SOCIAL.map(({ label, href }) => (
-                <li key={label}>
-                  {href ? (
-                    <a className={styles.link} href={href}>
-                      {label}
-                    </a>
-                  ) : (
-                    <span className={styles.off} aria-disabled="true">
-                      {label}
-                    </span>
-                  )}
-                </li>
+          <div className={`subgrid ${styles.details}`}>
+            <div className="md:span-6 span-6">
+              <p className="eyebrow">Hours</p>
+              {HOURS.map((row) => (
+                <p key={row}>{row}</p>
               ))}
-            </ul>
+            </div>
+            <div className="md:span-6 span-6">
+              <p className="eyebrow">Studio</p>
+              <p>Singapore, by appointment in your room</p>
+            </div>
           </div>
         </div>
-        <nav className={styles.columns} aria-label="Footer">
+
+        <p className={`span-4 ${styles.about}`}>
+          Ready-made and modular furniture for Singapore homes and small offices, made by our partner factory in China.
+        </p>
+        <nav className={`span-8 ${styles.columns}`} aria-label="Footer">
           {COLUMNS.map((col) => (
             <div key={col.label}>
-              <p className={styles.label}>{col.label}</p>
+              <p className="eyebrow">{col.label}</p>
               <ul className={styles.links}>
                 {col.links.map((l) => (
                   <li key={l.label}>
@@ -132,9 +88,11 @@ export function SiteFooter() {
             </div>
           ))}
         </nav>
-      </div>
 
-      <p className={styles.copy}>Copyright © {new Date().getFullYear()} Furnishes Pte Ltd. All rights reserved. {shown("companyDetails")}</p>
+        <p className={`span-12 meta ${styles.copy}`}>
+          © {new Date().getFullYear()} Furnishes Pte Ltd.{isReal("companyDetails") && ` ${shown("companyDetails")}`}
+        </p>
+      </div>
     </footer>
   );
 }

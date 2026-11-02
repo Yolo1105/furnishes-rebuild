@@ -1,4 +1,4 @@
-/* An elevation: the outline in umber, its sizes in clay, as the inspiration sheets' dimensions. */
+/* An elevation: the outline in ink on paper, its sizes in the secondary ink. */
 .elevation {
   margin: 0;
   min-width: 0;
@@ -19,37 +19,33 @@
 }
 
 .floor {
-  stroke: var(--color-umber-rule);
+  stroke: color-mix(in srgb, var(--ink) 30%, transparent);
   stroke-width: 1px;
 }
 
 .outline {
-  fill: var(--color-peach-paper);
-  stroke: var(--color-umber);
+  fill: var(--paper);
+  stroke: var(--ink);
   stroke-width: 1.5px;
 }
 
 .dim {
-  stroke: var(--color-clay);
+  stroke: var(--ink-2);
   stroke-width: 1px;
 }
 
 .elevation text {
-  fill: var(--color-clay);
-  font-family: var(--font-studio-mono);
+  fill: var(--ink-2);
+  font-family: var(--font-mono);
   text-anchor: middle;
   dominant-baseline: central;
   /* each length on a chip of paper, the line broken behind it */
   paint-order: stroke;
-  stroke: var(--color-peach-paper);
+  stroke: var(--paper);
   stroke-width: 60px;
   stroke-linejoin: round;
 }
 
 .caption {
-  composes: caps from global;
-}
-
-.caption {
-  margin-top: var(--space-2);
+  margin-top: var(--s-2);
 }

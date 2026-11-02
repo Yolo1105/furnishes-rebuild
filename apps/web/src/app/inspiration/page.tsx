@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { Ideas } from "./Ideas";
 import { ProjectSheets } from "./ProjectSheets";
@@ -12,7 +11,6 @@ export default function Inspiration() {
   return (
     <>
       <main id="main" className={styles.page} data-page="inspiration">
-        <PeachBackdrop />
         <ProjectSheets />
         <Ideas />
       </main>

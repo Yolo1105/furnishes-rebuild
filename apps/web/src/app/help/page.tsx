@@ -13,7 +13,6 @@ export default function Help() {
       label="Help"
       title="What to know before and after you buy."
       lede={`Can't find it here? Write to ${EMAIL}, and we reply within ${shown("replyTime")}.`}
-      jump
       sections={[
         {
           heading: "Measuring",

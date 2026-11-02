@@ -1,142 +1,79 @@
-/* Design tokens: every colour and size the site uses is named here once. */
+/* Design tokens: every type size, colour, space and duration the site uses is named here once.
+   Modules consume these; they never declare their own. */
 :root {
-  --color-night: #1a120a;
-  --color-paper: #fffaf3;
-  --color-cream: #fff6e9; /* text on a filled button */
-  --color-apricot: #f6c485; /* "Interior" over a dark studio photo, the old landing's soft orange */
-  --color-linen: #fbeedc; /* "Revolution" under it */
-  --color-espresso: #2e2118; /* the warm dark of the washes */
-  --color-mist: #ddd8d1; /* the landing's text on the photo: a soft neutral white, solid, not cream */
-  --color-orange: #e7551a; /* the classic Furnishes orange: the wordmark's full stop */
-  --color-umber: #6b2c12; /* the words, the plan, the rules and frames */
-  --color-umber-rule: rgb(107 44 18 / 22%); /* the plan's fine lines */
-  --color-clay: #9a4017; /* "Revolution" under it; the flat's kind, its labels, the one word of a heading */
+  /* ---------- type ---------- */
+  --font: var(--font-archivo), "Archivo", system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
 
-  /* Rules and frames, in the text's own colour: a fine rule between rows and
-     between sections, a solid frame round a sheet or a card. */
-  --rule: 1px solid color-mix(in srgb, currentcolor 22%, transparent);
-  --frame: 1px solid currentcolor;
-  --color-soft: color-mix(in srgb, currentcolor 84%, transparent); /* the quieter words: a lede, a note, a second line */
+  --text-xs: 12px; /* mono eyebrow, record numbers, captions */
+  --text-sm: 14px; /* meta, footer links, nav */
+  --text-md: 16px; /* body */
+  --text-lg: 18px; /* lede, card titles */
+  --text-xl: 22px; /* h3 */
+  --text-2xl: 32px; /* h2 on inner pages, big step numbers */
+  --text-3xl: clamp(36px, 3.4vw, 48px); /* h2 on the landing */
+  --text-4xl: clamp(44px, 5vw, 72px); /* h1 */
 
-  /* A filled button's colours; a dark band sets its own. */
-  --button-bg: var(--color-umber);
-  --button-fg: var(--color-cream);
+  --w-body: 400;
+  --w-ui: 500;
+  --w-em: 600;
 
-  /* the peach backdrop: a cream-to-peach diagonal, with light blobs drifting over it */
-  --color-peach-paper: #fff4e3;
-  --color-peach-mid: #ffd1ad;
-  --color-peach-deep: #f8b78a;
-  --color-peach-glow-1: rgb(255 232 200 / 85%);
-  --color-peach-glow-2: rgb(255 198 156 / 70%);
-  --color-peach-glow-3: rgb(255 248 235 / 90%);
+  --stretch-text: 100%; /* every readable word */
+  --stretch-display: 78%; /* h1 and h2 only */
 
-  /* the bar's background: the old landing's orange to amber, then a warm
-     apricot as it fades: deep enough not to look pale over a photo or the cream */
-  --wash-orange: linear-gradient(
-    180deg,
-    #e83200 0%,
-    #f24a00 9%,
-    #fa6400 20%,
-    #ff8410 33%,
-    #ff9c18 46%,
-    rgb(255 164 50 / 92%) 54%,
-    rgb(255 170 72 / 78%) 62%,
-    rgb(255 176 90 / 60%) 70%,
-    rgb(255 182 104 / 42%) 78%,
-    rgb(255 188 118 / 24%) 86%,
-    rgb(255 194 130 / 10%) 93%,
-    rgb(255 194 130 / 0%) 100%
-  );
-  /* a faint, wide glow under it, so the eye comes down off the orange by degrees
-     (a quick change to the page's cream makes the cream look white) */
-  --wash-glow: linear-gradient(
-    180deg,
-    rgb(248 183 138 / 55%) 30%,
-    rgb(248 183 138 / 42%) 45%,
-    rgb(248 183 138 / 27%) 60%,
-    rgb(248 183 138 / 13%) 75%,
-    rgb(248 183 138 / 4%) 88%,
-    rgb(248 183 138 / 0%) 100%
-  );
+  --lh-body: 1.5;
+  --lh-lede: 1.45;
+  --lh-h3: 1.25;
+  --lh-display: 1.05;
 
-  /* The site's two faces: Archivo for every word, set narrow; Space Mono for
-     small capitals (labels, codes, index lines). The wordmark alone keeps Jost. */
-  --font-studio: var(--font-archivo), "Archivo", system-ui, sans-serif;
-  --font-studio-mono: var(--font-space-mono), "Space Mono", ui-monospace, monospace;
-  --font-wordmark: var(--font-jost), "Jost", system-ui, sans-serif;
+  --track-display: -0.02em;
+  --track-caps: 0.12em;
 
-  /* The type scale, from the page's one big line down to the small capitals.
-     Each size is used for one role, wherever it appears. */
-  --text-display: clamp(44px, 6.4vw, 120px); /* one line across a band or a photo */
-  --text-h1: clamp(40px, 5.2vw, 92px); /* a page's title */
-  --text-h2: clamp(32px, 3.8vw, 64px); /* a section's title */
-  --text-title: clamp(22px, 2.6vw, 44px); /* a large paragraph, a package or figure title */
-  --text-item: clamp(17px, 1.7vw, 28px); /* a card, row, question or note title */
-  --text-body: clamp(16px, 1.5vw, 22px); /* paragraphs */
-  --text-small: clamp(15px, 1.35vw, 20px); /* captions, calls, buttons, inputs */
-  --text-caps: clamp(11px, 0.95vw, 14px); /* the small capitals */
-  --text-nav: clamp(12px, 1.05vw, 14px); /* the bar's links */
-  --text-number: clamp(56px, 6.5vw, 120px); /* a big number: a step, a figure, an initial */
-  --text-marquee: clamp(64px, 10.5vw, 200px); /* the collection's words running across */
-  --text-wordmark: clamp(18px, 1.5vw, 22px);
-  --text-wordmark-sm: 18px;
+  --measure: 65ch;
+  --measure-wide: 75ch;
 
-  /* Weights: one for words, one lighter for big numbers and display lines. */
-  --weight-body: 340;
-  --weight-light: 300;
+  /* ---------- colour ---------- */
+  --paper: #fffaf3; /* page background */
+  --linen: #fbeedc; /* one or two flat bands per page, max */
+  --night: #1a120a; /* dark band / photo overlay base */
+  --ink: #2b1a10; /* primary text */
+  --ink-2: #7a4a33; /* secondary text: ledes, meta, captions (6.3:1 on paper) */
+  --accent: #e7551a; /* INTERACTIVE ONLY: primary button, hover underline, focus ring, wordmark dot */
+  --on-dark: #fff6e9; /* text on photos / dark bands */
+  --rule: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  --rule-strong: 1px solid var(--ink);
+  --shade: rgb(20 16 12 / 35%); /* overlay under text on a photo */
 
-  /* Tracking: tight on display lines, a touch tight on headings, open on small capitals. */
-  --track-display: -0.03em;
-  --track-heading: -0.015em;
-  --track-caps: 0.16em;
-  --track-label: 0.12em; /* a section's label */
-  --track-nav: 0.06em; /* the bar's links: Archivo capitals, lightly tracked */
+  /* ---------- space & layout ---------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --gap: 24px;
+  --gutter: clamp(20px, 5vw, 80px);
+  --container: 1440px;
+  --section: clamp(64px, 8vw, 112px); /* between sections */
+  --section-tight: 40px; /* heading block → content */
+  --radius: 4px;
+  --control-h: 44px;
+  --nav-h: 64px;
 
-  /* Leading, by role. */
-  --leading-display: 1;
-  --leading-heading: 1.02;
-  --leading-title: 1.15;
-  --leading-body: 1.5;
-  --leading-loose: 1.75; /* a large paragraph with pictures set into its lines */
-
-  --stretch-narrow: 78%; /* Archivo, set narrow, for every word */
-  --stretch-wide: 118%; /* the photo label, set wide, as the old landing's hero */
-
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-4: 16px;
-  --space-6: 24px;
-
-  --radius-sm: 2px;
-  --radius-md: 4px;
-  --radius-frame: 12px; /* the collection banner's frame */
-  --radius-pill: 999px;
-
-
-  /* page edge to content: the bar and everything under it */
-  --gutter: clamp(32px, 6.8vw, 120px);
-  --gap: clamp(16px, 2.5vw, 48px); /* between the columns of a section */
-  --nav-h: 72px;
-  --nav-pad-x: clamp(16px, 2.5vw, 48px); /* the bar's sides, as they were */
-  --nav-pad-y: clamp(10px, 1.2vh, 14px);
-  --nav-gap: clamp(18px, 2.4vw, 36px);
-
-  /* the smallest target a finger can hit reliably */
-  --tap: 44px;
-
+  /* ---------- motion ---------- */
   --dur-fast: 0.2s;
-  --dur-fade: 0.6s; /* one photo fading into the next */
-  --dur-bob: 1.6s; /* one bob of the arrow at the foot of the studio's plan */
-  --dur-enter: 0.6s; /* words and buttons fading in on arrival */
-  --dur-rise: 1.7s; /* the words over the studio photos rising in */
-  --dur-room: 0.6s; /* the tour's room in view rising in */
-  --ease-rise: cubic-bezier(0.16, 0.84, 0.3, 1);
-  --dur-draw: 0.35s; /* one line of the studio's plan drawing itself on arrival */
-  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
-  --plan-at: 0.1s; /* the plan starts drawing this long after arrival */
-  --stagger: 80ms; /* between one arriving and the next */
-
+  --dur-slow: 0.5s;
+  --ease: cubic-bezier(0.16, 0.84, 0.3, 1);
   --z-header: 60;
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --gap: 32px;
+    --text-md: 17px;
+  }
 }
 
 *,
@@ -145,144 +82,425 @@
   box-sizing: border-box;
 }
 
-html,
+html {
+  background: var(--paper);
+  /* an anchor lands clear of the sticky bar */
+  scroll-padding-top: var(--nav-h);
+}
+
 body {
   margin: 0;
-  background: var(--color-night);
-  /* the page stops dead at its top and bottom: no bounce past either end */
-  overscroll-behavior: none;
+  color: var(--ink);
+  background: var(--paper);
+  font: var(--w-body) var(--text-md) / var(--lh-body) var(--font);
+  font-stretch: var(--stretch-text);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* The site's words: Archivo, narrow, at body size, in umber. Every page and
-   section inherits this; only a dark band or a filled button recolours. */
-body {
-  color: var(--color-umber);
-  font-family: var(--font-studio);
-  font-size: var(--text-body);
-  font-weight: var(--weight-body);
-  font-stretch: var(--stretch-narrow);
-  line-height: var(--leading-body);
-}
-
-/* Headings: the page's title, a section's title, an item's title. Each
-   module places them (margins, measure, colour); it does not resize them. */
 h1,
 h2,
 h3,
 h4 {
   margin: 0;
-  font-weight: inherit;
-  letter-spacing: var(--track-heading);
+}
+
+h1,
+h2 {
+  font-weight: var(--w-ui);
+  font-stretch: var(--stretch-display);
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-display);
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: var(--text-h1);
-  line-height: var(--leading-heading);
+  font-size: var(--text-4xl);
 }
 
 h2 {
-  font-size: var(--text-h2);
-  line-height: var(--leading-heading);
+  font-size: var(--text-3xl);
 }
 
 h3 {
-  font-size: var(--text-item);
-  line-height: var(--leading-title);
+  font-size: var(--text-xl);
+  font-weight: var(--w-ui);
+  line-height: var(--lh-h3);
 }
 
-/* Links carry no underline; a call shows itself by its arrow, its frame or
-   its fill, and a link in running text by the orange. */
+/* an h2 on an inner page, or a heading beside its words */
+.h2-sm {
+  font-size: var(--text-2xl);
+}
+
+/* emphasis by weight, never by colour */
+h1 strong,
+h2 strong {
+  font-weight: var(--w-em);
+  color: inherit;
+}
+
+p,
+li,
+dd,
+dt {
+  margin: 0;
+  max-width: var(--measure);
+}
+
+ul,
+ol,
+dl {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+p + p {
+  margin-top: var(--s-4);
+}
+
+.lede {
+  font-size: var(--text-lg);
+  line-height: var(--lh-lede);
+  color: var(--ink-2);
+  max-width: var(--measure-wide);
+}
+
+.meta {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* Buttons: one filled, one outlined, square, at the small size. Modules take
-   them with `composes: button from global` or `button-outline`. */
-.button,
-.button-outline {
+p a,
+li a {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+p a:hover,
+li a:hover {
+  color: var(--accent);
+}
+
+/* ONE eyebrow */
+.eyebrow {
+  font: var(--w-body) var(--text-xs) / 1 var(--font-mono);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* mono for dimensions, SKU/record codes, prices in tables */
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* THREE buttons, ONE height, ONE radius, ONE face */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
-  min-height: var(--tap);
-  padding: 0 var(--space-6);
+  gap: var(--s-2);
+  min-height: var(--control-h);
+  padding: 0 var(--s-6);
   border: 1px solid transparent;
-  background: none;
-  color: inherit;
-  font-size: var(--text-small);
-  line-height: var(--leading-display);
+  border-radius: var(--radius);
+  font: var(--w-ui) var(--text-md) / 1 var(--font);
+  font-stretch: var(--stretch-text);
+  letter-spacing: 0;
+  text-transform: none;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color var(--dur-fast) ease,
-    border-color var(--dur-fast) ease,
-    color var(--dur-fast) ease,
-    opacity var(--dur-fast) ease;
+    background-color var(--dur-fast),
+    color var(--dur-fast),
+    border-color var(--dur-fast);
 }
 
-.button {
-  border-color: var(--button-bg);
-  background: var(--button-bg);
-  color: var(--button-fg);
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
-.button:hover {
-  opacity: 0.85;
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--accent) 88%, black);
 }
 
-.button-outline {
-  border-color: currentcolor;
+.btn-secondary {
+  background: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
-.button-outline:hover {
-  background: color-mix(in srgb, currentcolor 10%, transparent);
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
-/* A section's label, over its title: Archivo capitals, a size up from the
-   small capitals and spaced wide. Modules take this with
-   `composes: label from global`. */
-.label {
+.btn-link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.btn-link:hover {
+  color: var(--accent);
+}
+
+/* a row of buttons */
+.actions {
   display: flex;
-  gap: var(--space-6);
-  font-size: var(--text-small);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--track-label);
-  line-height: var(--leading-display);
-  text-transform: uppercase;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
 }
 
-/* its first words in brackets, the brackets in orange */
-.label > :first-child::before,
-.label > :first-child::after {
-  color: var(--color-orange);
+/* on a dark band or photo */
+.on-dark {
+  color: var(--on-dark);
 }
 
-.label > :first-child::before {
-  content: "[";
-  margin-right: 0.6em;
+.on-dark .btn-secondary,
+.on-dark .btn-link {
+  border-color: var(--on-dark);
+  color: var(--on-dark);
 }
 
-.label > :first-child::after {
-  content: "]";
-  margin-left: 0.6em;
+.on-dark .lede,
+.on-dark .meta,
+.on-dark .eyebrow {
+  color: var(--on-dark);
 }
 
-/* The small capitals: codes, labels on rows, tabs. Modules take this
-   with `composes: caps from global`. After the buttons, so a button in small
-   capitals keeps their size. */
-.caps {
-  font-family: var(--font-studio-mono);
-  font-size: var(--text-caps);
-  font-weight: 400;
-  font-stretch: normal;
-  letter-spacing: var(--track-caps);
-  line-height: normal;
-  text-transform: uppercase;
+/* ONE 12-column grid */
+.container {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: var(--s-8);
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-/* Controls take the page's face rather than the browser's. */
+/* a grid nested in a span: the same columns, no outer padding */
+.subgrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: var(--s-8);
+}
+
+/* a span sets only where a cell ends, so a start class can set where it begins */
+.span-12 {
+  grid-column-end: span 12;
+}
+
+.span-8 {
+  grid-column-end: span 8;
+}
+
+.span-7 {
+  grid-column-end: span 7;
+}
+
+.span-6 {
+  grid-column-end: span 6;
+}
+
+.span-5 {
+  grid-column-end: span 5;
+}
+
+.span-4 {
+  grid-column-end: span 4;
+}
+
+.span-3 {
+  grid-column-end: span 3;
+}
+
+.start-7 {
+  grid-column-start: 7;
+}
+
+.start-8 {
+  grid-column-start: 8;
+}
+
+/* ONE section rhythm */
+.section {
+  padding-block: var(--section);
+}
+
+/* two sections on the same paper share one gap between them */
+.section:not(.band-linen, .band-dark) + .section:not(.band-linen, .band-dark) {
+  padding-top: 0;
+}
+
+.section-head {
+  display: grid;
+  gap: var(--s-3);
+  margin-bottom: var(--section-tight);
+}
+
+.section-head .lede {
+  margin-top: var(--s-1);
+}
+
+.band-linen {
+  background: var(--linen);
+}
+
+.band-dark {
+  background: var(--night);
+  color: var(--on-dark);
+}
+
+/* ONE card */
+.card {
+  position: relative;
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  padding-top: var(--s-4);
+  border-top: var(--rule);
+  color: inherit;
+}
+
+.card-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--linen);
+  border-radius: var(--radius);
+}
+
+.card-media img {
+  object-fit: cover;
+  transition: scale var(--dur-slow) var(--ease);
+}
+
+.card:hover .card-media img {
+  scale: 1.02;
+}
+
+.card-title {
+  font-size: var(--text-lg);
+  font-weight: var(--w-ui);
+  line-height: var(--lh-h3);
+}
+
+.card:hover .card-title {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+/* the card's one link covers the whole card */
+.card-title a {
+  text-decoration: none;
+}
+
+.card-title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.card-row .price {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* images */
+.media-band {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--linen);
+}
+
+.media-band img {
+  object-fit: cover;
+}
+
+.media-band .over {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--s-8);
+  background: linear-gradient(to top, var(--shade), transparent);
+  color: var(--on-dark);
+}
+
+.media-portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--linen);
+}
+
+.media-square {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--linen);
+}
+
+.media-portrait img,
+.media-square img {
+  object-fit: cover;
+}
+
+/* a list of points, each on its own ruled line */
+.ruled > li {
+  padding-block: var(--s-3);
+  border-top: var(--rule);
+}
+
+/* focus: visible, consistent, never removed */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* controls take the page face */
 button,
 input,
 textarea,
@@ -291,60 +509,15 @@ select {
   letter-spacing: inherit;
 }
 
-/* The page still scrolls, but shows no scrollbars, across or down. */
-html {
-  scrollbar-width: none;
-}
-
-html::-webkit-scrollbar {
-  display: none;
-}
-
-/* No box round anything in focus, however it got there, and no grey flash on
-   a tap. The keyboard's place shows by dimming what it is on. */
-html {
-  -webkit-tap-highlight-color: transparent;
-}
-
-:focus {
-  outline: none;
-}
-
-a:focus-visible,
-button:focus-visible,
-summary:focus-visible {
-  opacity: 0.6;
-}
-
-/* Rising into view as it scrolls on, where scroll-driven animation is
-   supported (elsewhere, and for anyone who asks for less motion, simply
-   there): the studio's sections below the plan, a block or card at a time. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 70%;
-    }
-  }
-}
-
-@keyframes reveal {
-  from {
-    opacity: 0;
-    translate: 0 16px;
-  }
-}
-
-/* The first stop for a keyboard, seen only when it is reached. */
 .skip-link {
   position: fixed;
-  top: var(--space-2);
+  top: var(--s-2);
   left: var(--gutter);
   z-index: 1000;
-  padding: var(--space-2);
-  background: var(--button-bg);
-  color: var(--button-fg);
+  padding: var(--s-2) var(--s-4);
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius);
   translate: 0 -200%;
 }
 
@@ -352,7 +525,6 @@ summary:focus-visible {
   translate: 0 0;
 }
 
-/* For text that only screen readers should hear. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -362,12 +534,58 @@ summary:focus-visible {
   white-space: nowrap;
 }
 
-/* Over a photo or a render: a frosted label or panel, and the wash under
-   words (app/collection). */
-:root {
-  --color-frost: rgb(255 255 255 / 24%); /* a label or panel over a render */
-  --color-frost-line: rgb(255 255 255 / 85%); /* a label's line and dot */
-  --color-shade: rgb(20 16 12 / 45%); /* the wash under words on a photo */
+/* reveal on scroll stays, but subtle and off for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
 
-  --dur-marquee: 48s; /* the words running across once */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+
+/* THREE breakpoints, used everywhere */
+@media (max-width: 1023px) {
+  .span-8,
+  .span-7,
+  .span-6,
+  .span-5,
+  .span-4,
+  .span-3 {
+    grid-column-end: span 12;
+  }
+
+  .start-7,
+  .start-8 {
+    grid-column-start: auto;
+  }
+
+  .md\:span-6 {
+    grid-column-end: span 6;
+  }
+}
+
+@media (max-width: 639px) {
+  .md\:span-6 {
+    grid-column-end: span 12;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions > .btn,
+  .actions > .btn-primary,
+  .actions > .btn-secondary {
+    width: 100%;
+  }
 }

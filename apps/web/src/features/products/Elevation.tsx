@@ -45,7 +45,7 @@ export function Elevation({ across, high, label, scale }: { across: number; high
           {high}
         </text>
       </svg>
-      <figcaption className={styles.caption}>{label}</figcaption>
+      <figcaption className={`eyebrow ${styles.caption}`}>{label}</figcaption>
     </figure>
   );
 }

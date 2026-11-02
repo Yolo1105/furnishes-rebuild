@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { LeadTimes } from "../contact/LeadTimes";
 import { AfterYouBuy } from "../studio/AfterYouBuy";
@@ -17,7 +16,6 @@ export default function BuyingGuide() {
   return (
     <>
       <main id="main" className={styles.page}>
-        <PeachBackdrop />
         <header className={details.pageHead}>
           <h1>Buying guide</h1>
           <p className={details.lede}>Everything to know before you order and once it's home.</p>

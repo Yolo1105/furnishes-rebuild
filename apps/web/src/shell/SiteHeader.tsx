@@ -1,65 +1,45 @@
 import Link from "next/link";
 import { routes } from "@/lib/routes";
+import { NavLink } from "./NavLink";
 import { PhoneMenu } from "./PhoneMenu";
 import styles from "./SiteHeader.module.css";
 
-/**
- * The bar, over the top of the page. Left: the wordmark, then ours to look at
- * (our pieces, our rooms, the quiz, who we are). Right: how to reach us,
- * then yours (designing your room, your account), with "Design your room" boxed as
- * the bar's one button.
- */
+/** Every link the bar carries, for the phone menu: browsing first, then reaching us. */
 const MENU: readonly { label: string; href: string }[] = [
   { label: "Collection", href: routes.collection },
   { label: "Inspiration", href: routes.inspiration },
-  { label: "Quiz", href: routes.quiz },
   { label: "About", href: routes.about },
   { label: "Contact", href: routes.contact },
-  { label: "Sign in", href: routes.signIn },
 ];
 
+/**
+ * The bar, on paper with a hairline under it. Left: the wordmark, then the
+ * browsing links. Right: contact and the bar's one button.
+ */
 export function SiteHeader() {
   return (
     <header className={styles.header}>
-      <svg className={styles.grain} aria-hidden="true" preserveAspectRatio="none">
-        <filter id="bar-grain" x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#bar-grain)" />
-      </svg>
-      <Link href={routes.studio} className={styles.wordmark}>
+      <Link href={routes.home} className={styles.wordmark}>
         furnishes<span className={styles.dot}>.</span>
       </Link>
 
       <nav className={styles.start} aria-label="Browse">
-        <Link href={routes.collection} className={styles.link}>
-          Collection
-        </Link>
-        <Link href={routes.inspiration} className={styles.link}>
-          Inspiration
-        </Link>
-        <Link href={routes.quiz} className={styles.link}>
-          Quiz
-        </Link>
-        <Link href={routes.about} className={styles.link}>
-          About
-        </Link>
+        {MENU.slice(0, 3).map((l) => (
+          <NavLink key={l.href} href={l.href} className={styles.link}>
+            {l.label}
+          </NavLink>
+        ))}
       </nav>
 
-      <PhoneMenu links={MENU} />
-
-      <nav className={styles.end} aria-label="Your space">
-        <Link href={routes.contact} className={styles.link}>
+      <div className={styles.end}>
+        <NavLink href={routes.contact} className={`${styles.link} ${styles.wide}`}>
           Contact
-        </Link>
-        <Link href={routes.designYourRoom} className={`${styles.link} ${styles.primary}`}>
+        </NavLink>
+        <Link href={routes.designYourRoom} className={`btn-primary ${styles.primary}`}>
           Design your room
         </Link>
-        <Link href={routes.signIn} className={styles.link}>
-          Sign in
-        </Link>
-      </nav>
+        <PhoneMenu links={MENU} />
+      </div>
     </header>
   );
 }

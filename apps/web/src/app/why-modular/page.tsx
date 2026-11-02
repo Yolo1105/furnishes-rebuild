@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { Customize } from "../studio/Customize";
 import details from "../studio/Details.module.css";
@@ -16,7 +15,6 @@ export default function WhyModularPage() {
   return (
     <>
       <main id="main" className={styles.page}>
-        <PeachBackdrop />
         <header className={details.pageHead}>
           <h1>Why modular</h1>
           <p className={details.lede}>What modular furniture gets you, what it doesn't, and the parts behind it.</p>

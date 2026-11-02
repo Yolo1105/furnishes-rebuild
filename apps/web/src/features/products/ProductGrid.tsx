@@ -1,17 +1,13 @@
 import type { Product } from "./catalogue";
 import { ProductCard } from "./ProductCard";
-import styles from "./ProductGrid.module.css";
 
-/** The cards' widths at each grid width, as ProductGrid.module.css sets its columns. */
-const SIZES = "(max-width: 560px) 100vw, (max-width: 1000px) 50vw, 33vw";
-
-/** Products as cards, three across on wide screens, two on narrower, one on phones; each rising in as it scrolls on. */
-export function ProductGrid({ products }: { products: readonly Product[] }) {
+/** Products as cards, three across on wide screens, one on narrower; the first row loads first when asked. */
+export function ProductGrid({ products, priority = false }: { products: readonly Product[]; priority?: boolean }) {
   return (
-    <ul className={styles.grid}>
-      {products.map((p) => (
-        <li key={p.id} className={`${styles.cell} reveal`}>
-          <ProductCard product={p} sizes={SIZES} />
+    <ul className="span-12 subgrid">
+      {products.map((p, i) => (
+        <li key={p.id} className="span-4 md:span-6">
+          <ProductCard product={p} priority={priority && i < 3} sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
         </li>
       ))}
     </ul>

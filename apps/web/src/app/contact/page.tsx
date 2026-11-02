@@ -3,7 +3,6 @@ import { EMAIL, HOURS } from "@/lib/contact";
 import { PRODUCTS } from "@/features/products/catalogue";
 import { shown } from "@/lib/facts";
 import { READY_MADE_PIECE } from "@/lib/routes";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { AfterYouSend } from "./AfterYouSend";
 import { Inquiry } from "./Inquiry";
@@ -31,7 +30,6 @@ export default async function Contact({
   return (
     <>
       <main id="main" className={styles.page}>
-        <PeachBackdrop />
         <section className={styles.contact} aria-labelledby="contact-title">
           <header>
             <p className={styles.index}>

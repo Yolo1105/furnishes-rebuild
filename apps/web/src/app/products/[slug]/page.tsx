@@ -24,7 +24,6 @@ import { Gallery } from "@/features/products/Gallery";
 import { ProductGrid } from "@/features/products/ProductGrid";
 import { priceInFull, shown } from "@/lib/facts";
 import { contactHref, routes } from "@/lib/routes";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import { ArrowLink } from "../../studio/ArrowLink";
 import styles from "./page.module.css";
@@ -70,7 +69,6 @@ export default async function ProductPage({ params }: Props) {
   return (
     <>
       <main id="main" className={styles.page} data-page="product">
-        <PeachBackdrop />
 
         <nav className={styles.crumbs} aria-label="Breadcrumb">
           <ol>

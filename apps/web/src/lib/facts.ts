@@ -2,8 +2,8 @@
  * Every business fact the site states that is not settled, in one place.
  * `draft` values are our working answers, not confirmed facts: pages show them
  * as they stand. `placeholder` values can't be made up (test results, people,
- * awards, registration details), so they say what is missing and show in
- * brackets. `pnpm check:facts` lists both and fails until each is real: run it
+ * awards, registration details), so they say what is missing and never
+ * render: call sites check `isReal` and drop the sentence resting on one. `pnpm check:facts` lists both and fails until each is real: run it
  * before launch.
  */
 type Fact = { value: string; status: "real" | "draft" | "placeholder" };
@@ -84,16 +84,22 @@ export const FACTS = {
   gstTerms: draft("Prices include GST and delivery in Singapore."),
 } satisfies Record<string, Fact>;
 
-/** A fact as a page shows it: in brackets if it is a placeholder. */
-export function shown(key: keyof typeof FACTS): string {
-  const fact: Fact = FACTS[key];
-  return fact.status === "placeholder" ? `[Placeholder: ${fact.value}]` : fact.value;
+/** Whether a fact can be shown: real or a working draft, not a placeholder. */
+export function isReal(key: keyof typeof FACTS): boolean {
+  return (FACTS[key] as Fact).status !== "placeholder";
 }
 
-/** Words that rest on a fact: in brackets if it is a placeholder. */
+/** Whether a fact is still missing; the sentence that rests on it should not render. */
+export const isPlaceholder = (key: keyof typeof FACTS): boolean => !isReal(key);
+
+/** A fact as a page shows it; empty if it is a placeholder, so callers check `isReal` first. */
+export function shown(key: keyof typeof FACTS): string {
+  return isReal(key) ? FACTS[key].value : "";
+}
+
+/** Words that rest on a fact; empty if the fact is a placeholder. */
 export function marked(key: keyof typeof FACTS, words: string): string {
-  const fact: Fact = FACTS[key];
-  return fact.status === "placeholder" ? `[Placeholder: ${words}]` : words;
+  return isReal(key) ? words : "";
 }
 
 /** A piece's lowest price, for its card. */

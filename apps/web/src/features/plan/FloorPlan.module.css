@@ -2,6 +2,10 @@
    however large the plan is drawn. Only the rooms' hover areas take the
    pointer; the drawing over them lets it through. */
 .plan {
+  /* one line's draw, its easing, and the wait before the first */
+  --plan-draw: 0.35s;
+  --plan-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --plan-at: 0.1s;
   display: block;
   width: 100%;
   height: 100%;
@@ -56,7 +60,7 @@
 
 .names text {
   fill: currentColor;
-  font-family: var(--font-studio-mono);
+  font-family: var(--font-mono);
   letter-spacing: var(--track-caps);
   text-anchor: middle;
   dominant-baseline: central;
@@ -80,7 +84,7 @@
 
 /* The floors, clear till the page turns them white (--plan-white, 0 to 1). */
 .floors {
-  color: var(--color-cream);
+  color: var(--paper);
   opacity: var(--plan-white, 0);
   pointer-events: none;
 }
@@ -88,7 +92,7 @@
 /* A room that brings up a photo: washed in the Furnishes orange, faintly on
    hover or focus, clearly when its photo is the one in view. */
 .rooms rect {
-  fill: var(--color-orange);
+  fill: var(--accent);
   fill-opacity: 0;
   cursor: pointer;
   outline: none;
@@ -105,7 +109,7 @@
   fill-opacity: calc(0.28 * var(--plan-wash, 1));
 }
 
-/* Arrival: while the page's arrival plays (data-intro="play" on the root),
+/* Drawing: while an ancestor has data-draw="play" (the landing's plan, as it scrolls in),
    the plan draws itself, each piece from a scattered moment and at its own
    pace (--at, --pace, FloorPlan's DRAW) after the plan's start (--plan-at). Each room's walls are traced
    then fade as the walls fill under them; every other line is drawn along
@@ -117,28 +121,28 @@
   opacity: 0;
 }
 
-:global(:root[data-intro="play"]) .lines path {
-  animation: draw calc(var(--dur-draw) * var(--pace, 1)) var(--ease-draw) calc(var(--plan-at) + var(--at)) backwards;
+:global([data-draw="play"]) .lines path {
+  animation: draw calc(var(--plan-draw) * var(--pace, 1)) var(--plan-ease) calc(var(--plan-at) + var(--at)) backwards;
 }
 
-:global(:root[data-intro="play"]) .outline path {
-  animation: trace calc(var(--dur-draw) * 2.6 * var(--pace, 1)) var(--ease-draw) calc(var(--plan-at) + var(--at)) both;
+:global([data-draw="play"]) .outline path {
+  animation: trace calc(var(--plan-draw) * 2.6 * var(--pace, 1)) var(--plan-ease) calc(var(--plan-at) + var(--at)) both;
 }
 
-:global(:root[data-intro="play"]) .lines .light {
+:global([data-draw="play"]) .lines .light {
   animation-name: faint;
 }
 
-:global(:root[data-intro="play"]) .walls {
-  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 0.6s) backwards;
+:global([data-draw="play"]) .walls {
+  animation: appear var(--plan-draw) ease-in-out calc(var(--plan-at) + 0.6s) backwards;
 }
 
-:global(:root[data-intro="play"]) .names text {
+:global([data-draw="play"]) .names text {
   animation: type calc(var(--chars) * 20ms) steps(var(--chars), end) calc(var(--plan-at) + var(--at)) backwards;
 }
 
-:global(:root[data-intro="play"]) .rooms {
-  animation: appear var(--dur-draw) ease-in-out calc(var(--plan-at) + 1.2s) backwards;
+:global([data-draw="play"]) .rooms {
+  animation: appear var(--plan-draw) ease-in-out calc(var(--plan-at) + 1.2s) backwards;
 }
 
 @keyframes draw {

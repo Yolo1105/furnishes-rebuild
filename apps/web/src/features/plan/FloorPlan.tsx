@@ -117,7 +117,7 @@ const LEDGE: Box[] = [
  * the furniture and fittings in fine line; and the rooms' names. Its colour
  * is the text colour it sits in.
  *
- * While the page's arrival plays (`data-intro="play"` on the root), it draws
+ * While an ancestor has `data-draw="play"` (the landing, as it scrolls in), it draws
  * itself: each room's walls traced, then filled, then everything else, tier
  * by tier, spreading out from the front door (DRAW); the names last.
  *

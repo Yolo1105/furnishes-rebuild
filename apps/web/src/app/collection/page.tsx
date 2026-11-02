@@ -17,7 +17,6 @@ import {
   USES,
 } from "@/features/products/catalogue";
 import { contactHref, routes } from "@/lib/routes";
-import { PeachBackdrop } from "@/shell/PeachBackdrop";
 import { SiteFooter } from "@/shell/SiteFooter";
 import {
   CLOSING,
@@ -145,7 +144,6 @@ export default async function Collection({
   return (
     <>
       <main id="main" className={styles.page} data-page="collection">
-        <PeachBackdrop />
         <section className={styles.hero} aria-labelledby="hero-title">
           <MarkedRender render={HERO_RENDER} sizes="(max-width: 700px) 100vw, 96vw" className={styles.heroRender} soft priority>
             <h1 id="hero-title" className={styles.heroTitle}>

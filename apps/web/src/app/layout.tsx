@@ -1,21 +1,11 @@
 import type { Metadata } from "next";
 // the tokens and base rules first, so every module's own rules cascade over them
 import "./globals.css";
-import { Archivo, Jost, Space_Mono } from "next/font/google";
+import { Archivo, Space_Mono } from "next/font/google";
 import { SITE_URL } from "@/lib/site";
 import { SiteHeader } from "@/shell/SiteHeader";
-import { INTRO_SCRIPT } from "./studio/intro";
 
-// The wordmark's face, and nothing else's.
-const jost = Jost({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-jost",
-  display: "swap",
-});
-
-// Every word on the site: the old landing's grotesque, variable, with its width axis (set narrow
-// for the words, wide for the photo label).
+// Every word on the site, variable with its width axis: wide for reading, narrow for h1 and h2.
 const archivo = Archivo({
   subsets: ["latin"],
   weight: "variable",
@@ -24,7 +14,7 @@ const archivo = Archivo({
   display: "swap",
 });
 
-// The small capitals: the old landing's mono, in its one weight.
+// Eyebrows, dimensions, record numbers and prices in tables.
 const spaceMono = Space_Mono({
   subsets: ["latin"],
   weight: "400",
@@ -36,16 +26,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "Furnishes", template: "%s · Furnishes" },
   description: "Ready-made and modular furniture for Singapore homes and small offices.",
+  openGraph: { type: "website", siteName: "Furnishes", locale: "en_SG" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${jost.variable} ${archivo.variable} ${spaceMono.variable}`}>
-      <head>
-        {/* before anything is painted, the studio marks whether its arrival plays (studio/intro.ts);
-            here, not in the studio's page, so it is only ever server HTML and React never builds it */}
-        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
-      </head>
+    <html lang="en" className={`${archivo.variable} ${spaceMono.variable}`}>
       <body>
         <a href="#main" className="skip-link">
           Skip to content

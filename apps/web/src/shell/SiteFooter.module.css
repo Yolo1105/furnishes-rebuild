@@ -1,162 +1,61 @@
-/* The footer: umber, with no ground of its own so the page's shows through,
-   in three bands. */
 .footer {
-  /* its own layer, over a page's fixed backdrop */
-  position: relative;
-  isolation: isolate;
-  color: var(--color-umber);
-}
-
-:where(.footer) :where(p, ul) {
-  margin: 0;
-}
-
-/* the bands: the halves 1fr : 1fr */
-.top,
-.middle {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--gap);
-  padding: clamp(32px, 5vh, 56px) var(--gutter);
-}
-
-/* one band's space between the two, not both bands' */
-.middle {
-  padding-top: 0;
-}
-
-/* the small capitals over each part */
-.label {
-  composes: caps from global;
-}
-
-/* the call: two lines, at a section title's size */
-.call {
-  display: grid;
-  margin-top: var(--space-6);
-  font-size: var(--text-h2);
-  letter-spacing: var(--track-heading);
-  line-height: var(--leading-heading);
+  padding-block: var(--section) var(--s-8);
+  background: var(--linen);
+  border-top: var(--rule);
 }
 
 .email {
-  display: inline-block;
-  margin-top: var(--space-6);
-  color: inherit;
-  font-size: var(--text-h2);
-  letter-spacing: var(--track-heading);
-  line-height: var(--leading-heading);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  transition: opacity var(--dur-fast) ease;
+  font-size: var(--text-xl);
 }
 
-.email:hover {
-  opacity: 0.7;
-}
-
-/* the hours and the studio, side by side under the address */
 .details {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap);
-  margin-top: clamp(32px, 6vh, 56px);
+  margin-top: var(--s-8);
 }
 
-.details .body {
-  margin-top: var(--space-4);
+.details .eyebrow {
+  margin-bottom: var(--s-2);
 }
 
-.body {
-  font-size: var(--text-body);
-}
-
-.row {
-  display: block;
-}
-
-/* who we are, then where else to find us */
 .about {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  max-width: 28em;
+  margin-top: var(--s-12);
 }
 
-.visit {
-  font-size: var(--text-body);
-}
-
-.social {
-  display: flex;
-  gap: var(--space-6);
-  margin-top: var(--space-2);
-  padding: 0;
-  list-style: none;
-  font-size: var(--text-body);
-}
-
-/* the link columns, three across the right half */
 .columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--gap);
+  margin-top: var(--s-12);
 }
 
 .links {
   display: grid;
-  gap: var(--space-2);
-  margin-top: var(--space-6);
-  padding: 0;
-  list-style: none;
-  font-size: var(--text-body);
+  margin-top: var(--s-2);
 }
 
 .link {
-  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: var(--text-sm);
   text-decoration: none;
-  transition: opacity var(--dur-fast) ease;
 }
 
 .link:hover {
-  opacity: 0.7;
-}
-
-/* an account not live yet: greyed, not a link */
-.off {
-  opacity: 0.5;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .copy {
-  padding: var(--space-6) var(--gutter);
-  font-size: var(--text-small);
-  text-align: center;
+  padding-top: var(--s-6);
+  border-top: var(--rule);
 }
 
-/* the halves stacked on narrower screens, the link columns two across on phones */
-@media (max-width: 900px) {
-  .top,
-  .middle {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: clamp(40px, 7vh, 64px);
-  }
-}
-
-@media (max-width: 520px) {
+@media (max-width: 639px) {
   .columns {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: var(--space-6);
-  }
-
-  .details {
     grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--space-6);
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .email,
   .link {
-    transition: none;
+    min-height: var(--control-h);
   }
 }
