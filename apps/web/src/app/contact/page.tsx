@@ -1,23 +1,27 @@
 import type { Metadata } from "next";
-import { EMAIL, HOURS } from "@/lib/contact";
 import { PRODUCTS } from "@/features/products/catalogue";
+import { EMAIL, HOURS } from "@/lib/contact";
 import { shown } from "@/lib/facts";
 import { READY_MADE_PIECE } from "@/lib/routes";
 import { SiteFooter } from "@/shell/SiteFooter";
-import { AfterYouSend } from "./AfterYouSend";
+import { FactGrid } from "@/shell/ui/FactGrid";
+import { Section } from "@/shell/ui/Section";
+import { SectionHead } from "@/shell/ui/SectionHead";
+import { isTopic } from "./enquiry";
 import { Inquiry } from "./Inquiry";
-import { LeadTimes } from "./LeadTimes";
-import styles from "./page.module.css";
 
-export const metadata: Metadata = { title: "Contact", description: "Ask about a piece, a room, a home visit or an office quote. We answer by email." };
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Ask about a piece, a room, a home visit or an office quote. Send the form and we reply by email.",
+};
+
+/** The pieces an enquiry can name: each modular piece, then the ready-made line. */
+const PIECES = [...PRODUCTS.map((p) => ({ id: p.id, name: p.name })), { id: READY_MADE_PIECE, name: "Ready-made furniture" }];
 
 /**
- * Contact, over the peach the index and headline on
- * the left, on the right a ruled list of how to reach us (the address to
- * write to, the hours, how soon we answer); the inquiry, a step at a time,
- * and what happens after it is sent; then the lead times by email and the
- * footer. A link from a piece
- * says which one, and what the enquiry is about (lib/routes.ts contactHref).
+ * Contact, on one screen: how to reach us on the left, the enquiry on the
+ * right. A link from a piece picks the piece and what it is about
+ * (lib/routes.ts contactHref).
  */
 export default async function Contact({
   searchParams,
@@ -25,49 +29,34 @@ export default async function Contact({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { topic, piece } = await searchParams;
-  const about = piece === READY_MADE_PIECE ? "Ready-made furniture" : PRODUCTS.find((p) => p.id === piece)?.name;
-  const picked = typeof topic === "string" ? topic : undefined;
+  const pickedTopic = isTopic(topic) ? topic : undefined;
+  const pickedPiece = PIECES.find((p) => p.id === piece)?.id;
+  const reply = shown("replyTime");
+  const facts = [
+    { label: "Email", body: EMAIL },
+    { label: "Hours", body: HOURS.join(" ") },
+    ...(reply ? [{ label: "Reply", body: `Within ${reply}.` }] : []),
+  ];
+
   return (
     <>
-      <main id="main" className={styles.page}>
-        <section className={styles.contact} aria-labelledby="contact-title">
-          <header>
-            <p className={styles.index}>
-              <span>Contact</span>
-            </p>
-            <h1 id="contact-title" className={styles.title}>
-              How can we help?
-            </h1>
-            <p className={styles.lede}>A question about a piece, advice on a room, or a visit. Write to us and we reply by email.</p>
-          </header>
-          <dl className={styles.list}>
-            <div className={styles.row}>
-              <dt className={styles.label}>Email</dt>
-              <dd className={styles.value}>
-                <a className={styles.email} href={`mailto:${EMAIL}`}>
-                  {EMAIL}
-                </a>
-              </dd>
-            </div>
-            <div className={styles.row}>
-              <dt className={styles.label}>Hours</dt>
-              <dd className={styles.value}>
-                {HOURS.map((h) => (
-                  <span key={h} className={styles.hour}>
-                    {h}
-                  </span>
-                ))}
-              </dd>
-            </div>
-            <div className={styles.row}>
-              <dt className={styles.label}>Reply</dt>
-              <dd className={styles.value}>{`Within ${shown("replyTime")}`}</dd>
-            </div>
-          </dl>
-        </section>
-        <Inquiry key={`${picked}-${about}`} topic={picked} about={about} />
-        <AfterYouSend />
-        <LeadTimes />
+      <main id="main">
+        <Section id="contact">
+          <div className="span-5">
+            <SectionHead
+              as="h1"
+              id="contact"
+              eyebrow="Contact"
+              title="How can we help?"
+              lede="A question about a piece, advice on a room, or a visit. Write to us here and we reply by email."
+              className=""
+            />
+            <FactGrid facts={facts} span="span-12" />
+          </div>
+          <div className="span-6 start-7">
+            <Inquiry key={`${pickedTopic}-${pickedPiece}`} topic={pickedTopic} piece={pickedPiece} pieces={PIECES} />
+          </div>
+        </Section>
       </main>
       <SiteFooter />
     </>

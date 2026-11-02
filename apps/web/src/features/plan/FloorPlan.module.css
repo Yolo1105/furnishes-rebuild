@@ -19,15 +19,8 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* The drawing, gone once the 3D plan has covered it (--plan-gone). */
-.sheet {
-  opacity: calc(1 - var(--plan-gone, 0));
-}
-
-/* The drafting grid behind the flat, in a fine line of its colour: it hands
-   over to the 3D plan's own, on the ground, as that comes in. */
+/* The drafting grid behind the flat, in a fine line of its colour. */
 .grid {
-  opacity: calc(1 - var(--walk-in, 0));
   pointer-events: none;
 }
 
@@ -73,22 +66,6 @@
   pointer-events: none;
 }
 
-.bayWalls {
-  opacity: calc(1 - var(--plan-wash, 1));
-}
-
-/* gone from under the 3D plan's own as it comes in (--walk-in): set a little differently, the two would show double */
-.names {
-  opacity: calc(1 - var(--walk-in, 0));
-}
-
-/* The floors, clear till the page turns them white (--plan-white, 0 to 1). */
-.floors {
-  color: var(--paper);
-  opacity: var(--plan-white, 0);
-  pointer-events: none;
-}
-
 /* A room that brings up a photo: washed in the Furnishes orange, faintly on
    hover or focus, clearly when its photo is the one in view. */
 .rooms rect {
@@ -104,9 +81,8 @@
   fill-opacity: 0.12;
 }
 
-/* (till the page takes its wash away, --plan-wash, 1 to 0) */
 .rooms rect[data-active] {
-  fill-opacity: calc(0.28 * var(--plan-wash, 1));
+  fill-opacity: 0.28;
 }
 
 /* Drawing: while an ancestor has data-draw="play" (the landing's plan, as it scrolls in),

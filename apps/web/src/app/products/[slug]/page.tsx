@@ -1,39 +1,23 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  ARRANGEMENTS,
-  CLAIMS,
-  FAMILIES,
-  KIT_TIER,
-  KITS,
-  MATERIALS,
-  OTHER_USE_STATE,
-  OTHER_USES,
-  CATEGORIES,
-  PRODUCTS,
-  productById,
-  productName,
-  STATUS,
-  sizeLabel,
-  USES,
-} from "@/features/products/catalogue";
+import { CLAIMS, FAMILIES, MATERIALS, PRODUCTS, priceFrom, productById, sizeLabel, USES } from "@/features/products/catalogue";
 import { Elevation, elevationWidth } from "@/features/products/Elevation";
 import { Gallery } from "@/features/products/Gallery";
 import { ProductGrid } from "@/features/products/ProductGrid";
-import { priceInFull, shown } from "@/lib/facts";
+import { isReal, marked, PIECE_PRICES, shown } from "@/lib/facts";
 import { contactHref, routes } from "@/lib/routes";
+import { SITE_URL } from "@/lib/site";
 import { SiteFooter } from "@/shell/SiteFooter";
-import { ArrowLink } from "../../studio/ArrowLink";
+import { Button } from "@/shell/ui/Button";
+import { FactGrid } from "@/shell/ui/FactGrid";
+import { Section } from "@/shell/ui/Section";
+import { SectionHead } from "@/shell/ui/SectionHead";
 import styles from "./page.module.css";
 
 type Props = { params: Promise<{ slug: string }> };
 
-/** Pieces this tall that you hang things on come with the widened base and strap (CLAIMS.stability), mm. */
-const STABILITY_HEIGHT = 1200;
-
-/** How many other pieces of the same family to show at the foot. */
+/** How many other pieces to show at the foot. */
 const MORE = 3;
 
 export const dynamicParams = false;
@@ -47,11 +31,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return p ? { title: p.name, description: p.line } : {};
 }
 
+const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** A small clock, beside the lead time. */
+function Clock() {
+  return (
+    <svg className={styles.clock} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.25" aria-hidden="true">
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M8 4.5V8l2.5 1.5" />
+    </svg>
+  );
+}
+
 /**
- * A product, in the same order every time: its name, status, price and what it
- * solves; what's included and what isn't; size and fit; materials; what can
- * change and what it costs; how it arrives; returns and questions; then other
- * uses and related pieces.
+ * A product: the gallery (sticky on wide screens) beside the buy panel, its
+ * breadcrumb, name, price, lead time, the calls and its facts; then its size
+ * drawn, what it is for and what to know before choosing; then other pieces.
  */
 export default async function ProductPage({ params }: Props) {
   const p = productById((await params).slug);
@@ -59,268 +54,163 @@ export default async function ProductPage({ params }: Props) {
 
   const [room] = p.uses;
   const launch = p.status === "launch";
-  const hangs = p.category === "organisers" || p.family === "screens";
-  const uses = OTHER_USES.filter((u) => u.parents.includes(p.id));
-  const arrangements = ARRANGEMENTS.filter((a) => a.members.some((m) => m.product === p.id));
-  const kits = KITS.filter((k) => k.applies.includes(p.id));
-  const family = PRODUCTS.filter((f) => f.family === p.family && f.id !== p.id).slice(0, MORE);
+  const prices = PIECE_PRICES[p.id];
+  const family = PRODUCTS.filter((f) => f.family === p.family && f.id !== p.id);
+  const related = [...family, ...PRODUCTS.filter((f) => f.family !== p.family && f.status === "launch" && f.id !== p.id)].slice(0, MORE);
   const scale = (elevationWidth(p.size.w) + elevationWidth(p.size.d)) * 1.08;
+  /** Notes that point to the weight limits say nothing until those limits are tested. */
+  const notes = p.notes.filter((n) => isReal("weightLimits") || !/weight limit/i.test(n));
+  const size = `${sizeLabel(p.size)}, width × height × depth${p.size.baseD ? `; steel base ${p.size.baseD / 10} cm deep` : ""}`;
+
+  const drawings = (
+    <>
+      <Elevation across={p.size.w} high={p.size.h} label="Front" scale={scale} />
+      <Elevation across={p.size.d} high={p.size.h} label="Side" scale={scale} />
+    </>
+  );
+
+  const facts = [
+    { label: "Size", body: <span className="mono">{size}</span> },
+    { label: "Material", body: MATERIALS.body },
+    { label: "Finish options", body: `White matte with birch edges to start. A special colour, once offered, costs ${shown("specialColourPrice")}.` },
+    ...(isReal("weightLimits") ? [{ label: "Load limits", body: shown("weightLimits") }] : []),
+    { label: "What's included", body: "The panels, base and hardware, and the steps if it comes flat-packed." },
+    { label: "Not included", body: p.scene },
+    { label: "Returns and warranty", body: `${shown("returnsTerms")} ${shown("warranty")}` },
+  ];
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: p.name,
+    description: p.line,
+    sku: p.record,
+    image: [p.room.src, p.studio.src].map((src) => new URL(src, SITE_URL).href),
+    brand: { "@type": "Brand", name: "Furnishes" },
+    ...(prices && isReal("piecePrices")
+      ? {
+          offers: {
+            "@type": "Offer",
+            url: `${SITE_URL}${routes.products}/${p.id}`,
+            priceCurrency: "SGD",
+            price: prices.flat,
+            availability: launch ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
+          },
+        }
+      : {}),
+  };
 
   return (
     <>
-      <main id="main" className={styles.page} data-page="product">
+      <main id="main" data-page="product">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-        <nav className={styles.crumbs} aria-label="Breadcrumb">
-          <ol>
-            <li>
-              <Link href={routes.products}>Products</Link>
-            </li>
-            {room && (
-              <li>
-                <Link href={`${routes.products}?room=${room}`}>{USES[room]}</Link>
-              </li>
-            )}
-            <li aria-current="page">{p.name}</li>
-          </ol>
-        </nav>
+        <Section id="piece" labelledBy="piece-title">
+          <Gallery
+            className="span-7"
+            views={[
+              { kind: "image", src: p.room, alt: `The ${p.name.toLowerCase()} in a room, a 3D render` },
+              { kind: "image", src: p.studio, alt: `The ${p.name.toLowerCase()} on its own, a 3D render` },
+              {
+                kind: "drawing",
+                label: `Dimensions: ${sizeLabel(p.size)}`,
+                main: drawings,
+                thumb: <Elevation across={p.size.w} high={p.size.h} label="Front" scale={elevationWidth(p.size.w)} />,
+              },
+            ]}
+            note={CLAIMS.renders.detail}
+          />
 
-        <header className={styles.head}>
-          <p className={styles.index}>
-            <span>{CATEGORIES[p.category]}</span>
-            <span>{p.uses.map((u) => USES[u]).join(" and ")}</span>
-          </p>
-          <h1 className={styles.title}>{p.name}</h1>
-          <p className={styles.use}>{p.line}</p>
-        </header>
-
-        <div className={styles.top}>
-          <div className={styles.media}>
-            <Gallery product={p} />
-            <p className={styles.note}>{CLAIMS.renders.detail}</p>
-          </div>
-
-          <div className={styles.decide}>
-            <p className={styles.status} data-status={p.status}>
-              {STATUS[p.status].name}
-            </p>
-            <h2 className={styles.heading}>{launch ? "Make this piece yours." : "Keep this piece in mind."}</h2>
-            <p className={styles.body}>{STATUS[p.status].detail}</p>
-            <p className={styles.quick}>
-              {sizeLabel(p.size)} · {priceInFull(p.id)} · {launch ? shown("leadFlatPack") : "Date to come"}
-            </p>
-            <div className={styles.actions}>
-              {launch && (
-                <Link href={routes.signIn} className={styles.button}>
-                  Sign in to buy
-                </Link>
-              )}
-              <Link href={contactHref("product", p.id)} className={launch ? styles.secondary : styles.button}>
-                {launch ? "Ask about this piece" : "Tell us you're interested"}
-              </Link>
-              <ArrowLink href={routes.studio}>See it in your room</ArrowLink>
-            </div>
-
-            <dl className={styles.facts}>
-              <div>
-                <dt className={styles.label}>Size</dt>
-                <dd>
-                  {sizeLabel(p.size)}, width × height × depth, nominal
-                  {p.size.baseD && `; steel base ${p.size.baseD / 10} cm deep`}
-                </dd>
-              </div>
-              <div>
-                <dt className={styles.label}>Family</dt>
-                <dd>
-                  {FAMILIES[p.family].name}: {FAMILIES[p.family].line}
-                </dd>
-              </div>
-              <div>
-                <dt className={styles.label}>Price</dt>
-                <dd>{CLAIMS.price.detail}</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-
-        <section className={styles.section} aria-labelledby="for">
-          <h2 id="for" className={styles.label}>
-            What it&rsquo;s for
-          </h2>
-          <div className={styles.content}>
-            <p className={styles.body}>Made for moments like</p>
-            <ul className={styles.moments}>
-              {p.situations.map((s) => (
-                <li key={s}>&ldquo;{s}&rdquo;</li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        <section className={styles.section} aria-labelledby="know">
-          <h2 id="know" className={styles.label}>
-            Before you choose
-          </h2>
-          <ul className={`${styles.content} ${styles.list}`}>
-            {p.notes.map((n) => (
-              <li key={n}>{n}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className={styles.section} aria-labelledby="included">
-          <h2 id="included" className={styles.label}>
-            What&rsquo;s included
-          </h2>
-          <div className={styles.content}>
-            <p className={styles.body}>{p.line}</p>
-            <p className={styles.body}>The panels, base and hardware are included, along with the steps if it comes flat-packed.</p>
-            <p className={styles.body}>
-              <strong>Not included:</strong> {p.scene}
-            </p>
-          </div>
-        </section>
-
-        <section className={styles.section} aria-labelledby="size">
-          <h2 id="size" className={styles.label}>
-            Size and fit
-          </h2>
-          <div className={styles.content}>
-            <div className={styles.drawings}>
-              <Elevation across={p.size.w} high={p.size.h} label="Front" scale={scale} />
-              <Elevation across={p.size.d} high={p.size.h} label="Side" scale={scale} />
-            </div>
-            <p className={styles.body}>
-              {sizeLabel(p.size)}, width × height × depth, nominal
-              {p.size.baseD && `; steel base ${p.size.baseD / 10} cm deep`}.
-            </p>
-            <p className={styles.body}>{CLAIMS.fit.detail}</p>
-            <ul className={styles.list}>
-              {p.notes.map((n) => (
-                <li key={n}>{n}</li>
-              ))}
-            </ul>
-            {hangs && p.size.h >= STABILITY_HEIGHT && <p className={styles.body}>{CLAIMS.stability.detail}</p>}
-          </div>
-        </section>
-
-        <section className={styles.section} aria-labelledby="material">
-          <h2 id="material" className={styles.label}>
-            Materials
-          </h2>
-          <div className={styles.content}>
-            <p className={styles.body}>{MATERIALS.body}</p>
-            <p className={styles.body}>{CLAIMS.accent.detail}</p>
-          </div>
-        </section>
-
-        <section className={styles.section} aria-labelledby="change">
-          <h2 id="change" className={styles.label}>
-            What you can change
-          </h2>
-          <div className={styles.content}>
-            <ul className={styles.list}>
-              <li>Size: height in steps of 40 cm up to 160 cm, width of 60, 120 or 180 cm. A custom size costs {shown("customSizePrice")}.</li>
-              <li>Colour: white matte with birch edges to start. A special colour, once offered, costs {shown("specialColourPrice")}.</li>
-              <li>Add-ons: {shown("addOnPrices")}.</li>
-            </ul>
-            {kits.length > 0 && (
-              <ul className={styles.list}>
-                {kits.map((k) => (
-                  <li key={k.id}>
-                    <strong>{k.name}</strong> ({KIT_TIER[k.tier].name.toLowerCase()}). {k.line}
+          <div className={`span-5 start-8 ${styles.panel}`}>
+            <nav aria-label="Breadcrumb">
+              <ol className={`eyebrow ${styles.crumbs}`}>
+                <li>
+                  <Link href={routes.products}>Products</Link>
+                </li>
+                {room && (
+                  <li>
+                    <Link href={`${routes.products}?use=${room}#find`}>{USES[room]}</Link>
                   </li>
+                )}
+                <li aria-current="page">{p.name}</li>
+              </ol>
+            </nav>
+
+            <h1 id="piece-title" className={styles.name}>
+              {p.name}
+            </h1>
+            <p className="lede">{p.line}</p>
+
+            <div className={styles.buy}>
+              {priceFrom(p.id) && <p className={styles.price}>{capital(priceFrom(p.id))}</p>}
+              {prices && (
+                <p className="meta">
+                  {[marked("piecePrices", "flat-packed"), marked("piecePrices", `S$${prices.built.toLocaleString("en-SG")} built`), marked("gstTerms", "GST and delivery included")]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              )}
+              <p className={`meta ${styles.lead}`}>
+                <Clock />
+                {launch ? `${capital(shown("leadFlatPack"))} flat-packed, ${shown("leadBuilt")} built` : "In production. Ask us when it will be ready."}
+              </p>
+            </div>
+
+            <div className="actions">
+              <Button variant="primary" href={contactHref("order", p.id)}>
+                Enquire to order
+              </Button>
+              <Button variant="secondary" href={contactHref("product", p.id)}>
+                Ask a question
+              </Button>
+            </div>
+            <p>
+              <Button variant="link" href={routes.designYourRoom}>
+                See it in a flat →
+              </Button>
+            </p>
+
+            <FactGrid facts={facts} span="span-6" />
+          </div>
+        </Section>
+
+        <Section id="dimensions">
+          <div className={`span-6 ${styles.panel}`}>
+            <header className={styles.head}>
+              <p className="eyebrow">Size and fit</p>
+              <h2 id="dimensions-title">
+                Dimensions.
+              </h2>
+            </header>
+            <p className="mono">{size}</p>
+            <p>{CLAIMS.fit.detail}</p>
+          </div>
+          <div className={`span-5 start-8 ${styles.drawings}`}>{drawings}</div>
+          <div className="span-6">
+            <h3>What it&rsquo;s for</h3>
+            <ul className={`ruled ${styles.points}`}>
+              {p.situations.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+          </div>
+          {notes.length > 0 && (
+            <div className="span-6">
+              <h3>Before you choose</h3>
+              <ul className={`ruled ${styles.points}`}>
+                {notes.map((n) => (
+                  <li key={n}>{n}</li>
                 ))}
               </ul>
-            )}
-            <p className={styles.body}>
-              <strong>What you can&rsquo;t change:</strong> the 40 cm depth. Casters stop at 120 cm tall, and doors at under 120 cm. Anything
-              outside these limits goes to our team for a review and a quote.
-            </p>
-          </div>
-        </section>
-
-        <section className={styles.section} aria-labelledby="delivery">
-          <h2 id="delivery" className={styles.label}>
-            How it arrives
-          </h2>
-          <div className={styles.content}>
-            <p className={styles.body}>{CLAIMS.delivery.detail}</p>
-            <p className={styles.body}>{CLAIMS.leadTime.detail}</p>
-            <p className={styles.body}>Delivery is in Singapore. Help with installing costs {shown("installPrice")}. {shown("gstTerms")}</p>
-          </div>
-        </section>
-
-        <section className={styles.section} aria-labelledby="returns">
-          <h2 id="returns" className={styles.label}>
-            Returns and warranty
-          </h2>
-          <div className={styles.content}>
-            <p className={styles.body}>
-              Standard pieces can be returned on our standard terms. Custom pieces can be returned only if they are faulty, damaged or wrong.{" "}
-              {shown("returnsTerms")} {shown("warranty")}
-            </p>
-            <ArrowLink href={routes.help}>More answers</ArrowLink>
-          </div>
-        </section>
-
-        {uses.length > 0 && (
-          <section className={styles.section} aria-labelledby="uses">
-            <h2 id="uses" className={styles.label}>
-              Other uses of it
-            </h2>
-            <ul className={styles.tiles}>
-              {uses.map((u) => (
-                <li key={u.id} className={styles.tile}>
-                  <div className={styles.tileImage}>
-                    <Image src={u.image} alt="" fill sizes="(max-width: 900px) 50vw, 20vw" />
-                  </div>
-                  <p className={styles.tileMeta}>
-                    <span>{OTHER_USE_STATE[u.state]}</span>
-                  </p>
-                  <h3 className={styles.tileName}>{u.name}</h3>
-                  <p className={styles.tileLine}>{u.line}</p>
-                  <p className={styles.tileNote}>{u.note}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {arrangements.length > 0 && (
-          <section className={styles.section} aria-labelledby="arrangements">
-            <h2 id="arrangements" className={styles.label}>
-              Arrangements with it
-            </h2>
-            <ul className={styles.tiles}>
-              {arrangements.map((a) => (
-                <li key={a.id} className={styles.tile}>
-                  <div className={styles.tileImage}>
-                    <Image src={a.image} alt="" fill sizes="(max-width: 900px) 50vw, 20vw" />
-                  </div>
-                  <h3 className={styles.tileName}>{a.name}</h3>
-                  <p className={styles.tileLine}>{a.line}</p>
-                  <p className={styles.tileNote}>
-                    {a.members
-                      .map((m) => `${m.count} × ${productName(m.product)}${m.note ? ` (${m.note})` : ""}`)
-                      .join(", ")}
-                    . {a.note}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {family.length > 0 && (
-          <section className={styles.family} aria-labelledby="family">
-            <div className={styles.familyHead}>
-              <h2 id="family" className={styles.heading}>
-                More {FAMILIES[p.family].name.toLowerCase()}.
-              </h2>
-              <ArrowLink href={routes.products}>All furniture</ArrowLink>
             </div>
-            <ProductGrid products={family} />
-          </section>
+          )}
+        </Section>
+
+        {related.length > 0 && (
+          <Section id="more">
+            <SectionHead id="more" title={family.length ? `More ${FAMILIES[p.family].name.toLowerCase()}.` : "Other pieces."} />
+            <ProductGrid products={related} />
+          </Section>
         )}
       </main>
       <SiteFooter />

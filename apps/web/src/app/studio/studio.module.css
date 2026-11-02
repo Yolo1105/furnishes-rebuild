@@ -29,37 +29,9 @@
   margin-bottom: var(--s-3);
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
-}
-
-/* a choice: the secondary button, smaller; chosen, ringed in the accent with a tick */
-.chip {
-  composes: btn-secondary from global;
-  min-height: 36px;
-  padding-inline: var(--s-3);
-  font-size: var(--text-sm);
-}
-
-.chip[aria-pressed="true"] {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
-}
-
-.chip[aria-pressed="true"]::before {
-  content: "✓";
-}
-
 .elevations {
   display: flex;
   gap: var(--s-4);
   align-items: end;
 }
 
-@media (max-width: 639px) {
-  .chip {
-    min-height: var(--control-h);
-  }
-}

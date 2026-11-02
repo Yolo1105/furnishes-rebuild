@@ -1,104 +1,17 @@
-/* The products, over the peach (its own layer, so the peach paints over the
-   page's night), in the studio's words and umber. */
-.page {
-  isolation: isolate;
-  padding: calc(var(--nav-h) + clamp(32px, 6vh, 72px)) var(--gutter) clamp(72px, 14vh, 160px);
-  color: var(--color-umber);
+/* The three kinds of furniture: each a card, its rows ruled, the link at its foot. */
+.kind {
+  grid-template-rows: auto auto 1fr auto;
 }
 
-:where(.page) :where(h1, p) {
-  margin: 0;
-}
-
-/* the small capitals: the index line, the room chips, the count */
-.index {
-  composes: label from global;
-}
-
-.chip {
-  composes: caps button-outline from global;
-}
-
-.count {
-  composes: caps from global;
-}
-
-
-.head {
+.rows {
   display: grid;
-  gap: var(--space-6);
-  max-width: 62rem;
+  gap: var(--s-3);
+  align-content: start;
 }
 
-.title {
-}
-
-.lede {
-  max-width: 40rem;
-  font-size: var(--text-body);
-}
-
-/* the rooms, one row of outlined chips; the one in view filled in umber */
-.rooms {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: clamp(32px, 5vh, 56px);
-}
-
-.chip {
-  padding-inline: var(--space-4);
-}
-
-.chip[aria-current="page"] {
-  border-color: var(--button-bg);
-  background: var(--button-bg);
-  color: var(--button-fg);
-}
-
-.group {
-  margin-top: clamp(40px, 7vh, 88px);
-}
-
-/* the group's name left, its count right, over a rule */
-.count {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: var(--space-4);
-  padding-bottom: var(--space-4);
-  border-bottom: var(--frame);
-  font-variant-numeric: tabular-nums;
-}
-
-.groupName {
-  margin: 0;
-  font-size: inherit;
-  letter-spacing: inherit;
-  line-height: inherit;
-}
-
-.groupLine {
-  max-width: 48rem;
-  margin-top: var(--space-4);
-  font-size: var(--text-small);
-}
-
-.end {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-6);
-  margin-top: clamp(56px, 10vh, 120px);
-}
-
-
-/* the ready-made kinds all in view, their prices with them, rather than running off sideways (doubled, to win over the shared row's styles) */
-.readyMade.readyMade {
-  grid-auto-flow: row;
-  grid-auto-columns: auto;
-  padding-inline-start: 0;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  overflow-x: visible;
+.rows > div {
+  display: grid;
+  gap: var(--s-1);
+  padding-top: var(--s-3);
+  border-top: var(--rule);
 }

@@ -16,6 +16,9 @@
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-h);
   font: var(--w-ui) var(--text-lg) / 1 var(--font);
   text-transform: lowercase;
 }
@@ -115,5 +118,10 @@
 @media (max-width: 639px) {
   .header {
     gap: var(--s-3);
+  }
+
+  /* "Design your room" shortened to "Design" where the bar is short of room */
+  .more {
+    display: none;
   }
 }

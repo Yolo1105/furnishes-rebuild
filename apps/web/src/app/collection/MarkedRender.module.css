@@ -1,10 +1,7 @@
-/* The frame: rounded, cropping the render to its own shape (the page sets
-   its aspect ratio; it must be wider than the picture). */
+/* The frame is the global 16:9 .media-band; it must be wider than the render, which it crops top and bottom. */
 .frame {
-  position: relative;
   margin: 0;
-  overflow: hidden;
-  background: var(--color-peach-paper);
+  background: var(--linen);
 }
 
 /* the render's own box, as wide as the frame, its middle on the frame's */
@@ -14,20 +11,8 @@
   translate: 0 -50%;
 }
 
-.image {
-  object-fit: cover;
-}
-
-.spots {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 /* a point: its dot here; the line rises from it and turns to the label */
 .spot {
-  --rise: clamp(22px, 3vw, 44px);
-  --reach: clamp(16px, 2vw, 32px);
   position: absolute;
   width: 0;
   height: 0;
@@ -36,84 +21,64 @@
 .spot::before {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: var(--s-3);
+  height: var(--s-3);
   border-radius: 50%;
-  background: var(--color-frost-line);
-  box-shadow: 0 0 0 4px var(--color-frost);
+  background: var(--on-dark);
+  outline: var(--s-1) solid var(--shade);
   translate: -50% -50%;
 }
 
-/* the line: up from the dot, a soft corner, across to the label */
 .spot::after {
   content: "";
   position: absolute;
   bottom: 0;
-  width: var(--reach);
-  height: var(--rise);
-  border-top: 1px solid var(--color-frost-line);
+  width: var(--s-6);
+  height: var(--s-8);
+  border-top: 1px solid var(--on-dark);
 }
 
 .spot[data-side="right"]::after {
   left: 0;
-  border-left: 1px solid var(--color-frost-line);
-  border-top-left-radius: 10px;
+  border-left: 1px solid var(--on-dark);
 }
 
 .spot[data-side="left"]::after {
   right: 0;
-  border-right: 1px solid var(--color-frost-line);
-  border-top-right-radius: 10px;
+  border-right: 1px solid var(--on-dark);
 }
 
-/* the label: a frosted pill at the line's end */
-.label {
-  composes: caps from global;
-}
-
+/* the label: a dark chip at the line's end */
 .label {
   position: absolute;
-  bottom: var(--rise);
-  padding: 6px 14px;
-  background: var(--color-frost);
-  backdrop-filter: blur(10px);
-  color: var(--color-cream);
-  text-decoration: none;
+  bottom: var(--s-8);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--night) 75%, transparent);
+  color: var(--on-dark);
+  font-size: var(--text-sm);
   white-space: nowrap;
   translate: 0 50%;
-  transition: background-color var(--dur-fast) ease;
+  transition: background-color var(--dur-fast);
 }
 
 .spot[data-side="right"] .label {
-  left: var(--reach);
+  left: var(--s-6);
 }
 
 .spot[data-side="left"] .label {
-  right: var(--reach);
+  right: var(--s-6);
 }
 
 a.label:hover {
-  background: var(--color-shade);
+  background: var(--night);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
-/* the banner: a rounded frame, its labels soft pills in sentence case */
-.frame[data-soft] {
-  border-radius: var(--radius-frame);
-}
-
-.frame[data-soft] .label {
-  border-radius: var(--radius-pill);
-  background: var(--color-shade);
-  font-family: inherit;
-  letter-spacing: normal;
-  text-transform: none;
-}
-
-/* a phone has no room for the marks: the picture fills the frame, without them */
-@media (max-width: 700px) {
+@media (max-width: 639px) {
   .render {
     inset: 0;
-    aspect-ratio: auto !important;
     translate: none;
   }
 

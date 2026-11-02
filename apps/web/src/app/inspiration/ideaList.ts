@@ -9,40 +9,53 @@ import kitchenAfter from "@/assets/before-after/kitchen-after.webp";
 import kitchenBefore from "@/assets/before-after/kitchen-before.webp";
 import workCartAfter from "@/assets/before-after/work-cart-after.webp";
 import workCartBefore from "@/assets/before-after/work-cart-before.webp";
-import { ACTIVITIES, ARRANGEMENTS, OTHER_USES, productById, USES, type UseId } from "@/features/products/catalogue";
+import dividerRender from "@/assets/catalogue/scene/divider.webp";
+import mobileScreenRender from "@/assets/catalogue/scene/mobile-screen.webp";
+import entryRender from "@/assets/render-entry.webp";
+import { ARRANGEMENTS, OTHER_USES, priceFrom, productById, USES, type UseId } from "@/features/products/catalogue";
+import { isReal, shown } from "@/lib/facts";
+import { routes } from "@/lib/routes";
 
-/** Everyday problems, from the street: the room, the design that answers it, and the problem in the visitor's words. */
+/**
+ * Everyday cases: a corner of a home, how it is now and what a piece does
+ * for it (from the brand story's scenes and the "things you stop noticing"
+ * list). `piece`: the catalogue piece the card leads to.
+ */
+const CASE_LIST: readonly { kind: string; title: string; body: string; piece: string }[] = [
+  { kind: "The entryway", title: "Give that chair back.", body: "Coats and bags pile on the chair by the door. One panel with hooks and a shoe shelf takes them.", piece: "entry" },
+  { kind: "The bedside", title: "What you use, within reach.", body: "Phone on the floor, glass on a book. A small block with a top and one open compartment.", piece: "bedside" },
+  { kind: "The workspace", title: "The desk comes back.", body: "Monitor, charger, cables. An organiser stands beside the desk and nothing attaches to it.", piece: "desk" },
+  { kind: "The kitchen", title: "More counter when you cook.", body: "Rice cooker and kettle share the only free stretch. A worktop on wheels rolls in, then out.", piece: "kitchen" },
+  { kind: "Low cabinets", title: "The long empty wall.", body: "A TV, then things piling on the floor. Three low bays, open, with doors, or both.", piece: "low-cabinet" },
+  { kind: "Screens on wheels", title: "What the camera sees.", body: "One side a quiet backdrop for calls, the other for hanging or storage. Roll it where needed.", piece: "mobile-screen" },
+  { kind: "A shared room", title: "One room, two people.", body: "A line down the middle nobody can see. A two-sided bookcase makes it real.", piece: "bookwall" },
+  { kind: "A whole room", title: "One room, more than one way.", body: "Work on one side, living and storage on the other, with light still coming through.", piece: "divider" },
+];
+
+/** The cases whose piece is in the catalogue, each with the piece. */
+export const CASES = CASE_LIST.flatMap((c) => {
+  const product = productById(c.piece);
+  return product ? [{ ...c, product }] : [];
+});
+
+/** Everyday problems, in the visitor's words: the room, the design that answers it, and the problem. */
 const STREET: readonly (readonly [UseId, string, string])[] = [
   ["entryway", "entry", "Coats pile up on the chair by the door"],
-  ["entryway", "coat-stand", "No hallway: coats land on the chair by the door"],
   ["entryway", "console", "Post and keys need somewhere by the door"],
   ["kitchen", "kitchen", "The counter is too short when I cook"],
   ["kitchen", "spice-face", "Bottles and jars crowd the counter"],
-  ["kitchen", "coffee", "The kitchen wall has nothing on it"],
-  ["kitchen", "island", "More counter when three of us cook"],
   ["kitchen", "kitchen-screen", "The open kitchen splashes the sofa"],
   ["living", "bookwall", "Books and records with no wall to live on"],
-  ["living", "drop-leaf", "There is no desk in the flat"],
   ["living", "sofa-back", "The sofa has its back to the whole room"],
   ["living", "device-cabinet", "The router and all the chargers"],
-  ["living", "shape-l", "One big room and no corners in it"],
   ["bedroom", "bedside", "Phone and book on the floor by the bed"],
   ["bedroom", "bed-head", "The bed and the living room are the same room"],
-  ["bedroom", "bed-screen", "Something between the bed and the rest, that rolls away"],
-  ["bedroom", "shape-t", "Two bedsides on one wall"],
-  ["bedroom", "fitting", "A mirror to dress by"],
   ["bedroom", "bath-cart", "Towels on the bathroom floor"],
   ["work", "desk", "One table for eating and for working"],
   ["work", "video-background", "The bed is behind me on every call"],
-  ["work", "phone-booth", "Three desks in a row and three calls at once"],
-  ["work", "two-desks", "Two of us working back to back"],
-  ["work", "workstation-wall", "A desk that is part of the wall"],
   ["work", "work-cart", "The printer lives on the floor"],
-  ["work", "tool-screen", "Tools on one side, a whiteboard on the other"],
-  ["work", "standing-desk", "A standing desk on the screen itself"],
   ["dividing", "divider", "Two children, one room, no line between them"],
   ["dividing", "grille", "A room of their own, with the light still coming through"],
-  ["dividing", "wheeled-partition", "Move the wall when there is a party"],
   ["dividing", "mobile-screen", "A screen between two desks"],
 ];
 
@@ -53,39 +66,97 @@ function pieceFor(id: string): string | undefined {
 }
 
 /** The problems by room, each leading to its piece. */
-export const PROBLEMS = (Object.entries(USES) as [UseId, string][]).map(([use, room]) => ({
-  use,
-  room,
-  items: STREET.filter(([u]) => u === use).flatMap(([, design, line]) => {
-    const id = pieceFor(design);
-    return id ? [{ line, id }] : [];
-  }),
-}));
+export const PROBLEMS = (Object.entries(USES) as [UseId, string][])
+  .map(([use, room]) => ({
+    use,
+    room,
+    items: STREET.filter(([u]) => u === use).flatMap(([, design, line]) => {
+      const id = pieceFor(design);
+      return id ? [{ line, href: `${routes.products}/${id}` }] : [];
+    }),
+  }))
+  .filter((r) => r.items.length > 0);
 
-/** What it can do: each action, leading to the pieces that do it. */
-export const ACTIONS = Object.entries(ACTIVITIES).map(([id, { name }]) => ({ id, name }));
+/** By the kind of answer you want: what to choose, and where to find it. */
+export const GUIDE: readonly { title: string; body: string; call: string; href: string }[] = [
+  {
+    title: "One small thing bothers you",
+    body: `A small modular piece made for just that problem, from ${priceFrom("bedside")}.`,
+    call: "See the small pieces",
+    href: `${routes.collection}?width=narrow#find`,
+  },
+  {
+    title: "One room has to do two jobs",
+    body: "A tall two-sided cabinet splits it at the size you need. It hides and stores, but doesn't block sound.",
+    call: "See the dividers",
+    href: `${routes.collection}?use=dividing#find`,
+  },
+  {
+    title: "Your layout keeps changing",
+    body: "Carts and screens on wheels, for a counter that follows you or a team's changing work area.",
+    call: "See what moves",
+    href: `${routes.collection}?activity=move#find`,
+  },
+  {
+    title: "Standard sizes don't fit the spot",
+    body: "A modular piece, sized in steps to the space you have.",
+    call: "Find your size",
+    href: `${routes.collection}#find`,
+  },
+  {
+    title: "A standard size is all you need",
+    body: "Ready-made furniture, ordered as it is.",
+    call: "See the furniture",
+    href: routes.products,
+  },
+];
 
-/** Needs you may not have noticed: how a corner is now, what it could be, and the piece it would take. */
-export const REVEALS = [
-  { id: "entry", title: "That chair by the door", now: "A chair nobody sits on, wearing a coat and holding a bag.", could: "One panel with hooks and a shoe shelf beside it. The chair goes back to being a chair." },
-  { id: "desk", title: "The desk you already like", now: "The desk is fine. The desk is also under a monitor, a charger, headphones and three cables.", could: "An organiser stands beside it. Nothing attaches to the desk. The desktop comes back." },
-  { id: "bedside", title: "The last thing at night", now: "A phone on the floor. A glass on a book. A lamp on a box.", could: "A 40 cm block with a top and one open compartment." },
-  { id: "kitchen", title: "Thirty centimetres of counter", now: "The rice cooker, the kettle and the chopping board share the only free stretch.", could: "A trolley with a worktop rolls in when you cook and out when you don't." },
-  { id: "bookwall", title: "One room, two people", now: "A bed on each side and a line down the middle nobody can see.", could: "A double-sided bookcase makes the line real, with books on both sides." },
-  { id: "mobile-screen", title: "What the camera sees", now: "The call sees the laundry rack, the bed, the door.", could: "A screen on wheels with a quiet face rolls behind your chair, with storage on your side." },
-  { id: "low-cabinet", title: "The long empty wall", now: "A TV and a lot of nothing. Things pile on the floor beside it.", could: "Three bays low along the wall. Open, doors, or both." },
-  { id: "work-cart", title: "A corner with nothing in it yet", now: "You've just moved in. The corner is waiting for a desk.", could: "Start with what you need today, and add to it as the corner fills up." },
-].flatMap((r) => {
-  const product = productById(r.id);
-  return product ? [{ ...r, product }] : [];
-});
+/** Where the furniture is used, and what to think about in each place. */
+export const PLACES: readonly { name: string; line: string; points: readonly string[]; href: string; render: StaticImageData; alt: string }[] = [
+  {
+    name: "HDB homes",
+    line: "Pieces for the small spots that bother you, sized for a flat.",
+    points: [
+      "By the door: bags, shoes and keys with nowhere to go.",
+      "If the way in is tight, choose flat-packed: its largest box is smaller than the piece.",
+      ...(isReal("hdbRules") ? [`Check HDB's rules before you drill. ${shown("hdbRules")}`] : []),
+    ],
+    href: routes.hdbHomes,
+    render: entryRender,
+    alt: "The entry piece by a front door, with hooks and a shoe shelf; a 3D render",
+  },
+  {
+    name: "Rented and shared rooms",
+    line: "Tall cabinets that split one room in two, at the size you need.",
+    points: [
+      "Holds books and belongings as it divides.",
+      "Measure where windows, doors and fans are, so it doesn't block them.",
+      "Check with your landlord before you drill.",
+    ],
+    href: routes.roomDividers,
+    render: dividerRender,
+    alt: "A tall two-sided divider cabinet splitting a room; a 3D render",
+  },
+  {
+    name: "Startup offices",
+    line: "Desks and chairs for a growing team, and screens that move with a project.",
+    points: [
+      "Start with what the team needs now, and add a piece when someone joins.",
+      "A corner for calls gives privacy from view, not from sound.",
+      ...(isReal("officeTerms") ? [shown("officeTerms")] : []),
+    ],
+    href: routes.workspaces,
+    render: mobileScreenRender,
+    alt: "A screen on wheels beside a desk; a 3D render",
+  },
+];
 
 const SWAPS: readonly { id: string; line: string; before: StaticImageData; after: StaticImageData }[] = [
-  { id: "entry", line: "Coats pile up on the chair by the door", before: entryBefore, after: entryAfter },
-  { id: "bedside", line: "Phone and book on the floor by the bed", before: bedsideBefore, after: bedsideAfter },
-  { id: "work-cart", line: "The printer lives on the floor", before: workCartBefore, after: workCartAfter },
-  { id: "kitchen", line: "The counter is too short when I cook", before: kitchenBefore, after: kitchenAfter },
-  { id: "bookwall", line: "Books and records with no wall to live on", before: bookwallBefore, after: bookwallAfter },
+  { id: "entry", line: "Coats pile up on the chair by the door.", before: entryBefore, after: entryAfter },
+  { id: "bedside", line: "Phone and book on the floor by the bed.", before: bedsideBefore, after: bedsideAfter },
+  { id: "kitchen", line: "The counter is too short when I cook.", before: kitchenBefore, after: kitchenAfter },
+  { id: "bookwall", line: "Books and records with no wall to live on.", before: bookwallBefore, after: bookwallAfter },
+  { id: "work-cart", line: "The printer lives on the floor.", before: workCartBefore, after: workCartAfter },
 ];
 
 /** The same room before and after a piece, with the piece's name. */

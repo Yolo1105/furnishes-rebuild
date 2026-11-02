@@ -1,4 +1,18 @@
-/* its own layer, so the peach (fixed, behind) paints over the page's night */
-.page {
-  isolation: isolate;
+/* a problem's link: its whole line is the target */
+.problems {
+  margin-top: var(--s-3);
+}
+
+.problems a {
+  display: block;
+}
+
+/* on phones every link in a list is at least a finger's height */
+@media (max-width: 639px) {
+  .problems a,
+  .link a {
+    display: flex;
+    align-items: center;
+    min-height: var(--control-h);
+  }
 }

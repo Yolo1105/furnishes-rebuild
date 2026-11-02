@@ -16,7 +16,6 @@ export const routes = {
   contact: "/contact",
   studio: "/studio",
   designYourRoom: "/studio",
-  signIn: "/sign-in",
   terms: "/terms",
   privacy: "/privacy-policy",
   refunds: "/refund-policy",

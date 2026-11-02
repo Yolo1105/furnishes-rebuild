@@ -2,322 +2,228 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { EMAIL } from "@/lib/contact";
-import { ROOM_COUNTS, SCOPES, STARTS, STEPS } from "./inquiryCopy";
+import { shown } from "@/lib/facts";
+import type { ContactTopic } from "@/lib/routes";
+import { type Enquiry, type EnquiryErrors, type EnquiryField, LIMITS, TOPICS, validateEnquiry } from "./enquiry";
 import styles from "./Inquiry.module.css";
 
-const pad = (n: number) => String(n).padStart(2, "0");
+/** What happens once it is sent. */
+const NEXT: readonly { title: string; line: string }[] = [
+  { title: "We reply by email", line: "We answer your question, or send a quote if you asked for one." },
+  { title: "If you asked for a visit", line: `We agree a time to come to your room, ${shown("consultPrice")}.` },
+];
 
-const NOT_GIVEN = "Not given";
+const REPLY = shown("replyTime");
+const THANKS = REPLY ? `Thanks — we reply within ${REPLY}.` : "Thanks — we reply by email.";
 
-type Answers = {
-  scopes: string[];
-  rooms: string;
-  size: string;
-  start: string;
-  by: string;
-  name: string;
-  email: string;
-  phone: string;
-  place: string;
-  notes: string;
-};
+const ORDER: readonly EnquiryField[] = ["topic", "piece", "name", "email", "message"];
 
-const EMPTY: Answers = { scopes: [], rooms: "", size: "", start: "", by: "", name: "", email: "", phone: "", place: "", notes: "" };
-
-/** The review's rows, label then answer, each with the step that sets it. */
-function summary(a: Answers, about?: string): { label: string; value: string; step: number }[] {
-  const join = (...parts: string[]) => parts.filter(Boolean).join(", ") || NOT_GIVEN;
-  return [
-    ...(about ? [{ label: "About", value: about, step: 0 }] : []),
-    {
-      label: "Topic",
-      value: join(a.scopes.join(", "), a.rooms && `${a.rooms} rooms`, a.size && `about ${a.size} sq ft`),
-      step: 0,
-    },
-    { label: "Timing", value: join(a.start, a.by && `done by ${a.by}`), step: 1 },
-    { label: "Contact", value: join(a.name, a.email, a.phone), step: 2 },
-    { label: "Place", value: join(a.place), step: 2 },
-    { label: "Notes", value: join(a.notes), step: 2 },
-  ];
-}
+type State = "idle" | "sending" | "failed" | "sent";
 
 /**
- * The inquiry, one sheet at a time: on the left the steps (those reached can
- * be gone back to) over the sheet's number; on the right the step's question
- * in a ruled frame, Back and Next at its foot. There is no server to send to
- * yet, so sending opens the sender's email app with the answers written in.
+ * The enquiry, on one screen: what it is about, which piece, who to answer
+ * and the message. It is checked as it is sent, posted to /api/enquiry, and
+ * on arrival the form gives way to what happens next.
  */
-export function Inquiry({ topic, about }: { topic?: string; about?: string }) {
-  const [step, setStep] = useState(0);
-  const [reached, setReached] = useState(0);
-  const [a, setA] = useState(() => {
-    const picked = SCOPES.find((s) => s.id === topic);
-    return picked ? { ...EMPTY, scopes: [picked.name] } : EMPTY;
-  });
-  const [error, setError] = useState("");
-  const [sent, setSent] = useState(false);
-  const title = useRef<HTMLHeadingElement>(null);
-  const moved = useRef(false);
+export function Inquiry({ topic, piece, pieces }: { topic?: ContactTopic; piece?: string; pieces: readonly { id: string; name: string }[] }) {
+  const [values, setValues] = useState<Enquiry>({ topic: topic ?? "", piece: piece ?? "", name: "", email: "", message: "" });
+  const [errors, setErrors] = useState<EnquiryErrors>({});
+  const [state, setState] = useState<State>("idle");
+  const form = useRef<HTMLFormElement>(null);
+  const thanks = useRef<HTMLHeadingElement>(null);
 
-  // after a move between steps (not on arrival), the new question takes focus
   useEffect(() => {
-    if (moved.current) title.current?.focus();
-    moved.current = true;
-  }, [step]);
+    if (state === "sent") thanks.current?.focus();
+  }, [state]);
 
-  const set = <K extends keyof Answers>(key: K, value: Answers[K]) => setA((prev) => ({ ...prev, [key]: value }));
-  const go = (to: number) => {
-    setError("");
-    setStep(to);
+  const set = (key: EnquiryField, value: string) => {
+    setValues((v) => ({ ...v, [key]: value }));
+    if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
   };
-  const toggleScope = (name: string) =>
-    set("scopes", a.scopes.includes(name) ? a.scopes.filter((s) => s !== name) : [...a.scopes, name]);
 
-  const next = (e: FormEvent) => {
+  const showErrors = (found: EnquiryErrors) => {
+    setErrors(found);
+    const firstBad = ORDER.find((k) => found[k]);
+    if (firstBad) form.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus();
+  };
+
+  const send = async (e: FormEvent) => {
     e.preventDefault();
-    if (step === 0 && a.scopes.length === 0) {
-      setError("Pick at least one.");
+    const { enquiry, errors: found } = validateEnquiry(values);
+    if (Object.keys(found).length > 0) {
+      showErrors(found);
       return;
     }
-    if (step < STEPS.length - 1) {
-      setReached((r) => Math.max(r, step + 1));
-      go(step + 1);
-      return;
+    setState("sending");
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enquiry),
+      });
+      if (res.ok) {
+        setState("sent");
+        return;
+      }
+      const body = (await res.json().catch(() => ({}))) as { errors?: EnquiryErrors };
+      if (res.status === 400 && body.errors && Object.keys(body.errors).length > 0) {
+        setState("idle");
+        showErrors(body.errors);
+        return;
+      }
+      setState("failed");
+    } catch {
+      setState("failed");
     }
-    const body = summary(a, about)
-      .map((row) => `${row.label}: ${row.value}`)
-      .join("\n");
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(`Enquiry from ${a.name}${about ? `: ${about}` : ""}`)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
   };
 
-  const { title: heading, lede } = STEPS[step] ?? STEPS[0];
-  const last = step === STEPS.length - 1;
+  /** A field's error line, and the attributes that tie the control to it. */
+  const described = (key: EnquiryField) => ({
+    id: `enquiry-${key}`,
+    name: key,
+    "aria-invalid": errors[key] ? true : undefined,
+    "aria-describedby": errors[key] ? `enquiry-${key}-error` : undefined,
+  });
+  const errorLine = (key: EnquiryField) =>
+    errors[key] && (
+      <p id={`enquiry-${key}-error`} className={styles.error}>
+        <span aria-hidden="true">✕ </span>
+        {errors[key]}
+      </p>
+    );
+  const label = (key: EnquiryField, text: string, required = true) => (
+    <label htmlFor={`enquiry-${key}`} className="meta">
+      {text}
+      {required ? <span aria-hidden="true"> *</span> : <span> (optional)</span>}
+    </label>
+  );
+
+  const count = Object.values(errors).filter(Boolean).length;
+  const status =
+    state === "sending" ? "Sending…" : count > 0 ? `${count === 1 ? "One field needs" : `${count} fields need`} a look.` : "";
 
   return (
-    <section className={styles.inquiry} aria-labelledby="inquiry-title">
-      <aside className={styles.side}>
-        <p className={styles.index}>
-          <span>Enquiry</span>
-        </p>
-        <ol className={styles.steps}>
-          {STEPS.map((s, i) => (
-            <li key={s.name} className={styles.step} aria-current={i === step ? "step" : undefined}>
-              <button type="button" className={styles.stepButton} disabled={i > reached || i === step} onClick={() => go(i)}>
-                <span className={styles.code}>{pad(i + 1)}</span>
-                {s.name}
-              </button>
-            </li>
-          ))}
-        </ol>
-        <div className={styles.sheet}>
-          <p className={styles.label}>
-            Step {step + 1} of {STEPS.length}
-          </p>
-        </div>
-      </aside>
-
-      <form className={styles.frame} onSubmit={next}>
-        <h2 id="inquiry-title" ref={title} tabIndex={-1} className={styles.title}>
-          {heading}
-        </h2>
-        <p className={styles.lede}>{lede}</p>
-
-        {step === 0 && (
-          <>
-            {about && <p className={styles.ask}>About: {about}</p>}
-            <fieldset className={styles.cards}>
-              <legend className="visually-hidden">{heading}</legend>
-              {SCOPES.map((s, i) => (
-                <label key={s.name} className={styles.card}>
-                  <span className={styles.code}>{pad(i + 1)}</span>
-                  <input
-                    type="checkbox"
-                    className={styles.check}
-                    checked={a.scopes.includes(s.name)}
-                    onChange={() => toggleScope(s.name)}
-                  />
-                  <span className={styles.cardName}>{s.name}</span>
-                  <span className={styles.code}>{s.runs}</span>
-                </label>
+    <div className={styles.inquiry}>
+      <div aria-live="polite">
+        {state === "sent" ? (
+          <section className={styles.sent} aria-labelledby="enquiry-sent">
+            <h2 id="enquiry-sent" ref={thanks} tabIndex={-1} className="h2-sm">
+              {THANKS}
+            </h2>
+            <ol className="ruled">
+              {NEXT.map((n) => (
+                <li key={n.title}>
+                  <strong>{n.title}.</strong> {n.line}
+                </li>
               ))}
-            </fieldset>
-            <div className={styles.pair}>
-              <fieldset className={styles.field}>
-                <legend className={styles.label}>Rooms</legend>
-                <p className={styles.ask}>How many rooms is it for, if any?</p>
-                <div className={styles.segments}>
-                  {ROOM_COUNTS.map((r) => (
-                    <label key={r} className={styles.segment}>
-                      <input
-                        type="radio"
-                        name="rooms"
-                        className="visually-hidden"
-                        checked={a.rooms === r}
-                        onChange={() => set("rooms", r)}
-                      />
-                      {r}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <label className={styles.field}>
-                <span className={styles.label}>Rough size</span>
-                <span className={styles.ask}>Roughly how many square feet?</span>
-                <span className={styles.underline}>
-                  <input
-                    className={styles.input}
-                    inputMode="numeric"
-                    pattern="[0-9,]*"
-                    placeholder="For example 900"
-                    value={a.size}
-                    onChange={(e) => set("size", e.target.value)}
-                  />
-                  <span className={styles.code}>sq ft</span>
-                </span>
-              </label>
-            </div>
-          </>
-        )}
-
-        {step === 1 && (
+            </ol>
+          </section>
+        ) : (
           <>
-            <fieldset className={`${styles.cards} ${styles.four}`}>
-              <legend className="visually-hidden">{heading}</legend>
-              {STARTS.map((s) => (
-                <label key={s} className={styles.card}>
-                  <input
-                    type="radio"
-                    name="start"
-                    required
-                    className={`${styles.check} ${styles.round}`}
-                    checked={a.start === s}
-                    onChange={() => set("start", s)}
-                  />
-                  <span className={styles.cardName}>{s}</span>
-                </label>
-              ))}
-            </fieldset>
-            <label className={styles.field}>
-              <span className={styles.label}>Fixed date</span>
-              <span className={styles.ask}>Is there a date you need it by?</span>
-              <input
-                className={`${styles.input} ${styles.underline}`}
-                placeholder="Optional, for example a move-in date"
-                value={a.by}
-                onChange={(e) => set("by", e.target.value)}
-              />
-            </label>
-          </>
-        )}
-
-        {step === 2 && (
-          <div className={styles.pairs}>
-            <label className={styles.field}>
-              <span className={styles.label}>Name</span>
-              <input
-                className={`${styles.input} ${styles.underline}`}
-                required
-                autoComplete="name"
-                placeholder="For example Alex Tan"
-                value={a.name}
-                onChange={(e) => set("name", e.target.value)}
-              />
-            </label>
-            <label className={styles.field}>
-              <span className={styles.label}>Email</span>
-              <input
-                className={`${styles.input} ${styles.underline}`}
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="For example alex@example.com"
-                value={a.email}
-                onChange={(e) => set("email", e.target.value)}
-              />
-            </label>
-            <label className={styles.field}>
-              <span className={styles.labelRow}>
-                <span className={styles.label}>Phone</span>
-                <span className={styles.label}>Optional</span>
-              </span>
-              <input
-                className={`${styles.input} ${styles.underline}`}
-                type="tel"
-                autoComplete="tel"
-                placeholder="For example +65 9123 4567"
-                value={a.phone}
-                onChange={(e) => set("phone", e.target.value)}
-              />
-            </label>
-            <label className={styles.field}>
-              <span className={styles.label}>Address or neighbourhood</span>
-              <input
-                className={`${styles.input} ${styles.underline}`}
-                autoComplete="street-address"
-                placeholder="For example Tiong Bahru"
-                value={a.place}
-                onChange={(e) => set("place", e.target.value)}
-              />
-            </label>
-            <label className={`${styles.field} ${styles.wide}`}>
-              <span className={styles.label}>Notes</span>
-              <span className={styles.ask}>Anything we should know?</span>
-              <textarea
-                className={styles.notes}
-                rows={4}
-                placeholder="Optional, for example what the home is like or what has to stay"
-                value={a.notes}
-                onChange={(e) => set("notes", e.target.value)}
-              />
-            </label>
-          </div>
-        )}
-
-        {last && (
-          <dl className={styles.review}>
-            {summary(a, about).map((row) => (
-              <div key={row.label} className={styles.reviewRow}>
-                <dt className={styles.label}>{row.label}</dt>
-                <dd className={styles.reviewValue} data-empty={row.value === NOT_GIVEN || undefined}>
-                  {row.value}
-                </dd>
-                <dd>
-                  <button type="button" className={styles.edit} onClick={() => go(row.step)}>
-                    Edit<span className="visually-hidden"> {row.label.toLowerCase()}</span>
-                  </button>
-                </dd>
-              </div>
-            ))}
-          </dl>
-        )}
-
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-        {sent && (
-          <p className={styles.sent} role="status">
-            Your email app should open with this written in, for you to send. If it did not, write to us at{" "}
-            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
-          </p>
-        )}
-
-        <footer className={styles.foot}>
-          <p className={styles.write}>
-            Prefer to write? <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-          </p>
-          <div className={styles.moves}>
-            {step > 0 && (
-              <button type="button" className={styles.back} onClick={() => go(step - 1)}>
-                Back
-              </button>
+            <p className="visually-hidden">{status}</p>
+            {state === "failed" && (
+              <p className={styles.error} role="alert">
+                <span aria-hidden="true">✕ </span>
+                It didn&apos;t send. Try again, or write to us at {EMAIL}.
+              </p>
             )}
-            <button type="submit" className={styles.next}>
-              {last ? "Open in my email app" : `Next: ${STEPS[step + 1]?.name.toLowerCase()}`}
-            </button>
+          </>
+        )}
+      </div>
+
+      {state !== "sent" && (
+        <form ref={form} className={styles.form} onSubmit={send} noValidate aria-labelledby="enquiry-title">
+          <h2 id="enquiry-title" className="visually-hidden">
+            Send us a message.
+          </h2>
+          <p className="meta">Fields marked * are required.</p>
+
+          <div className={styles.field}>
+            {label("topic", "What is it about?")}
+            <select
+              {...described("topic")}
+              className={styles.control}
+              required
+              value={values.topic}
+              onChange={(e) => set("topic", e.target.value)}
+            >
+              <option value="">Pick one</option>
+              {TOPICS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+            {errorLine("topic")}
           </div>
-        </footer>
-      </form>
-    </section>
+
+          <div className={styles.field}>
+            {label("piece", "Which piece", false)}
+            <select {...described("piece")} className={styles.control} value={values.piece} onChange={(e) => set("piece", e.target.value)}>
+              <option value="">Not about one piece</option>
+              {pieces.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            {errorLine("piece")}
+          </div>
+
+          <div className={styles.field}>
+            {label("name", "Name")}
+            <input
+              {...described("name")}
+              className={styles.control}
+              required
+              autoComplete="name"
+              maxLength={LIMITS.name}
+              value={values.name}
+              onChange={(e) => set("name", e.target.value)}
+            />
+            {errorLine("name")}
+          </div>
+
+          <div className={styles.field}>
+            {label("email", "Email")}
+            <input
+              {...described("email")}
+              className={styles.control}
+              type="email"
+              required
+              autoComplete="email"
+              maxLength={LIMITS.email}
+              value={values.email}
+              onChange={(e) => set("email", e.target.value)}
+            />
+            {errorLine("email")}
+          </div>
+
+          <div className={styles.field}>
+            {label("message", "Message")}
+            <textarea
+              {...described("message")}
+              className={`${styles.control} ${styles.message}`}
+              required
+              rows={6}
+              maxLength={LIMITS.message}
+              placeholder="For example the room, its size, and what has to stay"
+              value={values.message}
+              onChange={(e) => set("message", e.target.value)}
+            />
+            {errorLine("message")}
+          </div>
+
+          <div className={styles.foot}>
+            <button type="submit" className="btn-primary" disabled={state === "sending"} aria-busy={state === "sending"}>
+              {state === "sending" ? "Sending…" : "Send"}
+            </button>
+            <p className="meta">
+              Prefer to write? <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            </p>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }

@@ -36,7 +36,7 @@ export function SiteHeader() {
           Contact
         </NavLink>
         <Link href={routes.designYourRoom} className={`btn-primary ${styles.primary}`}>
-          Design your room
+          Design<span className={styles.more}> your room</span>
         </Link>
         <PhoneMenu links={MENU} />
       </div>

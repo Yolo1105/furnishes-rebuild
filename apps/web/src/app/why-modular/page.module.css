@@ -1,0 +1,12 @@
+/* a piece's add-on parts: global .disclosure rows */
+.part summary .mono {
+  color: var(--ink-2);
+}
+
+.part p {
+  padding-bottom: var(--s-3);
+}
+
+.part p + p {
+  margin-top: 0;
+}

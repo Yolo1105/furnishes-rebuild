@@ -1,17 +1,59 @@
-/* The room photograph, in a frame. */
+/* The gallery: sticky beside the buy panel on wide screens (this outer box; the image frames inside stay relative). */
 .gallery {
-  position: relative;
-  aspect-ratio: 1.6;
-  overflow: hidden;
-  border: var(--frame);
-  background: var(--color-peach-paper);
-}
-
-.room {
-  object-fit: cover;
-}
-
-.stack {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--s-3);
+  align-self: start;
+  position: sticky;
+  top: calc(var(--nav-h) + var(--s-6));
+}
+
+.main {
+  background: var(--linen);
+}
+
+/* a drawing sits on paper, centred in its frame with room round it */
+.drawing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-6);
+  padding: var(--s-8);
+  background: var(--paper);
+}
+
+.thumbs {
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.thumbs > li {
+  flex: 0 0 96px;
+  scroll-snap-align: start;
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.thumb .drawing {
+  padding: var(--s-2);
+}
+
+.thumb[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+@media (max-width: 1023px) {
+  .gallery {
+    position: static;
+  }
 }

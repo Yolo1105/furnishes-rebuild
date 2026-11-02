@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PiecesFor } from "@/features/products/PiecesFor";
-import { shown } from "@/lib/facts";
+import { isReal, shown } from "@/lib/facts";
 import { contactHref, routes } from "@/lib/routes";
 import { TextPage } from "@/shell/TextPage";
 
@@ -33,7 +33,7 @@ export default function RoomDividers() {
           heading: "The limits",
           points: [
             "Sound: our dividers separate a room visually. They do not block sound.",
-            `Tipping: ${shown("stability")} ${shown("weightLimits")}`,
+            isReal("stability") && isReal("weightLimits") ? `Tipping: ${shown("stability")} ${shown("weightLimits")}` : "",
             `Rules: check with your landlord or HDB before you drill or change a room. ${shown("hdbRules")}`,
             "Light and air: measure where windows, doors and fans are, so a divider doesn't block them.",
           ],

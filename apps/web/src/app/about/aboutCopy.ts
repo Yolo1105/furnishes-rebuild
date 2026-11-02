@@ -1,112 +1,61 @@
-import type { StaticImageData } from "next/image";
-import afternoonRoom from "@/assets/afternoon-living-room.jpg";
-import staircaseCorner from "@/assets/staircase-reading-corner.jpg";
-import aFrameRoom from "@/assets/a-frame-living-room.jpg";
-import whiteRoom from "@/assets/white-living-room.jpg";
-import brightRoom from "@/assets/bright-living-room.jpg";
-import gallery from "@/assets/furniture-gallery.jpg";
-import { marked, shown } from "@/lib/facts";
+import { isReal, shown } from "@/lib/facts";
 
 /**
  * The about page's words: drafts of how Furnishes works, for approval.
- * Anything about real events, people or results is a marked placeholder
- * (lib/facts) till it can be shown to be true.
+ * Anything about real events, people or results rests on a fact (lib/facts)
+ * and is left out till that fact is real.
  */
 
-/** The headline, its highlighted words in the Furnishes orange. */
-export const WHO_HEADLINE: readonly { text: string; highlight?: boolean }[] = [
-  { text: "Furniture that " },
-  { text: "fits", highlight: true },
-  { text: " how you " },
-  { text: "live", highlight: true },
-  { text: " and work." },
-];
+export const WHO_TAGLINE = "Ready-made furniture, modular designs, and modular pieces you compose, for Singapore homes and small offices.";
 
-export const WHO_TAGLINE = "Ready-made furniture, modular designs, and modular pieces you compose.";
-
-export const WHO_LEAD = "Furnishes sells furniture for Singapore homes and small offices. Some pieces are usual ready-made furniture. Others are modular, built from a family of birch panels: you can buy one of our finished designs, or compose your own, choosing the board size, colour, texture and add-ons within clear limits.";
-
+/** The three columns under the photo, at body size. */
 export const WHO_COLUMNS = [
-  "A change at home can start with something small: a place for the bag by the door, or a bedside that keeps the book within reach. It can also be bigger: a tall cabinet that divides a rented room, or a work area that changes as a team grows.",
-  "Each piece should be good on its own today, and adding to it later is a bonus. If you need help choosing, we can come to your room for a consultation, and the AI assistant can help once you sign in.",
+  "Some of our pieces are usual ready-made furniture. Others are modular, built from a family of birch panels: buy one of our finished designs, or compose your own within clear limits.",
+  "A change at home can start small: a place for the bag by the door, or a bedside that keeps the book within reach. It can be bigger: a cabinet that divides a rented room.",
+  `Each piece should be good on its own today; adding to it later is a bonus. If you need help choosing, we can visit your room, or answer by email within ${shown("replyTime")}.`,
 ] as const;
 
-export const WORKSHOP: readonly { label: string; value: string }[] = [
-  { label: "Made in", value: "China" },
-  { label: "Factory", value: shown("supplierName") },
-  { label: "Material", value: "18 mm birch plywood, white matte faces" },
-  { label: "Arrives", value: "Flat-packed or already built" },
-  { label: "Delivered to", value: "Singapore" },
+export const WORKSHOP: readonly { label: string; body: string }[] = [
+  { label: "Made in", body: "China, by our partner factory, to the version you chose." },
+  { label: "Material", body: "18 mm birch plywood, white matte faces." },
+  { label: "Arrives", body: "Flat-packed or already built, delivered in Singapore." },
 ];
 
-export const PROJECTS_HEADLINE = "Recognition";
-
-/** Placeholder rows till recognition can be shown. `images`: mood photos shown when the row is opened; rows without them do not open. */
-const UNPROVEN = { year: marked("award", "year"), award: shown("award"), project: marked("award", "project"), result: marked("award", "result") };
-
-export const PROJECTS: readonly {
-  year: string;
-  award: string;
-  project: string;
-  result: string;
-  images?: readonly { src: StaticImageData; alt: string }[];
-}[] = [
-  {
-    ...UNPROVEN,
-    images: [
-      { src: staircaseCorner, alt: "A mood photo of two armchairs by a tall window, not a Furnishes project" },
-      { src: aFrameRoom, alt: "A mood photo of an open kitchen under a triangular window, not a Furnishes project" },
-      { src: afternoonRoom, alt: "A mood photo of a living room in afternoon light, not a Furnishes project" },
-    ],
-  },
-  {
-    ...UNPROVEN,
-    images: [
-      { src: whiteRoom, alt: "A mood photo of a white living room, not a Furnishes project" },
-      { src: brightRoom, alt: "A mood photo of a bright living room, not a Furnishes project" },
-      { src: gallery, alt: "A mood photo of a gallery of wooden furniture, not a Furnishes project" },
-    ],
-  },
-  UNPROVEN,
-  UNPROVEN,
+/** The company's story, as three steps; the first rests on the story fact. */
+export const STORY: readonly { title: string; body: string }[] = [
+  ...(isReal("companyStory") ? [{ title: "How we started", body: shown("companyStory") }] : []),
+  { title: "What we do today", body: "We sell ready-made and modular furniture to homes and small offices in Singapore." },
+  { title: "Where we are going", body: "Singapore first, with HDB families and startup offices, and further once that works well." },
 ];
 
-export const TEAM_HEADLINE = "Who is behind Furnishes.";
+/** Recognition, shown only once the award fact is real. */
+export const RECOGNITION = isReal("award") ? shown("award") : "";
 
-export const TEAM_LINE = "The people you are buying from.";
-
-/** Where the company is, for each card's "Based in". */
-const BASE = "Singapore";
-
-/**
- * `about`: set as the card's focus. `initial`: the portrait frame's letter,
- * where the name has none yet. `credentials`: boxed in orange when given.
- */
-export const TEAM: readonly { name: string; role: string; about: string; initial?: string; credentials?: string; basedIn: string }[] = [
-  {
-    name: "Mohan",
-    role: "Cofounder and CTO",
-    about: "Leads the website, the 3D view and the AI assistant.",
-    basedIn: BASE,
-  },
-  {
-    name: shown("team"),
-    role: marked("team", "role"),
-    about: marked("team", "about this person"),
-    initial: "?",
-    basedIn: BASE,
-  },
-];
-
-/** From order to door, for the timeline after the factory. */
-export const MAKING_HEADLINE = { lead: "From order", soft: "to your home." };
-
+/** From order to door. */
 export const MAKING_LINE = `Most pieces are made after you order. Flat-packed pieces take ${shown("leadFlatPack")}, and built pieces ${shown("leadBuilt")}.`;
 
-export const MAKING_DAYS: readonly { day: number; title: string; body: string }[] = [
-  { day: 1, title: "You order", body: "You confirm the piece, its size, its finish and whether it comes flat-packed or built." },
-  { day: 2, title: "It is made", body: "Our partner factory in China makes it to the version you chose." },
-  { day: 3, title: "It is packed", body: "Each piece is packed with its parts and, if it is flat-packed, its steps." },
-  { day: 4, title: "It ships", body: "It travels from China to Singapore, and we email you when it moves." },
-  { day: 5, title: "It arrives", body: "Built pieces arrive ready to use. Flat-packed pieces are ready to put together." },
+export const MAKING_STEPS: readonly { title: string; body: string }[] = [
+  { title: "You order", body: "You confirm the piece, its size, its finish, and flat-packed or built." },
+  { title: "It is made", body: "Our partner factory in China makes it to the version you chose." },
+  { title: "It is packed", body: "Each piece is packed with its parts and, if flat-packed, its steps." },
+  { title: "It ships", body: "It travels from China to Singapore, and we email you when it moves." },
+  { title: "It arrives", body: "Built pieces arrive ready to use. Flat-packed pieces are ready to put together." },
+];
+
+/**
+ * The people behind Furnishes. `real`: whether the name is a confirmed fact;
+ * only those render, and the block goes when none do.
+ */
+const PEOPLE: readonly { name: string; role: string; about: string; real: boolean }[] = [
+  { name: "Mohan", role: "Cofounder and CTO", about: "Leads the website and the room planner.", real: true },
+  { name: shown("team"), role: "", about: "", real: isReal("team") },
+];
+
+export const TEAM = PEOPLE.filter((p) => p.real && p.name);
+
+/** Who we work with: each arrangement is talked through one by one. */
+export const PARTNERS: readonly { title: string; body: string }[] = [
+  { title: "Designers and space planners", body: "Tell us about a client's room, and use our pieces in your plan." },
+  { title: "Shops", body: "Stock our furniture, or show a piece and send customers on to us." },
+  { title: "Studios and shared spaces", body: "Have a piece in real use, where people can touch the materials and try both sides." },
 ];

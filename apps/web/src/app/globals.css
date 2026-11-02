@@ -132,6 +132,11 @@ h3 {
   font-size: var(--text-2xl);
 }
 
+strong,
+b {
+  font-weight: var(--w-em);
+}
+
 /* emphasis by weight, never by colour */
 h1 strong,
 h2 strong {
@@ -211,7 +216,8 @@ li a:hover {
 .btn,
 .btn-primary,
 .btn-secondary,
-.btn-link {
+.btn-link,
+.chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -233,23 +239,26 @@ li a:hover {
     border-color var(--dur-fast);
 }
 
+/* the accent deepened just enough for white words on it to pass AA (4.9:1; the pure accent is 3.7:1) */
 .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 85%, black);
+  border-color: transparent;
   color: #fff;
 }
 
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--accent) 88%, black);
+  background: color-mix(in srgb, var(--accent) 75%, black);
 }
 
-.btn-secondary {
+.btn-secondary,
+.chip {
   background: transparent;
   border-color: var(--ink);
   color: var(--ink);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.chip:hover {
   background: color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
@@ -273,6 +282,64 @@ li a:hover {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--s-3);
+}
+
+/* a row of choices: the secondary button, smaller; the chosen one ringed in the accent, with a tick */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.chip {
+  min-height: 36px;
+  padding-inline: var(--s-3);
+  font-size: var(--text-sm);
+}
+
+.chip[aria-pressed="true"],
+.chip[aria-current="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.chip[aria-pressed="true"]::before,
+.chip[aria-current="true"]::before {
+  content: "✓";
+}
+
+/* a ruled line that opens to its answer: the summary is a full finger's height */
+.disclosure {
+  border-top: var(--rule);
+}
+
+.disclosure > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: var(--control-h);
+  padding-block: var(--s-2);
+  cursor: pointer;
+  list-style: none;
+}
+
+.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure > summary::after {
+  content: "+";
+  font-family: var(--font-mono);
+  color: var(--ink-2);
+}
+
+.disclosure[open] > summary::after {
+  content: "–";
+}
+
+.disclosure > summary:hover {
+  color: var(--accent);
 }
 
 /* on a dark band or photo */
@@ -568,7 +635,8 @@ select {
     grid-column-start: auto;
   }
 
-  .md\:span-6 {
+  .md\:span-6,
+  .sm\:span-6 {
     grid-column-end: span 6;
   }
 }
@@ -578,9 +646,23 @@ select {
     grid-column-end: span 12;
   }
 
+  /* two-up even on phones: small tiles */
+  .sm\:span-6 {
+    grid-column-end: span 6;
+  }
+
   .actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  /* every text button is a full finger's height on phones */
+  .btn-link {
+    min-height: var(--control-h);
+  }
+
+  .chip {
+    min-height: var(--control-h);
   }
 
   .actions > .btn,

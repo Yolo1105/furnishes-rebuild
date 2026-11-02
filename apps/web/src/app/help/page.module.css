@@ -1,0 +1,17 @@
+/* what a way of getting help covers: each row a label over its words */
+.rows > div {
+  display: grid;
+  gap: var(--s-1);
+  padding-block: var(--s-3);
+  border-top: var(--rule);
+}
+
+/* the questions: global .disclosure rows, closed off with a rule */
+.questions > li:last-child .disclosure {
+  border-bottom: var(--rule);
+}
+
+.questions p {
+  padding-bottom: var(--s-4);
+  color: var(--ink-2);
+}

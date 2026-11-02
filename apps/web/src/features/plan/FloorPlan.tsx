@@ -7,13 +7,6 @@ import styles from "./FloorPlan.module.css";
 const MARGIN = 40;
 const MARGIN_EAST = 250;
 
-/** How far a floor reaches past its room, mm: past halfway to the next room, so the floors overlap, no seam showing in the doorways. */
-const UNDER_WALL = 200;
-
-/** How far a bay's glass stands in from its cheeks, and each of its two lines from its middle, mm. */
-const BAY_GLASS = 50;
-const GLASS_APART = 25;
-
 const box = ([x0, y0, x1, y1]: Box, fill: string) => (
   <rect key={`${x0} ${y0} ${x1} ${y1}`} x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={fill} />
 );
@@ -178,13 +171,6 @@ export function FloorPlan({
           {[...DOORS, ...WINDOWS].map((o) => box(cut(o), "black"))}
           {BAYS.map((b) => box([b.x0, top - 1, b.x1, top + WALL + 1], "black"))}
         </mask>
-        {/* the flat's footprint: the floors stop at the outer face of its walls, and run on through its doorways */}
-        <clipPath id="plan-footprint">
-          {DOORS.map((o) => box(cut(o), "black"))}
-          {ROOMS.map((r) => box([r.x - WALL, r.y - WALL, r.x + r.w + WALL, r.y + r.d + WALL], "black"))}
-          {BAYS.map((b) => box([b.x0 - WALL, top - b.depth, b.x1 + WALL, top + WALL], "black"))}
-          {box([AC_LEDGE.x0, AC_LEDGE.y0, AC_LEDGE.x1, AC_LEDGE.y1], "black")}
-        </clipPath>
       </defs>
 
       {grid && (
@@ -223,12 +209,7 @@ export function FloorPlan({
         </>
       )}
 
-      <g className={styles.sheet}>
-      <g className={styles.floors} clipPath="url(#plan-footprint)">
-        {ROOMS.map((r) => box([r.x - UNDER_WALL, r.y - UNDER_WALL, r.x + r.w + UNDER_WALL, r.y + r.d + UNDER_WALL], "currentColor"))}
-        {BAYS.map((b) => box([b.x0 - WALL, top - b.depth, b.x1 + WALL, top + WALL], "currentColor"))}
-        {box([AC_LEDGE.x0, AC_LEDGE.y0, AC_LEDGE.x1, AC_LEDGE.y1], "currentColor")}
-      </g>
+      <g>
 
       {onRoom && (
         <g className={styles.rooms}>
@@ -270,21 +251,6 @@ export function FloorPlan({
           {pieces("fittings", symbols.fittings, styles.fittings)}
           {pieces("furniture", symbols.furniture, styles.furniture)}
           {pieces("light", symbols.light, styles.light)}
-        </g>
-        {/* the bays as the 3D plan has them, solid, as the room's shading goes */}
-        <g className={styles.bayWalls}>
-          {BAYS.flatMap((b) => [
-            box([b.x0 - WALL, top - b.depth, b.x0, top], "currentColor"),
-            box([b.x1, top - b.depth, b.x1 + WALL, top], "currentColor"),
-            box([b.x0, top - b.depth, b.x0 + BAY_GLASS, top - b.depth + WALL], "currentColor"),
-            box([b.x1 - BAY_GLASS, top - b.depth, b.x1, top - b.depth + WALL], "currentColor"),
-          ])}
-          <path
-            className={styles.heavy}
-            d={BAYS.flatMap((b) =>
-              [-GLASS_APART, GLASS_APART].map((off) => `M${b.x0 + BAY_GLASS} ${top - b.depth + BAY_GLASS + off}H${b.x1 - BAY_GLASS}`),
-            ).join("")}
-          />
         </g>
       </g>
 

@@ -43,9 +43,9 @@ export function StudioView() {
       <div className={`span-4 ${styles.controls}`}>
         <fieldset className={styles.group}>
           <legend className="eyebrow">Room</legend>
-          <div className={styles.chips}>
+          <div className="chips">
             {ROOMS.filter((x) => LINKED.has(x.key)).map((x) => (
-              <button key={x.key} type="button" className={styles.chip} aria-pressed={x.key === room} onClick={() => setRoom(x.key)}>
+              <button key={x.key} type="button" className="chip" aria-pressed={x.key === room} onClick={() => setRoom(x.key)}>
                 {x.name}
               </button>
             ))}
@@ -57,9 +57,9 @@ export function StudioView() {
 
         <fieldset className={styles.group}>
           <legend className="eyebrow">Piece</legend>
-          <div className={styles.chips}>
+          <div className="chips">
             {PIECES.map((p) => (
-              <button key={p.id} type="button" className={styles.chip} aria-pressed={p.id === pieceId} onClick={() => setPieceId(p.id)}>
+              <button key={p.id} type="button" className="chip" aria-pressed={p.id === pieceId} onClick={() => setPieceId(p.id)}>
                 {p.name}
               </button>
             ))}

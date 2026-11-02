@@ -30,7 +30,7 @@ export default function HdbHomes() {
           body: [
             "Before you order, measure the lift, your door and any tight corners on the way to the spot. If the way in is tight, choose flat-packed. Its largest box is smaller than the finished piece.",
           ],
-          link: { label: "How to measure", href: `${routes.help}#measuring` },
+          link: { label: "How to measure", href: `${routes.buyingGuide}#measure` },
         },
         {
           heading: "Rules",

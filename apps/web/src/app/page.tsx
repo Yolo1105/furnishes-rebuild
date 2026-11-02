@@ -88,7 +88,7 @@ export default function Home() {
           <SectionHead id="starts" eyebrow="Where does it bother you?" title="Start from the spot that annoys you." />
           <ul className="span-12 subgrid">
             {STARTS.map((s) => (
-              <li key={s.name} className="span-3 md:span-6">
+              <li key={s.name} className="span-3 sm:span-6">
                 <div className="card">
                   <div className="media-square">
                     <Image src={s.render} alt="" fill placeholder="blur" sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" />

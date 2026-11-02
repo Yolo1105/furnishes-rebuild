@@ -1,0 +1,33 @@
+/* The collection: the questions open in place, the lists under their headings. */
+
+.questions summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--control-h);
+  font-weight: var(--w-ui);
+  cursor: pointer;
+}
+
+.questions summary:hover {
+  color: var(--accent);
+}
+
+.questions details p {
+  padding-bottom: var(--s-3);
+  color: var(--ink-2);
+}
+
+.list {
+  margin-top: var(--s-4);
+}
+
+.kit {
+  display: grid;
+  gap: var(--s-1);
+}
+
+@media (max-width: 639px) {
+  .guides a {
+    min-height: var(--control-h);
+  }
+}

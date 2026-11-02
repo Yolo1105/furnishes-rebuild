@@ -4,8 +4,9 @@ import { routes } from "@/lib/routes";
 import { SITE_URL } from "@/lib/site";
 import { productHref } from "./products/productHref";
 
-/** The pages people should find from a search; the sign-in and the unlinked drafts stay out. */
+/** The pages people should find from a search; the unlinked drafts stay out. */
 const PAGES = [
+  routes.home,
   routes.studio,
   routes.collection,
   routes.products,

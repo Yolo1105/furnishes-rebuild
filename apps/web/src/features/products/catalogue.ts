@@ -362,7 +362,7 @@ export type Kit = {
 export const KIT_TIER: Record<KitTier, { name: string; detail: string }> = {
   first: { name: "Offered first", detail: "Available with the first pieces." },
   "after-test": {
-    name: "Coming later",
+    name: "After testing",
     detail: "Offered once we have checked that it fits and holds up.",
   },
 };
